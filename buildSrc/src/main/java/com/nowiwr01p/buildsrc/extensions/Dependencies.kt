@@ -49,6 +49,7 @@ fun DependencyHandler.commonUiDependencies() {
     implementation(Basic.TOOLING_PREVIEW)
     implementation(Basic.CONSTRAINT_LAYOUT)
     implementation(Basic.TIMBER_LIB)
+    implementation(Basic.ACTIVITY_COMPOSE)
 }
 
 fun DependencyHandler.accompanistDependencies() {
@@ -57,7 +58,6 @@ fun DependencyHandler.accompanistDependencies() {
     implementation(Accompanist.ACCOMPANIST_FLOW_ROW)
     implementation(Accompanist.ACCOMPANIST_SYSTEM_UI)
     implementation(Accompanist.ACCOMPANIST_SWIPE_REFRESH)
-    implementation(Accompanist.ACCOMPANIST_NAV_ANIMATION)
     implementation(Accompanist.MATERIAL_ACCOMPANIST_PLACEHOLDER)
 }
 
