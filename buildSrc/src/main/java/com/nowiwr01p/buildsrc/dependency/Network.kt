@@ -22,7 +22,7 @@ object Network {
         const val RETROFIT = "2.9.0"
         const val RETROFIT_SERIALIZATION = "0.8.0"
         const val OKHTTP = "4.10.0"
-        const val KOTLINX_SERIALIZATION = "1.8.0"
+        const val KOTLINX_SERIALIZATION = "1.4.1"
         const val GSON = "2.10"
     }
 }
