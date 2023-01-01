@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings
+package com.nowiwr01p.meetings.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.nowiwr01p.meetings.ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.MeetingsTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

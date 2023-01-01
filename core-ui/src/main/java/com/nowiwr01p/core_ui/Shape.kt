@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings.ui.theme
+package com.nowiwr01p.core_ui
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes
