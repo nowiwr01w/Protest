@@ -1,10 +1,10 @@
 import com.nowiwr01p.buildsrc.dependency.BuildConfig
+import com.nowiwr01p.buildsrc.dependency.Basic
 import com.nowiwr01p.buildsrc.extensions.*
 
 plugins {
     id("kotlin-android")
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
 }
 
 android {
@@ -44,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.1.1"
+        kotlinCompilerExtensionVersion = Basic.Version.COMPOSE
     }
     packagingOptions {
         resources {
@@ -54,11 +54,14 @@ android {
 }
 
 dependencies {
+    implementation(project(mapOf("path" to ":core")))
+    implementation(project(mapOf("path" to ":core-ui")))
+    implementation(project(mapOf("path" to ":navigation")))
+
     animationDependencies()
     biometricDependencies()
     koinDependencies()
     navigationDependencies()
-//    roomDependencies()
     networkDependencies()
     commonUiDependencies()
     accompanistDependencies()
