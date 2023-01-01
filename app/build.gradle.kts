@@ -1,16 +1,19 @@
+import com.nowiwr01p.buildsrc.dependency.BuildConfig
+
 plugins {
+    id("kotlin-android")
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
 }
 
 android {
-    namespace = "com.nowiwr01p.meetings"
-    compileSdk = 32
+    namespace = BuildConfig.APP_ID
+    compileSdk = BuildConfig.COMPILE_SDK
 
     defaultConfig {
-        applicationId = "com.nowiwr01p.meetings"
-        minSdk = 26
-        targetSdk = 32
+        applicationId = BuildConfig.APP_ID
+        minSdk = BuildConfig.MIN_SDK
+        targetSdk = BuildConfig.TARGET_SDK
         versionCode = 1
         versionName = "1.0"
 

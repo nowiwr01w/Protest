@@ -5,6 +5,7 @@ pluginManagement {
         mavenCentral()
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -12,7 +13,9 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
+
 rootProject.name = "Meetings"
+
 include(":app")
 include(":core-ui")
 include(":core")
@@ -24,5 +27,4 @@ include(":news")
 include(":profile")
 include(":domain")
 include(":data")
-include(":build-src")
 include(":build-src")
