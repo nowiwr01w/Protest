@@ -28,7 +28,7 @@ dependencies {
     accompanistDependencies()
     animationDependencies()
     biometricDependencies()
-    roomDependencies()
+//    roomDependencies()
     commonUiDependencies()
     navigationDependencies()
 }
