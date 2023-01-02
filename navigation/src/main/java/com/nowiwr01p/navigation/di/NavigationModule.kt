@@ -2,6 +2,7 @@ package com.nowiwr01p.navigation.di
 
 import com.nowiwr01p.auth.di.moduleAuth
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.data.auth.di.moduleAuthData
 import com.nowiwr01p.map.di.moduleMap
 import com.nowiwr01p.meetings.di.moduleMeetings
 import com.nowiwr01p.navigation.NavigatorImpl
@@ -15,7 +16,7 @@ val moduleNavigation = module {
     }
 }
 
-val appModules = listOf(
+val uiModules = listOf(
     moduleNavigation,
     moduleAuth,
     moduleMap,
@@ -23,3 +24,9 @@ val appModules = listOf(
     moduleNews,
     moduleProfile
 )
+
+val dataModules = listOf(
+    moduleAuthData
+)
+
+val appModules = uiModules + dataModules
