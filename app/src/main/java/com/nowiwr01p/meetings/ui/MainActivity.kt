@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             MainActivityScreen(navigator, navController) {
                 NavHost(
                     navController = navController,
-                    startDestination = "map_main_screen",
+                    startDestination = "auth_main_screen",
                     builder = {
                         navigator.setGraphs(this)
                     }
