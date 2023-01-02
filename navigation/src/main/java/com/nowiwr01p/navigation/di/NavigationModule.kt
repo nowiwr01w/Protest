@@ -1,5 +1,6 @@
 package com.nowiwr01p.navigation.di
 
+import com.nowiwr01p.auth.navigation.moduleAuth
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.map.di.moduleMap
 import com.nowiwr01p.meetings.di.moduleMeetings
@@ -10,12 +11,13 @@ import org.koin.dsl.module
 
 val moduleNavigation = module {
     single<Navigator> {
-        NavigatorImpl(get(), get(), get(), get())
+        NavigatorImpl(get(), get(), get(), get(), get())
     }
 }
 
 val appModules = listOf(
     moduleNavigation,
+    moduleAuth,
     moduleMap,
     moduleMeetings,
     moduleNews,

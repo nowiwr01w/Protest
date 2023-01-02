@@ -7,6 +7,7 @@ import com.nowiwr01p.core_ui.bottom_navigation.BottomNavigationItem
 import com.nowiwr01p.core_ui.navigators.*
 
 interface Navigator {
+    val authNavigator: AuthNavigator
     val mapNavigator: MapNavigator
     val meetingsNavigator: MeetingsNavigator
     val newsNavigator: NewsNavigator
