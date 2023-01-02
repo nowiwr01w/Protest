@@ -1,6 +1,5 @@
 package com.nowiwr01p.auth.ui
 
-import com.nowiwr01p.auth.ui.data.AuthTextFieldType
 import com.nowiwr01p.auth.ui.data.AuthType
 import com.nowiwr01p.auth.ui.data.AuthType.*
 import com.nowiwr01p.core_ui.ui.ButtonState
@@ -8,6 +7,8 @@ import com.nowiwr01p.core_ui.ui.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
+import com.nowiwr01p.domain.auth.data.error.AuthError
+import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 
 interface AuthContract {
 
@@ -24,6 +25,7 @@ interface AuthContract {
         val authButtonState: ButtonState = DEFAULT,
         val showKeyboard: Boolean = false,
         val hidePassword: Boolean = true,
+        val authError: AuthError? = null,
         val email: String = "",
         val password: String = "",
         val passwordRepeat: String = ""
@@ -31,6 +33,7 @@ interface AuthContract {
 
     sealed interface Effect: ViewSideEffect {
         object NavigateToChooseLocation: Effect
+        data class ShowError(val error: AuthError): Effect
     }
 
     interface Listener {
