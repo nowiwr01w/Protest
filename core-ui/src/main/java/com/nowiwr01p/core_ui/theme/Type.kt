@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui
+package com.nowiwr01p.core_ui.theme
 
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
