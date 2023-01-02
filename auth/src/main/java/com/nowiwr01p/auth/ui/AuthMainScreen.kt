@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.nowiwr01p.auth.ui
 
 import androidx.compose.animation.core.animateDpAsState
@@ -11,13 +13,16 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,14 +35,16 @@ import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.AuthContract.*
-import com.nowiwr01p.auth.ui.data.AuthTextFieldType
-import com.nowiwr01p.auth.ui.data.AuthTextFieldType.*
 import com.nowiwr01p.auth.ui.data.AuthType.SIGN_IN
 import com.nowiwr01p.auth.ui.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.extensions.keyboardState
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.EffectObserver
 import com.nowiwr01p.core_ui.ui.StateButton
+import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
+import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -45,6 +52,9 @@ fun AuthMainScreen(
     navigator: Navigator,
     viewModel: AuthViewModel = getViewModel()
 ) {
+    val scope = rememberCoroutineScope()
+    val scaffoldState = rememberScaffoldState()
+
     rememberSystemUiController().apply {
         setSystemBarsColor(Color(0xFF3f4257))
         setStatusBarColor(Color(0xFF3f4257))
@@ -69,10 +79,25 @@ fun AuthMainScreen(
         viewModel.setEvent(Event.Init)
     }
 
-    AuthMainScreenContent(
-        state = viewModel.viewState.value,
-        listener = listener
-    )
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.ShowError -> {
+                scope.launch {
+                    scaffoldState.snackbarHostState.showSnackbar(
+                        message = it.error.message,
+                        duration = SnackbarDuration.Short
+                    )
+                }
+            }
+        }
+    }
+
+    Scaffold(scaffoldState = scaffoldState) {
+        AuthMainScreenContent(
+            state = viewModel.viewState.value,
+            listener = listener
+        )
+    }
 }
 
 @Composable
@@ -215,7 +240,11 @@ private fun CustomTextField(
             .border(
                 border = BorderStroke(
                     width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
+                    color = if (state.authError != null && state.authError.list.contains(fieldType)) {
+                        MaterialTheme.colors.graphicsRed
+                    } else {
+                        MaterialTheme.colors.graphicsSecondary
+                    }
                 ),
                 shape = RoundedCornerShape(12.dp)
             ),
@@ -259,7 +288,7 @@ private fun CustomTextField(
                 }
             }
         },
-        visualTransformation = if (state.hidePassword) {
+        visualTransformation = if (state.hidePassword && fieldType != EMAIL) {
             PasswordVisualTransformation()
         } else {
             VisualTransformation.None
@@ -274,16 +303,20 @@ private fun CustomTextField(
 private fun AuthButton(
     state: State,
     listener: Listener?
-) = StateButton(
-    text = if (state.authType == SIGN_IN) "Войти" else "Зарегистрироваться",
-    state = state.authButtonState,
-    modifier = Modifier
-        .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
-        .clip(RoundedCornerShape(24.dp))
-        .clickable {
+) {
+    val keyboard = LocalSoftwareKeyboardController.current
+    StateButton(
+        text = if (state.authType == SIGN_IN) "Войти" else "Зарегистрироваться",
+        state = state.authButtonState,
+        onSendRequest = {
+            keyboard?.hide()
             listener?.authClick()
-        }
-)
+        },
+        modifier = Modifier
+            .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
+            .clip(RoundedCornerShape(24.dp))
+    )
+}
 
 /**
  * TOGGLE TEXT

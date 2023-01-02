@@ -14,4 +14,5 @@ dependencies {
     implementation(project(mapOf("path" to ":meetings")))
     implementation(project(mapOf("path" to ":news")))
     implementation(project(mapOf("path" to ":profile")))
+    implementation(project(mapOf("path" to ":data")))
 }
