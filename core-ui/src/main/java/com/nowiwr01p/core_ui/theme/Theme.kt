@@ -5,18 +5,23 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
-import com.nowiwr01p.core_ui.*
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = darkBackgroundBrand,
+    primaryVariant = darkBackgroundBlue,
+    secondary = lightGraphicsSecondary,
+    error = darkTextNegative,
+    onPrimary = Color.White,
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500,
-    primaryVariant = Purple700,
-    secondary = Teal200
+    primary = lightBackgroundBrand,
+    primaryVariant = lightBackgroundBlue,
+    secondary = darkGraphicsSecondary,
+    error = lightTextNegative
+
+
 
     /* Other default colors to override
     background = Color.White,
@@ -29,7 +34,7 @@ private val LightColorPalette = lightColors(
 )
 
 @Composable
-fun MeetingsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun MeetingsTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable() () -> Unit) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {

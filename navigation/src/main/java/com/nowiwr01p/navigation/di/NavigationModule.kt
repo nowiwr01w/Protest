@@ -1,6 +1,6 @@
 package com.nowiwr01p.navigation.di
 
-import com.nowiwr01p.auth.navigation.moduleAuth
+import com.nowiwr01p.auth.di.moduleAuth
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.map.di.moduleMap
 import com.nowiwr01p.meetings.di.moduleMeetings

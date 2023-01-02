@@ -12,7 +12,7 @@ import com.nowiwr01p.core_ui.navigators.main.Navigator
 sealed class AuthScreen<T>(
     override val route: String,
     override val rootRoute: String = Companion.rootRoute,
-    override val showBottomNavigation: Boolean = true
+    override val showBottomNavigation: Boolean = false
 ): Screen<T> {
 
     object AuthMainScreen: AuthScreen<Unit>(AuthScreenType.AuthMainScreen.route, rootRoute) {
@@ -27,7 +27,7 @@ sealed class AuthScreen<T>(
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
-                AuthMainScreen()
+                AuthMainScreen(navigator)
             }
         }
     }

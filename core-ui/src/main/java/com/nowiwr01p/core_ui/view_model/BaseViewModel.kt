@@ -18,8 +18,8 @@ abstract class BaseViewModel<Event : ViewEvent, UiState : ViewState, Effect : Vi
 
     override val coroutineContext = SupervisorJob() + Dispatchers.Main
 
-    abstract fun handleEvents(event: Event)
     abstract fun setInitialState(): UiState
+    abstract fun handleEvents(event: Event)
 
     private val initialState: UiState by lazy {
         setInitialState()
