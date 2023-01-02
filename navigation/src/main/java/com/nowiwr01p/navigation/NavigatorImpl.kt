@@ -2,6 +2,7 @@ package com.nowiwr01p.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
+import com.nowiwr01p.auth.AuthScreen
 import com.nowiwr01p.core_ui.bottom_navigation.BottomNavigationItem
 import com.nowiwr01p.core_ui.navigators.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -12,6 +13,7 @@ import com.nowiwr01p.news.NewsScreen
 import com.nowiwr01p.profile.ProfileScreen
 
 class NavigatorImpl(
+    override val authNavigator: AuthNavigator,
     override val mapNavigator: MapNavigator,
     override val meetingsNavigator: MeetingsNavigator,
     override val newsNavigator: NewsNavigator,
@@ -21,7 +23,7 @@ class NavigatorImpl(
     private lateinit var navController: NavHostController
 
     private val navigators = listOf(
-        mapNavigator, meetingsNavigator, newsNavigator, profileNavigator
+        authNavigator, mapNavigator, meetingsNavigator, newsNavigator, profileNavigator
     )
 
     override fun navigateUp() {
@@ -76,6 +78,7 @@ class NavigatorImpl(
     }
 
     override fun currentScreen() = when (navController.currentDestination?.route) {
+        AuthScreen.AuthMainScreen.route -> AuthScreen.AuthMainScreen
         MapScreen.MapMainScreen.route -> MapScreen.MapMainScreen
         MeetingsScreen.MeetingsMainScreen.route -> MeetingsScreen.MeetingsMainScreen
         NewsScreen.NewsMainScreen.route -> NewsScreen.NewsMainScreen
