@@ -15,12 +15,17 @@ class AuthViewModel: BaseViewModel<Event, State, Effect>() {
             is Event.Init -> init()
             is Event.OnAuthClick -> auth()
             is Event.ToggleAuthMode -> toggleAuthMode()
+            is Event.TogglePasswordVisibility -> togglePasswordVisibility()
             is Event.OnValueChanged -> changeValue(event.type, event.value)
         }
     }
 
     private fun init() {
 
+    }
+
+    private fun togglePasswordVisibility() = setState {
+        copy(hidePassword = !hidePassword)
     }
 
     private fun toggleAuthMode() = setState {
