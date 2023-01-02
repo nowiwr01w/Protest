@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui
+package com.nowiwr01p.core_ui.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

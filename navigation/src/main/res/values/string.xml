@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="map_title">Map</string>
+    <string name="meetings_title">Meetings</string>
+    <string name="news_title">News</string>
+    <string name="profile_title">Profile</string>
+</resources>
