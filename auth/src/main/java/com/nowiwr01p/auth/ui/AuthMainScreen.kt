@@ -7,10 +7,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,6 +21,8 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -33,7 +32,6 @@ import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.AuthContract.*
 import com.nowiwr01p.auth.ui.data.AuthTextFieldType
 import com.nowiwr01p.auth.ui.data.AuthTextFieldType.*
-import com.nowiwr01p.auth.ui.data.AuthType
 import com.nowiwr01p.auth.ui.data.AuthType.SIGN_IN
 import com.nowiwr01p.auth.ui.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.extensions.keyboardState
@@ -58,6 +56,9 @@ fun AuthMainScreen(
         }
         override fun toggleAccountMode() {
             viewModel.setEvent(Event.ToggleAuthMode)
+        }
+        override fun togglePasswordVisibility() {
+            viewModel.setEvent(Event.TogglePasswordVisibility)
         }
         override fun onValueChanged(type: AuthTextFieldType, value: String) {
             viewModel.setEvent(Event.OnValueChanged(type, value))
@@ -157,12 +158,11 @@ private fun TextFields(
 ) = Column(
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        .padding(top = 16.dp, start = 24.dp, end = 24.dp)
 ) {
-    val authType = state.authType
     val focusManager = LocalFocusManager.current
     CustomTextField(
-        authType = authType,
+        state = state,
         fieldType = EMAIL,
         text = state.email,
         hint = "Почта",
@@ -170,16 +170,16 @@ private fun TextFields(
         listener = listener
     )
     CustomTextField(
-        authType = authType,
+        state = state,
         fieldType = PASSWORD,
         text = state.password,
         hint = "Пароль",
         focusManager = focusManager,
         listener = listener
     )
-    if (authType == SIGN_UP) {
+    if (state.authType == SIGN_UP) {
         CustomTextField(
-            authType = authType,
+            state = state,
             fieldType = PASSWORD_REPEAT,
             text = state.passwordRepeat,
             hint = "Подтверждения пароля",
@@ -191,7 +191,7 @@ private fun TextFields(
 
 @Composable
 private fun CustomTextField(
-    authType: AuthType,
+    state: State,
     fieldType: AuthTextFieldType,
     text: String,
     hint: String,
@@ -235,12 +235,35 @@ private fun CustomTextField(
         ),
         keyboardOptions = KeyboardOptions(
             imeAction = when {
-                authType == SIGN_IN && fieldType == PASSWORD -> ImeAction.Done
-                authType == SIGN_UP && fieldType == PASSWORD_REPEAT -> ImeAction.Done
+                state.authType == SIGN_IN && fieldType == PASSWORD -> ImeAction.Done
+                state.authType == SIGN_UP && fieldType == PASSWORD_REPEAT -> ImeAction.Done
                 else -> ImeAction.Next
             },
             keyboardType = if (fieldType == EMAIL) KeyboardType.Email else KeyboardType.Password
-        )
+        ),
+        trailingIcon = {
+            if (fieldType == PASSWORD || fieldType == PASSWORD_REPEAT) {
+                val icon = if (state.hidePassword) R.drawable.ic_eye_closed else R.drawable.ic_eye_opened
+                Box(
+                    modifier = Modifier
+                        .clip(RoundedCornerShape(16.dp))
+                        .clickable {
+                            listener?.togglePasswordVisibility()
+                        }
+                ) {
+                    Icon(
+                        painter = painterResource(icon),
+                        contentDescription = "Show or hide password icon",
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+            }
+        },
+        visualTransformation = if (state.hidePassword) {
+            PasswordVisualTransformation()
+        } else {
+            VisualTransformation.None
+        }
     )
 }
 
@@ -255,7 +278,7 @@ private fun AuthButton(
     text = if (state.authType == SIGN_IN) "Войти" else "Зарегистрироваться",
     state = state.authButtonState,
     modifier = Modifier
-        .padding(top = 32.dp, bottom = 32.dp, start = 16.dp, end = 16.dp)
+        .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
         .clip(RoundedCornerShape(24.dp))
         .clickable {
             listener?.authClick()

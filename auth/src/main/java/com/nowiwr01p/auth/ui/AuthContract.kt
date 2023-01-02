@@ -13,8 +13,9 @@ interface AuthContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
-        object ToggleAuthMode: Event
         object OnAuthClick: Event
+        object ToggleAuthMode: Event
+        object TogglePasswordVisibility: Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
     }
 
@@ -22,6 +23,7 @@ interface AuthContract {
         val authType: AuthType = SIGN_IN,
         val authButtonState: ButtonState = DEFAULT,
         val showKeyboard: Boolean = false,
+        val hidePassword: Boolean = true,
         val email: String = "",
         val password: String = "",
         val passwordRepeat: String = ""
@@ -34,6 +36,7 @@ interface AuthContract {
     interface Listener {
         fun authClick()
         fun toggleAccountMode()
+        fun togglePasswordVisibility()
         fun onValueChanged(type: AuthTextFieldType, value: String)
     }
 }
