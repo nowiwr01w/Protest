@@ -107,7 +107,7 @@ fun AuthMainScreen(
     Scaffold(scaffoldState = scaffoldState) {
         ModalBottomSheetLayout(
             sheetState = bottomSheetState,
-            sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
             sheetContent = { bottomSheetContent(state) }
         ) {
             AuthMainScreenContent(state, listener)
