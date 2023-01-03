@@ -25,11 +25,11 @@ object Basic {
     const val TIMBER_LIB = "com.jakewharton.timber:timber:$TIMBER"
 
     object Version {
-        const val COMPOSE = "1.2.0-alpha06"
+        const val COMPOSE = "1.4.0-alpha02"
         const val CONSTRAINT = "1.1.0-alpha01"
         const val KOTLIN_KTX = "1.9.0"
         const val TIMBER = "5.0.1"
         const val LIFECYCLE = "2.5.1"
-        const val COMPOSE_ACTIVITY = "1.6.1"
+        const val COMPOSE_ACTIVITY = "1.7.0-alpha02"
     }
 }
