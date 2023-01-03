@@ -4,6 +4,9 @@ import androidx.compose.material.Colors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+@get:Composable
+val Colors.mainBackgroundColor: Color
+    get() = Color(0xFF3f4257)
 
 /**
  * Text

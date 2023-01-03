@@ -37,17 +37,17 @@ fun StateButton(
         targetValue = when (state) {
             ERROR -> MaterialTheme.colors.graphicsRed
             SUCCESS -> MaterialTheme.colors.graphicsGreen
-            else -> Color(0xFF3f4257)
+            else -> MaterialTheme.colors.mainBackgroundColor
         },
     )
     val backgroundColor = when (state) {
         INIT_LOADING -> MaterialTheme.colors.backgroundSecondary.copy(alpha = 0.9f)
         DEFAULT -> if (enabled) {
-            Color(0xFF3f4257)
+            MaterialTheme.colors.mainBackgroundColor
         } else {
             MaterialTheme.colors.backgroundSecondary.copy(alpha = 0.9f)
         }
-        SEND_REQUEST -> Color(0xFF3f4257)
+        SEND_REQUEST -> MaterialTheme.colors.mainBackgroundColor
         SUCCESS, ERROR -> successErrorColor
     }
 

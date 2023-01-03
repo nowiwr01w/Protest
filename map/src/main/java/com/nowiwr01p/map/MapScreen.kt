@@ -1,7 +1,6 @@
 package com.nowiwr01p.map
 
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.nowiwr01p.core_ui.base_screen.Screen
@@ -18,12 +17,9 @@ sealed class MapScreen<T>(
     object MapMainScreen: MapScreen<Unit>(MapScreenType.MapMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
             navController.navigate(route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
             }
+            navController.graph.setStartDestination(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {

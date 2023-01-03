@@ -77,6 +77,7 @@ class LocationViewModel(
     private fun onConfirmClicked() {
         viewState.value.selectedLocation?.let {
             setEffect { Effect.ShowNextScreen(it) }
+            setState { copy(selectedLocation = null) }
         }
     }
 }

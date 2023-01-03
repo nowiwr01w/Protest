@@ -38,6 +38,7 @@ import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.extensions.keyboardState
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.EffectObserver
@@ -58,10 +59,7 @@ fun AuthMainScreen(
     val scaffoldState = rememberScaffoldState()
     val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
-    rememberSystemUiController().apply {
-        setSystemBarsColor(Color(0xFF3f4257))
-        setStatusBarColor(Color(0xFF3f4257))
-    }
+    setSystemUiColor()
 
     val listener = object : Listener {
         override fun authClick() {
@@ -130,7 +128,7 @@ private fun AuthMainScreenContent(
 ) = ConstraintLayout(
     modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xFF3f4257))
+        .background(MaterialTheme.colors.mainBackgroundColor)
 ) {
     val (icon, textFieldsContainer) = createRefs()
 
