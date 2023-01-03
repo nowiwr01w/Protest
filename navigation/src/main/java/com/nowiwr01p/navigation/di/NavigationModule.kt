@@ -3,7 +3,7 @@ package com.nowiwr01p.navigation.di
 import com.nowiwr01p.auth.di.moduleAuth
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.data.di.moduleData
-import com.nowiwr01p.data.di.moduleDataStore
+import com.nowiwr01p.data.di.moduleCore
 import com.nowiwr01p.domain.di.moduleDomain
 import com.nowiwr01p.map.di.moduleMap
 import com.nowiwr01p.meetings.di.moduleMeetings
@@ -36,7 +36,7 @@ val dataModules = listOf(
 )
 
 val dataStoreModules = listOf(
-    moduleDataStore
+    moduleCore
 )
 
 val appModules = uiModules + domainModules + dataModules + dataStoreModules
