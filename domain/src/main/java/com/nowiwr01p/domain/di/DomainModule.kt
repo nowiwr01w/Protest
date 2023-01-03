@@ -1,8 +1,6 @@
 package com.nowiwr01p.domain.di
 
-import com.nowiwr01p.domain.auth.usecase.GetAuthSecurityWarningUseCase
-import com.nowiwr01p.domain.auth.usecase.SetAuthSecurityWarningShownUseCase
-import com.nowiwr01p.domain.auth.usecase.ValidateAuthDataUseCase
+import com.nowiwr01p.domain.auth.usecase.*
 import org.koin.dsl.module
 
 val moduleDomain = module  {
@@ -13,4 +11,6 @@ val moduleDomain = module  {
     factory { ValidateAuthDataUseCase(get()) }
     factory { GetAuthSecurityWarningUseCase(get()) }
     factory { SetAuthSecurityWarningShownUseCase(get()) }
+    factory { FirebaseSignInUseCase(get()) }
+    factory { FirebaseSignUpUseCase(get()) }
 }
