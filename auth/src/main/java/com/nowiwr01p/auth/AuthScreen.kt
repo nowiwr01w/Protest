@@ -5,7 +5,7 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.nowiwr01p.auth.navigation.AuthScreenType
-import com.nowiwr01p.auth.ui.AuthMainScreen
+import com.nowiwr01p.auth.ui.auth.AuthMainScreen
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 
