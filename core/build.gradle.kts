@@ -2,7 +2,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 
 plugins {
     id("libs.common")
-    id("org.jetbrains.kotlin.plugin.serialization") version "1.6.10"
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.21"
 }
 
 val properties = gradleLocalProperties(rootDir)

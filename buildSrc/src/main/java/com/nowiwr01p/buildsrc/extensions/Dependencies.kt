@@ -19,24 +19,24 @@ fun DependencyHandler.dataStoreDependencies() {
 }
 
 fun DependencyHandler.firebaseDependencies() {
-    implementation(Firebase.FIREBASE_AUTH)
-    implementation(Firebase.FIREBASE_DATABASE)
+    implementation(Firebase.AUTH)
+    implementation(Firebase.DATABASE)
 }
 
 fun DependencyHandler.koinDependencies() {
-    implementation(Koin.KOIN_ANDROID)
-    implementation(Koin.KOIN_COMPOSE_LIB)
+    implementation(Koin.ANDROID)
+    implementation(Koin.COMPOSE)
 }
 
 fun DependencyHandler.navigationDependencies() {
-    implementation(Navigation.NAVIGATION_COMPOSE)
-    implementation(Navigation.NAVIGATION_COMMON)
+    implementation(Navigation.COMPOSE)
+    implementation(Navigation.COMMON)
 }
 
 fun DependencyHandler.roomDependencies() {
-    implementation(Room.ROOM_KTX)
-    implementation(Room.ROOM_RUNTIME)
-    implementation(Room.ROOM_COMPILER)
+    implementation(Room.KTX)
+    implementation(Room.RUNTIME)
+    implementation(Room.COMPILER)
 }
 
 fun DependencyHandler.networkDependencies() {
@@ -63,12 +63,12 @@ fun DependencyHandler.commonUiDependencies() {
 }
 
 fun DependencyHandler.accompanistDependencies() {
-    implementation(Accompanist.ACCOMPANIST_PAGER)
-    implementation(Accompanist.ACCOMPANIST_INSETS)
-    implementation(Accompanist.ACCOMPANIST_FLOW_ROW)
-    implementation(Accompanist.ACCOMPANIST_SYSTEM_UI)
-    implementation(Accompanist.ACCOMPANIST_SWIPE_REFRESH)
-    implementation(Accompanist.MATERIAL_ACCOMPANIST_PLACEHOLDER)
+    implementation(Accompanist.PAGER)
+    implementation(Accompanist.INSETS)
+    implementation(Accompanist.FLOW_ROW)
+    implementation(Accompanist.SYSTEM_UI)
+    implementation(Accompanist.SWIPE_REFRESH)
+    implementation(Accompanist.MATERIAL_PLACEHOLDER)
 }
 
 fun DependencyHandler.unitTestDependencies() {

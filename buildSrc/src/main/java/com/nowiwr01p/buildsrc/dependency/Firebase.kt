@@ -1,15 +1,15 @@
 package com.nowiwr01p.buildsrc.dependency
 
-import com.nowiwr01p.buildsrc.dependency.Firebase.Version.AUTH
-import com.nowiwr01p.buildsrc.dependency.Firebase.Version.DATABASE
+import com.nowiwr01p.buildsrc.dependency.Firebase.Version.AUTH_VERSION
+import com.nowiwr01p.buildsrc.dependency.Firebase.Version.DATABASE_VERSION
 
 object Firebase {
 
-    const val FIREBASE_AUTH = "com.google.firebase:firebase-auth-ktx:$AUTH"
-    const val FIREBASE_DATABASE = "com.google.firebase:firebase-database-ktx:$DATABASE"
+    const val AUTH = "com.google.firebase:firebase-auth-ktx:$AUTH_VERSION"
+    const val DATABASE = "com.google.firebase:firebase-database-ktx:$DATABASE_VERSION"
 
     private object Version {
-        const val AUTH = "21.1.0"
-        const val DATABASE = "20.1.0"
+        const val AUTH_VERSION = "21.1.0"
+        const val DATABASE_VERSION = "20.1.0"
     }
 }
