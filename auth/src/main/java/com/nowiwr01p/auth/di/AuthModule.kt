@@ -11,5 +11,5 @@ val moduleAuth = module {
         AuthNavigatorImpl()
     }
 
-    viewModel { AuthViewModel(get()) }
+    viewModel { AuthViewModel(get(), get(), get()) }
 }
