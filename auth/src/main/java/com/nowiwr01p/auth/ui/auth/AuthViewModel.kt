@@ -1,7 +1,7 @@
-package com.nowiwr01p.auth.ui
+package com.nowiwr01p.auth.ui.auth
 
-import com.nowiwr01p.auth.ui.AuthContract.*
-import com.nowiwr01p.auth.ui.data.AuthType.*
+import com.nowiwr01p.auth.ui.auth.AuthContract.*
+import com.nowiwr01p.auth.ui.auth.data.AuthType.*
 import com.nowiwr01p.core_ui.ui.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType

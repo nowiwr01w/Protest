@@ -1,6 +1,6 @@
 @file:OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 
-package com.nowiwr01p.auth.ui
+package com.nowiwr01p.auth.ui.auth
 
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.*
@@ -34,9 +34,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nowiwr01p.auth.R
-import com.nowiwr01p.auth.ui.AuthContract.*
-import com.nowiwr01p.auth.ui.data.AuthType.SIGN_IN
-import com.nowiwr01p.auth.ui.data.AuthType.SIGN_UP
+import com.nowiwr01p.auth.ui.auth.AuthContract.*
+import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
+import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.extensions.keyboardState
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
