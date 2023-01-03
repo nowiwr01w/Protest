@@ -38,7 +38,10 @@ sealed class AuthScreen<T>(
 
     object CountriesMainScreen: AuthScreen<Unit>(AuthScreenType.CountriesMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route)
+            navController.navigate(route) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+            navController.graph.setStartDestination(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {

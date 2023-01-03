@@ -1,6 +1,7 @@
 package com.nowiwr01p.auth.ui.location
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +15,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,12 +26,14 @@ import com.nowiwr01p.auth.ui.location.LocationContract.*
 import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.core.datastore.location.data.Location
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.theme.textColorSecondary
 import com.nowiwr01p.core_ui.ui.*
-import com.nowiwr01p.core_ui.ui.ButtonState.*
+import com.nowiwr01p.core_ui.ui.ButtonState.DEFAULT
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -38,7 +42,12 @@ fun LocationMainScreen(
     navigator: Navigator,
     viewModel: LocationViewModel = getViewModel()
 ) {
+    setSystemUiColor()
+
     val listener = object : Listener {
+        override fun onBackClick() {
+            navigator.navigateUp()
+        }
         override fun onLocationClick(location: Location) {
             viewModel.setEvent(Event.LocationClick(location))
         }
@@ -88,7 +97,7 @@ fun ChooseCityMainScreenContent(
             linkTo(top = parent.top, bottom = parent.bottom, start = parent.start, end = parent.end)
         }
     Column(modifier = contentModifier) {
-        Toolbar(countryCode)
+        Toolbar(countryCode.isNotEmpty(), listener)
         if (state.loaded) {
             LocationList(state, listener)
         } else {
@@ -127,11 +136,22 @@ fun ChooseCityMainScreenContent(
 }
 
 @Composable
-private fun Toolbar(countryCode: String) = ToolbarTop(
+private fun Toolbar(
+    selectCityScreen: Boolean,
+    listener: Listener?
+) = ToolbarTop(
+    showElevation = true,
+    modifier = Modifier.background(MaterialTheme.colors.mainBackgroundColor),
     title = {
         ToolbarTitle(
-            title = if (countryCode.isNotEmpty()) "Выберите город" else "Выберите страну"
+            textColor = Color.White,
+            title = if (selectCityScreen) "Выберите город" else "Выберите страну"
         )
+    },
+    backIcon = {
+        if (selectCityScreen) {
+            ToolbarBackButton { listener?.onBackClick() }
+        }
     }
 )
 
