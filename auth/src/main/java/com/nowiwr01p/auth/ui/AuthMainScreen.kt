@@ -111,11 +111,10 @@ fun AuthMainScreen(
 
 @Composable
 private fun bottomSheetContent(state: State) {
-    Spacer(modifier = Modifier.height(16.dp))
+    Spacer(modifier = Modifier.height(1.dp))
     if (state.authType == SIGN_UP) {
-        Title()
+        AuthSecurityWarningContent()
     }
-    Spacer(modifier = Modifier.height(48.dp))
 }
 
 @Composable
