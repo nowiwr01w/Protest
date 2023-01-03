@@ -1,5 +1,6 @@
 package com.nowiwr01p.data.auth.validators
 
+import com.nowiwr01p.domain.auth.data.error.PasswordError.*
 import com.nowiwr01p.domain.auth.validators.PasswordValidator
 
 /**
@@ -16,8 +17,11 @@ class PasswordValidatorImpl : PasswordValidator {
     private val upperCaseRegex = ".*[A-Z].*".toRegex()
     private val specialCharRegex = ".*[@#!$%^&+=].*".toRegex()
 
-    override fun validate(value: String) = value.length >= 8
-            && value.matches(numberRegex)
-            && value.matches(upperCaseRegex)
-            && value.matches(specialCharRegex)
+    override fun validate(value: String) = when {
+        value.length < 8 -> ShortPasswordError()
+        value.matches(numberRegex).not() -> PasswordNumberError()
+        value.matches(upperCaseRegex).not() -> PasswordUpperLetterError()
+        value.matches(specialCharRegex).not() -> PasswordSpecialSymbolError()
+        else -> null
+    }
 }
