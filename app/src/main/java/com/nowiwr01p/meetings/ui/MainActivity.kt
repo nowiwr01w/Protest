@@ -23,8 +23,10 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.BottomNavigation
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -35,6 +37,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
+
+            setSystemUiColor()
 
             MainActivityScreen(navigator, navController) {
                 NavHost(
@@ -86,7 +90,7 @@ fun MainActivityScreen(
                                     )
                                 },
                                 selectedContentColor = Color(0xFFFC4C4C),
-                                unselectedContentColor = Color(0xFF3f4257)
+                                unselectedContentColor = MaterialTheme.colors.mainBackgroundColor
                             )
                         }
                     }

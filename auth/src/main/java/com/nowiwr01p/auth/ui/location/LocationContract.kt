@@ -25,7 +25,8 @@ interface LocationContract {
     }
 
     interface Listener {
-        fun onLocationClick(location: Location)
+        fun onBackClick()
         fun onConfirmClick()
+        fun onLocationClick(location: Location)
     }
 }
