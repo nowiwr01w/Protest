@@ -1,4 +1,4 @@
-package com.nowiwr01p.core.datastore
+package com.nowiwr01p.core.datastore.auth
 
 import androidx.datastore.core.CorruptionException
 import androidx.datastore.core.Serializer

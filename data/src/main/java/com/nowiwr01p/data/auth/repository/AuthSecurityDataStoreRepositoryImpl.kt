@@ -1,7 +1,7 @@
 package com.nowiwr01p.data.auth.repository
 
 import androidx.datastore.core.DataStore
-import com.nowiwr01p.core.datastore.AuthSecurityWarning
+import com.nowiwr01p.core.datastore.auth.AuthSecurityWarning
 import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
 import kotlinx.coroutines.flow.first
 

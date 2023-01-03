@@ -1,4 +1,4 @@
-package com.nowiwr01p.core.datastore
+package com.nowiwr01p.core.datastore.auth
 
 import kotlinx.serialization.Serializable
 
