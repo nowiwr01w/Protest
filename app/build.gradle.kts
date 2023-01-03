@@ -5,6 +5,7 @@ import com.nowiwr01p.buildsrc.extensions.*
 plugins {
     id("kotlin-android")
     id("com.android.application")
+    id("com.google.gms.google-services")
 }
 
 android {

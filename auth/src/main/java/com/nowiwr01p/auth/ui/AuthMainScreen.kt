@@ -73,6 +73,9 @@ fun AuthMainScreen(
         override fun togglePasswordVisibility() {
             viewModel.setEvent(Event.TogglePasswordVisibility)
         }
+        override fun toChooseCounty() {
+            viewModel.setEvent(Event.NavigateToChooseCountry)
+        }
         override fun onValueChanged(type: AuthTextFieldType, value: String) {
             viewModel.setEvent(Event.OnValueChanged(type, value))
         }
@@ -84,6 +87,9 @@ fun AuthMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
+            is Effect.NavigateToChooseCountry -> {
+                // TODO
+            }
             is Effect.ShowAuthSecurityWarning -> {
                 scope.launch { bottomSheetState.show() }
             }
@@ -328,6 +334,9 @@ private fun AuthButton(
         onSendRequest = {
             keyboard?.hide()
             listener?.authClick()
+        },
+        onSuccess = {
+            listener?.toChooseCounty()
         },
         modifier = Modifier
             .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)

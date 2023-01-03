@@ -1,6 +1,7 @@
 import com.nowiwr01p.buildsrc.dependency.BuildConfig
 import com.nowiwr01p.buildsrc.extensions.dataStoreDependencies
 import com.nowiwr01p.buildsrc.extensions.koinDependencies
+import com.nowiwr01p.buildsrc.extensions.firebaseDependencies
 import com.nowiwr01p.buildsrc.extensions.unitTestDependencies
 import com.nowiwr01p.buildsrc.extensions.networkDependencies
 
@@ -48,6 +49,7 @@ android {
 dependencies {
     koinDependencies()
     networkDependencies()
+    firebaseDependencies()
     unitTestDependencies()
     dataStoreDependencies()
 }
