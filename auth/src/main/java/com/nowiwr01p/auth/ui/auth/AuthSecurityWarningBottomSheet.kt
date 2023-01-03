@@ -1,4 +1,4 @@
-package com.nowiwr01p.auth.ui
+package com.nowiwr01p.auth.ui.auth
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
