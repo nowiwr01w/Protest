@@ -8,10 +8,15 @@ import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
+import com.nowiwr01p.domain.auth.usecase.GetAuthSecurityWarningUseCase
+import com.nowiwr01p.domain.auth.usecase.SetAuthSecurityWarningShownUseCase
 import com.nowiwr01p.domain.auth.usecase.ValidateAuthDataUseCase
+import com.nowiwr01p.domain.execute
 
 class AuthViewModel(
-    private val authDataValidator: ValidateAuthDataUseCase
+    private val authDataValidator: ValidateAuthDataUseCase,
+    private val authSecurityWarning: GetAuthSecurityWarningUseCase,
+    private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -20,23 +25,28 @@ class AuthViewModel(
         when (event) {
             is Event.Init -> init()
             is Event.OnAuthClick -> checkUserInput()
-            is Event.ToggleAuthMode -> toggleAuthMode()
             is Event.TogglePasswordVisibility -> togglePasswordVisibility()
             is Event.OnValueChanged -> changeValue(event.type, event.value)
+            is Event.ToggleAuthMode -> toggleAuthMode()
         }
     }
 
-    private fun init() {
-        // TODO
+    private fun init() = io {
+        getAuthSecurityWarning()
     }
 
     private fun togglePasswordVisibility() = setState {
         copy(hidePassword = !hidePassword)
     }
 
-    private fun toggleAuthMode() = setState {
-        val authType = if (viewState.value.authType == SIGN_IN) SIGN_UP else SIGN_IN
-        copy(authType = authType)
+    private suspend fun getAuthSecurityWarning() {
+        val shown = authSecurityWarning.execute()
+        setState { copy(authSecurityWarningWasShown = shown) }
+    }
+
+    private suspend fun setAuthSecurityWarningShown() {
+        setAuthSecurityWarningShown.execute()
+        setState { copy(authSecurityWarningWasShown = true) }
     }
 
     private fun changeValue(type: AuthTextFieldType, value: String) = setState {
@@ -44,6 +54,15 @@ class AuthViewModel(
             EMAIL -> copy(email = value)
             PASSWORD -> copy(password = value)
             PASSWORD_REPEAT -> copy(passwordRepeat = value)
+        }
+    }
+
+    private fun toggleAuthMode() = io {
+        val authType = if (viewState.value.authType == SIGN_IN) SIGN_UP else SIGN_IN
+        setState { copy(authType = authType) }
+        if (!viewState.value.authSecurityWarningWasShown) {
+            setEffect { Effect.ShowAuthSecurityWarning }
+            setAuthSecurityWarningShown()
         }
     }
 

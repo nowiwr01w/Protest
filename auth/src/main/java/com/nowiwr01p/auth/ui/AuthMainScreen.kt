@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
 
 package com.nowiwr01p.auth.ui
 
@@ -52,8 +52,11 @@ fun AuthMainScreen(
     navigator: Navigator,
     viewModel: AuthViewModel = getViewModel()
 ) {
+    val state = viewModel.viewState.value
+
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
+    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
 
     rememberSystemUiController().apply {
         setSystemBarsColor(Color(0xFF3f4257))
@@ -81,6 +84,9 @@ fun AuthMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
+            is Effect.ShowAuthSecurityWarning -> {
+                scope.launch { bottomSheetState.show() }
+            }
             is Effect.ShowError -> {
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar(
@@ -93,11 +99,23 @@ fun AuthMainScreen(
     }
 
     Scaffold(scaffoldState = scaffoldState) {
-        AuthMainScreenContent(
-            state = viewModel.viewState.value,
-            listener = listener
-        )
+        ModalBottomSheetLayout(
+            sheetState = bottomSheetState,
+            sheetShape = RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp),
+            sheetContent = { bottomSheetContent(state) }
+        ) {
+            AuthMainScreenContent(state, listener)
+        }
     }
+}
+
+@Composable
+private fun bottomSheetContent(state: State) {
+    Spacer(modifier = Modifier.height(16.dp))
+    if (state.authType == SIGN_UP) {
+        Title()
+    }
+    Spacer(modifier = Modifier.height(48.dp))
 }
 
 @Composable

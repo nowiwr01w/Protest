@@ -25,6 +25,7 @@ interface AuthContract {
         val authButtonState: ButtonState = DEFAULT,
         val showKeyboard: Boolean = false,
         val hidePassword: Boolean = true,
+        val authSecurityWarningWasShown: Boolean = false,
         val authError: AuthError? = null,
         val email: String = "",
         val password: String = "",
@@ -33,6 +34,7 @@ interface AuthContract {
 
     sealed interface Effect: ViewSideEffect {
         object NavigateToChooseLocation: Effect
+        object ShowAuthSecurityWarning: Effect
         data class ShowError(val error: AuthError): Effect
     }
 

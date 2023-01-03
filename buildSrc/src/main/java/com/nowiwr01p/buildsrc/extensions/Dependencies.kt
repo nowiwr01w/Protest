@@ -14,6 +14,10 @@ fun DependencyHandler.biometricDependencies() {
     implementation(Biometric.BIOMETRIC_LIB)
 }
 
+fun DependencyHandler.dataStoreDependencies() {
+    implementation(DataStore.DATASTORE)
+}
+
 fun DependencyHandler.koinDependencies() {
     implementation(Koin.KOIN_ANDROID)
     implementation(Koin.KOIN_COMPOSE_LIB)
