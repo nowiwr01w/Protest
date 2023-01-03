@@ -88,7 +88,7 @@ fun AuthMainScreen(
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.NavigateToChooseCountry -> {
-                // TODO
+                navigator.authNavigator.toChooseCountry()
             }
             is Effect.ShowAuthSecurityWarning -> {
                 scope.launch { bottomSheetState.show() }

@@ -6,3 +6,7 @@ plugins {
 android {
     namespace = "com.nowiwr01p.domain"
 }
+
+dependencies {
+    implementation(project(mapOf("path" to ":core")))
+}
