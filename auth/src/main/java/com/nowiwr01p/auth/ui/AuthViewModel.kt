@@ -2,21 +2,23 @@ package com.nowiwr01p.auth.ui
 
 import com.nowiwr01p.auth.ui.AuthContract.*
 import com.nowiwr01p.auth.ui.data.AuthType.*
+import com.nowiwr01p.core_ui.ui.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
-import com.nowiwr01p.domain.auth.usecase.GetAuthSecurityWarningUseCase
-import com.nowiwr01p.domain.auth.usecase.SetAuthSecurityWarningShownUseCase
-import com.nowiwr01p.domain.auth.usecase.ValidateAuthDataUseCase
+import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.execute
+import kotlinx.coroutines.delay
 
 class AuthViewModel(
     private val authDataValidator: ValidateAuthDataUseCase,
     private val authSecurityWarning: GetAuthSecurityWarningUseCase,
-    private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase
+    private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
+    private val firebaseSignIn: FirebaseSignInUseCase,
+    private val firebaseSignUp: FirebaseSignUpUseCase,
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -28,6 +30,7 @@ class AuthViewModel(
             is Event.TogglePasswordVisibility -> togglePasswordVisibility()
             is Event.OnValueChanged -> changeValue(event.type, event.value)
             is Event.ToggleAuthMode -> toggleAuthMode()
+            is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
         }
     }
 
@@ -85,7 +88,23 @@ class AuthViewModel(
         }
     }
 
-    private suspend fun auth(userData: UserData) = runCatching {
-        // TODO
+    private fun auth(userData: UserData) = io {
+        setState { copy(authButtonState = SEND_REQUEST) }
+        runCatching {
+            when (userData) {
+                is UserDataSignIn -> firebaseSignIn.execute(userData)
+                is UserDataSignUp -> firebaseSignUp.execute(userData)
+            }
+        }.onSuccess {
+            setState { copy(authButtonState = SUCCESS) }
+        }.onFailure {
+            onAuthFailed()
+        }
+    }
+
+    private suspend fun onAuthFailed() {
+        setState { copy(authButtonState = ERROR) }
+        delay(3000)
+        setState { copy(authButtonState = DEFAULT) }
     }
 }

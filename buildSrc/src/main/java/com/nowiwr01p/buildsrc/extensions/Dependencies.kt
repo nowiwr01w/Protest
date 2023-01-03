@@ -18,6 +18,11 @@ fun DependencyHandler.dataStoreDependencies() {
     implementation(DataStore.DATASTORE)
 }
 
+fun DependencyHandler.firebaseDependencies() {
+    implementation(Firebase.FIREBASE_AUTH)
+    implementation(Firebase.FIREBASE_DATABASE)
+}
+
 fun DependencyHandler.koinDependencies() {
     implementation(Koin.KOIN_ANDROID)
     implementation(Koin.KOIN_COMPOSE_LIB)

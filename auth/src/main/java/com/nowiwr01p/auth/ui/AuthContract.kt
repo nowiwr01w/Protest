@@ -16,6 +16,7 @@ interface AuthContract {
         object Init: Event
         object OnAuthClick: Event
         object ToggleAuthMode: Event
+        object NavigateToChooseCountry: Event
         object TogglePasswordVisibility: Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
     }
@@ -33,13 +34,14 @@ interface AuthContract {
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
-        object NavigateToChooseLocation: Effect
+        object NavigateToChooseCountry: Effect
         object ShowAuthSecurityWarning: Effect
         data class ShowError(val error: AuthError): Effect
     }
 
     interface Listener {
         fun authClick()
+        fun toChooseCounty()
         fun toggleAccountMode()
         fun togglePasswordVisibility()
         fun onValueChanged(type: AuthTextFieldType, value: String)
