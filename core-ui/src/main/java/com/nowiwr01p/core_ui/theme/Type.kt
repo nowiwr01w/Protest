@@ -48,7 +48,7 @@ val Typography.largeTitle
 val Typography.title1Bold
     get() = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.Black,
         fontSize = 27.sp,
         lineHeight = 32.sp
     )
