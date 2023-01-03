@@ -1,8 +1,8 @@
 package com.nowiwr01p.data.di
 
-import com.nowiwr01p.core.AuthSecurityWarningDataStore
+import com.nowiwr01p.core.datastore.AuthSecurityWarningDataStore
 import com.nowiwr01p.core.BuildConfig
-import com.nowiwr01p.core.DataStoreType
+import com.nowiwr01p.core.datastore.DataStoreType
 import com.nowiwr01p.data.auth.repository.AuthSecurityDataStoreRepositoryImpl
 import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
 import org.koin.android.ext.koin.androidContext
