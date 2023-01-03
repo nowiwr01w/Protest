@@ -1,6 +1,10 @@
 package com.nowiwr01p.domain.di
 
 import com.nowiwr01p.domain.auth.usecase.*
+import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
+import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
+import com.nowiwr01p.domain.location.usecase.SetCityUseCase
+import com.nowiwr01p.domain.location.usecase.SetCountryUseCase
 import org.koin.dsl.module
 
 val moduleDomain = module  {
@@ -13,4 +17,12 @@ val moduleDomain = module  {
     factory { SetAuthSecurityWarningShownUseCase(get()) }
     factory { FirebaseSignInUseCase(get()) }
     factory { FirebaseSignUpUseCase(get()) }
+
+    /**
+     * LOCATION
+     */
+    factory { GetCitiesUseCase(get()) }
+    factory { GetCountriesUseCase(get()) }
+    factory { SetCityUseCase(get()) }
+    factory { SetCountryUseCase(get()) }
 }

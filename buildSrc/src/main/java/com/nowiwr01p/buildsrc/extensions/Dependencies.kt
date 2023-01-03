@@ -46,6 +46,7 @@ fun DependencyHandler.networkDependencies() {
     implementation(Network.OKHTTP_LOGGING)
     implementation(Network.KOTLIN_SERIALIZATION)
     implementation(Network.GSON_LIB)
+    implementation(Network.GSON_CONVERTER_LIB)
 }
 
 fun DependencyHandler.commonUiDependencies() {
