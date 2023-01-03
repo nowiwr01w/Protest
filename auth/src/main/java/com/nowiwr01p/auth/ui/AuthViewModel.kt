@@ -53,9 +53,9 @@ class AuthViewModel(
             if (error == null) {
                 auth(userData)
             } else {
-                setState { copy(authError = error) }
                 setEffect { Effect.ShowError(error) }
             }
+            setState { copy(authError = error) }
         }
     }
 

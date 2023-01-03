@@ -1,5 +1,7 @@
 package com.nowiwr01p.data.auth.validators
 
+import com.nowiwr01p.domain.auth.data.error.EmailError.WeakDomainError
+import com.nowiwr01p.domain.auth.data.error.EmailError.WrongEmailFormatError
 import com.nowiwr01p.domain.auth.validators.EmailValidator
 import java.util.regex.Pattern
 
@@ -15,5 +17,20 @@ class EmailValidatorImpl: EmailValidator {
                 ")+"
     )
 
-    override fun validate(value: String) = pattern.matcher(value).matches()
+    override fun validate(value: String) = when {
+        isValidDomain(value).not() -> WeakDomainError()
+        pattern.matcher(value).matches().not() -> WrongEmailFormatError()
+        else -> null
+    }
+
+    private fun isValidDomain(value: String): Boolean {
+        invalidDomainsList.forEach { domain ->
+            if (value.contains(domain)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private val invalidDomainsList = listOf("@vk", "@mail", "@yandex")
 }
