@@ -7,8 +7,8 @@ import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.core.datastore.location.data.Location
 import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
-import com.nowiwr01p.domain.location.usecase.SetCityUseCase
-import com.nowiwr01p.domain.location.usecase.SetCountryUseCase
+import com.nowiwr01p.domain.location.usecase.local.SetCityUseCase
+import com.nowiwr01p.domain.location.usecase.local.SetCountryUseCase
 
 class LocationViewModel(
     private val getCities: GetCitiesUseCase,
