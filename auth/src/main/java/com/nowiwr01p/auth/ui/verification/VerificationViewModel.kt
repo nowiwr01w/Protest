@@ -10,7 +10,6 @@ import com.nowiwr01p.domain.auth.usecase.FirebaseSendVerificationUseCase
 import com.nowiwr01p.domain.execute
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
-import timber.log.Timber
 
 class VerificationViewModel(
     private val sendVerification: FirebaseSendVerificationUseCase,
@@ -35,7 +34,6 @@ class VerificationViewModel(
         }.onSuccess {
             onCheckVerificationSuccess(it)
         }.onFailure {
-            Timber.tag("Zhopa").d("error = ${it.message}")
             onCheckVerificationFailed()
         }
     }
