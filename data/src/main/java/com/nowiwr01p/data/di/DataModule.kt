@@ -7,16 +7,22 @@ import com.nowiwr01p.data.auth.repository.AuthRepositoryImpl
 import com.nowiwr01p.data.auth.repository.ValidateAuthDataRepositoryImpl
 import com.nowiwr01p.data.auth.validators.EmailValidatorImpl
 import com.nowiwr01p.data.auth.validators.PasswordValidatorImpl
-import com.nowiwr01p.data.location.LocationDataStoreRepositoryImpl
 import com.nowiwr01p.data.location.LocationRepositoryImpl
+import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
+import com.nowiwr01p.data.location.LocationStateRemoteRepositoryImpl
+import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
+import com.nowiwr01p.data.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.AppDispatchersImpl
 import com.nowiwr01p.domain.auth.repository.AuthRepository
 import com.nowiwr01p.domain.auth.repository.ValidateAuthDataRepository
 import com.nowiwr01p.domain.auth.validators.EmailValidator
 import com.nowiwr01p.domain.auth.validators.PasswordValidator
-import com.nowiwr01p.domain.location.repository.LocationDataStoreRepository
+import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
 import com.nowiwr01p.domain.location.repository.LocationRepository
+import com.nowiwr01p.domain.location.repository.LocationStateRemoteRepository
+import com.nowiwr01p.domain.user.UserRemoteRepository
+import com.nowiwr01p.domain.verification.repository.VerificationRemoteRepository
 import org.koin.dsl.module
 
 val moduleData = module {
@@ -26,6 +32,23 @@ val moduleData = module {
      */
     single<AppDispatchers> {
         AppDispatchersImpl()
+    }
+
+    /**
+     * USER
+     */
+    factory<UserRemoteRepository> {
+        UserRemoteRepositoryImpl(get(), get())
+    }
+
+    /**
+     * FIREBASE
+     */
+    factory {
+        Firebase.auth
+    }
+    factory {
+        Firebase.database
     }
 
     /**
@@ -45,13 +68,10 @@ val moduleData = module {
     }
 
     /**
-     * FIREBASE
+     * VERIFICATION
      */
-    factory {
-        Firebase.auth
-    }
-    factory {
-        Firebase.database
+    factory<VerificationRemoteRepository> {
+        VerificationRemoteRepositoryImpl(get(), get())
     }
 
     /**
@@ -60,7 +80,10 @@ val moduleData = module {
     factory<LocationRepository> {
         LocationRepositoryImpl(get(), get())
     }
-    factory<LocationDataStoreRepository> {
-        LocationDataStoreRepositoryImpl(get())
+    factory<LocationStateLocalRepository> {
+        LocationStateLocalRepositoryImpl(get())
+    }
+    factory<LocationStateRemoteRepository> {
+        LocationStateRemoteRepositoryImpl(get())
     }
 }

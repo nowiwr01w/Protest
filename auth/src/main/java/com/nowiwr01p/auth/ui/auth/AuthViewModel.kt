@@ -33,6 +33,7 @@ class AuthViewModel(
             is Event.TogglePasswordVisibility -> togglePasswordVisibility()
             is Event.OnValueChanged -> changeValue(event.type, event.value)
             is Event.ToggleAuthMode -> toggleAuthMode()
+            is Event.NavigateToMap -> setEffect { Effect.NavigateToMap }
             is Event.NavigateToVerification -> setEffect { Effect.NavigateToVerification }
             is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
         }
@@ -108,7 +109,7 @@ class AuthViewModel(
 
     private suspend fun checkVerification(user: User) {
         if (user.verified) {
-            setState { copy(isUserVerified = true, authButtonState = SUCCESS) }
+            setUserWasLoggedInBefore(user)
         } else {
             runCatching {
                 firebaseSendVerification.execute()
@@ -118,6 +119,14 @@ class AuthViewModel(
                 onAuthFailed()
             }
         }
+    }
+
+    private fun setUserWasLoggedInBefore(user: User) = setState {
+        copy(
+            isUserVerified = true,
+            isUserSetCity = user.city.name.isNotEmpty(),
+            authButtonState = SUCCESS
+        )
     }
 
     private suspend fun onAuthFailed() {
