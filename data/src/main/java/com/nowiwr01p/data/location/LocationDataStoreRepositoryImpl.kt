@@ -4,12 +4,12 @@ import androidx.datastore.core.DataStore
 import com.nowiwr01p.core.datastore.location.LocationPreference
 import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
-import com.nowiwr01p.domain.location.repository.LocationPreferencesRepository
+import com.nowiwr01p.domain.location.repository.LocationDataStoreRepository
 import kotlinx.coroutines.flow.first
 
-class LocationPreferencesRepositoryImpl(
+class LocationDataStoreRepositoryImpl(
     private val locationStore: DataStore<LocationPreference>
-): LocationPreferencesRepository {
+): LocationDataStoreRepository {
 
     override suspend fun isCitySet(): City {
         return locationStore.data.first().selectedCity

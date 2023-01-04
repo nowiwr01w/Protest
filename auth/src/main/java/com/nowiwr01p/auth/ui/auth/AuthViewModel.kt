@@ -12,6 +12,7 @@ import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
 import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.verification.usecase.FirebaseSendVerificationUseCase
 import kotlinx.coroutines.delay
 
 class AuthViewModel(

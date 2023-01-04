@@ -23,7 +23,7 @@ val moduleAuth = module {
     /**
      * VERIFICATION
      */
-    viewModel { VerificationViewModel(get(), get()) }
+    viewModel { VerificationViewModel(get(), get(), get()) }
 
     /**
      * LOCATION

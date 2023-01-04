@@ -9,6 +9,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,22 +24,37 @@ import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.BottomNavigation
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
-import com.nowiwr01p.core_ui.extensions.setSystemUiColor
-import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
+import com.nowiwr01p.core_ui.ui.EffectObserver
+import com.nowiwr01p.navigation.start_screen.ChooseStartScreenContract.Effect
+import com.nowiwr01p.navigation.start_screen.ChooseStartScreenContract.Event
+import com.nowiwr01p.navigation.start_screen.ChooseStartScreenViewModel
 import org.koin.android.ext.android.inject
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
 
     private val navigator by inject<Navigator>()
+    private val viewModel by viewModel<ChooseStartScreenViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             val navController = rememberNavController()
 
-            setSystemUiColor()
+            LaunchedEffect(Unit) {
+                viewModel.setEvent(Event.Init)
+            }
+
+            EffectObserver(viewModel.effect) {
+                when (it) {
+                    is Effect.NavigateToStartScreen -> {
+                        navigator.navigateToRoute(it.route)
+                    }
+                }
+            }
 
             MainActivityScreen(navigator, navController) {
                 NavHost(

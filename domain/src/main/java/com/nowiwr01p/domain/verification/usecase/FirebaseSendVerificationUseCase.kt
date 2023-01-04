@@ -1,4 +1,4 @@
-package com.nowiwr01p.domain.auth.usecase
+package com.nowiwr01p.domain.verification.usecase
 
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.auth.repository.AuthRepository
