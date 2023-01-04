@@ -22,13 +22,17 @@ class LocationViewModel(
         mapper.viewModel = this
     }
 
+    private var allLocations = listOf<Location>()
+
     override fun setInitialState() = State()
 
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init(event.countryCode)
             is Event.LocationClick -> selectLocation(event.location)
+            is Event.ClearSelectedLocation -> setState { copy(selectedLocation = null) }
             is Event.ConfirmClick -> onConfirmClicked()
+            is Event.OnSearchStateChanged -> onSearchStateChanged(event.value)
         }
     }
 
@@ -56,7 +60,7 @@ class LocationViewModel(
 
     private fun getCities(countryCode: String) = io {
         runCatching {
-            getCities.execute(countryCode)
+            getCities.execute(countryCode).sortedByDescending { it.population.toIntOrNull() }
         }.onSuccess {
             setLocations(it)
         }
@@ -71,7 +75,13 @@ class LocationViewModel(
     }
 
     private fun setLocations(locations: List<Location>) {
+        allLocations = locations
         setState { copy(locations = locations, loaded = true) }
+    }
+
+    private fun onSearchStateChanged(value: String) {
+        val filtered = allLocations.filter { it.name.lowercase().contains(value.lowercase()) }
+        setState { copy(searchValue = value, locations = filtered) }
     }
 
     private fun onConfirmClicked() {

@@ -134,7 +134,7 @@ private fun AuthMainScreenContent(
 
     val isKeyboardOpen by keyboardState()
     val authContentTransitionDp by animateDpAsState(
-        targetValue = if (isKeyboardOpen) 32.dp else 160.dp
+        targetValue = if (isKeyboardOpen) 8.dp else 160.dp
     )
 
     val iconModifier = Modifier
@@ -272,7 +272,7 @@ private fun CustomTextField(
         label = {
             Text(
                 text = hint,
-                modifier = Modifier.padding(top = 4.dp)
+                modifier = Modifier.padding(top = 3.dp)
             )
         },
         keyboardActions = KeyboardActions(
