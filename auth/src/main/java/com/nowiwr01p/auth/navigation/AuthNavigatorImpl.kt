@@ -16,6 +16,10 @@ class AuthNavigatorImpl: AuthNavigator {
         navController = curNavController
     }
 
+    override fun toVerification() {
+        VerificationMainScreen.navigate(Unit, navController)
+    }
+
     override fun toChooseCountry() {
         CountriesMainScreen.navigate(Unit, navController)
     }
@@ -27,6 +31,7 @@ class AuthNavigatorImpl: AuthNavigator {
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {
         builder.navigation(AuthMainScreen.route, AuthScreen.rootRoute) {
             AuthMainScreen.createScreen(builder, navigator)
+            VerificationMainScreen.createScreen(this, navigator)
             CitiesMainScreen.createScreen(this, navigator)
             CountriesMainScreen.createScreen(this, navigator)
         }

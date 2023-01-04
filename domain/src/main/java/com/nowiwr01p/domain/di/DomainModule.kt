@@ -19,6 +19,12 @@ val moduleDomain = module  {
     factory { FirebaseSignUpUseCase(get()) }
 
     /**
+     * VERIFICATION
+     */
+    factory { FirebaseSendVerificationUseCase(get()) }
+    factory { FirebaseCheckEmailVerificationUseCase(get()) }
+
+    /**
      * LOCATION
      */
     factory { GetCitiesUseCase(get()) }

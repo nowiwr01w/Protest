@@ -13,6 +13,8 @@ data class User(
     val hasCountry: Boolean = false,
     @SerialName("hasCity")
     val hasCity: Boolean = false,
+    @SerialName("verified")
+    val verified: Boolean = false,
     @SerialName("organizer")
     val organizer: Boolean = false
 )

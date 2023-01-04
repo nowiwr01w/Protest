@@ -16,6 +16,7 @@ interface AuthContract {
         object Init: Event
         object OnAuthClick: Event
         object ToggleAuthMode: Event
+        object NavigateToVerification: Event
         object NavigateToChooseCountry: Event
         object TogglePasswordVisibility: Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
@@ -26,6 +27,7 @@ interface AuthContract {
         val authButtonState: ButtonState = DEFAULT,
         val showKeyboard: Boolean = false,
         val hidePassword: Boolean = true,
+        val isUserVerified: Boolean = false,
         val authSecurityWarningWasShown: Boolean = false,
         val authError: AuthError? = null,
         val email: String = "",
@@ -34,6 +36,7 @@ interface AuthContract {
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
+        object NavigateToVerification: Effect
         object NavigateToChooseCountry: Effect
         object ShowAuthSecurityWarning: Effect
         data class ShowError(val error: AuthError): Effect
@@ -41,7 +44,7 @@ interface AuthContract {
 
     interface Listener {
         fun authClick()
-        fun toChooseCounty()
+        fun toNextScreen()
         fun toggleAccountMode()
         fun togglePasswordVisibility()
         fun onValueChanged(type: AuthTextFieldType, value: String)
