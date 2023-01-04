@@ -1,15 +1,14 @@
 package com.nowiwr01p.auth.ui.location
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -23,15 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.location.LocationContract.*
-import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.core.datastore.location.data.Location
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.theme.MeetingsTheme
-import com.nowiwr01p.core_ui.theme.mainBackgroundColor
-import com.nowiwr01p.core_ui.theme.subHeadlineRegular
-import com.nowiwr01p.core_ui.theme.textColorSecondary
+import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.*
 import com.nowiwr01p.core_ui.ui.ButtonState.DEFAULT
 import org.koin.androidx.compose.getViewModel
@@ -54,6 +49,9 @@ fun LocationMainScreen(
         override fun onConfirmClick() {
             viewModel.setEvent(Event.ConfirmClick)
         }
+        override fun onSearchStateChanged(value: String) {
+            viewModel.setEvent(Event.OnSearchStateChanged(value))
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -74,7 +72,7 @@ fun LocationMainScreen(
         }
     }
 
-    ChooseCityMainScreenContent(
+    LocationMainScreenContent(
         countryCode = countryCode,
         state = viewModel.viewState.value,
         listener = listener
@@ -82,7 +80,7 @@ fun LocationMainScreen(
 }
 
 @Composable
-fun ChooseCityMainScreenContent(
+fun LocationMainScreenContent(
     countryCode: String,
     state: State,
     listener: Listener?
@@ -105,7 +103,7 @@ fun ChooseCityMainScreenContent(
         }
     }
 
-    if (countryCode.isEmpty()) {
+    if (countryCode.isEmpty() && state.loaded && state.selectedLocation == null) {
         val futureTextModifier = Modifier
             .padding(horizontal = 16.dp)
             .constrainAs(futureText) {
@@ -127,11 +125,11 @@ fun ChooseCityMainScreenContent(
             end.linkTo(parent.end)
             bottom.linkTo(parent.bottom)
         }
-    AnimatedVisibility(
-        modifier = buttonModifier,
-        visible = state.selectedLocation != null
-    ) {
-        ChooseButton(listener)
+    if (state.selectedLocation != null) {
+        ChooseButton(listener, buttonModifier)
+    }
+    if (state.selectedLocation == null) {
+        Search(state, listener, buttonModifier)
     }
 }
 
@@ -195,29 +193,93 @@ fun LocationItem(
 }
 
 @Composable
-private fun ChooseButton(listener: Listener?) = StateButton(
+private fun ChooseButton(
+    listener: Listener?,
+    modifier: Modifier
+) = StateButton(
     text = "Выбрать",
     state = DEFAULT,
     onSendRequest = { listener?.onConfirmClick() },
-    modifier = Modifier
+    modifier = modifier
         .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
         .clip(RoundedCornerShape(24.dp))
 )
 
+@Composable
+private fun Search(
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) = TextField(
+    value = state.searchValue,
+    onValueChange = {
+        listener?.onSearchStateChanged(it)
+    },
+    colors = TextFieldDefaults.outlinedTextFieldColors(
+        unfocusedBorderColor = Color.Transparent,
+        disabledBorderColor = Color.Transparent,
+        errorBorderColor = Color.Transparent,
+        focusedBorderColor = Color.Transparent
+    ),
+    modifier = modifier
+        .fillMaxWidth()
+        .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
+        .background(
+            color = Color.White,
+            shape = RoundedCornerShape(24.dp)
+        )
+        .border(
+            border = BorderStroke(
+                width = 1.25.dp,
+                color = MaterialTheme.colors.graphicsSecondary
+            ),
+            shape = RoundedCornerShape(24.dp)
+        ),
+    placeholder = {
+        Text(
+            text = "Поиск нужного города",
+            modifier = Modifier.padding(top = 2.dp)
+        )
+    },
+    leadingIcon = {
+        Icon(
+            painter = painterResource(R.drawable.ic_search),
+            contentDescription = "Show or hide password icon",
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
+)
+
 /**
- * PREVIEW
+ * PREVIEWS
  */
 @Preview(showBackground = true)
 @Composable
-private fun PreviewFull() = MeetingsTheme {
-    ChooseCityMainScreenContent(
+private fun PreviewSearch() = MeetingsTheme {
+    LocationMainScreenContent(
         countryCode = "",
         state = State(
             loaded = true,
-            selectedLocation = City(true, "Test city"),
             locations = listOf(
-                City(false, "Test city"), City(false, "Test city"),
-                City(true, "Test city"), City(false, "Test city"),
+                Country(false, "Test country"), Country(false, "Test country"),
+                Country(false, "Test country"), Country(false, "Test country"),
+            )
+        ),
+        listener = null
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewFull() = MeetingsTheme {
+    LocationMainScreenContent(
+        countryCode = "",
+        state = State(
+            loaded = true,
+            selectedLocation = Country(true, "Test country"),
+            locations = listOf(
+                Country(false, "Test country"), Country(false, "Test country"),
+                Country(true, "Test country"), Country(false, "Test country"),
             )
         ),
         listener = null
@@ -227,7 +289,7 @@ private fun PreviewFull() = MeetingsTheme {
 @Preview(showBackground = true)
 @Composable
 private fun PreviewLoading() = MeetingsTheme {
-    ChooseCityMainScreenContent(
+    LocationMainScreenContent(
         countryCode = "",
         state = State(),
         listener = null
