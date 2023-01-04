@@ -6,6 +6,7 @@ import com.nowiwr01p.core_ui.ui.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
+import com.nowiwr01p.domain.auth.data.user.User
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
@@ -19,6 +20,7 @@ class AuthViewModel(
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
     private val firebaseSignIn: FirebaseSignInUseCase,
     private val firebaseSignUp: FirebaseSignUpUseCase,
+    private val firebaseSendVerification: FirebaseSendVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -30,6 +32,7 @@ class AuthViewModel(
             is Event.TogglePasswordVisibility -> togglePasswordVisibility()
             is Event.OnValueChanged -> changeValue(event.type, event.value)
             is Event.ToggleAuthMode -> toggleAuthMode()
+            is Event.NavigateToVerification -> setEffect { Effect.NavigateToVerification }
             is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
         }
     }
@@ -96,9 +99,23 @@ class AuthViewModel(
                 is UserDataSignUp -> firebaseSignUp.execute(userData)
             }
         }.onSuccess {
-            setState { copy(authButtonState = SUCCESS) }
+            checkVerification(it)
         }.onFailure {
             onAuthFailed()
+        }
+    }
+
+    private suspend fun checkVerification(user: User) {
+        if (user.verified) {
+            setState { copy(isUserVerified = true, authButtonState = SUCCESS) }
+        } else {
+            runCatching {
+                firebaseSendVerification.execute()
+            }.onSuccess {
+                setState { copy(authButtonState = SUCCESS) }
+            }.onFailure {
+                onAuthFailed()
+            }
         }
     }
 

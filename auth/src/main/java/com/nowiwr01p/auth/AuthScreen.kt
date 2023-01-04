@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.nowiwr01p.auth.navigation.AuthScreenType
 import com.nowiwr01p.auth.ui.auth.AuthMainScreen
 import com.nowiwr01p.auth.ui.location.LocationMainScreen
+import com.nowiwr01p.auth.ui.verification.VerificationMainScreen
 import com.nowiwr01p.core_ui.Keys.ARG_TO_CITIES
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -32,6 +33,20 @@ sealed class AuthScreen<T>(
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
                 AuthMainScreen(navigator)
+            }
+        }
+    }
+
+    object VerificationMainScreen: AuthScreen<Unit>(AuthScreenType.VerificationMainScreen.route, rootRoute) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route) {
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            }
+            navController.graph.setStartDestination(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                VerificationMainScreen(navigator)
             }
         }
     }
