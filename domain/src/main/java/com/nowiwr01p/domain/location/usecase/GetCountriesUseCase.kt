@@ -6,9 +6,9 @@ import com.nowiwr01p.domain.location.repository.LocationRepository
 
 class GetCountriesUseCase(
     private val repository: LocationRepository
-): UseCase<Unit, List<com.nowiwr01p.core.datastore.location.data.Country>> {
+): UseCase<Unit, List<Country>> {
 
-    override suspend fun execute(input: Unit): List<com.nowiwr01p.core.datastore.location.data.Country> {
+    override suspend fun execute(input: Unit): List<Country> {
         return repository.getCountries()
     }
 }
