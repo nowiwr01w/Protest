@@ -7,6 +7,7 @@ import com.nowiwr01p.domain.auth.data.user.User
 fun AuthResult.toUser() = User(
     id = user?.uid.orEmpty(),
     email = user?.email.orEmpty(),
+    verified = user?.isEmailVerified ?: false,
     organizer = false,
     hasCountry = false,
     hasCity = false

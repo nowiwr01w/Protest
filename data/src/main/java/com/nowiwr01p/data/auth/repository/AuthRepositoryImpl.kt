@@ -19,36 +19,55 @@ class AuthRepositoryImpl(
     private val dispatchers: AppDispatchers
 ): AuthRepository {
 
+    private fun loadUser() = auth.currentUser ?: throw IllegalStateException("User expected")
+
+    /**
+     * SIGN IN
+     */
     override suspend fun signIn(userData: UserData) = withContext(dispatchers.io) {
         val authResult = auth.signInWithEmailAndPassword(userData.email, userData.password)
             .asDeferred()
             .await()
-        if (authResult.user != null) {
-            getUserAccount(authResult)
-        } else {
-            throw IllegalStateException("Auth: firebaseUser = null")
-        }
+        getUserAccount(authResult)
     }
 
-    override suspend fun signUp(userData: UserData) = withContext(dispatchers.io) {
-        val user = auth.createUserWithEmailAndPassword(userData.email, userData.password)
-            .asDeferred()
-            .await()
-        saveFirebaseUser(user.toUser())
-    }
-
-    private suspend fun getUserAccount(user: AuthResult): User {
+    private suspend fun getUserAccount(authResult: AuthResult): User {
         database.getReference(USERS_REFERENCE).get().await().children.forEach { snapshot ->
-            snapshot.hasAccount(user).let { resultUser ->
+            snapshot.hasAccount(authResult).let { resultUser ->
                 if (resultUser != null) return resultUser
             }
         }
         throw IllegalStateException("Bro, you're completely wrong. We always have user here.")
     }
 
+    /**
+     * SIGN UP
+     */
+    override suspend fun signUp(userData: UserData) = withContext(dispatchers.io) {
+        val authResult = auth.createUserWithEmailAndPassword(userData.email, userData.password)
+            .asDeferred()
+            .await()
+        saveFirebaseUser(authResult.toUser())
+    }
+
     private suspend fun saveFirebaseUser(user: User): User {
         database.getReference(USERS_REFERENCE).child(user.id).setValue(user).await()
         return user
+    }
+
+    /**
+     * SEND VERIFICATION
+     */
+    override suspend fun sendVerification(): Unit = withContext(dispatchers.io) {
+        loadUser().sendEmailVerification().await()
+    }
+
+    /**
+     * CHECK VERIFICATION
+     */
+    override suspend fun checkVerification() = withContext(dispatchers.io) {
+        loadUser().reload().await()
+        loadUser().isEmailVerified
     }
 
     private companion object {

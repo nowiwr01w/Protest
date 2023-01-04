@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
@@ -71,8 +70,9 @@ fun AuthMainScreen(
         override fun togglePasswordVisibility() {
             viewModel.setEvent(Event.TogglePasswordVisibility)
         }
-        override fun toChooseCounty() {
-            viewModel.setEvent(Event.NavigateToChooseCountry)
+        override fun toNextScreen() {
+            val event = if (state.isUserVerified) Event.NavigateToChooseCountry else Event.NavigateToVerification
+            viewModel.setEvent(event)
         }
         override fun onValueChanged(type: AuthTextFieldType, value: String) {
             viewModel.setEvent(Event.OnValueChanged(type, value))
@@ -85,6 +85,9 @@ fun AuthMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
+            is Effect.NavigateToVerification -> {
+                navigator.authNavigator.toVerification()
+            }
             is Effect.NavigateToChooseCountry -> {
                 navigator.authNavigator.toChooseCountry()
             }
@@ -334,7 +337,7 @@ private fun AuthButton(
             listener?.authClick()
         },
         onSuccess = {
-            listener?.toChooseCounty()
+            listener?.toNextScreen()
         },
         modifier = Modifier
             .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
