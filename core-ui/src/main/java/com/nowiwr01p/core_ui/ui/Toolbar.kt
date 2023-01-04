@@ -1,5 +1,6 @@
 package com.nowiwr01p.core_ui.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core_ui.theme.calloutMedium
+import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import com.nowiwr01p.core_ui.theme.textPrimary
 
 @Composable
@@ -27,11 +29,15 @@ fun ToolbarTop(
     modifier: Modifier = Modifier,
     showElevation: Boolean = false
 ) {
-    Surface(elevation = if (showElevation) 4.dp else 0.dp) {
+    Surface(
+        modifier = modifier,
+        elevation = if (showElevation) 4.dp else 0.dp
+    ) {
         Box(
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding()
+                .background(MaterialTheme.colors.mainBackgroundColor)
                 .height(56.dp)
         ) {
             Box(modifier = Modifier.align(Alignment.CenterStart)) {

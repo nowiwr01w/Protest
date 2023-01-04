@@ -62,7 +62,7 @@ class LocationViewModel(
         runCatching {
             getCities.execute(countryCode).sortedByDescending { it.population.toIntOrNull() }
         }.onSuccess {
-            setLocations(it)
+            setLocations(it).run { allLocations = it }
         }
     }
 
@@ -70,12 +70,11 @@ class LocationViewModel(
         runCatching {
             getCountries.execute(Unit).filter { it.code == "RU" }
         }.onSuccess {
-            setLocations(it)
+            setLocations(it).run { allLocations = it }
         }
     }
 
     private fun setLocations(locations: List<Location>) {
-        allLocations = locations
         setState { copy(locations = locations, loaded = true) }
     }
 

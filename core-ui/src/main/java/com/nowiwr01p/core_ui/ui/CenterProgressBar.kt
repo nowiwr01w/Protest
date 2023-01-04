@@ -16,3 +16,10 @@ fun CenterScreenProgressBar() = Column(
 ) {
     CircularProgressIndicator()
 }
+
+@Composable
+fun CenterScreenProgressBar(
+    modifier: Modifier = Modifier
+) {
+    CircularProgressIndicator(modifier = modifier)
+}
