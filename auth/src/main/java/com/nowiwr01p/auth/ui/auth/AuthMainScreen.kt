@@ -71,7 +71,11 @@ fun AuthMainScreen(
             viewModel.setEvent(Event.TogglePasswordVisibility)
         }
         override fun toNextScreen() {
-            val event = if (state.isUserVerified) Event.NavigateToChooseCountry else Event.NavigateToVerification
+            val event = when {
+                state.isUserVerified && state.isUserSetCity -> Event.NavigateToMap
+                state.isUserVerified -> Event.NavigateToChooseCountry
+                else -> Event.NavigateToVerification
+            }
             viewModel.setEvent(event)
         }
         override fun onValueChanged(type: AuthTextFieldType, value: String) {
@@ -85,6 +89,9 @@ fun AuthMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
+            is Effect.NavigateToMap -> {
+                navigator.navigateToMap()
+            }
             is Effect.NavigateToVerification -> {
                 navigator.authNavigator.toVerification()
             }

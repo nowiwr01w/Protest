@@ -18,6 +18,7 @@ interface AuthContract {
         object ToggleAuthMode: Event
         object NavigateToVerification: Event
         object NavigateToChooseCountry: Event
+        object NavigateToMap: Event
         object TogglePasswordVisibility: Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
     }
@@ -27,15 +28,17 @@ interface AuthContract {
         val authButtonState: ButtonState = DEFAULT,
         val showKeyboard: Boolean = false,
         val hidePassword: Boolean = true,
-        val isUserVerified: Boolean = false,
         val authSecurityWarningWasShown: Boolean = false,
         val authError: AuthError? = null,
         val email: String = "",
         val password: String = "",
-        val passwordRepeat: String = ""
+        val passwordRepeat: String = "",
+        val isUserVerified: Boolean = false,
+        val isUserSetCity: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
+        object NavigateToMap: Effect
         object NavigateToVerification: Effect
         object NavigateToChooseCountry: Effect
         object ShowAuthSecurityWarning: Effect

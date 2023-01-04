@@ -2,13 +2,16 @@ package com.nowiwr01p.domain.location.usecase.local
 
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.core.datastore.location.data.City
-import com.nowiwr01p.domain.location.repository.LocationDataStoreRepository
+import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
+import com.nowiwr01p.domain.location.repository.LocationStateRemoteRepository
 
 class SetCityUseCase(
-    private val repository: LocationDataStoreRepository
+    private val localRepository: LocationStateLocalRepository,
+    private val remoteRepository: LocationStateRemoteRepository
 ): UseCase<City, Unit> {
 
     override suspend fun execute(input: City) {
-        repository.setCity(input)
+        localRepository.setCity(input)
+        remoteRepository.setCity(input)
     }
 }

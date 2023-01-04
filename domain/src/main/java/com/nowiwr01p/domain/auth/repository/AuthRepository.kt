@@ -6,6 +6,4 @@ import com.nowiwr01p.domain.auth.data.user.UserData
 interface AuthRepository {
     suspend fun signIn(userData: UserData): User
     suspend fun signUp(userData: UserData): User
-    suspend fun sendVerification()
-    suspend fun checkVerification(): Boolean
 }

@@ -7,12 +7,12 @@ import com.nowiwr01p.core.datastore.DataStoreType
 import com.nowiwr01p.core.datastore.LocationDataStore
 import com.nowiwr01p.core.datastore.VerificationDataStore
 import com.nowiwr01p.data.auth.repository.AuthSecurityDataStoreRepositoryImpl
-import com.nowiwr01p.data.location.LocationDataStoreRepositoryImpl
+import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
 import com.nowiwr01p.data.verification.VerificationDataStoreRepositoryImpl
 import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
 import com.nowiwr01p.domain.location.api.LocationApi
-import com.nowiwr01p.domain.location.repository.LocationDataStoreRepository
-import com.nowiwr01p.domain.verification.repository.VerificationDataStoreRepository
+import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
+import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -42,14 +42,14 @@ val moduleCore = module {
             dataStore.create(androidContext())
         )
     }
-    single<LocationDataStoreRepository> {
+    single<LocationStateLocalRepository> {
         val fileName = get<String>(named(DataStoreType.LOCATION))
         val dataStore = LocationDataStore(fileName)
-        LocationDataStoreRepositoryImpl(
+        LocationStateLocalRepositoryImpl(
             dataStore.create(androidContext())
         )
     }
-    single<VerificationDataStoreRepository> {
+    single<VerificationLocalRepository> {
         val fileName = get<String>(named(DataStoreType.VERIFICATION))
         val dataStore = VerificationDataStore(fileName)
         VerificationDataStoreRepositoryImpl(
