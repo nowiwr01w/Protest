@@ -12,6 +12,5 @@ fun setSystemUiColor(
 ) {
     rememberSystemUiController().apply {
         setStatusBarColor(color)
-        setSystemBarsColor(color)
     }
 }
