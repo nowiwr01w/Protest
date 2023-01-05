@@ -12,7 +12,7 @@ class SetCountryUseCase(
 ): UseCase<Country, Unit> {
 
     override suspend fun execute(input: Country) {
-        localRepository.setCounty(input)
         remoteRepository.setCounty(input)
+        localRepository.setCounty(input)
     }
 }
