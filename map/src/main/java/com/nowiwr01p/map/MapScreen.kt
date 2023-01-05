@@ -22,7 +22,7 @@ sealed class MapScreen<T>(
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
-                MapMainScreen()
+                MapMainScreen(navigator)
             }
         }
     }
