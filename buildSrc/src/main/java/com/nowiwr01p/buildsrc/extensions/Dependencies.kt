@@ -1,6 +1,7 @@
 package com.nowiwr01p.buildsrc.extensions
 
 import com.nowiwr01p.buildsrc.dependency.*
+import com.nowiwr01p.buildsrc.dependency.Map
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
 /**
@@ -37,6 +38,13 @@ fun DependencyHandler.roomDependencies() {
     implementation(Room.KTX)
     implementation(Room.RUNTIME)
     implementation(Room.COMPILER)
+}
+
+fun DependencyHandler.mapDependencies() {
+    implementation(Map.GOOGLE_MAP)
+    implementation(Map.PLAY_SERVICES)
+    implementation(Map.COMPOSE_FOUNDATION)
+    implementation(Map.GOOGLE_MAP_WIDGETS)
 }
 
 fun DependencyHandler.networkDependencies() {

@@ -3,6 +3,7 @@ import com.nowiwr01p.buildsrc.extensions.animationDependencies
 import com.nowiwr01p.buildsrc.extensions.biometricDependencies
 import com.nowiwr01p.buildsrc.extensions.commonUiDependencies
 import com.nowiwr01p.buildsrc.extensions.navigationDependencies
+import com.nowiwr01p.buildsrc.extensions.mapDependencies
 import org.gradle.kotlin.dsl.dependencies
 import com.nowiwr01p.buildsrc.dependency.Basic.Version
 
@@ -28,4 +29,5 @@ dependencies {
 //    roomDependencies()
     commonUiDependencies()
     navigationDependencies()
+    mapDependencies()
 }

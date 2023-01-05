@@ -29,6 +29,11 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDWy6a4xscvOFlwYOQwL6QFjlMETmfkA70" />
+
     </application>
 
 </manifest>
