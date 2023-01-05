@@ -27,7 +27,7 @@ val moduleDomain = module  {
     /**
      * VERIFICATION
      */
-    factory { IsVerificationCompletedUseCase(get(), get(), get()) }
+    factory { IsVerificationCompletedUseCase(get()) }
     factory { SetVerificationCompletedUseCase(get(), get()) }
     factory { FirebaseSendVerificationUseCase(get()) }
     factory { FirebaseCheckEmailVerificationUseCase(get()) }
@@ -39,6 +39,6 @@ val moduleDomain = module  {
     factory { GetCountriesUseCase(get()) }
     factory { SetCityUseCase(get(), get()) }
     factory { SetCountryUseCase(get(), get()) }
-    factory { IsCitySetUseCase(get(), get(), get()) }
-    factory { IsCountrySetUseCase(get(), get(), get()) }
+    factory { IsCitySetUseCase(get()) }
+    factory { IsCountrySetUseCase(get()) }
 }
