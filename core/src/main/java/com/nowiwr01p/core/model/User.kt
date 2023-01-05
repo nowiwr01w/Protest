@@ -1,4 +1,4 @@
-package com.nowiwr01p.domain.auth.data.user
+package com.nowiwr01p.core.model
 
 import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
