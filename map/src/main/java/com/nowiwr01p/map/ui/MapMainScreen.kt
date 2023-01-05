@@ -93,7 +93,7 @@ private fun Toolbar() = Surface(
             modifier = Modifier.padding(start = 16.dp)
         )
         IconButton(
-            modifier = Modifier.padding(start = 8.dp),
+            modifier = Modifier.padding(start = 4.dp),
             onClick = {  }
         ) {
             Icon(

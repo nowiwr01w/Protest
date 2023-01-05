@@ -19,7 +19,10 @@ abstract class Screen<T> {
         graph.setStartDestination(route)
     }
 
-    protected fun NavController.navigateWithActionOrPopup(route: String, action: () -> Unit) {
+    protected fun NavController.navigateOrPopup(
+        route: String,
+        action: () -> Unit = { navigate(route) }
+    ) {
         currentBackStack.value.find { it.destination.route == route }
             ?.let { popBackStack(route, inclusive = false, saveState = true) }
             ?: run { action() }

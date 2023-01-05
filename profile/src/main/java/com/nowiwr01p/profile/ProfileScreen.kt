@@ -17,13 +17,7 @@ sealed class ProfileScreen<T>(
 
     object ProfileMainScreen: ProfileScreen<Unit>(ProfileScreenType.ProfileMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            navController.navigateOrPopup(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
