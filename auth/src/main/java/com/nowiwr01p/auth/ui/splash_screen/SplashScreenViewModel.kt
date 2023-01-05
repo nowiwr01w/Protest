@@ -1,9 +1,9 @@
-package com.nowiwr01p.navigation.start_screen
+package com.nowiwr01p.auth.ui.splash_screen
 
 import com.google.firebase.auth.FirebaseAuth
+import com.nowiwr01p.auth.AuthScreen.*
+import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.navigation.start_screen.ChooseStartScreenContract.*
-import com.nowiwr01p.navigation.start_screen.data.StartScreenType.*
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
@@ -11,7 +11,7 @@ import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
-class ChooseStartScreenViewModel(
+class SplashScreenViewModel(
     private val auth: FirebaseAuth,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalCountryUseCase: GetLocalCountryUseCase,
@@ -54,11 +54,11 @@ class ChooseStartScreenViewModel(
 
     private fun getStartScreenRoute() = with(viewState.value) {
         val startScreen = when {
-            auth.currentUser == null -> AUTH
-            !isVerificationCompleted -> VERIFICATION
-            !isCountrySet || !isCitySet -> COUNTRIES
-            else -> MAP
+            auth.currentUser == null -> AuthMainScreen.route
+            !isVerificationCompleted -> VerificationMainScreen.route
+            !isCountrySet || !isCitySet -> CountriesMainScreen.route
+            else -> "map_main_screen"
         }
-        setEffect { Effect.NavigateToStartScreen(startScreen) }
+        setState { copy(route = startScreen) }
     }
 }
