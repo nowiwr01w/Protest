@@ -12,16 +12,16 @@ import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
 import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.verification.usecase.FirebaseSendVerificationUseCase
+import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
 import kotlinx.coroutines.delay
 
 class AuthViewModel(
     private val authDataValidator: ValidateAuthDataUseCase,
     private val authSecurityWarning: GetAuthSecurityWarningUseCase,
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
-    private val firebaseSignIn: FirebaseSignInUseCase,
-    private val firebaseSignUp: FirebaseSignUpUseCase,
-    private val firebaseSendVerification: FirebaseSendVerificationUseCase
+    private val signInUseCase: SignInUseCase,
+    private val signUpUseCase: SignUpUseCase,
+    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -97,8 +97,8 @@ class AuthViewModel(
         setState { copy(authButtonState = SEND_REQUEST) }
         runCatching {
             when (userData) {
-                is UserDataSignIn -> firebaseSignIn.execute(userData)
-                is UserDataSignUp -> firebaseSignUp.execute(userData)
+                is UserDataSignIn -> signInUseCase.execute(userData)
+                is UserDataSignUp -> signUpUseCase.execute(userData)
             }
         }.onSuccess {
             checkVerification(it)
@@ -112,7 +112,7 @@ class AuthViewModel(
             setUserWasLoggedInBefore(user)
         } else {
             runCatching {
-                firebaseSendVerification.execute()
+                sendEmailVerificationUseCase.execute()
             }.onSuccess {
                 setState { copy(authButtonState = SUCCESS) }
             }.onFailure {

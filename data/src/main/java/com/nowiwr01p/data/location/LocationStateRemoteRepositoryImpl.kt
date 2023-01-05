@@ -9,7 +9,7 @@ class LocationStateRemoteRepositoryImpl(
     private val userRemoteRepository: UserRemoteRepository
 ): LocationStateRemoteRepository {
 
-    override suspend fun isCitySet(): City {
+    override suspend fun getCity(): City {
         return userRemoteRepository.getUser().city
     }
 
@@ -18,7 +18,7 @@ class LocationStateRemoteRepositoryImpl(
         userRemoteRepository.updateUser(updated)
     }
 
-    override suspend fun isCountrySet(): Country {
+    override suspend fun getCountry(): Country {
         return userRemoteRepository.getUser().country
     }
 

@@ -3,13 +3,13 @@ package com.nowiwr01p.domain.di
 import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
-import com.nowiwr01p.domain.location.usecase.local.IsCitySetUseCase
-import com.nowiwr01p.domain.location.usecase.local.IsCountrySetUseCase
+import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
+import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
 import com.nowiwr01p.domain.location.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.location.usecase.local.SetCountryUseCase
-import com.nowiwr01p.domain.verification.usecase.FirebaseCheckEmailVerificationUseCase
-import com.nowiwr01p.domain.verification.usecase.FirebaseSendVerificationUseCase
-import com.nowiwr01p.domain.verification.usecase.IsVerificationCompletedUseCase
+import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
+import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
+import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SetVerificationCompletedUseCase
 import org.koin.dsl.module
 
@@ -21,16 +21,16 @@ val moduleDomain = module  {
     factory { ValidateAuthDataUseCase(get()) }
     factory { GetAuthSecurityWarningUseCase(get()) }
     factory { SetAuthSecurityWarningShownUseCase(get()) }
-    factory { FirebaseSignInUseCase(get()) }
-    factory { FirebaseSignUpUseCase(get()) }
+    factory { SignInUseCase(get()) }
+    factory { SignUpUseCase(get()) }
 
     /**
      * VERIFICATION
      */
-    factory { IsVerificationCompletedUseCase(get()) }
+    factory { GetLocalVerificationUseCase(get()) }
     factory { SetVerificationCompletedUseCase(get(), get()) }
-    factory { FirebaseSendVerificationUseCase(get()) }
-    factory { FirebaseCheckEmailVerificationUseCase(get()) }
+    factory { SendEmailVerificationUseCase(get()) }
+    factory { GetRemoteVerificationUseCase(get()) }
 
     /**
      * LOCATION
@@ -39,6 +39,6 @@ val moduleDomain = module  {
     factory { GetCountriesUseCase(get()) }
     factory { SetCityUseCase(get(), get()) }
     factory { SetCountryUseCase(get(), get()) }
-    factory { IsCitySetUseCase(get()) }
-    factory { IsCountrySetUseCase(get()) }
+    factory { GetLocalCityUseCase(get()) }
+    factory { GetLocalCountryUseCase(get()) }
 }

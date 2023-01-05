@@ -11,7 +11,7 @@ class LocationStateLocalRepositoryImpl(
     private val locationStore: DataStore<LocationPreference>
 ): LocationStateLocalRepository {
 
-    override suspend fun isCitySet(): City {
+    override suspend fun getCity(): City {
         return locationStore.data.first().selectedCity
     }
 
@@ -19,7 +19,7 @@ class LocationStateLocalRepositoryImpl(
         locationStore.updateData { it.copy(selectedCity = city) }
     }
 
-    override suspend fun isCountrySet(): Country {
+    override suspend fun getCountry(): Country {
         return locationStore.data.first().selectedCountry
     }
 
