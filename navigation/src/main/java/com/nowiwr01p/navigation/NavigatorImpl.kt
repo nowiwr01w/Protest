@@ -66,7 +66,10 @@ class NavigatorImpl(
     }
 
     override fun navigateToRoute(route: String) {
-        navController.navigate(route)
+        navController.navigate(route) {
+            popUpTo(navController.graph.startDestinationId) { inclusive = true }
+        }
+        navController.graph.setStartDestination(route)
     }
 
     override fun setNavController(navHostController: NavHostController) {

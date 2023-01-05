@@ -16,12 +16,8 @@ sealed class MapScreen<T>(
 
     object MapMainScreen: MapScreen<Unit>(MapScreenType.MapMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navigateOrPopup(navController, route) {
-                navController.navigate(route) {
-                    launchSingleTop = true
-                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
-                }
-                navController.graph.setStartDestination(route)
+            with(navController) {
+                navigateWithActionOrPopup(route) { navigateAndMakeStart(route) }
             }
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {

@@ -1,7 +1,6 @@
 package com.nowiwr01p.auth
 
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
@@ -34,13 +33,7 @@ sealed class AuthScreen<T>(
 
     object AuthMainScreen: AuthScreen<Unit>(AuthScreenType.AuthMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            navController.navigateAndMakeStart(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
@@ -51,10 +44,7 @@ sealed class AuthScreen<T>(
 
     object VerificationMainScreen: AuthScreen<Unit>(AuthScreenType.VerificationMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
-            }
-            navController.graph.setStartDestination(route)
+            navController.navigateAndMakeStart(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
@@ -65,10 +55,7 @@ sealed class AuthScreen<T>(
 
     object CountriesMainScreen: AuthScreen<Unit>(AuthScreenType.CountriesMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
-            }
-            navController.graph.setStartDestination(route)
+            navController.navigateAndMakeStart(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {

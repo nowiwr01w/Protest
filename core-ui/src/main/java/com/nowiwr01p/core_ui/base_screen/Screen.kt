@@ -12,14 +12,16 @@ abstract class Screen<T> {
     abstract fun navigate(args: T, navController: NavController)
     abstract fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator)
 
-    protected fun navigateOrPopup(
-        navController: NavController,
-        route: String,
-        navigateAction: () -> Unit
-    ) {
-        navController.currentBackStack.value
-            .find { it.destination.route == route }
-            ?.let { navController.popBackStack(route, inclusive = false, saveState = true) }
-            ?: run { navigateAction() }
+    protected fun NavController.navigateAndMakeStart(route: String) {
+        navigate(route) {
+            popUpTo(graph.startDestinationId) { inclusive = true }
+        }
+        graph.setStartDestination(route)
+    }
+
+    protected fun NavController.navigateWithActionOrPopup(route: String, action: () -> Unit) {
+        currentBackStack.value.find { it.destination.route == route }
+            ?.let { popBackStack(route, inclusive = false, saveState = true) }
+            ?: run { action() }
     }
 }
