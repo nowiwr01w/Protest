@@ -2,7 +2,7 @@ package com.nowiwr01p.domain.extensions
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DataSnapshot
-import com.nowiwr01p.domain.auth.data.user.User
+import com.nowiwr01p.core.model.User
 
 fun AuthResult.toUser() = User(
     id = user?.uid.orEmpty(),

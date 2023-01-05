@@ -1,7 +1,7 @@
 package com.nowiwr01p.domain.auth.usecase
 
 import com.nowiwr01p.domain.UseCase
-import com.nowiwr01p.domain.auth.data.user.User
+import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.repository.AuthRepository
 

@@ -5,9 +5,10 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.FirebaseDatabase
 import com.nowiwr01p.core.firebase.FirebaseConst.USERS_REFERENCE
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.auth.data.user.User
+import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.extensions.getAccount
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
+import com.nowiwr01p.domain.user.UserDataStoreRepository
 import com.nowiwr01p.domain.user.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
 import kotlinx.coroutines.tasks.await
@@ -18,6 +19,7 @@ class UserRemoteRepositoryImpl(
     private val database: FirebaseDatabase,
     private val verificationLocalRepository: VerificationLocalRepository,
     private val locationStateLocalRepository: LocationStateLocalRepository,
+    private val userDataStoreRepository: UserDataStoreRepository,
     private val dispatchers: AppDispatchers
 ): UserRemoteRepository {
 
@@ -51,5 +53,6 @@ class UserRemoteRepositoryImpl(
         locationStateLocalRepository.setCity(city)
         locationStateLocalRepository.setCounty(country)
         verificationLocalRepository.setVerificationCompleted(verified)
+        userDataStoreRepository.setUser(this)
     }
 }

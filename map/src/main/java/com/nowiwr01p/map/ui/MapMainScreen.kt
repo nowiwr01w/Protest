@@ -65,12 +65,15 @@ fun MapContent(
 ) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
-    Toolbar()
+    Toolbar(state, listener)
     Map(state, listener)
 }
 
 @Composable
-private fun Toolbar() = Surface(
+private fun Toolbar(
+    state: State,
+    listener: Listener?
+) = Surface(
     elevation = 4.dp,
 ) {
     Row(
@@ -86,8 +89,9 @@ private fun Toolbar() = Surface(
                 .padding(start = 16.dp)
                 .size(24.dp)
         )
+        val userId = state.user.id.take(18)
         Text(
-            text = "ID: sjSIDJHbihABSDUHvh2-1-uasd",
+            text = "ID: $userId..",
             color = MaterialTheme.colors.textColorSecondary,
             style = MaterialTheme.typography.subHeadlineRegular,
             modifier = Modifier.padding(start = 16.dp)

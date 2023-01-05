@@ -38,7 +38,7 @@ val moduleData = module {
      * USER
      */
     factory<UserRemoteRepository> {
-        UserRemoteRepositoryImpl(get(), get(), get(), get(), get())
+        UserRemoteRepositoryImpl(get(), get(), get(), get(), get(), get())
     }
 
     /**

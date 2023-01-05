@@ -1,17 +1,16 @@
 package com.nowiwr01p.data.di
 
 import com.google.gson.Gson
-import com.nowiwr01p.core.datastore.AuthSecurityWarningDataStore
 import com.nowiwr01p.core.BuildConfig
-import com.nowiwr01p.core.datastore.DataStoreType
-import com.nowiwr01p.core.datastore.LocationDataStore
-import com.nowiwr01p.core.datastore.VerificationDataStore
+import com.nowiwr01p.core.datastore.*
 import com.nowiwr01p.data.auth.repository.AuthSecurityDataStoreRepositoryImpl
 import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
+import com.nowiwr01p.data.user.UserDataStoreRepositoryImpl
 import com.nowiwr01p.data.verification.VerificationDataStoreRepositoryImpl
 import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
 import com.nowiwr01p.domain.location.api.LocationApi
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
+import com.nowiwr01p.domain.user.UserDataStoreRepository
 import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
@@ -30,6 +29,9 @@ val moduleCore = module {
     }
     single(named(DataStoreType.VERIFICATION)) {
         BuildConfig.VERIFICATION_DATA_STORE
+    }
+    single(named(DataStoreType.USER)) {
+        BuildConfig.USER_DATA_STORE
     }
 
     /**
@@ -54,6 +56,14 @@ val moduleCore = module {
         val dataStore = VerificationDataStore(fileName)
         VerificationDataStoreRepositoryImpl(
             dataStore.create(androidContext())
+        )
+    }
+    single<UserDataStoreRepository> {
+        val fileName = get<String>(named(DataStoreType.USER))
+        val dataStore = UserDataStore(fileName)
+        UserDataStoreRepositoryImpl(
+            dataStore.create(androidContext()),
+            get()
         )
     }
 
