@@ -4,11 +4,11 @@ import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
 
-class IsCountrySetUseCase(
-    private val localRepository: LocationStateLocalRepository
+class GetLocalCountryUseCase(
+    private val repository: LocationStateLocalRepository
 ): UseCase<Unit, Country> {
 
     override suspend fun execute(input: Unit): Country {
-        return localRepository.isCountrySet()
+        return repository.getCountry()
     }
 }

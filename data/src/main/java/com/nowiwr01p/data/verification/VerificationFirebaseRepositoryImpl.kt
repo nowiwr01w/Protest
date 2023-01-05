@@ -14,7 +14,7 @@ class VerificationRemoteRepositoryImpl(
     /**
      * SEND VERIFICATION
      */
-    override suspend fun sendVerification(): Unit = withContext(dispatchers.io) {
+    override suspend fun sendEmailVerification(): Unit = withContext(dispatchers.io) {
         userRepository.getFirebaseUser().sendEmailVerification().await()
     }
 

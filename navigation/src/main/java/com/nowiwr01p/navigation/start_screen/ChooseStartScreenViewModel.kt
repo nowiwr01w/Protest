@@ -5,17 +5,17 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.navigation.start_screen.ChooseStartScreenContract.*
 import com.nowiwr01p.navigation.start_screen.data.StartScreenType.*
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.location.usecase.local.IsCitySetUseCase
-import com.nowiwr01p.domain.location.usecase.local.IsCountrySetUseCase
-import com.nowiwr01p.domain.verification.usecase.IsVerificationCompletedUseCase
+import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
+import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
+import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class ChooseStartScreenViewModel(
     private val auth: FirebaseAuth,
-    private val isCitySetUseCase: IsCitySetUseCase,
-    private val isCountrySetUseCase: IsCountrySetUseCase,
-    private val isVerificationCompleted: IsVerificationCompletedUseCase
+    private val getLocalCityUseCase: GetLocalCityUseCase,
+    private val getLocalCountryUseCase: GetLocalCountryUseCase,
+    private val getLocalVerificationUseCase: GetLocalVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -38,17 +38,17 @@ class ChooseStartScreenViewModel(
     ).awaitAll()
 
     private suspend fun isCitySet() {
-        val set = isCitySetUseCase.execute().name.isNotEmpty()
+        val set = getLocalCityUseCase.execute().name.isNotEmpty()
         setState { copy(isCitySet = set) }
     }
 
     private suspend fun isCountrySet() {
-        val set = isCountrySetUseCase.execute().name.isNotEmpty()
+        val set = getLocalCountryUseCase.execute().name.isNotEmpty()
         setState { copy(isCountrySet = set) }
     }
 
     private suspend fun isVerificationCompleted() {
-        val completed = isVerificationCompleted.execute()
+        val completed = getLocalVerificationUseCase.execute()
         setState { copy(isVerificationCompleted = completed) }
     }
 
