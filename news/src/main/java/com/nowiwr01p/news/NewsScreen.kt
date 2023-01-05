@@ -17,13 +17,7 @@ sealed class NewsScreen<T>(
 
     object NewsMainScreen: NewsScreen<Unit>(NewsScreenType.NewsMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route) {
-                popUpTo(navController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = true
-            }
+            navController.navigateOrPopup(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
