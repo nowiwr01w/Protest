@@ -3,6 +3,7 @@ package com.nowiwr01p.auth.navigation
 import com.nowiwr01p.core_ui.Keys
 
 enum class AuthScreenType(val route: String) {
+    SplashScreen("splash_screen"),
     AuthMainScreen("auth_main_screen"),
     VerificationMainScreen("verification_main_screen"),
     CountriesMainScreen("countries_main_screen"),

@@ -78,6 +78,7 @@ class NavigatorImpl(
     }
 
     override fun currentScreen() = when (navController.currentDestination?.route) {
+        AuthScreen.SplashScreen.route -> AuthScreen.SplashScreen
         AuthScreen.AuthMainScreen.route -> AuthScreen.AuthMainScreen
         AuthScreen.VerificationMainScreen.route -> AuthScreen.VerificationMainScreen
         AuthScreen.CountriesMainScreen.route -> AuthScreen.CountriesMainScreen

@@ -9,6 +9,7 @@ import androidx.navigation.navArgument
 import com.nowiwr01p.auth.navigation.AuthScreenType
 import com.nowiwr01p.auth.ui.auth.AuthMainScreen
 import com.nowiwr01p.auth.ui.location.LocationMainScreen
+import com.nowiwr01p.auth.ui.splash_screen.SplashScreen
 import com.nowiwr01p.auth.ui.verification.VerificationMainScreen
 import com.nowiwr01p.core_ui.Keys.ARG_TO_CITIES
 import com.nowiwr01p.core_ui.base_screen.Screen
@@ -19,6 +20,17 @@ sealed class AuthScreen<T>(
     override val rootRoute: String = Companion.rootRoute,
     override val showBottomNavigation: Boolean = false
 ): Screen<T>() {
+
+    object SplashScreen: AuthScreen<Unit>(AuthScreenType.SplashScreen.route, rootRoute) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                SplashScreen(navigator)
+            }
+        }
+    }
 
     object AuthMainScreen: AuthScreen<Unit>(AuthScreenType.AuthMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
