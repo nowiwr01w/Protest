@@ -13,7 +13,7 @@ sealed class NewsScreen<T>(
     override val route: String,
     override val rootRoute: String = Companion.rootRoute,
     override val showBottomNavigation: Boolean = true
-): Screen<T> {
+): Screen<T>() {
 
     object NewsMainScreen: NewsScreen<Unit>(NewsScreenType.NewsMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {

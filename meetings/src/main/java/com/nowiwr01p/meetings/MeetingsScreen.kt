@@ -13,7 +13,7 @@ sealed class MeetingsScreen<T>(
     override val route: String,
     override val rootRoute: String = Companion.rootRoute,
     override val showBottomNavigation: Boolean = true
-): Screen<T> {
+): Screen<T>() {
 
     object MeetingsMainScreen: MeetingsScreen<Unit>(
         MeetingsScreenType.MeetingsMainScreen.route,

@@ -3,6 +3,7 @@ package com.nowiwr01p.navigation.start_screen
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
+import com.nowiwr01p.navigation.start_screen.data.StartScreenType
 
 interface ChooseStartScreenContract {
 
@@ -17,6 +18,6 @@ interface ChooseStartScreenContract {
     ): ViewState
 
     interface Effect: ViewSideEffect {
-        data class NavigateToStartScreen(val route: String): Effect
+        data class NavigateToStartScreen(val route: StartScreenType): Effect
     }
 }
