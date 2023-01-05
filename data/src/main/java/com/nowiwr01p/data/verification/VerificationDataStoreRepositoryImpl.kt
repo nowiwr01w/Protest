@@ -13,9 +13,9 @@ class VerificationDataStoreRepositoryImpl(
         return verificationStore.data.first().completed
     }
 
-    override suspend fun setVerificationCompleted() {
+    override suspend fun setVerificationCompleted(completed: Boolean) {
         verificationStore.updateData {
-            VerificationPreference(true)
+            VerificationPreference(completed)
         }
     }
 }
