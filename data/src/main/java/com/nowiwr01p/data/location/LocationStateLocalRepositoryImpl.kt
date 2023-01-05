@@ -16,9 +16,7 @@ class LocationStateLocalRepositoryImpl(
     }
 
     override suspend fun setCity(city: City) {
-        locationStore.updateData {
-            LocationPreference(selectedCountry = isCountrySet(), selectedCity = city)
-        }
+        locationStore.updateData { it.copy(selectedCity = city) }
     }
 
     override suspend fun isCountrySet(): Country {
@@ -26,8 +24,6 @@ class LocationStateLocalRepositoryImpl(
     }
 
     override suspend fun setCounty(country: Country) {
-        locationStore.updateData {
-            LocationPreference(selectedCountry = country)
-        }
+        locationStore.updateData { it.copy(selectedCountry = country) }
     }
 }

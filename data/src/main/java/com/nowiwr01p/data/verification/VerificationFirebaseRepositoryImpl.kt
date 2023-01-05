@@ -29,8 +29,8 @@ class VerificationRemoteRepositoryImpl(
     /**
      * SET VERIFICATION COMPLETED
      */
-    override suspend fun setVerificationCompleted(): Unit = withContext(dispatchers.io) {
-        val updated = userRepository.getUser().copy(verified = true)
+    override suspend fun setVerificationCompleted(completed: Boolean): Unit = withContext(dispatchers.io) {
+        val updated = userRepository.getUser().copy(verified = completed)
         userRepository.updateUser(updated)
     }
 }
