@@ -1,14 +1,14 @@
 package com.nowiwr01p.auth.ui.splash_screen
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -38,17 +38,18 @@ private fun SplashScreenContent(
 ) = Box(
     modifier = Modifier
         .fillMaxSize()
-        .background(Color(0xFF181C21)),
+        .background(Color.White),
     contentAlignment = Alignment.Center
 ) {
     val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(R.raw.splash_screen)
+        spec = LottieCompositionSpec.RawRes(R.raw.anim_splash_screen)
     )
     val logoAnimationState = animateLottieCompositionAsState(composition)
 
     LottieAnimation(
         composition = composition,
-        progress = { logoAnimationState.progress }
+        progress = { logoAnimationState.progress },
+        modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
     )
 
     if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
