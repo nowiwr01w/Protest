@@ -11,7 +11,7 @@ class SetCityUseCase(
 ): UseCase<City, Unit> {
 
     override suspend fun execute(input: City) {
-        localRepository.setCity(input)
         remoteRepository.setCity(input)
+        localRepository.setCity(input)
     }
 }

@@ -10,7 +10,7 @@ class SetVerificationCompletedUseCase(
 ): UseCase<Unit, Unit> {
 
     override suspend fun execute(input: Unit) {
-        localRepository.setVerificationCompleted()
         remoteRepository.setVerificationCompleted()
+        localRepository.setVerificationCompleted()
     }
 }
