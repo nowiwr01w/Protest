@@ -12,14 +12,17 @@ sealed class MapScreen<T>(
     override val route: String,
     override val rootRoute: String = Companion.rootRoute,
     override val showBottomNavigation: Boolean = true
-): Screen<T> {
+): Screen<T>() {
 
     object MapMainScreen: MapScreen<Unit>(MapScreenType.MapMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route) {
-                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+            navigateOrPopup(navController, route) {
+                navController.navigate(route) {
+                    launchSingleTop = true
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                }
+                navController.graph.setStartDestination(route)
             }
-            navController.graph.setStartDestination(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {

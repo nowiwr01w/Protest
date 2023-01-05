@@ -13,7 +13,7 @@ sealed class ProfileScreen<T>(
     override val route: String,
     override val rootRoute: String = Companion.rootRoute,
     override val showBottomNavigation: Boolean = true
-): Screen<T> {
+): Screen<T>() {
 
     object ProfileMainScreen: ProfileScreen<Unit>(ProfileScreenType.ProfileMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {

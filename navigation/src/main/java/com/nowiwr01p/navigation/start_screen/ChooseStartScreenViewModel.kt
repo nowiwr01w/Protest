@@ -59,6 +59,6 @@ class ChooseStartScreenViewModel(
             !isCountrySet || !isCitySet -> COUNTRIES
             else -> MAP
         }
-        setEffect { Effect.NavigateToStartScreen(startScreen.roure) }
+        setEffect { Effect.NavigateToStartScreen(startScreen) }
     }
 }
