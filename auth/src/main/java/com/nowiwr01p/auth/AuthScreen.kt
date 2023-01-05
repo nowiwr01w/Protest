@@ -18,7 +18,7 @@ sealed class AuthScreen<T>(
     override val route: String,
     override val rootRoute: String = Companion.rootRoute,
     override val showBottomNavigation: Boolean = false
-): Screen<T> {
+): Screen<T>() {
 
     object AuthMainScreen: AuthScreen<Unit>(AuthScreenType.AuthMainScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {

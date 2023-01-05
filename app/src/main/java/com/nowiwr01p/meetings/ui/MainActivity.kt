@@ -31,6 +31,7 @@ import com.nowiwr01p.core_ui.ui.EffectObserver
 import com.nowiwr01p.navigation.start_screen.ChooseStartScreenContract.Effect
 import com.nowiwr01p.navigation.start_screen.ChooseStartScreenContract.Event
 import com.nowiwr01p.navigation.start_screen.ChooseStartScreenViewModel
+import com.nowiwr01p.navigation.start_screen.data.StartScreenType.*
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -51,7 +52,12 @@ class MainActivity : ComponentActivity() {
             EffectObserver(viewModel.effect) {
                 when (it) {
                     is Effect.NavigateToStartScreen -> {
-                        navigator.navigateToRoute(it.route)
+                        when (it.route) {
+                            MAP -> navigator.navigateToMap()
+                            COUNTRIES -> navigator.authNavigator.toChooseCountry()
+                            VERIFICATION -> navigator.authNavigator.toVerification()
+                            else -> { }
+                        }
                     }
                 }
             }
@@ -59,7 +65,7 @@ class MainActivity : ComponentActivity() {
             MainActivityScreen(navigator, navController) {
                 NavHost(
                     navController = navController,
-                    startDestination = "auth_main_screen",
+                    startDestination = AUTH.roure,
                     builder = {
                         navigator.setGraphs(this)
                     }
