@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.ui
+package com.nowiwr01p.core_ui.ui.progress
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

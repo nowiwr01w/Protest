@@ -20,16 +20,21 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.location.LocationContract.*
 import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.core.datastore.location.data.Location
+import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
+import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
+import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
+import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
+import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.core_ui.ui.*
-import com.nowiwr01p.core_ui.ui.ButtonState.DEFAULT
+import com.nowiwr01p.core_ui.ui.button.ButtonState.DEFAULT
+import com.nowiwr01p.core_ui.ui.button.StateButton
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -38,6 +43,8 @@ fun LocationMainScreen(
     navigator: Navigator,
     viewModel: LocationViewModel = getViewModel()
 ) {
+    setSystemUiColor()
+
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()

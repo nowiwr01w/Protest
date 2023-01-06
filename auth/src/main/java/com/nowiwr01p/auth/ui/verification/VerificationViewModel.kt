@@ -3,7 +3,7 @@ package com.nowiwr01p.auth.ui.verification
 import androidx.lifecycle.viewModelScope
 import com.nowiwr01p.auth.ui.verification.VerificationContract.*
 import com.nowiwr01p.auth.ui.verification.data.Mode.*
-import com.nowiwr01p.core_ui.ui.ButtonState.*
+import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase

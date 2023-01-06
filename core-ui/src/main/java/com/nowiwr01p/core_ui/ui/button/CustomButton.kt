@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.ui
+package com.nowiwr01p.core_ui.ui.button
 
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.layout.*
@@ -16,8 +16,8 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.nowiwr01p.core_ui.R
+import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.core_ui.ui.ButtonState.*
 
 /**
  * BUTTON
@@ -164,7 +164,7 @@ enum class ButtonState {
 private fun PreviewInit() {
     StateButton(
         text = "Confirm",
-        state =  INIT_LOADING
+        state = INIT_LOADING
     )
 }
 

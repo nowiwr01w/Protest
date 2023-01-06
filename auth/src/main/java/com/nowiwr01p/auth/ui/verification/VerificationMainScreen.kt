@@ -24,8 +24,9 @@ import com.nowiwr01p.auth.ui.verification.VerificationContract.*
 import com.nowiwr01p.auth.ui.verification.data.Mode.SEND_AGAIN_TEXT
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.core_ui.ui.EffectObserver
-import com.nowiwr01p.core_ui.ui.StateButton
+import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
+import com.nowiwr01p.core_ui.ui.button.StateButton
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -33,6 +34,8 @@ fun VerificationMainScreen(
     navigator: Navigator,
     viewModel: VerificationViewModel = getViewModel()
 ) {
+    setSystemUiColor()
+
     val listener = object : Listener {
         override fun resendCode() {
             viewModel.setEvent(Event.ResendCode)
