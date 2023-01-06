@@ -37,7 +37,7 @@ class NavigatorImpl(
     }
 
     override fun getBottomNavigationItems() = listOf(
-        Map, Meetings, News, Profile
+        Meetings, Map, News, Profile
     )
 
     override fun onBottomNavigationSelected(item: BottomNavigationItem) {
