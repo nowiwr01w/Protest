@@ -2,6 +2,7 @@ package com.nowiwr01p.navigation.di
 
 import com.nowiwr01p.auth.di.moduleAuth
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenViewModel
+import com.nowiwr01p.core_ui.di.moduleCoreUI
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.data.di.moduleData
 import com.nowiwr01p.data.di.moduleCore
@@ -43,4 +44,4 @@ val dataStoreModules = listOf(
     moduleCore
 )
 
-val appModules = uiModules + domainModules + dataModules + dataStoreModules
+val appModules = moduleCoreUI + uiModules + domainModules + dataModules + dataStoreModules

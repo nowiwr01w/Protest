@@ -1,18 +1,13 @@
 package com.nowiwr01p.auth.ui.auth
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nowiwr01p.core_ui.theme.graphicsNeutral
 import com.nowiwr01p.core_ui.theme.textPrimary
 import com.nowiwr01p.core_ui.theme.title1Bold
 
@@ -23,30 +18,12 @@ fun AuthSecurityWarningContent() = LazyColumn(
         .fillMaxWidth()
         .padding(start = 16.dp, end = 16.dp, top = 8.dp),
 ) {
-    item { DraggableStuff() }
     item { Title() }
     item { Subtitle1() }
     item { Subtitle2() }
     item { StepsTitle() }
     item { Steps() }
     item { Subtitle3() }
-}
-
-@Composable
-private fun DraggableStuff() = Row(
-    modifier = Modifier
-        .fillMaxWidth()
-        .height(12.dp),
-    verticalAlignment = Alignment.CenterVertically,
-    horizontalArrangement = Arrangement.Center
-) {
-    Box(
-        modifier = Modifier
-            .width(36.dp)
-            .height(4.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .background(MaterialTheme.colors.graphicsNeutral)
-    )
 }
 
 @Composable

@@ -7,6 +7,7 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import com.nowiwr01p.core.model.User
+import com.nowiwr01p.core_ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
@@ -21,7 +22,8 @@ class AuthViewModel(
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
-    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase
+    private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
+    private val showBottomSheetHelper: ShowBottomSheetHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -36,6 +38,7 @@ class AuthViewModel(
             is Event.NavigateToMap -> setEffect { Effect.NavigateToMap }
             is Event.NavigateToVerification -> setEffect { Effect.NavigateToVerification }
             is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
+            is Event.ShowBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)
         }
     }
 
