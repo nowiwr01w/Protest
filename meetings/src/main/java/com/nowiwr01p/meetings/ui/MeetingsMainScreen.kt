@@ -1,15 +1,318 @@
 package com.nowiwr01p.meetings.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
+import com.nowiwr01p.core_ui.extensions.shadowCard
+import com.nowiwr01p.core_ui.ui.button.StateButton
+import com.nowiwr01p.meetings.R
+import com.nowiwr01p.meetings.ui.MeetingsContract.*
+import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun MeetingsMainScreen() = Box(
+fun MeetingsMainScreen(
+    navigator: Navigator,
+    viewModel: MeetingsViewModel = getViewModel()
+) {
+    setSystemUiColor(Color.White)
+
+    val listener = object : Listener {
+
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(Event.Init)
+    }
+
+    EffectObserver(viewModel.effect) {
+
+    }
+
+    MeetingsMainScreenContent(viewModel.viewState.value, listener)
+}
+
+@Composable
+private fun MeetingsMainScreenContent(
+    state: State,
+    listener: Listener?
+) = Column(
     modifier = Modifier
         .fillMaxSize()
-        .background(Color.Blue)
+        .background(MaterialTheme.colors.background)
+) {
+    Toolbar()
+//    StoriesTitle()
+    Stories()
+    MeetingsTitle()
+    Categories()
+    EmptyListStub()
+}
+
+/**
+ * TOOLBAR
+ */
+@Composable
+private fun Toolbar() = Row(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(56.dp)
+) {
+    Image(
+        painter = painterResource(R.drawable.zero_two),
+        contentDescription = "Icon user",
+        modifier = Modifier
+            .padding(start = 16.dp)
+            .size(32.dp)
+            .clip(CircleShape)
+    )
+    Text(
+        text = "Andrey Larionov",
+        color = MaterialTheme.colors.textPrimary,
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    Box(
+        modifier = Modifier
+            .padding(start = 8.dp)
+            .clip(CircleShape)
+            .clickable {
+
+            }
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_edit),
+            contentDescription = "Icon edit",
+            modifier = Modifier
+                .padding(4.dp)
+                .size(16.dp)
+        )
+    }
+}
+
+/**
+ * STORIES TITLE
+ */
+@Composable
+private fun StoriesTitle() = Text(
+    text = "Важные штуки",
+    color = MaterialTheme.colors.textPrimary,
+    style = MaterialTheme.typography.title2Bold,
+    modifier = Modifier.padding(top = 4.dp, start = 16.dp)
 )
+
+/**
+ * STORIES LIST
+ */
+@Composable
+private fun Stories() = LazyRow(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp)
+) {
+    items(6) { index ->
+        Story(index)
+    }
+    item { Spacer(modifier = Modifier.width(6.dp)) }
+}
+
+@Composable
+private fun Story(
+    index: Int
+) = Column(
+    modifier = Modifier
+        .padding(start = if (index == 0) 12.dp else 6.dp, end = 6.dp)
+        .width(72.dp)
+) {
+    Box(
+        modifier = Modifier
+            .size(72.dp)
+            .clip(CircleShape)
+            .border(2.dp, Color(0xFFFC4C4C), CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .size(68.dp)
+                .clip(CircleShape)
+                .border(2.dp, Color.White, CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(R.drawable.hao),
+                contentDescription = "Story item icon",
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
+            )
+        }
+    }
+    Text(
+        text = "Важная штука",
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        color = MaterialTheme.colors.textPrimary,
+        style = MaterialTheme.typography.captionRegular,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp)
+    )
+}
+
+/**
+ * MEETINGS TITLE
+ */
+@Composable
+private fun MeetingsTitle() = Text(
+    text = "Ближайшие митинги",
+    color = MaterialTheme.colors.textPrimary,
+    style = MaterialTheme.typography.title2Bold,
+    modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+)
+
+/**
+ * CATEGORIES LIST
+ */
+@Composable
+private fun Categories() = LazyRow(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp)
+) {
+    items(12) {
+        Category()
+    }
+    item { Spacer(modifier = Modifier.width(12.dp)) }
+}
+
+@Composable
+private fun Category(
+    title: String = "Политика",
+    isSelected: Boolean = false,
+    onItemClick: () -> Unit = {},
+) {
+    val backgroundColor = if (isSelected) {
+        MaterialTheme.colors.backgroundSpecialInverse
+    } else {
+        MaterialTheme.colors.backgroundSpecial
+    }
+    Card(
+        backgroundColor = backgroundColor,
+        modifier = Modifier
+            .padding(start = 12.dp)
+            .shadowCard(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(16.dp),
+                clip = true,
+                backgroundColor = backgroundColor
+            )
+            .clickable { onItemClick() },
+    ) {
+        val textColor = if (isSelected) {
+            MaterialTheme.colors.textPrimaryInverted
+        } else {
+            MaterialTheme.colors.textPrimary
+        }
+        Row(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.subHeadlineRegular,
+                color = textColor,
+                modifier = Modifier.padding(vertical = 8.dp),
+            )
+        }
+    }
+}
+
+/**
+ * NO MEETINGS STUB
+ */
+@Composable
+private fun EmptyListStub() = ConstraintLayout(
+    modifier = Modifier.fillMaxSize()
+) {
+    val (emptyContent, button) = createRefs()
+    val guideline = createGuidelineFromTop(0.55f)
+
+    val emptyContentModifier = Modifier
+        .fillMaxWidth()
+        .constrainAs(emptyContent) {
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            bottom.linkTo(guideline)
+        }
+    Column(
+        modifier = emptyContentModifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(R.drawable.image_no_meetings),
+            contentDescription = "No meetings image stub"
+        )
+        Text(
+            text = "Тут пусто",
+            color = MaterialTheme.colors.textPrimary,
+            style = MaterialTheme.typography.title1Bold,
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+        )
+        Text(
+            text = "В этом городе ничего не запланировано\nИсправь это",
+            color = MaterialTheme.colors.textColorSecondary,
+            style = MaterialTheme.typography.bodyRegular,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
+        )
+    }
+
+    val buttonModifier = Modifier
+        .padding(top = 32.dp, start = 48.dp, end = 48.dp)
+        .clip(RoundedCornerShape(24.dp))
+        .constrainAs(button) {
+            start.linkTo(emptyContent.start)
+            end.linkTo(emptyContent.end)
+            top.linkTo(emptyContent.bottom)
+        }
+    StateButton(
+        text = "Стать организатором",
+        modifier = buttonModifier
+    )
+}
+
+/**
+ * PREVIEWS
+ */
+@Preview(showBackground = true)
+@Composable
+private fun Preview() = MeetingsTheme {
+    MeetingsMainScreenContent(
+        state = State(),
+        listener = null
+    )
+}

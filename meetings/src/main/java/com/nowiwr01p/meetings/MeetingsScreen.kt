@@ -23,7 +23,7 @@ sealed class MeetingsScreen<T>(
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
-                MeetingsMainScreen()
+                MeetingsMainScreen(navigator)
             }
         }
     }
