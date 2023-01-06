@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.ui
+package com.nowiwr01p.core_ui
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect

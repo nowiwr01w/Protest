@@ -19,8 +19,8 @@ import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.theme.textColorSecondary
-import com.nowiwr01p.core_ui.ui.CenterScreenProgressBar
-import com.nowiwr01p.core_ui.ui.EffectObserver
+import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
+import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.map.R
 import com.nowiwr01p.map.ui.MapContract.*
 import org.koin.androidx.compose.getViewModel

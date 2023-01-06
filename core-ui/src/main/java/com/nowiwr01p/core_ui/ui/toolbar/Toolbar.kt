@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.ui
+package com.nowiwr01p.core_ui.ui.toolbar
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

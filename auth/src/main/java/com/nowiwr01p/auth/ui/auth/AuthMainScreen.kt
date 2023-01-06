@@ -38,8 +38,9 @@ import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.extensions.keyboardState
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.core_ui.ui.EffectObserver
-import com.nowiwr01p.core_ui.ui.StateButton
+import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.setSystemUiColor
+import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import org.koin.androidx.compose.getViewModel
@@ -50,6 +51,7 @@ fun AuthMainScreen(
     viewModel: AuthViewModel = getViewModel()
 ) {
     val state = viewModel.viewState.value
+    setSystemUiColor()
 
     val listener = object : Listener {
         override fun authClick() {

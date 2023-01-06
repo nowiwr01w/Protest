@@ -3,8 +3,8 @@ package com.nowiwr01p.auth.ui.auth
 import androidx.compose.runtime.Composable
 import com.nowiwr01p.auth.ui.auth.data.AuthType
 import com.nowiwr01p.auth.ui.auth.data.AuthType.*
-import com.nowiwr01p.core_ui.ui.ButtonState
-import com.nowiwr01p.core_ui.ui.ButtonState.*
+import com.nowiwr01p.core_ui.ui.button.ButtonState
+import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
