@@ -1,5 +1,4 @@
 import com.nowiwr01p.buildsrc.dependency.BuildConfig
-import com.nowiwr01p.buildsrc.dependency.Basic
 import com.nowiwr01p.buildsrc.extensions.*
 
 plugins {
@@ -45,7 +44,7 @@ android {
         compose = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = Basic.Version.COMPOSE
+        kotlinCompilerExtensionVersion = BuildConfig.COMPOSE_VERSION
     }
     packagingOptions {
         resources {
