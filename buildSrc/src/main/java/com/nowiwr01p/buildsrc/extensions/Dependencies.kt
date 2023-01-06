@@ -68,7 +68,7 @@ fun DependencyHandler.commonUiDependencies() {
     implementation(Basic.CONSTRAINT_LAYOUT)
     implementation(Basic.TIMBER_LIB)
     implementation(Basic.ACTIVITY_COMPOSE)
-    implementation(Basic.GLIDE)
+    implementation(Basic.COIL)
 }
 
 fun DependencyHandler.accompanistDependencies() {

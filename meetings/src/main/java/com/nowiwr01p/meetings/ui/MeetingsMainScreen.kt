@@ -1,10 +1,8 @@
 package com.nowiwr01p.meetings.ui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +19,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.EffectObserver
@@ -29,6 +28,7 @@ import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.MeetingsContract.*
+import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -58,16 +58,18 @@ private fun MeetingsMainScreenContent(
     state: State,
     listener: Listener?
 ) = Column(
-    modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.background)
+    modifier = Modifier.fillMaxSize()
 ) {
     Toolbar()
-//    StoriesTitle()
-    Stories()
-    MeetingsTitle()
-    Categories()
-    EmptyListStub()
+    LazyColumn(
+        modifier = Modifier.background(MaterialTheme.colors.background)
+    ) {
+        item { Stories() }
+        item { MeetingsTitle() }
+        item { Categories() }
+//        item { EmptyListStub() }
+        item { Meetings() }
+    }
 }
 
 /**
@@ -111,17 +113,6 @@ private fun Toolbar() = Row(
         )
     }
 }
-
-/**
- * STORIES TITLE
- */
-@Composable
-private fun StoriesTitle() = Text(
-    text = "Важные штуки",
-    color = MaterialTheme.colors.textPrimary,
-    style = MaterialTheme.typography.title2Bold,
-    modifier = Modifier.padding(top = 4.dp, start = 16.dp)
-)
 
 /**
  * STORIES LIST
@@ -197,15 +188,16 @@ private fun MeetingsTitle() = Text(
  * CATEGORIES LIST
  */
 @Composable
-private fun Categories() = LazyRow(
+private fun Categories() = Row(
     modifier = Modifier
         .fillMaxWidth()
+        .horizontalScroll(rememberScrollState())
         .padding(top = 8.dp)
 ) {
-    items(12) {
+    repeat(12) {
         Category()
     }
-    item { Spacer(modifier = Modifier.width(12.dp)) }
+    Spacer(modifier = Modifier.width(12.dp))
 }
 
 @Composable
@@ -302,6 +294,88 @@ private fun EmptyListStub() = ConstraintLayout(
     StateButton(
         text = "Стать организатором",
         modifier = buttonModifier
+    )
+}
+
+/**
+ * MEETINGS
+ */
+@Composable
+private fun Meetings() = Column(
+    modifier = Modifier.fillMaxWidth()
+) {
+    Spacer(modifier = Modifier.height(8.dp))
+    repeat(5) {
+        Meeting()
+    }
+    Spacer(modifier = Modifier.height(8.dp))
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun Meeting() = ConstraintLayout(
+    modifier = Modifier
+        .fillMaxWidth()
+        .clickable {  }
+        .padding(vertical = 12.dp, horizontal = 16.dp)
+        .background(MaterialTheme.colors.background)
+) {
+    val (image, title, date, count) = createRefs()
+
+    val imageModifier = Modifier
+        .fillMaxWidth()
+        .height(200.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .constrainAs(image) {
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            top.linkTo(parent.top)
+        }
+    CoilImage(
+        modifier = imageModifier,
+        imageModel = { R.drawable.navalny }
+    )
+
+    val titleModifier = Modifier
+        .padding(top = 8.dp)
+        .constrainAs(title) {
+            width = Dimension.fillToConstraints
+            start.linkTo(image.start)
+            end.linkTo(image.end)
+            top.linkTo(image.bottom)
+        }
+    Text(
+        text = "Свободу Навальному",
+        color = MaterialTheme.colors.textPrimary,
+        style = MaterialTheme.typography.title2Bold,
+        modifier = titleModifier
+    )
+
+    val dateModifier = Modifier
+        .padding(top = 4.dp)
+        .constrainAs(date) {
+            start.linkTo(title.start)
+            top.linkTo(title.bottom)
+        }
+    Text(
+        text = "24.02.2023 17:30",
+        color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = dateModifier
+    )
+
+    val countModifier = Modifier
+        .constrainAs(count) {
+            end.linkTo(parent.end)
+            top.linkTo(date.top)
+            bottom.linkTo(date.bottom)
+        }
+    Text(
+        text = "175 человек",
+        color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = countModifier
     )
 }
 
