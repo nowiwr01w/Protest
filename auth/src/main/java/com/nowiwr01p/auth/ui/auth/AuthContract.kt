@@ -44,7 +44,6 @@ interface AuthContract {
         object NavigateToVerification: Effect
         object NavigateToChooseCountry: Effect
         object ShowAuthSecurityWarning: Effect
-        data class ShowError(val error: AuthError): Effect
     }
 
     interface Listener {

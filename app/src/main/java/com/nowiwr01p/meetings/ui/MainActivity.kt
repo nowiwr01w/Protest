@@ -22,11 +22,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.BottomNavigation
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.nowiwr01p.core_ui.bottom_sheet.BottomSheet
 import com.nowiwr01p.core_ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import org.koin.android.ext.android.inject
@@ -34,6 +34,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
 
     private val navigator by inject<Navigator>()
+    private val showSnackBarHelper by inject<ShowSnackBarHelper>()
     private val showBottomSheetHelper by inject<ShowBottomSheetHelper>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,7 +43,9 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
 
             val scope = rememberCoroutineScope()
+            val scaffoldState = rememberScaffoldState()
             val bottomSheetState = rememberModalBottomSheetState(Hidden)
+            showSnackBarHelper.init(scope, scaffoldState)
             showBottomSheetHelper.init(scope, bottomSheetState)
 
             LaunchedEffect(Unit) {
@@ -62,6 +65,7 @@ class MainActivity : ComponentActivity() {
             MainActivityScreen(
                 navigator = navigator,
                 navController = navController,
+                scaffoldState = scaffoldState,
                 bottomSheetState = bottomSheetState,
                 bottomSheetContent = bottomSheetContent
             ) {
@@ -81,13 +85,13 @@ class MainActivity : ComponentActivity() {
 fun MainActivityScreen(
     navigator: Navigator,
     navController: NavHostController,
+    scaffoldState: ScaffoldState,
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable () -> Unit,
     setGraphs: @Composable () -> Unit
 ) {
     navigator.setNavController(navController)
 
-    val systemUiController = rememberSystemUiController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -98,6 +102,7 @@ fun MainActivityScreen(
             sheetContent = { bottomSheetContent() }
         ) {
             Scaffold(
+                scaffoldState = scaffoldState,
                 bottomBar = {
                     if (navigator.currentScreen().showBottomNavigation) {
                         BottomNavigation(
@@ -127,7 +132,7 @@ fun MainActivityScreen(
                         }
                     } else {
                         Spacer(
-                            Modifier
+                            modifier = Modifier
                                 .navigationBarsPadding()
                                 .imePadding()
                                 .fillMaxWidth()

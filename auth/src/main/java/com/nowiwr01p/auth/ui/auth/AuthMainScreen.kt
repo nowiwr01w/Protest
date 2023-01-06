@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterialApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class)
 
 package com.nowiwr01p.auth.ui.auth
 
@@ -13,7 +13,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -37,14 +36,12 @@ import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.extensions.keyboardState
-import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.EffectObserver
 import com.nowiwr01p.core_ui.ui.StateButton
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -53,9 +50,6 @@ fun AuthMainScreen(
     viewModel: AuthViewModel = getViewModel()
 ) {
     val state = viewModel.viewState.value
-
-    val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
 
     val listener = object : Listener {
         override fun authClick() {
@@ -102,20 +96,10 @@ fun AuthMainScreen(
             is Effect.ShowAuthSecurityWarning -> {
                 viewModel.setEvent(Event.ShowBottomSheet(bottomSheetContent))
             }
-            is Effect.ShowError -> {
-                scope.launch {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        message = it.error.message,
-                        duration = SnackbarDuration.Short
-                    )
-                }
-            }
         }
     }
 
-    Scaffold(scaffoldState = scaffoldState) {
-        AuthMainScreenContent(state, listener)
-    }
+    AuthMainScreenContent(state, listener)
 }
 
 @Composable
