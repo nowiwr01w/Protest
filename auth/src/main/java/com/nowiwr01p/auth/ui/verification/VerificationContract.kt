@@ -1,7 +1,7 @@
 package com.nowiwr01p.auth.ui.verification
 
 import com.nowiwr01p.auth.ui.verification.data.Mode
-import com.nowiwr01p.core_ui.ui.ButtonState
+import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState

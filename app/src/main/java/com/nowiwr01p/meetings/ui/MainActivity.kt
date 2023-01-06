@@ -22,11 +22,11 @@ import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.LocalWindowInsets
 import com.google.accompanist.insets.rememberInsetsPaddingValues
 import com.google.accompanist.insets.ui.BottomNavigation
-import com.nowiwr01p.core_ui.bottom_sheet.BottomSheet
-import com.nowiwr01p.core_ui.bottom_sheet.ShowBottomSheetHelper
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheet
+import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import org.koin.android.ext.android.inject
@@ -140,7 +140,7 @@ fun MainActivityScreen(
                     }
                 }
             ) {
-                setSystemUiColor()
+                setSystemUiColor(color = Color.White)
                 Column(
                     modifier = Modifier.padding(it)
                 ) {

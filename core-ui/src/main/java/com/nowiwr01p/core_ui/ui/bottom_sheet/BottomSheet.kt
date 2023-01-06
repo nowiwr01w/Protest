@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.bottom_sheet
+package com.nowiwr01p.core_ui.ui.bottom_sheet
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*

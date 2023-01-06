@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.snack_bar
+package com.nowiwr01p.core_ui.ui.snack_bar
 
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
