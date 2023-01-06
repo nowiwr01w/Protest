@@ -8,6 +8,7 @@ import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.bottom_sheet.ShowBottomSheetHelper
+import com.nowiwr01p.core_ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
@@ -23,7 +24,8 @@ class AuthViewModel(
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
-    private val showBottomSheetHelper: ShowBottomSheetHelper
+    private val showSnackBarHelper: ShowSnackBarHelper,
+    private val showBottomSheetHelper: ShowBottomSheetHelper,
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -83,7 +85,7 @@ class AuthViewModel(
             if (error == null) {
                 auth(userData)
             } else {
-                setEffect { Effect.ShowError(error) }
+                showSnackBarHelper.showSnackBar(error.message)
             }
             setState { copy(authError = error) }
         }
