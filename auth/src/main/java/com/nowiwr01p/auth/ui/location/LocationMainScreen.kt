@@ -26,7 +26,6 @@ import com.nowiwr01p.auth.ui.location.LocationContract.*
 import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.core.datastore.location.data.Location
-import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.*
@@ -39,8 +38,6 @@ fun LocationMainScreen(
     navigator: Navigator,
     viewModel: LocationViewModel = getViewModel()
 ) {
-    setSystemUiColor()
-
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
