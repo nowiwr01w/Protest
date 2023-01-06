@@ -57,7 +57,7 @@ class SplashScreenViewModel(
             auth.currentUser == null -> AuthMainScreen.route
             !isVerificationCompleted -> VerificationMainScreen.route
             !isCountrySet || !isCitySet -> CountriesMainScreen.route
-            else -> "map_main_screen"
+            else -> "meetings_main_screen"
         }
         setState { copy(route = startScreen) }
     }

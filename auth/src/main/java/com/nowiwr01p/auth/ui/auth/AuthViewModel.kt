@@ -37,7 +37,7 @@ class AuthViewModel(
             is Event.TogglePasswordVisibility -> togglePasswordVisibility()
             is Event.OnValueChanged -> changeValue(event.type, event.value)
             is Event.ToggleAuthMode -> toggleAuthMode()
-            is Event.NavigateToMap -> setEffect { Effect.NavigateToMap }
+            is Event.NavigateToMeetings -> setEffect { Effect.NavigateToMeetings }
             is Event.NavigateToVerification -> setEffect { Effect.NavigateToVerification }
             is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
             is Event.ShowBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)

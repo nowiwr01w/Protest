@@ -19,7 +19,7 @@ interface AuthContract {
         object ToggleAuthMode: Event
         object NavigateToVerification: Event
         object NavigateToChooseCountry: Event
-        object NavigateToMap: Event
+        object NavigateToMeetings: Event
         object TogglePasswordVisibility: Event
         data class ShowBottomSheet(val content: @Composable () -> Unit): Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
@@ -40,7 +40,7 @@ interface AuthContract {
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
-        object NavigateToMap: Effect
+        object NavigateToMeetings: Effect
         object NavigateToVerification: Effect
         object NavigateToChooseCountry: Effect
         object ShowAuthSecurityWarning: Effect

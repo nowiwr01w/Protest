@@ -63,7 +63,7 @@ fun AuthMainScreen(
         }
         override fun toNextScreen() {
             val event = when {
-                state.isUserVerified && state.isUserSetCity -> Event.NavigateToMap
+                state.isUserVerified && state.isUserSetCity -> Event.NavigateToMeetings
                 state.isUserVerified -> Event.NavigateToChooseCountry
                 else -> Event.NavigateToVerification
             }
@@ -84,8 +84,8 @@ fun AuthMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
-            is Effect.NavigateToMap -> {
-                navigator.navigateToMap()
+            is Effect.NavigateToMeetings -> {
+                navigator.navigateToMeetings()
             }
             is Effect.NavigateToVerification -> {
                 navigator.authNavigator.toVerification()
