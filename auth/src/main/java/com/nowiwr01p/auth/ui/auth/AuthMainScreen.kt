@@ -56,9 +56,6 @@ fun AuthMainScreen(
 
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberScaffoldState()
-    val bottomSheetState = rememberModalBottomSheetState(ModalBottomSheetValue.Hidden)
-
-    setSystemUiColor()
 
     val listener = object : Listener {
         override fun authClick() {
@@ -87,6 +84,10 @@ fun AuthMainScreen(
         viewModel.setEvent(Event.Init)
     }
 
+    val bottomSheetContent: @Composable () -> Unit = {
+        AuthSecurityWarningContent()
+    }
+
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.NavigateToMap -> {
@@ -99,7 +100,7 @@ fun AuthMainScreen(
                 navigator.authNavigator.toChooseCountry()
             }
             is Effect.ShowAuthSecurityWarning -> {
-                scope.launch { bottomSheetState.show() }
+                viewModel.setEvent(Event.ShowBottomSheet(bottomSheetContent))
             }
             is Effect.ShowError -> {
                 scope.launch {
@@ -113,21 +114,7 @@ fun AuthMainScreen(
     }
 
     Scaffold(scaffoldState = scaffoldState) {
-        ModalBottomSheetLayout(
-            sheetState = bottomSheetState,
-            sheetShape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
-            sheetContent = { bottomSheetContent(state) }
-        ) {
-            AuthMainScreenContent(state, listener)
-        }
-    }
-}
-
-@Composable
-private fun bottomSheetContent(state: State) {
-    Spacer(modifier = Modifier.height(1.dp))
-    if (state.authType == SIGN_UP) {
-        AuthSecurityWarningContent()
+        AuthMainScreenContent(state, listener)
     }
 }
 
