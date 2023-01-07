@@ -27,6 +27,7 @@ import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.ui.button.StateButton
+import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.domain.meetings.data.Category
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.MeetingsContract.*
@@ -62,17 +63,21 @@ private fun MeetingsMainScreenContent(
 ) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
-    Toolbar()
-    LazyColumn(
-        modifier = Modifier.background(MaterialTheme.colors.background)
-    ) {
-        item { Stories() }
-        item { MeetingsTitle() }
-        item { Categories(state) }
-        if (state.meetings.isEmpty()) {
-            item { EmptyListStub() }
-        } else {
-            item { Meetings() }
+    Toolbar(state)
+    if (state.showProgress) {
+        CenterScreenProgressBar()
+    } else {
+        LazyColumn(
+            modifier = Modifier.background(MaterialTheme.colors.background)
+        ) {
+            item { Stories(state) }
+            item { MeetingsTitle(state) }
+            item { Categories(state, listener) }
+            if (state.meetings.isEmpty()) {
+                item { EmptyListStub() }
+            } else {
+                item { Meetings(state, listener) }
+            }
         }
     }
 }
@@ -81,7 +86,9 @@ private fun MeetingsMainScreenContent(
  * TOOLBAR
  */
 @Composable
-private fun Toolbar() = Row(
+private fun Toolbar(
+    state: State
+) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
@@ -123,19 +130,22 @@ private fun Toolbar() = Row(
  * STORIES LIST
  */
 @Composable
-private fun Stories() = LazyRow(
+private fun Stories(
+    state: State
+) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp)
 ) {
     items(6) { index ->
-        Story(index)
+        Story(state, index)
     }
     item { Spacer(modifier = Modifier.width(6.dp)) }
 }
 
 @Composable
 private fun Story(
+    state: State,
     index: Int
 ) = Column(
     modifier = Modifier
@@ -182,7 +192,7 @@ private fun Story(
  * MEETINGS TITLE
  */
 @Composable
-private fun MeetingsTitle() = Text(
+private fun MeetingsTitle(state: State) = Text(
     text = "Ближайшие митинги",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.title2Bold,
@@ -194,7 +204,8 @@ private fun MeetingsTitle() = Text(
  */
 @Composable
 private fun Categories(
-    state: State
+    state: State,
+    listener: Listener?
 ) = Row(
     modifier = Modifier
         .fillMaxWidth()
@@ -202,7 +213,7 @@ private fun Categories(
         .padding(top = 8.dp)
 ) {
     state.categories.forEach { category ->
-        Category(category)
+        Category(category, state, listener)
     }
     Spacer(modifier = Modifier.width(12.dp))
 }
@@ -210,6 +221,8 @@ private fun Categories(
 @Composable
 private fun Category(
     category: Category,
+    state: State,
+    listener: Listener?,
     isSelected: Boolean = false,
     onItemClick: () -> Unit = {},
 ) {
@@ -287,19 +300,25 @@ private fun EmptyListStub() = Column(
  * MEETINGS
  */
 @Composable
-private fun Meetings() = Column(
+private fun Meetings(
+    state: State,
+    listener: Listener?
+) = Column(
     modifier = Modifier.fillMaxWidth()
 ) {
     Spacer(modifier = Modifier.height(8.dp))
     repeat(5) {
-        MeetingItem()
+        MeetingItem(state, listener)
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
 
 
 @Composable
-private fun MeetingItem() = ConstraintLayout(
+private fun MeetingItem(
+    state: State,
+    listener: Listener?
+) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable {  }

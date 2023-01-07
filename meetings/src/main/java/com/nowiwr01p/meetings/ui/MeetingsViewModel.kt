@@ -18,11 +18,11 @@ class MeetingsViewModel(
     }
 
     private fun init() = io {
-        setState { copy(showShimmer = true) }
+        setState { copy(showProgress = true) }
         runCatching {
             getCategories()
         }.onSuccess {
-            setState { copy(showShimmer = false) }
+            setState { copy(showProgress = false) }
         }
     }
 
