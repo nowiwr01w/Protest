@@ -4,6 +4,7 @@ import com.nowiwr01p.buildsrc.extensions.koinDependencies
 import com.nowiwr01p.buildsrc.extensions.firebaseDependencies
 import com.nowiwr01p.buildsrc.extensions.unitTestDependencies
 import com.nowiwr01p.buildsrc.extensions.networkDependencies
+import com.nowiwr01p.buildsrc.extensions.dateTimeDependencies
 
 plugins {
     id("com.android.library")
@@ -52,4 +53,5 @@ dependencies {
     firebaseDependencies()
     unitTestDependencies()
     dataStoreDependencies()
+    dateTimeDependencies()
 }

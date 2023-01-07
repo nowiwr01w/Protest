@@ -80,6 +80,10 @@ fun DependencyHandler.accompanistDependencies() {
     implementation(Accompanist.MATERIAL_PLACEHOLDER)
 }
 
+fun DependencyHandler.dateTimeDependencies() {
+    implementation(Basic.JODA_TIME)
+}
+
 fun DependencyHandler.unitTestDependencies() {
     testImplementation(UnitTest.JUNIT_LIB)
     testImplementation(UnitTest.JUNIT_JB)
