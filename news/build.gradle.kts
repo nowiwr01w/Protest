@@ -8,4 +8,5 @@ android {
 
 dependencies {
     implementation(project(mapOf("path" to ":core-ui")))
+    implementation(project(mapOf("path" to ":core")))
 }
