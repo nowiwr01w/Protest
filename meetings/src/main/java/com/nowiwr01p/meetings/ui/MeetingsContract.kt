@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
@@ -14,6 +15,7 @@ interface MeetingsContract {
 
     data class State(
         val showProgress: Boolean = false,
+        val user: User = User(),
         val meetings: List<Meeting> = listOf(),
         val categories: List<Category> = listOf()
     ): ViewState
