@@ -88,6 +88,7 @@ class NavigatorImpl(
         AuthScreen.CitiesMainScreen.route -> AuthScreen.CitiesMainScreen
         MapScreen.MapMainScreen.route -> MapScreen.MapMainScreen
         MeetingsScreen.MeetingsMainScreen.route -> MeetingsScreen.MeetingsMainScreen
+        MeetingsScreen.MeetingMainScreen.route -> MeetingsScreen.MeetingMainScreen
         NewsScreen.NewsMainScreen.route -> NewsScreen.NewsMainScreen
         ProfileScreen.ProfileMainScreen.route -> ProfileScreen.ProfileMainScreen
         else -> MapScreen.MapMainScreen

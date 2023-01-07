@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings.ui
+package com.nowiwr01p.meetings.ui.main
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -34,7 +34,7 @@ import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.domain.meetings.data.Category
 import com.nowiwr01p.meetings.R
-import com.nowiwr01p.meetings.ui.MeetingsContract.*
+import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
@@ -49,7 +49,7 @@ fun MeetingsMainScreen(
 
     val listener = object : Listener {
         override fun toCreateMeeting() {
-            // TODO
+            navigator.meetingsNavigator.navigateToMeeting()
         }
     }
 
