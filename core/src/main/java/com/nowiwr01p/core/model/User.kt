@@ -18,5 +18,5 @@ data class User(
     @SerialName("verified")
     val verified: Boolean = false,
     @SerialName("organizer")
-    val organizer: Boolean = false
+    val organizer: Boolean = true
 )
