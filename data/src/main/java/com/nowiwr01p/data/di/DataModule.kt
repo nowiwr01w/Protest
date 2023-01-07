@@ -7,9 +7,11 @@ import com.nowiwr01p.data.auth.repository.AuthRepositoryImpl
 import com.nowiwr01p.data.auth.repository.ValidateAuthDataRepositoryImpl
 import com.nowiwr01p.data.auth.validators.EmailValidatorImpl
 import com.nowiwr01p.data.auth.validators.PasswordValidatorImpl
+import com.nowiwr01p.data.firebase.FirebaseReferencesRepositoryImpl
 import com.nowiwr01p.data.location.LocationRepositoryImpl
 import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
 import com.nowiwr01p.data.location.LocationStateRemoteRepositoryImpl
+import com.nowiwr01p.data.meetings.MeetingsRepositoryImpl
 import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.domain.AppDispatchers
@@ -18,9 +20,11 @@ import com.nowiwr01p.domain.auth.repository.AuthRepository
 import com.nowiwr01p.domain.auth.repository.ValidateAuthDataRepository
 import com.nowiwr01p.domain.auth.validators.EmailValidator
 import com.nowiwr01p.domain.auth.validators.PasswordValidator
+import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
 import com.nowiwr01p.domain.location.repository.LocationRepository
 import com.nowiwr01p.domain.location.repository.LocationStateRemoteRepository
+import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.user.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationRemoteRepository
 import org.koin.dsl.module
@@ -49,6 +53,9 @@ val moduleData = module {
     }
     factory {
         Firebase.database
+    }
+    single<FirebaseReferencesRepository> {
+        FirebaseReferencesRepositoryImpl(get())
     }
 
     /**
@@ -85,5 +92,12 @@ val moduleData = module {
     }
     factory<LocationStateRemoteRepository> {
         LocationStateRemoteRepositoryImpl(get())
+    }
+
+    /**
+     * MEETINGS
+     */
+    factory<MeetingsRepository> {
+        MeetingsRepositoryImpl(get(), get())
     }
 }

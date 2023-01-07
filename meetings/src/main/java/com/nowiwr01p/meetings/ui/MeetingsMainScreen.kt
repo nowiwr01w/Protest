@@ -20,12 +20,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.ui.button.StateButton
+import com.nowiwr01p.domain.meetings.data.Category
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
@@ -66,9 +68,12 @@ private fun MeetingsMainScreenContent(
     ) {
         item { Stories() }
         item { MeetingsTitle() }
-        item { Categories() }
-//        item { EmptyListStub() }
-        item { Meetings() }
+        item { Categories(state) }
+        if (state.meetings.isEmpty()) {
+            item { EmptyListStub() }
+        } else {
+            item { Meetings() }
+        }
     }
 }
 
@@ -188,21 +193,23 @@ private fun MeetingsTitle() = Text(
  * CATEGORIES LIST
  */
 @Composable
-private fun Categories() = Row(
+private fun Categories(
+    state: State
+) = Row(
     modifier = Modifier
         .fillMaxWidth()
         .horizontalScroll(rememberScrollState())
         .padding(top = 8.dp)
 ) {
-    repeat(12) {
-        Category()
+    state.categories.forEach { category ->
+        Category(category)
     }
     Spacer(modifier = Modifier.width(12.dp))
 }
 
 @Composable
 private fun Category(
-    title: String = "Политика",
+    category: Category,
     isSelected: Boolean = false,
     onItemClick: () -> Unit = {},
 ) {
@@ -233,7 +240,7 @@ private fun Category(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = title,
+                text = category.name,
                 style = MaterialTheme.typography.subHeadlineRegular,
                 color = textColor,
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -246,54 +253,33 @@ private fun Category(
  * NO MEETINGS STUB
  */
 @Composable
-private fun EmptyListStub() = ConstraintLayout(
-    modifier = Modifier.fillMaxSize()
+private fun EmptyListStub() = Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier.padding(top = 48.dp)
 ) {
-    val (emptyContent, button) = createRefs()
-    val guideline = createGuidelineFromTop(0.55f)
-
-    val emptyContentModifier = Modifier
-        .fillMaxWidth()
-        .constrainAs(emptyContent) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(guideline)
-        }
-    Column(
-        modifier = emptyContentModifier,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painter = painterResource(R.drawable.image_no_meetings),
-            contentDescription = "No meetings image stub"
-        )
-        Text(
-            text = "Тут пусто",
-            color = MaterialTheme.colors.textPrimary,
-            style = MaterialTheme.typography.title1Bold,
-            modifier = Modifier.padding(top = 16.dp, start = 16.dp)
-        )
-        Text(
-            text = "В этом городе ничего не запланировано\nИсправь это",
-            color = MaterialTheme.colors.textColorSecondary,
-            style = MaterialTheme.typography.bodyRegular,
-            textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
-        )
-    }
-
-    val buttonModifier = Modifier
-        .padding(top = 32.dp, start = 48.dp, end = 48.dp)
-        .clip(RoundedCornerShape(24.dp))
-        .constrainAs(button) {
-            start.linkTo(emptyContent.start)
-            end.linkTo(emptyContent.end)
-            top.linkTo(emptyContent.bottom)
-        }
+    Image(
+        painter = painterResource(R.drawable.image_no_meetings),
+        contentDescription = "No meetings image stub"
+    )
+    Text(
+        text = "Тут пусто",
+        color = MaterialTheme.colors.textPrimary,
+        style = MaterialTheme.typography.title1Bold,
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+    )
+    Text(
+        text = "В этом городе ничего не запланировано\nИсправь это",
+        color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.bodyRegular,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
+    )
     StateButton(
         text = "Стать организатором",
-        modifier = buttonModifier
+        modifier = Modifier
+            .padding(top = 32.dp, start = 48.dp, end = 48.dp)
+            .clip(RoundedCornerShape(24.dp))
     )
 }
 
@@ -306,15 +292,14 @@ private fun Meetings() = Column(
 ) {
     Spacer(modifier = Modifier.height(8.dp))
     repeat(5) {
-        Meeting()
+        MeetingItem()
     }
     Spacer(modifier = Modifier.height(8.dp))
 }
 
 
-@Preview(showBackground = true)
 @Composable
-private fun Meeting() = ConstraintLayout(
+private fun MeetingItem() = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable {  }
@@ -385,6 +370,17 @@ private fun Meeting() = ConstraintLayout(
 @Preview(showBackground = true)
 @Composable
 private fun Preview() = MeetingsTheme {
+    MeetingsMainScreenContent(
+        state = State(
+            meetings = listOf(Meeting())
+        ),
+        listener = null
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun PreviewEmpty() = MeetingsTheme {
     MeetingsMainScreenContent(
         state = State(),
         listener = null
