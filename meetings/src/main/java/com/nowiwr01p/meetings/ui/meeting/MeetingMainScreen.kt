@@ -1,6 +1,8 @@
 package com.nowiwr01p.meetings.ui.meeting
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,6 +21,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
@@ -71,6 +75,7 @@ private fun MeetingMainScreenContent(
         modifier = Modifier.fillMaxSize()
     ) {
         item { TopImage() }
+        item { Categories() }
         item { Title() }
         item { Description() }
         item { LocationTitle() }
@@ -81,6 +86,10 @@ private fun MeetingMainScreenContent(
         item { TakeWithYouDetails() }
         item { TakeWithYouList() }
         item { DropdownItems() }
+        item { WillYouGoTitle() }
+        item { WillYouGoPeopleCount() }
+        item { WillYouGoImage() }
+        item { WillYouGoActionButtons() }
         item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
@@ -111,6 +120,61 @@ private fun TopImage() = CoilImage(
 )
 
 /**
+ * CATEGORY
+ */
+@Composable
+private fun Categories() = LazyRow(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 16.dp)
+) {
+    item {
+        Category(
+            text = "Политика",
+            textColor = MaterialTheme.colors.graphicsBlue,
+            backgroundColor = MaterialTheme.colors.backgroundBlue
+        )
+    }
+    item {
+        Category(
+            text = "Права человека",
+            textColor = MaterialTheme.colors.graphicsRed,
+            backgroundColor = MaterialTheme.colors.backgroundRed
+        )
+    }
+    item {
+        Category(
+            text = "Преступность",
+            textColor = MaterialTheme.colors.graphicsGreen,
+            backgroundColor = MaterialTheme.colors.backgroundGreen
+        )
+    }
+    item {
+        Spacer(modifier = Modifier.width(16.dp))
+    }
+}
+
+@Composable
+private fun Category(
+    text: String,
+    textColor: Color,
+    backgroundColor: Color
+) = Box(
+    contentAlignment = Alignment.Center,
+    modifier = Modifier
+        .padding(start = 16.dp)
+        .clip(RoundedCornerShape(40))
+        .background(backgroundColor)
+) {
+    Text(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+        text = text,
+        color = textColor,
+        style = MaterialTheme.typography.caption2Regular,
+    )
+}
+
+/**
  * TITLE
  */
 @Composable
@@ -118,7 +182,7 @@ private fun Title() = Text(
     text = "Свободу Навальному",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.title2Bold,
-    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+    modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
 
 /**
@@ -361,6 +425,89 @@ private fun StepItem(text: String) = Row(
         style = MaterialTheme.typography.body1,
         color = MaterialTheme.colors.textPrimary
     )
+}
+
+/**
+ * WILL YOU GO
+ */
+@Composable
+private fun WillYouGoTitle() = Text(
+    text = "Увидимся на митинге?",
+    color = MaterialTheme.colors.textPrimary,
+    style = MaterialTheme.typography.title2Bold,
+    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+)
+
+@Composable
+private fun WillYouGoPeopleCount() = Text(
+    text = "725 человек точно пойдут\nЕщё 1322, возможно, тоже\nА ты?",
+    color = MaterialTheme.colors.textPrimary,
+    style = MaterialTheme.typography.body1,
+    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+)
+
+@Composable
+private fun WillYouGoImage() = Row(
+    horizontalArrangement = Arrangement.Center,
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 24.dp)
+) {
+    val width = LocalConfiguration.current.screenWidthDp * 2/3
+    Image(
+        painter = painterResource(R.drawable.image_call_to_go),
+        contentDescription = "Will you go image",
+        modifier = Modifier.width(width.dp)
+    )
+}
+
+@Composable
+private fun WillYouGoActionButtons() = Row(
+    horizontalArrangement = Arrangement.Center,
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 24.dp)
+) {
+    WillYouGoActionButton(
+        text = "Пойду",
+        borderColor = MaterialTheme.colors.graphicsGreen.copy(alpha = 0.1f),
+        textColor = MaterialTheme.colors.textPositive
+    )
+    Spacer(
+        modifier = Modifier.width(24.dp)
+    )
+    WillYouGoActionButton(
+        text = "Мб пойду",
+        borderColor = Color(0xFFD3D3D3).copy(alpha = 0.25f),
+        textColor = Color(0xFFD3D3D3)
+    )
+}
+
+@Composable
+private fun WillYouGoActionButton(
+    text: String,
+    borderColor: Color,
+    textColor: Color
+) {
+    val width = LocalConfiguration.current.screenWidthDp * 1/3
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .width(width.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .border(
+                width = 2.dp,
+                color = borderColor,
+                shape = RoundedCornerShape(24.dp)
+            )
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.headline,
+            color = textColor,
+            modifier = Modifier.padding(vertical = 12.dp)
+        )
+    }
 }
 
 /**
