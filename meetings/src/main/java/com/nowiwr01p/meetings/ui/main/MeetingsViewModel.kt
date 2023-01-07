@@ -1,11 +1,11 @@
-package com.nowiwr01p.meetings.ui
+package com.nowiwr01p.meetings.ui.main
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.*
 import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCacheData
-import com.nowiwr01p.meetings.ui.MeetingsContract.*
+import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 
 class MeetingsViewModel(
     private val getCategories: GetCategoriesUseCase,
