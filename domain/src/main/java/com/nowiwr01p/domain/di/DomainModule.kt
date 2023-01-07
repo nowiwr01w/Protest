@@ -1,6 +1,7 @@
 package com.nowiwr01p.domain.di
 
 import com.nowiwr01p.domain.auth.usecase.*
+import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
 import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
@@ -47,4 +48,9 @@ val moduleDomain = module  {
      * MAP
      */
     factory { GetLocalUserUseCase(get()) }
+
+    /**
+     * MEETINGS
+     */
+    factory { GetCategoriesUseCase(get()) }
 }
