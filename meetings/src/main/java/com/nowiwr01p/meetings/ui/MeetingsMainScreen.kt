@@ -103,7 +103,7 @@ private fun Toolbar(
             .clip(CircleShape)
     )
     Text(
-        text = "Andrey Larionov",
+        text = state.user.email,
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = Modifier.padding(start = 16.dp)
