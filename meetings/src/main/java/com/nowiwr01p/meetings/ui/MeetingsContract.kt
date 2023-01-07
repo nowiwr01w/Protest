@@ -13,7 +13,7 @@ interface MeetingsContract {
     }
 
     data class State(
-        val showShimmer: Boolean = false,
+        val showProgress: Boolean = false,
         val meetings: List<Meeting> = listOf(),
         val categories: List<Category> = listOf()
     ): ViewState
