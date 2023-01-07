@@ -2,11 +2,13 @@ package com.nowiwr01p.meetings.ui
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
 import com.nowiwr01p.meetings.ui.MeetingsContract.*
 
 class MeetingsViewModel(
-    private val getCategories: GetCategoriesUseCase
+    private val getCategories: GetCategoriesUseCase,
+    private val getLocalUserUseCase: GetLocalUserUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -20,10 +22,16 @@ class MeetingsViewModel(
     private fun init() = io {
         setState { copy(showProgress = true) }
         runCatching {
+            getUserData()
             getCategories()
         }.onSuccess {
             setState { copy(showProgress = false) }
         }
+    }
+
+    private suspend fun getUserData() {
+        val user = getLocalUserUseCase.execute()
+        setState { copy(user = user) }
     }
 
     private suspend fun getCategories() {

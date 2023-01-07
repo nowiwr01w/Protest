@@ -11,5 +11,5 @@ val moduleMeetings = module {
         MeetingsNavigatorImpl()
     }
 
-    viewModel { MeetingsViewModel(get()) }
+    viewModel { MeetingsViewModel(get(), get()) }
 }
