@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Meeting(
     @SerialName("id")
-    val id: Long = 0L,
+    val id: String = "",
     @SerialName("title")
     val title: String = "",
     @SerialName("description")
