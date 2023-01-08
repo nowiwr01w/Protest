@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings.ui
+package com.nowiwr01p.meetings.ui.main
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.model.User
@@ -25,6 +25,6 @@ interface MeetingsContract {
     }
 
     interface Listener {
-
+        fun toCreateMeeting()
     }
 }
