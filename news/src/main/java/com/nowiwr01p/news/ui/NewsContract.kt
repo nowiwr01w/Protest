@@ -12,7 +12,7 @@ interface NewsContract {
 
     data class State(
         val isLoading: Boolean = true,
-        val newsList: List<Article> = listOf(Article.DataForPreview.article)
+        val newsList: List<Article> = listOf()
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
