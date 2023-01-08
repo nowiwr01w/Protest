@@ -21,7 +21,7 @@ sealed class NewsScreen<T>(
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
-                NewsMainScreen()
+                NewsMainScreen(navigator)
             }
         }
     }
