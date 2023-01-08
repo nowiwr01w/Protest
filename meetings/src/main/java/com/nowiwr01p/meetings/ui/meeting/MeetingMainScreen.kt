@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
@@ -102,6 +103,20 @@ private fun Toolbar() = ToolbarTop(
     backIcon = {
         ToolbarBackButton {
 
+        }
+    },
+    actions = {
+        Box(
+            modifier = Modifier
+                .padding(end = 10.dp)
+                .clip(RoundedCornerShape(14.dp))
+                .clickable {  }
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_telegram),
+                contentDescription = "Telegram chat icon",
+                modifier = Modifier.padding(6.dp)
+            )
         }
     }
 )
@@ -272,8 +287,9 @@ private fun MapPlaceComment() = Row(
 ) {
     Text(
         text = "Рядом со сценой",
+        textAlign = TextAlign.Center,
         style = MaterialTheme.typography.footnoteRegular,
-        color = MaterialTheme.colors.textColorSecondary
+        color = MaterialTheme.colors.textColorSecondary,
     )
 }
 
@@ -453,7 +469,7 @@ private fun WillYouGoImage() = Row(
         .fillMaxWidth()
         .padding(top = 24.dp)
 ) {
-    val width = LocalConfiguration.current.screenWidthDp * 2/3
+    val width = LocalConfiguration.current.screenWidthDp * 3/5
     Image(
         painter = painterResource(R.drawable.image_call_to_go),
         contentDescription = "Will you go image",

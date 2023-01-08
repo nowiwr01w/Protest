@@ -55,7 +55,6 @@ fun ToolbarTop(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
             ) {
                 actions()
             }
@@ -86,14 +85,17 @@ fun ToolbarBackButton(
         blackColors -> Color.White
         else -> Color.Black
     }
-    Icon(
-        painter = rememberVectorPainter(Icons.Default.ArrowBack),
-        contentDescription = "",
-        tint = iconColor,
+    Box(
         modifier = Modifier
-            .padding(start = 12.dp)
+            .padding(start = 6.dp)
             .clip(RoundedCornerShape(14.dp))
             .clickable { onBack() }
-            .padding(4.dp)
-    )
+    ) {
+        Icon(
+            painter = rememberVectorPainter(Icons.Default.ArrowBack),
+            contentDescription = "Toolbar back icon",
+            tint = iconColor,
+            modifier = Modifier.padding(6.dp)
+        )
+    }
 }
