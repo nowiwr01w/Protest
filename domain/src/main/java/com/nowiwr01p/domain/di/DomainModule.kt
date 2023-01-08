@@ -9,13 +9,14 @@ import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
 import com.nowiwr01p.domain.location.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.location.usecase.local.SetCountryUseCase
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
+import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SetVerificationCompletedUseCase
 import org.koin.dsl.module
 
-val moduleDomain = module  {
+val moduleDomain = module {
 
     /**
      * AUTH
@@ -53,4 +54,9 @@ val moduleDomain = module  {
      * MEETINGS
      */
     factory { GetCategoriesUseCase(get()) }
+
+    /**
+     * NEWS
+     */
+    factory { GetNewsUseCase(get()) }
 }

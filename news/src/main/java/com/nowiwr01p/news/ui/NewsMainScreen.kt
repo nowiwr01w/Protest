@@ -8,9 +8,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -19,13 +19,9 @@ import com.nowiwr01p.core.formatToDate
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
-import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.ui.NewsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
-import java.util.*
-import com.nowiwr01p.news.R
 
 @Composable
 fun NewsMainScreen(
@@ -37,7 +33,10 @@ fun NewsMainScreen(
         override fun onBackClick() {
             navigator.navigateUp()
         }
+    }
 
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(Event.Init)
     }
 
     NewsContent(state = state, listener = listener)
@@ -49,20 +48,20 @@ fun NewsContent(
     listener: Listener?
 ) = Column(modifier = Modifier.fillMaxSize()) {
     Toolbar()
+    Spacer(modifier = Modifier.height(16.dp))
     NewsList(state = state, listener = listener)
 }
 
 @Composable
-fun Toolbar() = ToolbarTop(
-    showElevation = true,
-    modifier = Modifier.background(MaterialTheme.colors.mainBackgroundColor),
-    title = {
-        ToolbarTitle(
-            title = "Новости",
-            textColor = Color.White
-        )
-    }
-)
+fun Toolbar() =
+    Text(
+        modifier = Modifier
+            .statusBarsPadding()
+            .padding(start = 20.dp, top = 20.dp),
+        text = "Новости",
+        style = MaterialTheme.typography.largeTitle,
+        color = MaterialTheme.colors.textPrimary
+    )
 
 @Composable
 fun NewsList(
@@ -71,6 +70,7 @@ fun NewsList(
 ) = LazyColumn(modifier = Modifier.fillMaxSize()) {
     state.newsList.map {
         item { ArticleView(article = it, listener = listener) }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
     }
 
 }
