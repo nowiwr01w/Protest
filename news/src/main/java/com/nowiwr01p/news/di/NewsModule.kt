@@ -11,5 +11,5 @@ val moduleNews = module {
         NewsNavigatorImpl()
     }
 
-    viewModel { NewsViewModel() }
+    viewModel { NewsViewModel(get()) }
 }
