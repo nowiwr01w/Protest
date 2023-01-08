@@ -6,7 +6,8 @@ import androidx.navigation.compose.composable
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
-import com.nowiwr01p.meetings.ui.MeetingsMainScreen
+import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
+import com.nowiwr01p.meetings.ui.meeting.MeetingMainScreen
 
 sealed class MeetingsScreen<T>(
     override val route: String,
@@ -24,6 +25,21 @@ sealed class MeetingsScreen<T>(
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
                 MeetingsMainScreen(navigator)
+            }
+        }
+    }
+
+    object MeetingMainScreen: MeetingsScreen<Unit>(
+        MeetingsScreenType.MeetingMainScreen.route,
+        rootRoute,
+        false
+    ) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                MeetingMainScreen(navigator)
             }
         }
     }
