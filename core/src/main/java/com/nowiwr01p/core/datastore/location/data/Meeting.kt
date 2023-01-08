@@ -23,8 +23,6 @@ data class Meeting(
     val description: String = "",
     @SerializedName("locationInfo")
     val locationInfo: LocationInfo = LocationInfo(),
-    @SerializedName("hideLocationUntil")
-    val hideLocationUntil: HideLocationUntil = HideLocationUntil(),
     @SerializedName("takeWithYouInfo")
     val takeWithYouInfo: TakeWithYouInfo = TakeWithYouInfo(),
     @SerializedName("details")
@@ -37,7 +35,29 @@ data class Meeting(
     val path: List<Coordinate> = listOf(),
     @SerializedName("currentPosition")
     val currentPosition: Coordinate = Coordinate()
-)
+) {
+    companion object {
+        fun getSampleData() = Meeting(
+            id = "123",
+            creatorId = "1234",
+            image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",
+            date = System.currentTimeMillis(),
+            openDate = OpenDate.getSampleData(),
+            categories = listOf("Политика", "Права человека", "Преступность"),
+            title = "Свободу Навальному",
+            description = "Ни для кого не секрет, что в России права человека считаются чем-то, что всегда " +
+                    "уходит на задний план.\n\n" +
+                    "Алексей Навальный старался изменить ситуацию, но стал жертвой режима. Его посадили " +
+                    "в тюрьму за то, что он говорил правду.\n" +
+                    "Так быть не должно.",
+            locationInfo = LocationInfo.getSampleData(),
+            takeWithYouInfo = TakeWithYouInfo.getSampleData(),
+            details = Details.getSampleData(),
+            reaction = Reaction.getSampleData(),
+            telegram = "nowiwr01p"
+        )
+    }
+}
 
 @Serializable
 data class Coordinate(
@@ -45,23 +65,28 @@ data class Coordinate(
     val latitude: Double = .0,
     @SerialName("longitude")
     val longitude: Double = .0,
-)
+) {
+    companion object {
+        fun getSampleData() = Coordinate(59.938946, 30.314982)
+    }
+}
 
 @Serializable
 data class OpenDate(
-    @SerializedName("test")
-    val test: String = "",
-    @SerializedName("requiredPeopleCount")
-    val requiredPeopleCount: Int = 0
-)
-
-@Serializable
-data class HideLocationUntil(
+    @SerializedName("text")
+    val text: String = "",
     @SerializedName("date")
     val date: Long = 0L,
     @SerializedName("requiredPeopleCount")
     val requiredPeopleCount: Int = 0
-)
+) {
+    companion object {
+        fun getSampleData() = OpenDate(
+            text = "Место и дата проведения появится либо 23.02, либо после того, как наберётся хотя бы 1000 человек. Это обязательное условие.",
+            requiredPeopleCount = 1000
+        )
+    }
+}
 
 @Serializable
 data class LocationInfo(
@@ -71,7 +96,15 @@ data class LocationInfo(
     val coordinates: Coordinate = Coordinate(),
     @SerializedName("placeDetails")
     val placeDetails: String = ""
-)
+) {
+    companion object {
+        fun getSampleData() = LocationInfo(
+            shortName = "Дворцовая площадь",
+            coordinates = Coordinate(59.938946, 30.314982),
+            placeDetails = "Рядом со сценой"
+        )
+    }
+}
 
 @Serializable
 data class TakeWithYouInfo(
@@ -79,7 +112,20 @@ data class TakeWithYouInfo(
     val description: String = "",
     @SerializedName("posterLinks")
     val posterLinks: List<String> = listOf()
-)
+) {
+    companion object {
+        fun getSampleData() = TakeWithYouInfo(
+            description = "Плакаты, флаги, что угодно\nВот примеры:",
+            posterLinks = listOf(
+                "https://google.com/search?q=first",
+                "https://google.com/search?q=second",
+                "https://google.com/search?q=third",
+                "https://google.com/search?q=fourth",
+                "https://google.com/search?q=fifth",
+            )
+        )
+    }
+}
 
 @Serializable
 data class Details(
@@ -89,7 +135,15 @@ data class Details(
     val slogans: List<String> = listOf(),
     @SerializedName("strategy")
     val strategy: List<String> = listOf(),
-)
+) {
+    companion object {
+        fun getSampleData() = Details(
+            goals = listOf("Путин - хуйло", "Ла", "Лалала", "Лалалалааааа"),
+            slogans = listOf("Путин - хуйло", "Ла", "Лалала", "Лалалалааааа"),
+            strategy = listOf("Путин - хуйло", "Ла", "Лалала", "Лалалалааааа"),
+        )
+    }
+}
 
 @Serializable
 data class Reaction(
@@ -99,4 +153,12 @@ data class Reaction(
     val peopleMaybeGoCount: Int = 0,
     @SerializedName("yourChoiceToGo")
     val yourChoiceToGo: Boolean? = null
-)
+) {
+    companion object {
+        fun getSampleData() = Reaction(
+            peopleGoCount = 725,
+            peopleMaybeGoCount = 1327,
+            yourChoiceToGo = true
+        )
+    }
+}

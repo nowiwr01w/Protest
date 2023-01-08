@@ -9,6 +9,7 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -29,6 +30,7 @@ import androidx.compose.ui.unit.dp
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
@@ -71,26 +73,27 @@ private fun MeetingMainScreenContent(
 ) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
+    val meeting = state.meeting
     Toolbar()
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        item { TopImage() }
-        item { Categories() }
-        item { Title() }
-        item { Description() }
+        item { TopImage(meeting) }
+        item { Categories(meeting) }
+        item { Title(meeting) }
+        item { Description(meeting) }
         item { LocationTitle() }
-        item { LocationInfoContainer() }
-        item { MapPreview() }
-        item { MapPlaceComment() }
+        item { LocationInfoContainer(meeting) }
+        item { MapPreview(meeting) }
+        item { MapPlaceComment(meeting) }
         item { TakeWithYouTitle() }
-        item { TakeWithYouDetails() }
-        item { TakeWithYouList() }
-        item { DropdownItems() }
+        item { TakeWithYouDetails(meeting) }
+        item { TakeWithYouList(meeting) }
+        item { DropdownItems(meeting) }
         item { WillYouGoTitle() }
-        item { WillYouGoPeopleCount() }
+        item { WillYouGoPeopleCount(meeting) }
         item { WillYouGoImage() }
-        item { WillYouGoActionButtons() }
+        item { WillYouGoActionButtons(meeting) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
@@ -125,8 +128,8 @@ private fun Toolbar() = ToolbarTop(
  * IMAGE
  */
 @Composable
-private fun TopImage() = CoilImage(
-    imageModel = { R.drawable.navalny },
+private fun TopImage(meeting: Meeting) = CoilImage(
+    imageModel = { meeting.image },
     modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
@@ -138,30 +141,16 @@ private fun TopImage() = CoilImage(
  * CATEGORY
  */
 @Composable
-private fun Categories() = LazyRow(
+private fun Categories(meeting: Meeting) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 16.dp)
 ) {
-    item {
+    items(meeting.categories) { category ->
         Category(
-            text = "Политика",
+            text = category,
             textColor = MaterialTheme.colors.graphicsBlue,
             backgroundColor = MaterialTheme.colors.backgroundBlue
-        )
-    }
-    item {
-        Category(
-            text = "Права человека",
-            textColor = MaterialTheme.colors.graphicsRed,
-            backgroundColor = MaterialTheme.colors.backgroundRed
-        )
-    }
-    item {
-        Category(
-            text = "Преступность",
-            textColor = MaterialTheme.colors.graphicsGreen,
-            backgroundColor = MaterialTheme.colors.backgroundGreen
         )
     }
     item {
@@ -193,8 +182,8 @@ private fun Category(
  * TITLE
  */
 @Composable
-private fun Title() = Text(
-    text = "Свободу Навальному",
+private fun Title(meeting: Meeting) = Text(
+    text = meeting.title,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.title2Bold,
     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
@@ -204,12 +193,8 @@ private fun Title() = Text(
  * DESCRIPTION
  */
 @Composable
-private fun Description() = Text(
-    text = "Ни для кого не секрет, что в России права человека считаются чем-то, что всегда " +
-            "уходит на задний план.\n\n" +
-            "Алексей Навальный старался изменить ситуацию, но стал жертвой режима. Его посадили " +
-            "в тюрьму за то, что он говорил правду.\n" +
-            "Так быть не должно.",
+private fun Description(meeting: Meeting) = Text(
+    text = meeting.description,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1,
     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
@@ -227,34 +212,36 @@ private fun LocationTitle() = Text(
 )
 
 @Composable
-private fun LocationInfoContainer() = Row(
+private fun LocationInfoContainer(meeting: Meeting) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
-    LocationPlace()
+    LocationPlace(meeting.locationInfo.shortName)
     Spacer(modifier = Modifier.weight(1f))
-    LocationDate()
+    LocationDate(meeting.date.toString())
 }
 
 @Composable
-private fun LocationPlace() = Text(
-    text = "Дворцовая площадь",
+private fun LocationPlace(shortName: String) = Text(
+    text = shortName,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1
 )
 
 @Composable
-private fun LocationDate() = Text(
-    text = "24.02.2023 17:30",
+private fun LocationDate(placeDetails: String) = Text(
+    text = placeDetails,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1
 )
 
 @Composable
-private fun MapPreview() {
-    val coordinates = LatLng(59.938946, 30.314982)
+private fun MapPreview(meeting: Meeting) {
+    val coordinates = with(meeting.locationInfo.coordinates) {
+        LatLng(latitude, longitude)
+    }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(coordinates, 13f)
     }
@@ -278,7 +265,7 @@ private fun MapPreview() {
 }
 
 @Composable
-private fun MapPlaceComment() = Row(
+private fun MapPlaceComment(meeting: Meeting) = Row(
     horizontalArrangement = Arrangement.Center,
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
@@ -286,7 +273,7 @@ private fun MapPlaceComment() = Row(
         .padding(top = 8.dp, start = 16.dp, end = 16.dp),
 ) {
     Text(
-        text = "Рядом со сценой",
+        text = meeting.locationInfo.placeDetails,
         textAlign = TextAlign.Center,
         style = MaterialTheme.typography.footnoteRegular,
         color = MaterialTheme.colors.textColorSecondary,
@@ -305,20 +292,20 @@ private fun TakeWithYouTitle() = Text(
 )
 
 @Composable
-private fun TakeWithYouDetails() = Text(
-    text = "Плакаты, флаги, что угодно\nВот примеры:",
+private fun TakeWithYouDetails(meeting: Meeting) = Text(
+    text = meeting.takeWithYouInfo.description,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1,
     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
 
 @Composable
-private fun TakeWithYouList() = LazyRow(
+private fun TakeWithYouList(meeting: Meeting) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 16.dp)
 ) {
-    items(5) {
+    items(meeting.takeWithYouInfo.posterLinks) {
         ThingItem()
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
@@ -344,9 +331,8 @@ private fun ThingItem() = Column(
     )
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun DropdownItems() = Column(
+private fun DropdownItems(meeting: Meeting) = Column(
     modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(16.dp))
@@ -357,15 +343,27 @@ private fun DropdownItems() = Column(
             shape = RoundedCornerShape(16.dp)
         )
 ) {
-    DropdownItem("Чего хотим добиться")
+    DropdownItem(
+        title = "Чего хотим добиться",
+        steps = meeting.details.goals
+    )
     Separator()
-    DropdownItem("Лозунги")
+    DropdownItem(
+        title = "Лозунги",
+        steps = meeting.details.slogans
+    )
     Separator()
-    DropdownItem("Стратегия")
+    DropdownItem(
+        title = "Стратегия",
+        steps = meeting.details.strategy
+    )
 }
 
 @Composable
-private fun DropdownItem(text: String) {
+private fun DropdownItem(
+    title: String,
+    steps: List<String>
+) {
     val expanded = remember { mutableStateOf(false) }
     val rotateAnimation by animateFloatAsState(
         targetValue = if (expanded.value) 180f else 0f,
@@ -385,7 +383,7 @@ private fun DropdownItem(text: String) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
-                text = text,
+                text = title,
                 color = MaterialTheme.colors.textPrimary,
                 style = MaterialTheme.typography.bodyRegular,
                 modifier = Modifier.padding(start = 24.dp)
@@ -408,10 +406,9 @@ private fun DropdownItem(text: String) {
             }
         }
         if (expanded.value) {
-            StepItem("Путин хуйло")
-            StepItem("Мы против коррупции")
-            StepItem("Пошёл нахуй, пёс")
-            StepItem("Россия без Путина")
+            steps.forEach { step ->
+                StepItem(step)
+            }
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -455,8 +452,8 @@ private fun WillYouGoTitle() = Text(
 )
 
 @Composable
-private fun WillYouGoPeopleCount() = Text(
-    text = "725 человек точно пойдут\nЕщё 1322, возможно, тоже\nА ты?",
+private fun WillYouGoPeopleCount(meeting: Meeting) = Text(
+    text = "${meeting.reaction.peopleGoCount} человек точно пойдут\nЕщё ${meeting.reaction.peopleMaybeGoCount}, возможно, тоже\nА ты?",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1,
     modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
@@ -478,7 +475,7 @@ private fun WillYouGoImage() = Row(
 }
 
 @Composable
-private fun WillYouGoActionButtons() = Row(
+private fun WillYouGoActionButtons(meeting: Meeting) = Row(
     horizontalArrangement = Arrangement.Center,
     modifier = Modifier
         .fillMaxWidth()
