@@ -8,7 +8,7 @@ class NewsViewModel(
     private val getNews: GetNewsUseCase
 ) : BaseViewModel<Event, State, Effect>() {
 
-    override fun setInitialState(): State = State()
+    override fun setInitialState() = State()
 
     override fun handleEvents(event: Event) {
         when (event) {
@@ -17,9 +17,10 @@ class NewsViewModel(
     }
 
     private fun init() = io {
-        val news = getNews.execute(Unit)
-        setState {
-            copy(newsList = news)
+        runCatching {
+            getNews.execute(Unit)
+        }.onSuccess {
+            setState { copy(newsList = it) }
         }
     }
 }
