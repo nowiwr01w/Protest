@@ -27,8 +27,13 @@ fun ToolbarTop(
     backIcon: @Composable BoxScope.() -> Unit = {},
     actions: @Composable RowScope.() -> Unit = {},
     modifier: Modifier = Modifier,
-    showElevation: Boolean = false
+    showElevation: Boolean = false,
+    blackColors: Boolean = false
 ) {
+    val backgroundColor = when {
+        blackColors -> MaterialTheme.colors.mainBackgroundColor
+        else -> Color.White
+    }
     Surface(
         modifier = modifier,
         elevation = if (showElevation) 4.dp else 0.dp
@@ -37,7 +42,7 @@ fun ToolbarTop(
             modifier = Modifier
                 .fillMaxWidth()
                 .statusBarsPadding()
-                .background(MaterialTheme.colors.mainBackgroundColor)
+                .background(backgroundColor)
                 .height(56.dp)
         ) {
             Box(modifier = Modifier.align(Alignment.CenterStart)) {
@@ -50,7 +55,6 @@ fun ToolbarTop(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .align(Alignment.CenterEnd)
-                    .padding(end = 16.dp)
             ) {
                 actions()
             }
@@ -73,13 +77,25 @@ fun ToolbarTitle(
 }
 
 @Composable
-fun ToolbarBackButton(onBack: () -> Unit) = Icon(
-    painter = rememberVectorPainter(Icons.Default.ArrowBack),
-    contentDescription = "",
-    tint = Color.White,
-    modifier = Modifier
-        .padding(start = 12.dp)
-        .clip(RoundedCornerShape(14.dp))
-        .clickable { onBack() }
-        .padding(4.dp)
-)
+fun ToolbarBackButton(
+    blackColors: Boolean = false,
+    onBack: () -> Unit
+) {
+    val iconColor = when {
+        blackColors -> Color.White
+        else -> Color.Black
+    }
+    Box(
+        modifier = Modifier
+            .padding(start = 6.dp)
+            .clip(RoundedCornerShape(14.dp))
+            .clickable { onBack() }
+    ) {
+        Icon(
+            painter = rememberVectorPainter(Icons.Default.ArrowBack),
+            contentDescription = "Toolbar back icon",
+            tint = iconColor,
+            modifier = Modifier.padding(6.dp)
+        )
+    }
+}

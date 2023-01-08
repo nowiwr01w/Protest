@@ -1,12 +1,16 @@
-package com.nowiwr01p.meetings.ui
+package com.nowiwr01p.meetings.ui.main
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -30,7 +34,7 @@ import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.domain.meetings.data.Category
 import com.nowiwr01p.meetings.R
-import com.nowiwr01p.meetings.ui.MeetingsContract.*
+import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
@@ -41,8 +45,12 @@ fun MeetingsMainScreen(
 ) {
     setSystemUiColor(Color.White)
 
-    val listener = object : Listener {
+    val state = viewModel.viewState.value
 
+    val listener = object : Listener {
+        override fun toCreateMeeting() {
+            navigator.meetingsNavigator.navigateToMeeting()
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -53,7 +61,12 @@ fun MeetingsMainScreen(
 
     }
 
-    MeetingsMainScreenContent(viewModel.viewState.value, listener)
+    Scaffold(
+        floatingActionButtonPosition = FabPosition.End,
+        floatingActionButton = { CreateButton(state, listener) }
+    ) {
+        MeetingsMainScreenContent(state, listener)
+    }
 }
 
 @Composable
@@ -76,7 +89,7 @@ private fun MeetingsMainScreenContent(
             if (state.meetings.isEmpty()) {
                 item { EmptyListStub() }
             } else {
-                item { Meetings(state, listener) }
+                Meetings(state, listener)
             }
         }
     }
@@ -206,16 +219,15 @@ private fun MeetingsTitle(state: State) = Text(
 private fun Categories(
     state: State,
     listener: Listener?
-) = Row(
+) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
-        .horizontalScroll(rememberScrollState())
         .padding(top = 8.dp)
 ) {
-    state.categories.forEach { category ->
+    items(state.categories) { category ->
         Category(category, state, listener)
     }
-    Spacer(modifier = Modifier.width(12.dp))
+    item { Spacer(modifier = Modifier.width(12.dp)) }
 }
 
 @Composable
@@ -263,54 +275,17 @@ private fun Category(
 }
 
 /**
- * NO MEETINGS STUB
- */
-@Composable
-private fun EmptyListStub() = Column(
-    verticalArrangement = Arrangement.Center,
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier.padding(top = 48.dp)
-) {
-    Image(
-        painter = painterResource(R.drawable.image_no_meetings),
-        contentDescription = "No meetings image stub"
-    )
-    Text(
-        text = "Тут пусто",
-        color = MaterialTheme.colors.textPrimary,
-        style = MaterialTheme.typography.title1Bold,
-        modifier = Modifier.padding(top = 16.dp, start = 16.dp)
-    )
-    Text(
-        text = "В этом городе ничего не запланировано\nИсправь это",
-        color = MaterialTheme.colors.textColorSecondary,
-        style = MaterialTheme.typography.bodyRegular,
-        textAlign = TextAlign.Center,
-        modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
-    )
-    StateButton(
-        text = "Стать организатором",
-        modifier = Modifier
-            .padding(top = 32.dp, start = 48.dp, end = 48.dp)
-            .clip(RoundedCornerShape(24.dp))
-    )
-}
-
-/**
  * MEETINGS
  */
-@Composable
-private fun Meetings(
+private fun LazyListScope.Meetings(
     state: State,
     listener: Listener?
-) = Column(
-    modifier = Modifier.fillMaxWidth()
 ) {
-    Spacer(modifier = Modifier.height(8.dp))
-    repeat(5) {
+    item { Spacer(modifier = Modifier.height(8.dp)) }
+    items(5) {
         MeetingItem(state, listener)
     }
-    Spacer(modifier = Modifier.height(8.dp))
+    item { Spacer(modifier = Modifier.height(8.dp)) }
 }
 
 
@@ -380,6 +355,62 @@ private fun MeetingItem(
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = countModifier
+    )
+}
+
+/**
+ * CREATE MEETING FAB
+ */
+@Composable
+private fun CreateButton(
+    state: State,
+    listener: Listener?
+) {
+    if (!state.showProgress && state.user.organizer) {
+        FloatingActionButton(
+            contentColor = Color.White,
+            backgroundColor = MaterialTheme.colors.mainBackgroundColor,
+            onClick = { listener?.toCreateMeeting() }
+        ) {
+            Icon(
+                imageVector = Icons.Filled.Add,
+                contentDescription = "Create new meeting button"
+            )
+        }
+    }
+}
+
+/**
+ * NO MEETINGS STUB
+ */
+@Composable
+private fun EmptyListStub() = Column(
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier.padding(top = 48.dp)
+) {
+    Image(
+        painter = painterResource(R.drawable.image_no_meetings),
+        contentDescription = "No meetings image stub"
+    )
+    Text(
+        text = "Тут пусто",
+        color = MaterialTheme.colors.textPrimary,
+        style = MaterialTheme.typography.title1Bold,
+        modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+    )
+    Text(
+        text = "В этом городе ничего не запланировано\nИсправь это",
+        color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.bodyRegular,
+        textAlign = TextAlign.Center,
+        modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
+    )
+    StateButton(
+        text = "Стать организатором",
+        modifier = Modifier
+            .padding(top = 32.dp, start = 48.dp, end = 48.dp)
+            .clip(RoundedCornerShape(24.dp))
     )
 }
 
