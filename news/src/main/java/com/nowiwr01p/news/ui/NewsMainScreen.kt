@@ -103,7 +103,7 @@ fun ArticleView(
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { article.getField("image") ?: "" }
+        imageModel = { article.getField("image") }
     )
 
     val titleModifier = Modifier
@@ -116,7 +116,7 @@ fun ArticleView(
         }
 
     Text(
-        text = article.getField("title") ?: "",
+        text = article.getField("title"),
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title2Bold,
         modifier = titleModifier
