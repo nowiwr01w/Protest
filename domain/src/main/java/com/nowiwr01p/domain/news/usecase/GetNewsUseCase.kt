@@ -7,6 +7,7 @@ import com.nowiwr01p.domain.news.repository.NewsRepository
 class GetNewsUseCase(
     private val repository: NewsRepository
 ) : UseCase<Unit, List<Article>> {
+
     override suspend fun execute(input: Unit): List<Article> {
         return repository.getNews()
     }

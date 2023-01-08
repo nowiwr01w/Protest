@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -39,40 +40,43 @@ fun NewsMainScreen(
         viewModel.setEvent(Event.Init)
     }
 
-    NewsContent(state = state, listener = listener)
+    NewsContent(state, listener)
 }
 
 @Composable
 fun NewsContent(
     state: State,
     listener: Listener?
-) = Column(modifier = Modifier.fillMaxSize()) {
+) = Column(
+    modifier = Modifier.fillMaxSize()
+) {
     Toolbar()
     Spacer(modifier = Modifier.height(16.dp))
-    NewsList(state = state, listener = listener)
+    NewsList(state, listener)
 }
 
 @Composable
 fun Toolbar() =
     Text(
-        modifier = Modifier
-            .statusBarsPadding()
-            .padding(start = 20.dp, top = 20.dp),
         text = "Новости",
         style = MaterialTheme.typography.largeTitle,
-        color = MaterialTheme.colors.textPrimary
+        color = MaterialTheme.colors.textPrimary,
+        modifier = Modifier
+            .statusBarsPadding()
+            .padding(start = 20.dp, top = 20.dp)
     )
 
 @Composable
 fun NewsList(
     state: State,
     listener: Listener?
-) = LazyColumn(modifier = Modifier.fillMaxSize()) {
-    state.newsList.map {
-        item { ArticleView(article = it, listener = listener) }
-        item { Spacer(modifier = Modifier.height(8.dp)) }
+) = LazyColumn(
+    modifier = Modifier.fillMaxSize()
+) {
+    items(state.newsList) { article ->
+        ArticleView(article, listener)
+        Spacer(modifier = Modifier.height(8.dp))
     }
-
 }
 
 @Composable
@@ -87,6 +91,7 @@ fun ArticleView(
         .background(MaterialTheme.colors.background)
 ) {
     val (image, title, date) = createRefs()
+
     val imageModifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
@@ -98,7 +103,7 @@ fun ArticleView(
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { article.components.find { it.type == "image" }?.value ?: "" }
+        imageModel = { article.getField("image") ?: "" }
     )
 
     val titleModifier = Modifier
@@ -111,7 +116,7 @@ fun ArticleView(
         }
 
     Text(
-        text = article.components.find { it.type == "title" }?.value ?: "",
+        text = article.getField("title") ?: "",
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title2Bold,
         modifier = titleModifier
@@ -137,7 +142,7 @@ fun Preview() = MeetingsTheme {
     NewsContent(
         state = State(
             isLoading = false,
-            newsList = listOf(Article.DataForPreview.article)
+            newsList = listOf(Article.article)
         ),
         listener = null
     )
