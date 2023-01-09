@@ -1,6 +1,7 @@
 package com.nowiwr01p.core.datastore.location.data
 
 import com.google.gson.annotations.SerializedName
+import com.nowiwr01p.core.model.Category
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -16,7 +17,7 @@ data class Meeting(
     @SerializedName("openDate")
     val openDate: OpenDate = OpenDate(),
     @SerializedName("categories")
-    val categories: List<String> = listOf(),
+    val categories: List<Category> = listOf(),
     @SerializedName("title")
     val title: String = "",
     @SerializedName("description")
@@ -43,7 +44,7 @@ data class Meeting(
             image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",
             date = System.currentTimeMillis(),
             openDate = OpenDate.getSampleData(),
-            categories = listOf("Политика", "Права человека", "Преступность"),
+            categories = Category.getSampleData(),
             title = "Свободу Навальному",
             description = "Ни для кого не секрет, что в России права человека считаются чем-то, что всегда " +
                     "уходит на задний план.\n\n" +
@@ -83,6 +84,7 @@ data class OpenDate(
     companion object {
         fun getSampleData() = OpenDate(
             text = "Место и дата проведения появится либо 23.02, либо после того, как наберётся хотя бы 1000 человек. Это обязательное условие.",
+            date = System.currentTimeMillis(),
             requiredPeopleCount = 1000
         )
     }

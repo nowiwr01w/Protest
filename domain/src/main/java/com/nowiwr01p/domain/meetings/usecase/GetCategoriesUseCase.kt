@@ -1,7 +1,7 @@
 package com.nowiwr01p.domain.meetings.usecase
 
 import com.nowiwr01p.domain.UseCase
-import com.nowiwr01p.domain.meetings.data.Category
+import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 
 class GetCategoriesUseCase(
