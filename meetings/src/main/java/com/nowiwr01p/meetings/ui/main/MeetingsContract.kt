@@ -11,13 +11,15 @@ interface MeetingsContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        data class SelectCategory(val category: Category): Event
     }
 
     data class State(
         val showProgress: Boolean = false,
         val user: User = User(),
         val meetings: List<Meeting> = listOf(),
-        val categories: List<Category> = listOf()
+        val categories: List<Category> = listOf(),
+        val selectedCategory: Category = Category()
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
@@ -27,5 +29,6 @@ interface MeetingsContract {
     interface Listener {
         fun toMeeting(meeting: Meeting)
         fun toCreateMeeting()
+        fun onCategoryClick(category: Category)
     }
 }

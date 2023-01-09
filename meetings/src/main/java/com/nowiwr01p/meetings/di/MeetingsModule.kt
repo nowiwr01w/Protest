@@ -6,6 +6,7 @@ import com.nowiwr01p.domain.meetings.usecase.SaveMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCache
 import com.nowiwr01p.meetings.navigation.MeetingsNavigatorImpl
 import com.nowiwr01p.meetings.ui.create.CreateMeetingVewModel
+import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
 import com.nowiwr01p.meetings.ui.meeting.MeetingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -28,9 +29,12 @@ val moduleMeetings = module {
             get(),
             get(),
             scope.get(),
-            scope.get()
+            scope.get(),
+            get()
         )
     }
+
+    factory { MeetingsMapper() }
 
     scope(named(meetingsScreenScopeName)) {
         scoped { MeetingsScreenCache() }
