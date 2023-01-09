@@ -1,16 +1,13 @@
 package com.nowiwr01p.meetings.ui.meeting
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -32,6 +29,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -335,34 +333,33 @@ private fun ThingItem() = Column(
 private fun DropdownItems(meeting: Meeting) = Column(
     modifier = Modifier
         .fillMaxWidth()
-        .clip(RoundedCornerShape(16.dp))
-        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-        .border(
-            width = 2.dp,
-            color = Color.Black.copy(alpha = 0.45f),
-            shape = RoundedCornerShape(16.dp)
+        .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        .shadowCard(
+            elevation = 6.dp,
+            shape = RoundedCornerShape(16.dp),
+            backgroundColor = MaterialTheme.colors.backgroundSpecial
         )
 ) {
     DropdownItem(
         title = "Чего хотим добиться",
         steps = meeting.details.goals
     )
-    Separator()
     DropdownItem(
         title = "Лозунги",
         steps = meeting.details.slogans
     )
-    Separator()
     DropdownItem(
         title = "Стратегия",
-        steps = meeting.details.strategy
+        steps = meeting.details.strategy,
+        lastItem = true
     )
 }
 
 @Composable
 private fun DropdownItem(
     title: String,
-    steps: List<String>
+    steps: List<String>,
+    lastItem: Boolean = false
 ) {
     val expanded = remember { mutableStateOf(false) }
     val rotateAnimation by animateFloatAsState(
@@ -371,6 +368,7 @@ private fun DropdownItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .animateContentSize()
             .clickable(
                 indication = null,
                 interactionSource = MutableInteractionSource()
@@ -389,9 +387,8 @@ private fun DropdownItem(
                 modifier = Modifier.padding(start = 24.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp),
-                onClick = { expanded.value = !expanded.value }
+            Box(
+                modifier = Modifier.padding(end = 16.dp, top = 16.dp, bottom = 16.dp),
             ) {
                 Icon(
                     painter = rememberVectorPainter(Icons.Default.KeyboardArrowDown),
@@ -399,8 +396,9 @@ private fun DropdownItem(
                     tint = MaterialTheme.colors.graphicsTertiary,
                     modifier = Modifier
                         .size(28.dp)
-                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(14.dp))
                         .rotate(rotateAnimation)
+                        .clickable { expanded.value = !expanded.value }
 
                 )
             }
@@ -409,17 +407,10 @@ private fun DropdownItem(
             steps.forEach { step ->
                 StepItem(step)
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(if (lastItem) 16.dp else 8.dp))
         }
     }
 }
-
-@Composable
-private fun Separator() = Divider(
-    modifier = Modifier.fillMaxWidth(),
-    color = Color.Black.copy(alpha = 0.45f),
-    thickness = 2.dp
-)
 
 @Composable
 private fun StepItem(text: String) = Row(
@@ -448,7 +439,7 @@ private fun WillYouGoTitle() = Text(
     text = "Увидимся на митинге?",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.title2Bold,
-    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+    modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
 )
 
 @Composable
