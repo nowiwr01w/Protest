@@ -18,6 +18,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.formatToDate
 import com.nowiwr01p.core.model.Article
+import com.nowiwr01p.core.model.ArticleContentType.Image
+import com.nowiwr01p.core.model.ArticleContentType.Title
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.news.ui.NewsContract.*
@@ -103,7 +105,7 @@ fun ArticleView(
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { article.getField("image") }
+        imageModel = { article.getField(Image) }
     )
 
     val titleModifier = Modifier
@@ -116,7 +118,7 @@ fun ArticleView(
         }
 
     Text(
-        text = article.getField("title"),
+        text = article.getField(Title),
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title2Bold,
         modifier = titleModifier
