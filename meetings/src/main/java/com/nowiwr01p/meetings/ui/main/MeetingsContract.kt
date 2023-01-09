@@ -25,6 +25,7 @@ interface MeetingsContract {
     }
 
     interface Listener {
+        fun toMeeting(meeting: Meeting)
         fun toCreateMeeting()
     }
 }

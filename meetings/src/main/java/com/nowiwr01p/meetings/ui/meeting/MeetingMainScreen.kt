@@ -46,6 +46,7 @@ import timber.log.Timber
 
 @Composable
 fun MeetingMainScreen(
+    meeting: Meeting,
     navigator: Navigator,
     viewModel: MeetingViewModel = getViewModel()
 ) {
@@ -54,7 +55,7 @@ fun MeetingMainScreen(
    }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(Event.Init)
+        viewModel.setEvent(Event.Init(meeting))
     }
 
     EffectObserver(viewModel.effect) {
@@ -159,7 +160,7 @@ private fun Category(
 ) = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-        .padding(start = 16.dp)
+        .padding(start = 8.dp)
         .clip(RoundedCornerShape(40))
         .background(category.backgroundColor.toColor())
 ) {
