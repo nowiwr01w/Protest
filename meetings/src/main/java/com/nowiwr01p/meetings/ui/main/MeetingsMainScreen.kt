@@ -383,7 +383,7 @@ private fun MeetingCategories(
 ) = LazyRow(
     modifier = modifier.fillMaxWidth()
 ) {
-    val sorted = meeting.categories.sortedBy { it.priority }
+    val sorted = meeting.categories.distinctBy { it.textColor }.sortedBy { it.priority }.take(3)
     items(sorted) {
         Category(it)
     }
