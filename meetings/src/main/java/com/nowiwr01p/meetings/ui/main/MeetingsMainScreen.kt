@@ -56,6 +56,9 @@ fun MeetingsMainScreen(
         override fun toCreateMeeting() {
             // TODO
         }
+        override fun onCategoryClick(category: Category) {
+            viewModel.setEvent(Event.SelectCategory(category))
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -91,11 +94,7 @@ private fun MeetingsMainScreenContent(
             item { Stories(state) }
             item { MeetingsTitle(state) }
             item { Categories(state, listener) }
-            if (state.meetings.isEmpty()) {
-                item { EmptyListStub() }
-            } else {
-                Meetings(state, listener)
-            }
+            Meetings(state, listener)
         }
     }
 }
@@ -230,7 +229,9 @@ private fun Categories(
         .padding(top = 8.dp)
 ) {
     items(state.categories) { category ->
-        Category(category, state, listener)
+        Category(category) {
+            listener?.onCategoryClick(category)
+        }
     }
     item { Spacer(modifier = Modifier.width(12.dp)) }
 }
@@ -238,12 +239,9 @@ private fun Categories(
 @Composable
 private fun Category(
     category: Category,
-    state: State,
-    listener: Listener?,
-    isSelected: Boolean = false,
     onItemClick: () -> Unit = {},
 ) {
-    val backgroundColor = if (isSelected) {
+    val backgroundColor = if (category.isSelected) {
         MaterialTheme.colors.backgroundSpecialInverse
     } else {
         MaterialTheme.colors.backgroundSpecial
@@ -260,7 +258,7 @@ private fun Category(
             )
             .clickable { onItemClick() },
     ) {
-        val textColor = if (isSelected) {
+        val textColor = if (category.isSelected) {
             MaterialTheme.colors.textPrimaryInverted
         } else {
             MaterialTheme.colors.textPrimary
@@ -286,11 +284,20 @@ private fun LazyListScope.Meetings(
     state: State,
     listener: Listener?
 ) {
-    item { Spacer(modifier = Modifier.height(8.dp)) }
-    items(state.meetings) { meeting ->
-        MeetingItem(meeting, listener)
+    val filtered = state.meetings.filter { meeting ->
+        val selectedName = state.selectedCategory.name
+        val found = meeting.categories.find { category -> category.name == selectedName } != null
+        found || selectedName.isEmpty()
     }
-    item { Spacer(modifier = Modifier.height(8.dp)) }
+    if (filtered.isEmpty()) {
+        item { EmptyListStub() }
+    } else {
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        items(filtered) { meeting ->
+            MeetingItem(meeting, listener)
+        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+    }
 }
 
 
