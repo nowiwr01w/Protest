@@ -20,7 +20,7 @@ data class Article(
     @SerialName("content")
     val content: List<ContentItem> = listOf()
 ) {
-    fun getField(type: String) = content.find { it.type == type }?.value ?: ""
+    fun getField(type: ArticleContentType) = content.find { it.type == type.type }?.value ?: ""
 
     companion object {
         val article = Article(
