@@ -8,7 +8,8 @@ import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCacheData
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 
 class MeetingsViewModel(
-    private val getCategories: GetCategoriesUseCase,
+    private val getMeetingsUseCase: GetMeetingsUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val getMeetingsScreenCacheUseCase: GetMeetingsScreenCacheUseCase,
     private val saveMeetingsScreenCacheUseCase: SaveMeetingsScreenCacheUseCase
@@ -27,6 +28,7 @@ class MeetingsViewModel(
         runCatching {
             getScreenCache()
             getUserData()
+            getMeetings()
             getCategories()
         }.onSuccess {
             saveScreenCache()
@@ -43,10 +45,18 @@ class MeetingsViewModel(
     }
 
     /**
+     * MEETINGS
+     */
+    private suspend fun getMeetings() {
+        val meetings = getMeetingsUseCase.execute()
+        setState { copy(meetings = meetings) }
+    }
+
+    /**
      * CATEGORIES
      */
     private suspend fun getCategories() {
-        val categories = getCategories.execute()
+        val categories = getCategoriesUseCase.execute()
         setState { copy(categories = categories) }
     }
 

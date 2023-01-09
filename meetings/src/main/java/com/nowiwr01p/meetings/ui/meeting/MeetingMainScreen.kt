@@ -28,12 +28,15 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.extenstion.formatToDate
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
+import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
@@ -144,34 +147,26 @@ private fun Categories(meeting: Meeting) = LazyRow(
         .fillMaxWidth()
         .padding(top = 16.dp)
 ) {
-    items(meeting.categories) { category ->
-        Category(
-            text = category,
-            textColor = MaterialTheme.colors.graphicsBlue,
-            backgroundColor = MaterialTheme.colors.backgroundBlue
-        )
+    items(meeting.categories) {
+        Category(it)
     }
-    item {
-        Spacer(modifier = Modifier.width(16.dp))
-    }
+    item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
 @Composable
 private fun Category(
-    text: String,
-    textColor: Color,
-    backgroundColor: Color
+    category: Category
 ) = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
         .padding(start = 16.dp)
         .clip(RoundedCornerShape(40))
-        .background(backgroundColor)
+        .background(category.backgroundColor.toColor())
 ) {
     Text(
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        text = text,
-        color = textColor,
+        text = category.name,
+        color = category.textColor.toColor(),
         style = MaterialTheme.typography.caption2Regular,
     )
 }
@@ -218,7 +213,7 @@ private fun LocationInfoContainer(meeting: Meeting) = Row(
 ) {
     LocationPlace(meeting.locationInfo.shortName)
     Spacer(modifier = Modifier.weight(1f))
-    LocationDate(meeting.date.toString())
+    LocationDate(meeting.date.formatToDate())
 }
 
 @Composable
@@ -229,8 +224,8 @@ private fun LocationPlace(shortName: String) = Text(
 )
 
 @Composable
-private fun LocationDate(placeDetails: String) = Text(
-    text = placeDetails,
+private fun LocationDate(date: String) = Text(
+    text = date,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1
 )

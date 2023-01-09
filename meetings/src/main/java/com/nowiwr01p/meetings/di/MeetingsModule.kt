@@ -26,6 +26,7 @@ val moduleMeetings = module {
         MeetingsViewModel(
             get(),
             get(),
+            get(),
             scope.get(),
             scope.get()
         )
