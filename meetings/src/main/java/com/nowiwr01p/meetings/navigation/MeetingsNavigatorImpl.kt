@@ -3,6 +3,7 @@ package com.nowiwr01p.meetings.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
+import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.navigators.MeetingsNavigator
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.MeetingsScreen.*
@@ -15,8 +16,8 @@ class MeetingsNavigatorImpl: MeetingsNavigator {
         navController = curNavController
     }
 
-    override fun navigateToMeeting() {
-        MeetingMainScreen.navigate(Unit, navController)
+    override fun navigateToMeeting(meeting: Meeting) {
+        MeetingMainScreen.navigate(meeting, navController)
     }
 
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {

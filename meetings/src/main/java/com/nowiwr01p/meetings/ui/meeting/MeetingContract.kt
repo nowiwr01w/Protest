@@ -8,10 +8,10 @@ import com.nowiwr01p.core_ui.view_model.ViewState
 interface MeetingContract {
 
     sealed interface Event: ViewEvent {
-        object Init: Event
+        data class Init(val meeting: Meeting): Event
     }
 
-    class State(
+    data class State(
         val meeting: Meeting = Meeting.getSampleData()
     ): ViewState
 

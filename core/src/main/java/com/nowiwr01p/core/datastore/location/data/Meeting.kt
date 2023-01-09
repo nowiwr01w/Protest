@@ -5,6 +5,7 @@ import com.nowiwr01p.core.model.Category
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
+@Serializable
 data class Meeting(
     @SerializedName("id")
     val id: String = "",

@@ -50,8 +50,11 @@ fun MeetingsMainScreen(
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
+        override fun toMeeting(meeting: Meeting) {
+            navigator.meetingsNavigator.navigateToMeeting(meeting)
+        }
         override fun toCreateMeeting() {
-            navigator.meetingsNavigator.navigateToMeeting()
+            // TODO
         }
     }
 
@@ -298,7 +301,7 @@ private fun MeetingItem(
 ) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
-        .clickable {  }
+        .clickable { listener?.toMeeting(meeting) }
         .padding(vertical = 12.dp, horizontal = 16.dp)
         .background(MaterialTheme.colors.background)
 ) {
