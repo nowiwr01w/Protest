@@ -24,6 +24,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -143,15 +146,19 @@ private fun TopImage(meeting: Meeting) = CoilImage(
  * CATEGORY
  */
 @Composable
-private fun Categories(meeting: Meeting) = LazyRow(
+private fun Categories(meeting: Meeting) = FlowRow(
+    mainAxisSize = SizeMode.Wrap,
+    mainAxisSpacing = 8.dp,
+    crossAxisSpacing = 8.dp,
+    mainAxisAlignment = FlowMainAxisAlignment.Start,
+    lastLineMainAxisAlignment = FlowMainAxisAlignment.Start,
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 16.dp)
+        .padding(top = 16.dp, start = 16.dp)
 ) {
-    items(meeting.categories) {
+    meeting.categories.forEach {
         Category(it)
     }
-    item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
 @Composable
@@ -160,7 +167,6 @@ private fun Category(
 ) = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-        .padding(start = 8.dp)
         .clip(RoundedCornerShape(40))
         .background(category.backgroundColor.toColor())
 ) {
