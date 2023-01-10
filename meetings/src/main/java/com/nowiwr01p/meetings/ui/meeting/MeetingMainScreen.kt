@@ -23,6 +23,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
@@ -33,6 +34,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.location.data.Poster
 import com.nowiwr01p.core.extenstion.formatToDate
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
@@ -104,7 +106,7 @@ private fun MeetingMainScreenContent(
         item { MapPlaceComment(meeting) }
         item { TakeWithYouTitle() }
         item { TakeWithYouDetails(meeting) }
-        item { TakeWithYouList(meeting, listener) }
+        item { Posters(meeting, listener) }
         item { DropdownItems(meeting) }
         item { WillYouGoTitle() }
         item { WillYouGoPeopleCount(meeting) }
@@ -348,7 +350,7 @@ private fun TakeWithYouDetails(meeting: Meeting) = Text(
 )
 
 @Composable
-private fun TakeWithYouList(
+private fun Posters(
     meeting: Meeting,
     listener: Listener?
 ) = LazyRow(
@@ -356,33 +358,38 @@ private fun TakeWithYouList(
         .fillMaxWidth()
         .padding(top = 16.dp)
 ) {
-    items(meeting.takeWithYouInfo.posterLinks) { link ->
-        ThingItem {
-            listener?.openLink(link)
+    items(meeting.takeWithYouInfo.posters) { poster ->
+        Poster(poster) {
+            listener?.openLink(poster.link)
         }
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
 @Composable
-private fun ThingItem(
+private fun Poster(
+    poster: Poster,
     onClick: () -> Unit
 ) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(start = 16.dp)
 ) {
     CoilImage(
-        imageModel = { R.drawable.ic_poster },
+        imageModel = {
+            poster.image.ifEmpty { R.drawable.ic_poster }
+        },
         modifier = Modifier
             .size(96.dp)
             .clip(RoundedCornerShape(8.dp))
             .clickable { onClick() }
     )
     Text(
-        text = "Плакат",
+        text = poster.name,
         style = MaterialTheme.typography.caption2Regular,
         color = MaterialTheme.colors.textPrimary,
-        modifier = Modifier.padding(top = 8.dp)
+        maxLines = 2,
+        overflow = TextOverflow.Ellipsis,
+        modifier = Modifier.padding(top = 8.dp, start = 4.dp, end = 4.dp)
     )
 }
 

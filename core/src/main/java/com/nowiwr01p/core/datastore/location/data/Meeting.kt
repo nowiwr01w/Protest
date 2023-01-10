@@ -1,41 +1,25 @@
 package com.nowiwr01p.core.datastore.location.data
 
-import com.google.gson.annotations.SerializedName
 import com.nowiwr01p.core.model.Category
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Meeting(
-    @SerializedName("id")
     val id: String = "",
-    @SerializedName("creatorId")
     val creatorId: String = "",
-    @SerializedName("image")
     val image: String = "",
-    @SerializedName("date")
     val date: Long = 0L,
-    @SerializedName("openDate")
     val openDate: OpenDate = OpenDate(),
-    @SerializedName("categories")
     val categories: List<Category> = listOf(),
-    @SerializedName("title")
     val title: String = "",
-    @SerializedName("description")
     val description: String = "",
-    @SerializedName("locationInfo")
     val locationInfo: LocationInfo = LocationInfo(),
-    @SerializedName("takeWithYouInfo")
     val takeWithYouInfo: TakeWithYouInfo = TakeWithYouInfo(),
-    @SerializedName("details")
     val details: Details = Details(),
-    @SerializedName("reaction")
     val reaction: Reaction = Reaction(),
-    @SerializedName("telegram")
     val telegram: String = "",
-    @SerializedName("path")
     val path: List<Coordinate> = listOf(),
-    @SerializedName("currentPosition")
     val currentPosition: Coordinate = Coordinate()
 ) {
     companion object {
@@ -56,7 +40,8 @@ data class Meeting(
             takeWithYouInfo = TakeWithYouInfo.getSampleData(),
             details = Details.getSampleData(),
             reaction = Reaction.getSampleData(),
-            telegram = "nowiwr01p"
+            telegram = "nowiwr01p",
+            currentPosition = Coordinate.getSampleData()
         )
     }
 }
@@ -75,11 +60,8 @@ data class Coordinate(
 
 @Serializable
 data class OpenDate(
-    @SerializedName("text")
     val text: String = "",
-    @SerializedName("date")
     val date: Long = 0L,
-    @SerializedName("requiredPeopleCount")
     val requiredPeopleCount: Int = 0
 ) {
     companion object {
@@ -93,11 +75,8 @@ data class OpenDate(
 
 @Serializable
 data class LocationInfo(
-    @SerializedName("shortName")
     val shortName: String = "",
-    @SerializedName("coordinates")
     val coordinates: Coordinate = Coordinate(),
-    @SerializedName("placeDetails")
     val placeDetails: String = ""
 ) {
     companion object {
@@ -111,32 +90,34 @@ data class LocationInfo(
 
 @Serializable
 data class TakeWithYouInfo(
-    @SerializedName("description")
     val description: String = "",
-    @SerializedName("posterLinks")
-    val posterLinks: List<String> = listOf()
+    val posters: List<Poster> = listOf()
 ) {
     companion object {
         fun getSampleData() = TakeWithYouInfo(
             description = "Плакаты, флаги, что угодно\nВот примеры:",
-            posterLinks = listOf(
-                "https://google.com/search?q=first",
-                "https://google.com/search?q=second",
-                "https://google.com/search?q=third",
-                "https://google.com/search?q=fourth",
-                "https://google.com/search?q=fifth",
+            posters = listOf(
+                Poster("Плакат", "https://google.com/search?q=first", ""),
+                Poster("Плакат", "https://google.com/search?q=second", ""),
+                Poster("Плакат", "https://google.com/search?q=third", ""),
+                Poster("Плакат", "https://google.com/search?q=fourth", ""),
+                Poster("Плакат", "https://google.com/search?q=fifth", "")
             )
         )
     }
 }
 
 @Serializable
+data class Poster(
+    val name: String = "",
+    val link: String = "",
+    val image: String = ""
+)
+
+@Serializable
 data class Details(
-    @SerializedName("goals")
     val goals: List<String> = listOf(),
-    @SerializedName("slogans")
     val slogans: List<String> = listOf(),
-    @SerializedName("strategy")
     val strategy: List<String> = listOf(),
 ) {
     companion object {
@@ -150,9 +131,7 @@ data class Details(
 
 @Serializable
 data class Reaction(
-    @SerializedName("peopleGoCount")
     val peopleGoCount: List<String> = listOf(),
-    @SerializedName("peopleMaybeGoCount")
     val peopleMaybeGoCount: List<String> = listOf()
 ) {
     companion object {
