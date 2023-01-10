@@ -88,8 +88,8 @@ private fun MeetingMainScreenContent(
         item { Title(meeting) }
         item { Description(meeting) }
         item { LocationTitle() }
-        item { LocationInfoContainer(meeting) }
-        item { MapPreview(meeting) }
+        item { LocationInfoContainer(state) }
+        item { MapPreview(state) }
         item { MapPlaceComment(meeting) }
         item { TakeWithYouTitle() }
         item { TakeWithYouDetails(meeting) }
@@ -212,15 +212,19 @@ private fun LocationTitle() = Text(
 )
 
 @Composable
-private fun LocationInfoContainer(meeting: Meeting) = Row(
+private fun LocationInfoContainer(state: State) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
-    LocationPlace(meeting.locationInfo.shortName)
-    Spacer(modifier = Modifier.weight(1f))
-    LocationDate(meeting.date.formatToDate())
+    if (state.meeting.openDate.date != 0L) {
+        LocationPlace(state.meeting.openDate.text)
+    } else {
+        LocationPlace(state.meeting.locationInfo.shortName)
+        Spacer(modifier = Modifier.weight(1f))
+        LocationDate(state.meeting.date.formatToDate())
+    }
 }
 
 @Composable
@@ -238,46 +242,57 @@ private fun LocationDate(date: String) = Text(
 )
 
 @Composable
-private fun MapPreview(meeting: Meeting) {
-    val coordinates = with(meeting.locationInfo.coordinates) {
-        LatLng(latitude, longitude)
+private fun MapPreview(state: State) {
+    val coordinates = if (state.city.name.isNotEmpty() && state.meeting.openDate.date != 0L) {
+        LatLng(state.city.latitude, state.city.longitude)
+    } else {
+        with(state.meeting.locationInfo.coordinates) { LatLng(latitude, longitude) }
     }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(coordinates, 13f)
+        position = CameraPosition.fromLatLngZoom(coordinates, 11f)
     }
-    GoogleMap(
-        cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(zoomControlsEnabled = false),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(top = 12.dp, start = 16.dp, end = 16.dp)
-            .clip(RoundedCornerShape(16.dp))
+    Box(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Marker(
-            state = rememberMarkerState(position = coordinates),
-            onClick = {
-                Timber.tag("Zhopa").d("click")
-                true
+        GoogleMap(
+            cameraPositionState = cameraPositionState,
+            uiSettings = MapUiSettings(zoomControlsEnabled = false),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(top = 12.dp, start = 16.dp, end = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
+        ) {
+            if (state.meeting.openDate.date == 0L) {
+                Marker(
+                    state = rememberMarkerState(position = coordinates)
+                )
             }
-        )
+        }
+        if (state.meeting.openDate.date != 0L) {
+            MapUnknownPlaceContainer()
+        }
     }
 }
 
 @Composable
-private fun MapPlaceComment(meeting: Meeting) = Row(
-    horizontalArrangement = Arrangement.Center,
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp),
-) {
-    Text(
-        text = meeting.locationInfo.placeDetails,
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.footnoteRegular,
-        color = MaterialTheme.colors.textColorSecondary,
-    )
+private fun MapPlaceComment(meeting: Meeting) {
+    if (meeting.openDate.date == 0L) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 8.dp, start = 16.dp, end = 16.dp),
+        ) {
+            Text(
+                text = meeting.locationInfo.placeDetails,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.footnoteRegular,
+                color = MaterialTheme.colors.textColorSecondary,
+            )
+        }
+    }
 }
 
 /**
