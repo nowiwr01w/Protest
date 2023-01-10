@@ -1,16 +1,13 @@
 package com.nowiwr01p.meetings.ui.meeting
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -27,33 +24,48 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
+import com.google.accompanist.flowlayout.FlowRow
+import com.google.accompanist.flowlayout.SizeMode
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.getPeopleGoCount
+import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
+import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.shadowCard
+import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
+import com.nowiwr01p.meetings.ui.meeting.MeetingContract.ReactionLoadingStatus.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 @Composable
 fun MeetingMainScreen(
+    meeting: Meeting,
     navigator: Navigator,
     viewModel: MeetingViewModel = getViewModel()
 ) {
    val listener = object : Listener {
-
+       override fun onBack() {
+           navigator.navigateUp()
+       }
+       override fun openLink(link: String) {
+           viewModel.setEvent(Event.OpenLink(link))
+       }
    }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(Event.Init)
+        viewModel.setEvent(Event.Init(meeting))
     }
 
     EffectObserver(viewModel.effect) {
@@ -74,7 +86,7 @@ private fun MeetingMainScreenContent(
     modifier = Modifier.fillMaxSize()
 ) {
     val meeting = state.meeting
-    Toolbar()
+    Toolbar(meeting, listener)
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -83,17 +95,17 @@ private fun MeetingMainScreenContent(
         item { Title(meeting) }
         item { Description(meeting) }
         item { LocationTitle() }
-        item { LocationInfoContainer(meeting) }
-        item { MapPreview(meeting) }
+        item { LocationInfoContainer(state) }
+        item { MapPreview(state) }
         item { MapPlaceComment(meeting) }
         item { TakeWithYouTitle() }
         item { TakeWithYouDetails(meeting) }
-        item { TakeWithYouList(meeting) }
+        item { TakeWithYouList(meeting, listener) }
         item { DropdownItems(meeting) }
         item { WillYouGoTitle() }
         item { WillYouGoPeopleCount(meeting) }
         item { WillYouGoImage() }
-        item { WillYouGoActionButtons(meeting) }
+        item { WillYouGoActionButtons(state) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
@@ -102,10 +114,13 @@ private fun MeetingMainScreenContent(
  * TOOLBAR
  */
 @Composable
-private fun Toolbar() = ToolbarTop(
+private fun Toolbar(
+    meeting: Meeting,
+    listener: Listener?
+) = ToolbarTop(
     backIcon = {
         ToolbarBackButton {
-
+            listener?.onBack()
         }
     },
     actions = {
@@ -113,7 +128,9 @@ private fun Toolbar() = ToolbarTop(
             modifier = Modifier
                 .padding(end = 10.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .clickable {  }
+                .clickable {
+                    listener?.openLink(meeting.telegram)
+                }
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_telegram),
@@ -141,39 +158,34 @@ private fun TopImage(meeting: Meeting) = CoilImage(
  * CATEGORY
  */
 @Composable
-private fun Categories(meeting: Meeting) = LazyRow(
+private fun Categories(meeting: Meeting) = FlowRow(
+    mainAxisSize = SizeMode.Wrap,
+    mainAxisSpacing = 8.dp,
+    crossAxisSpacing = 8.dp,
+    mainAxisAlignment = FlowMainAxisAlignment.Start,
+    lastLineMainAxisAlignment = FlowMainAxisAlignment.Start,
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 16.dp)
+        .padding(top = 16.dp, start = 16.dp)
 ) {
-    items(meeting.categories) { category ->
-        Category(
-            text = category,
-            textColor = MaterialTheme.colors.graphicsBlue,
-            backgroundColor = MaterialTheme.colors.backgroundBlue
-        )
-    }
-    item {
-        Spacer(modifier = Modifier.width(16.dp))
+    meeting.categories.forEach {
+        Category(it)
     }
 }
 
 @Composable
 private fun Category(
-    text: String,
-    textColor: Color,
-    backgroundColor: Color
+    category: Category
 ) = Box(
     contentAlignment = Alignment.Center,
     modifier = Modifier
-        .padding(start = 16.dp)
         .clip(RoundedCornerShape(40))
-        .background(backgroundColor)
+        .background(category.backgroundColor.toColor())
 ) {
     Text(
         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        text = text,
-        color = textColor,
+        text = category.name,
+        color = category.textColor.toColor(),
         style = MaterialTheme.typography.caption2Regular,
     )
 }
@@ -212,15 +224,21 @@ private fun LocationTitle() = Text(
 )
 
 @Composable
-private fun LocationInfoContainer(meeting: Meeting) = Row(
+private fun LocationInfoContainer(state: State) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
-    LocationPlace(meeting.locationInfo.shortName)
-    Spacer(modifier = Modifier.weight(1f))
-    LocationDate(meeting.date.toString())
+    with(state.meeting) {
+        if (openDate.date != 0L) {
+            LocationPlace(openDate.text)
+        } else {
+            LocationPlace(locationInfo.shortName)
+            Spacer(modifier = Modifier.weight(1f))
+            LocationDate(date.formatToDate())
+        }
+    }
 }
 
 @Composable
@@ -231,53 +249,64 @@ private fun LocationPlace(shortName: String) = Text(
 )
 
 @Composable
-private fun LocationDate(placeDetails: String) = Text(
-    text = placeDetails,
+private fun LocationDate(date: String) = Text(
+    text = date,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1
 )
 
 @Composable
-private fun MapPreview(meeting: Meeting) {
-    val coordinates = with(meeting.locationInfo.coordinates) {
-        LatLng(latitude, longitude)
+private fun MapPreview(state: State) {
+    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.openDate.date != 0L) {
+        LatLng(state.user.city.latitude, state.user.city.longitude)
+    } else {
+        with(state.meeting.locationInfo.coordinates) { LatLng(latitude, longitude) }
     }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(coordinates, 13f)
+        position = CameraPosition.fromLatLngZoom(coordinates, 11f)
     }
-    GoogleMap(
-        cameraPositionState = cameraPositionState,
-        uiSettings = MapUiSettings(zoomControlsEnabled = false),
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(200.dp)
-            .padding(top = 12.dp, start = 16.dp, end = 16.dp)
-            .clip(RoundedCornerShape(16.dp))
+    Box(
+        modifier = Modifier.fillMaxWidth()
     ) {
-        Marker(
-            state = rememberMarkerState(position = coordinates),
-            onClick = {
-                Timber.tag("Zhopa").d("click")
-                true
+        GoogleMap(
+            cameraPositionState = cameraPositionState,
+            uiSettings = MapUiSettings(zoomControlsEnabled = false),
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .padding(top = 12.dp, start = 16.dp, end = 16.dp)
+                .clip(RoundedCornerShape(16.dp))
+        ) {
+            if (state.meeting.openDate.date == 0L) {
+                Marker(
+                    state = rememberMarkerState(position = coordinates)
+                )
             }
-        )
+        }
+        if (state.meeting.openDate.date != 0L) {
+            MapUnknownPlaceContainer()
+        }
     }
 }
 
 @Composable
-private fun MapPlaceComment(meeting: Meeting) = Row(
-    horizontalArrangement = Arrangement.Center,
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp),
-) {
-    Text(
-        text = meeting.locationInfo.placeDetails,
-        textAlign = TextAlign.Center,
-        style = MaterialTheme.typography.footnoteRegular,
-        color = MaterialTheme.colors.textColorSecondary,
-    )
+private fun MapPlaceComment(meeting: Meeting) {
+    if (meeting.openDate.date == 0L) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 8.dp, start = 16.dp, end = 16.dp),
+        ) {
+            Text(
+                text = meeting.locationInfo.placeDetails,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.footnoteRegular,
+                color = MaterialTheme.colors.textColorSecondary,
+            )
+        }
+    }
 }
 
 /**
@@ -300,19 +329,26 @@ private fun TakeWithYouDetails(meeting: Meeting) = Text(
 )
 
 @Composable
-private fun TakeWithYouList(meeting: Meeting) = LazyRow(
+private fun TakeWithYouList(
+    meeting: Meeting,
+    listener: Listener?
+) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 16.dp)
 ) {
-    items(meeting.takeWithYouInfo.posterLinks) {
-        ThingItem()
+    items(meeting.takeWithYouInfo.posterLinks) { link ->
+        ThingItem {
+            listener?.openLink(link)
+        }
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
 @Composable
-private fun ThingItem() = Column(
+private fun ThingItem(
+    onClick: () -> Unit
+) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(start = 16.dp)
 ) {
@@ -321,7 +357,7 @@ private fun ThingItem() = Column(
         modifier = Modifier
             .size(96.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable {}
+            .clickable { onClick() }
     )
     Text(
         text = "Плакат",
@@ -335,34 +371,33 @@ private fun ThingItem() = Column(
 private fun DropdownItems(meeting: Meeting) = Column(
     modifier = Modifier
         .fillMaxWidth()
-        .clip(RoundedCornerShape(16.dp))
-        .padding(top = 16.dp, start = 16.dp, end = 16.dp)
-        .border(
-            width = 2.dp,
-            color = Color.Black.copy(alpha = 0.45f),
-            shape = RoundedCornerShape(16.dp)
+        .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+        .shadowCard(
+            elevation = 6.dp,
+            shape = RoundedCornerShape(16.dp),
+            backgroundColor = MaterialTheme.colors.backgroundSpecial
         )
 ) {
     DropdownItem(
         title = "Чего хотим добиться",
         steps = meeting.details.goals
     )
-    Separator()
     DropdownItem(
         title = "Лозунги",
         steps = meeting.details.slogans
     )
-    Separator()
     DropdownItem(
         title = "Стратегия",
-        steps = meeting.details.strategy
+        steps = meeting.details.strategy,
+        lastItem = true
     )
 }
 
 @Composable
 private fun DropdownItem(
     title: String,
-    steps: List<String>
+    steps: List<String>,
+    lastItem: Boolean = false
 ) {
     val expanded = remember { mutableStateOf(false) }
     val rotateAnimation by animateFloatAsState(
@@ -371,6 +406,7 @@ private fun DropdownItem(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .animateContentSize()
             .clickable(
                 indication = null,
                 interactionSource = MutableInteractionSource()
@@ -389,9 +425,8 @@ private fun DropdownItem(
                 modifier = Modifier.padding(start = 24.dp)
             )
             Spacer(modifier = Modifier.weight(1f))
-            IconButton(
-                modifier = Modifier.padding(end = 16.dp, top = 8.dp, bottom = 8.dp),
-                onClick = { expanded.value = !expanded.value }
+            Box(
+                modifier = Modifier.padding(end = 16.dp, top = 16.dp, bottom = 16.dp),
             ) {
                 Icon(
                     painter = rememberVectorPainter(Icons.Default.KeyboardArrowDown),
@@ -399,8 +434,9 @@ private fun DropdownItem(
                     tint = MaterialTheme.colors.graphicsTertiary,
                     modifier = Modifier
                         .size(28.dp)
-                        .clip(CircleShape)
+                        .clip(RoundedCornerShape(14.dp))
                         .rotate(rotateAnimation)
+                        .clickable { expanded.value = !expanded.value }
 
                 )
             }
@@ -409,17 +445,10 @@ private fun DropdownItem(
             steps.forEach { step ->
                 StepItem(step)
             }
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(if (lastItem) 16.dp else 8.dp))
         }
     }
 }
-
-@Composable
-private fun Separator() = Divider(
-    modifier = Modifier.fillMaxWidth(),
-    color = Color.Black.copy(alpha = 0.45f),
-    thickness = 2.dp
-)
 
 @Composable
 private fun StepItem(text: String) = Row(
@@ -448,16 +477,22 @@ private fun WillYouGoTitle() = Text(
     text = "Увидимся на митинге?",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.title2Bold,
-    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+    modifier = Modifier.padding(top = 24.dp, start = 16.dp, end = 16.dp)
 )
 
 @Composable
-private fun WillYouGoPeopleCount(meeting: Meeting) = Text(
-    text = "${meeting.reaction.peopleGoCount} человек точно пойдут\nЕщё ${meeting.reaction.peopleMaybeGoCount}, возможно, тоже\nА ты?",
-    color = MaterialTheme.colors.textPrimary,
-    style = MaterialTheme.typography.body1,
-    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
-)
+private fun WillYouGoPeopleCount(meeting: Meeting) {
+    val maybeGoText = meeting.getPeopleMaybeGoCount()
+    val definitelyGoText = meeting.getPeopleGoCount()
+    if (definitelyGoText.isNotEmpty()) {
+        Text(
+            text = "${definitelyGoText}${maybeGoText}А ты?",
+            color = MaterialTheme.colors.textPrimary,
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        )
+    }
+}
 
 @Composable
 private fun WillYouGoImage() = Row(
@@ -475,32 +510,39 @@ private fun WillYouGoImage() = Row(
 }
 
 @Composable
-private fun WillYouGoActionButtons(meeting: Meeting) = Row(
-    horizontalArrangement = Arrangement.Center,
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 24.dp)
-) {
-    WillYouGoActionButton(
-        text = "Пойду",
-        borderColor = MaterialTheme.colors.graphicsGreen.copy(alpha = 0.1f),
-        textColor = MaterialTheme.colors.textPositive
-    )
-    Spacer(
-        modifier = Modifier.width(24.dp)
-    )
-    WillYouGoActionButton(
-        text = "Мб пойду",
-        borderColor = Color(0xFFD3D3D3).copy(alpha = 0.25f),
-        textColor = Color(0xFFD3D3D3)
-    )
+private fun WillYouGoActionButtons(state: State) {
+    val maybeStatus = state.negativeReaction
+    val positiveStatus = state.positiveReaction
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp)
+    ) {
+        WillYouGoActionButton(
+            text = "Пойду",
+            borderColor = getBorderColor(true, maybeStatus, positiveStatus),
+            textColor = getTextColor(true, maybeStatus, positiveStatus),
+            backgroundColor = getBackgroundColor(true, maybeStatus, positiveStatus)
+        )
+        Spacer(
+            modifier = Modifier.width(24.dp)
+        )
+        WillYouGoActionButton(
+            text = "Мб пойду",
+            borderColor = getBorderColor(false, maybeStatus, positiveStatus),
+            textColor = getTextColor(false, maybeStatus, positiveStatus),
+            backgroundColor = getBackgroundColor(false, maybeStatus, positiveStatus),
+        )
+    }
 }
 
 @Composable
 private fun WillYouGoActionButton(
     text: String,
     borderColor: Color,
-    textColor: Color
+    textColor: Color,
+    backgroundColor: Color
 ) {
     val width = LocalConfiguration.current.screenWidthDp * 1/3
     Box(
@@ -513,6 +555,10 @@ private fun WillYouGoActionButton(
                 color = borderColor,
                 shape = RoundedCornerShape(24.dp)
             )
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(24.dp)
+            )
     ) {
         Text(
             text = text,
@@ -520,6 +566,55 @@ private fun WillYouGoActionButton(
             color = textColor,
             modifier = Modifier.padding(vertical = 12.dp)
         )
+    }
+}
+
+@Composable
+private fun getTextColor(
+    isPositiveButton: Boolean,
+    positiveStatus: ReactionLoadingStatus,
+    maybeStatus: ReactionLoadingStatus
+) = when {
+    positiveStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.graphicsTertiary
+    }
+    maybeStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.graphicsTertiary else MaterialTheme.colors.textNegative
+    }
+    else -> if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.textNegative
+}
+
+@Composable
+private fun getBackgroundColor(
+    isPositiveButton: Boolean,
+    positiveStatus: ReactionLoadingStatus,
+    maybeStatus: ReactionLoadingStatus
+) = when {
+    positiveStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.graphicsGreenTransparent else Color.Transparent
+    }
+    maybeStatus == SUCCESS -> {
+        if (isPositiveButton) Color.Transparent else MaterialTheme.colors.graphicsRedTransparent
+    }
+    else -> Color.Transparent
+}
+
+@Composable
+private fun getBorderColor(
+    isPositiveButton: Boolean,
+    positiveStatus: ReactionLoadingStatus,
+    maybeStatus: ReactionLoadingStatus
+) = when {
+    positiveStatus == SUCCESS -> {
+        if (isPositiveButton) Color.Transparent else MaterialTheme.colors.backgroundSecondary
+    }
+    maybeStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.backgroundSecondary else Color.Transparent
+    }
+    else -> if (isPositiveButton) {
+        MaterialTheme.colors.textPositive.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
+    } else {
+        MaterialTheme.colors.textNegative.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
     }
 }
 

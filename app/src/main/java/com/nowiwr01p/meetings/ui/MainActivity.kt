@@ -12,6 +12,7 @@ import androidx.compose.material.ModalBottomSheetValue.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -29,6 +30,9 @@ import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
+import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -36,6 +40,7 @@ class MainActivity : ComponentActivity() {
     private val navigator by inject<Navigator>()
     private val showSnackBarHelper by inject<ShowSnackBarHelper>()
     private val showBottomSheetHelper by inject<ShowBottomSheetHelper>()
+    private val openLinksHelper by inject<OpenLinksHelper>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,6 +65,11 @@ class MainActivity : ComponentActivity() {
                     if (content != null) BottomSheet(content)
                 }
                 Spacer(modifier = Modifier.height(48.dp))
+            }
+
+            val context = LocalContext.current
+            OpenLinkObserver(openLinksHelper.openLink) {
+                openLink(it, context)
             }
 
             MainActivityScreen(
