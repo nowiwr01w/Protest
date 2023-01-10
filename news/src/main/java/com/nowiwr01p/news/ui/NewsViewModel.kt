@@ -13,6 +13,7 @@ class NewsViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
+            is Event.OnArticleClick -> setEffect { Effect.ShowArticle(event.article) }
         }
     }
 
