@@ -10,6 +10,7 @@ interface MeetingContract {
 
     sealed interface Event: ViewEvent {
         data class Init(val meeting: Meeting): Event
+        data class OpenLink(val link: String): Event
     }
 
     data class State(
@@ -22,6 +23,7 @@ interface MeetingContract {
     }
 
     interface Listener {
-
+        fun onBack()
+        fun openLink(link: String)
     }
 }

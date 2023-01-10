@@ -55,7 +55,12 @@ fun MeetingMainScreen(
     viewModel: MeetingViewModel = getViewModel()
 ) {
    val listener = object : Listener {
-
+       override fun onBack() {
+           navigator.navigateUp()
+       }
+       override fun openLink(link: String) {
+           viewModel.setEvent(Event.OpenLink(link))
+       }
    }
 
     LaunchedEffect(Unit) {
@@ -80,7 +85,7 @@ private fun MeetingMainScreenContent(
     modifier = Modifier.fillMaxSize()
 ) {
     val meeting = state.meeting
-    Toolbar()
+    Toolbar(meeting, listener)
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -94,7 +99,7 @@ private fun MeetingMainScreenContent(
         item { MapPlaceComment(meeting) }
         item { TakeWithYouTitle() }
         item { TakeWithYouDetails(meeting) }
-        item { TakeWithYouList(meeting) }
+        item { TakeWithYouList(meeting, listener) }
         item { DropdownItems(meeting) }
         item { WillYouGoTitle() }
         item { WillYouGoPeopleCount(meeting) }
@@ -108,10 +113,13 @@ private fun MeetingMainScreenContent(
  * TOOLBAR
  */
 @Composable
-private fun Toolbar() = ToolbarTop(
+private fun Toolbar(
+    meeting: Meeting,
+    listener: Listener?
+) = ToolbarTop(
     backIcon = {
         ToolbarBackButton {
-
+            listener?.onBack()
         }
     },
     actions = {
@@ -119,7 +127,9 @@ private fun Toolbar() = ToolbarTop(
             modifier = Modifier
                 .padding(end = 10.dp)
                 .clip(RoundedCornerShape(14.dp))
-                .clickable {  }
+                .clickable {
+                    listener?.openLink(meeting.telegram)
+                }
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_telegram),
@@ -318,19 +328,26 @@ private fun TakeWithYouDetails(meeting: Meeting) = Text(
 )
 
 @Composable
-private fun TakeWithYouList(meeting: Meeting) = LazyRow(
+private fun TakeWithYouList(
+    meeting: Meeting,
+    listener: Listener?
+) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 16.dp)
 ) {
-    items(meeting.takeWithYouInfo.posterLinks) {
-        ThingItem()
+    items(meeting.takeWithYouInfo.posterLinks) { link ->
+        ThingItem {
+            listener?.openLink(link)
+        }
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
 @Composable
-private fun ThingItem() = Column(
+private fun ThingItem(
+    onClick: () -> Unit
+) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(start = 16.dp)
 ) {
@@ -339,7 +356,7 @@ private fun ThingItem() = Column(
         modifier = Modifier
             .size(96.dp)
             .clip(RoundedCornerShape(8.dp))
-            .clickable {}
+            .clickable { onClick() }
     )
     Text(
         text = "Плакат",
