@@ -69,6 +69,7 @@ fun DependencyHandler.commonUiDependencies() {
     implementation(Basic.TIMBER_LIB)
     implementation(Basic.ACTIVITY_COMPOSE)
     implementation(Basic.COIL)
+    implementation(Basic.CUSTOM_TABS)
 }
 
 fun DependencyHandler.accompanistDependencies() {
