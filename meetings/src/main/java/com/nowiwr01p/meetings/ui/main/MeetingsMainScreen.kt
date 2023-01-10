@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.EffectObserver
@@ -32,7 +34,8 @@ import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
-import com.nowiwr01p.domain.meetings.data.Category
+import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
@@ -48,8 +51,14 @@ fun MeetingsMainScreen(
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
+        override fun toMeeting(meeting: Meeting) {
+            navigator.meetingsNavigator.navigateToMeeting(meeting)
+        }
         override fun toCreateMeeting() {
-            navigator.meetingsNavigator.navigateToMeeting()
+            // TODO
+        }
+        override fun onCategoryClick(category: Category) {
+            viewModel.setEvent(Event.SelectCategory(category))
         }
     }
 
@@ -86,11 +95,7 @@ private fun MeetingsMainScreenContent(
             item { Stories(state) }
             item { MeetingsTitle(state) }
             item { Categories(state, listener) }
-            if (state.meetings.isEmpty()) {
-                item { EmptyListStub() }
-            } else {
-                Meetings(state, listener)
-            }
+            Meetings(state, listener)
         }
     }
 }
@@ -225,7 +230,9 @@ private fun Categories(
         .padding(top = 8.dp)
 ) {
     items(state.categories) { category ->
-        Category(category, state, listener)
+        Category(category) {
+            listener?.onCategoryClick(category)
+        }
     }
     item { Spacer(modifier = Modifier.width(12.dp)) }
 }
@@ -233,12 +240,9 @@ private fun Categories(
 @Composable
 private fun Category(
     category: Category,
-    state: State,
-    listener: Listener?,
-    isSelected: Boolean = false,
     onItemClick: () -> Unit = {},
 ) {
-    val backgroundColor = if (isSelected) {
+    val backgroundColor = if (category.isSelected) {
         MaterialTheme.colors.backgroundSpecialInverse
     } else {
         MaterialTheme.colors.backgroundSpecial
@@ -255,7 +259,7 @@ private fun Category(
             )
             .clickable { onItemClick() },
     ) {
-        val textColor = if (isSelected) {
+        val textColor = if (category.isSelected) {
             MaterialTheme.colors.textPrimaryInverted
         } else {
             MaterialTheme.colors.textPrimary
@@ -281,26 +285,35 @@ private fun LazyListScope.Meetings(
     state: State,
     listener: Listener?
 ) {
-    item { Spacer(modifier = Modifier.height(8.dp)) }
-    items(5) {
-        MeetingItem(state, listener)
+    val filtered = state.meetings.filter { meeting ->
+        val selectedName = state.selectedCategory.name
+        val found = meeting.categories.find { category -> category.name == selectedName } != null
+        found || selectedName.isEmpty()
     }
-    item { Spacer(modifier = Modifier.height(8.dp)) }
+    if (filtered.isEmpty()) {
+        item { EmptyListStub() }
+    } else {
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+        items(filtered) { meeting ->
+            MeetingItem(meeting, listener)
+        }
+        item { Spacer(modifier = Modifier.height(8.dp)) }
+    }
 }
 
 
 @Composable
 private fun MeetingItem(
-    state: State,
+    meeting: Meeting,
     listener: Listener?
 ) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
-        .clickable {  }
+        .clickable { listener?.toMeeting(meeting) }
         .padding(vertical = 12.dp, horizontal = 16.dp)
         .background(MaterialTheme.colors.background)
 ) {
-    val (image, title, date, count) = createRefs()
+    val (image, categories, title, date, count) = createRefs()
 
     val imageModifier = Modifier
         .fillMaxWidth()
@@ -313,19 +326,29 @@ private fun MeetingItem(
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { R.drawable.navalny }
+        imageModel = { meeting.image }
     )
 
-    val titleModifier = Modifier
-        .padding(top = 8.dp)
-        .constrainAs(title) {
+    val categoriesModifier = Modifier
+        .padding(top = 12.dp)
+        .constrainAs(categories) {
             width = Dimension.fillToConstraints
             start.linkTo(image.start)
             end.linkTo(image.end)
             top.linkTo(image.bottom)
         }
+    MeetingCategories(meeting, categoriesModifier)
+
+    val titleModifier = Modifier
+        .padding(top = 4.dp)
+        .constrainAs(title) {
+            width = Dimension.fillToConstraints
+            start.linkTo(image.start)
+            end.linkTo(image.end)
+            top.linkTo(categories.bottom)
+        }
     Text(
-        text = "Свободу Навальному",
+        text = meeting.title,
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title2Bold,
         modifier = titleModifier
@@ -338,7 +361,7 @@ private fun MeetingItem(
             top.linkTo(title.bottom)
         }
     Text(
-        text = "24.02.2023 17:30",
+        text = meeting.date.formatToDate(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier
@@ -351,10 +374,45 @@ private fun MeetingItem(
             bottom.linkTo(date.bottom)
         }
     Text(
-        text = "175 человек",
+        text = meeting.getPeopleGoCountShort(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = countModifier
+    )
+}
+
+/**
+ * CATEGORY
+ */
+@Composable
+private fun MeetingCategories(
+    meeting: Meeting,
+    modifier: Modifier
+) = LazyRow(
+    modifier = modifier.fillMaxWidth()
+) {
+    val sorted = meeting.categories.distinctBy { it.textColor }.sortedBy { it.priority }.take(3)
+    items(sorted) {
+        Category(it)
+    }
+    item { Spacer(modifier = Modifier.width(8.dp)) }
+}
+
+@Composable
+private fun Category(
+    category: Category
+) = Box(
+    contentAlignment = Alignment.Center,
+    modifier = Modifier
+        .padding(end = 8.dp)
+        .clip(RoundedCornerShape(40))
+        .background(category.backgroundColor.toColor())
+) {
+    Text(
+        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+        text = category.name,
+        color = category.textColor.toColor(),
+        style = MaterialTheme.typography.caption2Regular,
     )
 }
 
