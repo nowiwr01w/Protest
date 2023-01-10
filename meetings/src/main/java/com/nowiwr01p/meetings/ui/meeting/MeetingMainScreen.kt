@@ -44,7 +44,6 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
-import com.nowiwr01p.meetings.ui.meeting.MeetingContract.ReactionLoadingStatus.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
@@ -61,6 +60,9 @@ fun MeetingMainScreen(
        }
        override fun openLink(link: String) {
            viewModel.setEvent(Event.OpenLink(link))
+       }
+       override fun setReaction(isPositiveButtonClicked: Boolean) {
+            viewModel.setEvent(Event.SetReaction(isPositiveButtonClicked))
        }
    }
 
@@ -105,7 +107,7 @@ private fun MeetingMainScreenContent(
         item { WillYouGoTitle() }
         item { WillYouGoPeopleCount(meeting) }
         item { WillYouGoImage() }
-        item { WillYouGoActionButtons(state) }
+        item { WillYouGoActionButtons(state, listener) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
@@ -510,9 +512,12 @@ private fun WillYouGoImage() = Row(
 }
 
 @Composable
-private fun WillYouGoActionButtons(state: State) {
-    val maybeStatus = state.negativeReaction
-    val positiveStatus = state.positiveReaction
+private fun WillYouGoActionButtons(
+    state: State,
+    listener: Listener?
+) {
+    val maybeStatus = state.meeting.reaction.peopleMaybeGoCount.contains(state.user.id)
+    val positiveStatus = state.meeting.reaction.peopleGoCount.contains(state.user.id)
     Row(
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
@@ -521,19 +526,23 @@ private fun WillYouGoActionButtons(state: State) {
     ) {
         WillYouGoActionButton(
             text = "Пойду",
-            borderColor = getBorderColor(true, maybeStatus, positiveStatus),
-            textColor = getTextColor(true, maybeStatus, positiveStatus),
-            backgroundColor = getBackgroundColor(true, maybeStatus, positiveStatus)
-        )
+            borderColor = getBorderColor(true, positiveStatus, maybeStatus),
+            textColor = getTextColor(true, positiveStatus, maybeStatus),
+            backgroundColor = getBackgroundColor(true, positiveStatus, maybeStatus)
+        ) {
+            listener?.setReaction(true)
+        }
         Spacer(
             modifier = Modifier.width(24.dp)
         )
         WillYouGoActionButton(
             text = "Мб пойду",
-            borderColor = getBorderColor(false, maybeStatus, positiveStatus),
-            textColor = getTextColor(false, maybeStatus, positiveStatus),
-            backgroundColor = getBackgroundColor(false, maybeStatus, positiveStatus),
-        )
+            borderColor = getBorderColor(false, positiveStatus, maybeStatus),
+            textColor = getTextColor(false, positiveStatus, maybeStatus),
+            backgroundColor = getBackgroundColor(false, positiveStatus, maybeStatus),
+        ) {
+            listener?.setReaction(false)
+        }
     }
 }
 
@@ -542,7 +551,8 @@ private fun WillYouGoActionButton(
     text: String,
     borderColor: Color,
     textColor: Color,
-    backgroundColor: Color
+    backgroundColor: Color,
+    onSetReaction: () -> Unit
 ) {
     val width = LocalConfiguration.current.screenWidthDp * 1/3
     Box(
@@ -559,6 +569,7 @@ private fun WillYouGoActionButton(
                 color = backgroundColor,
                 shape = RoundedCornerShape(24.dp)
             )
+            .clickable { onSetReaction() }
     ) {
         Text(
             text = text,
@@ -572,29 +583,29 @@ private fun WillYouGoActionButton(
 @Composable
 private fun getTextColor(
     isPositiveButton: Boolean,
-    positiveStatus: ReactionLoadingStatus,
-    maybeStatus: ReactionLoadingStatus
+    positiveStatus: Boolean,
+    maybeStatus: Boolean
 ) = when {
-    positiveStatus == SUCCESS -> {
+    positiveStatus -> {
         if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.graphicsTertiary
     }
-    maybeStatus == SUCCESS -> {
-        if (isPositiveButton) MaterialTheme.colors.graphicsTertiary else MaterialTheme.colors.textNegative
+    maybeStatus -> {
+        if (isPositiveButton) MaterialTheme.colors.graphicsTertiary else MaterialTheme.colors.graphicsOrange
     }
-    else -> if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.textNegative
+    else -> if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.graphicsOrange
 }
 
 @Composable
 private fun getBackgroundColor(
     isPositiveButton: Boolean,
-    positiveStatus: ReactionLoadingStatus,
-    maybeStatus: ReactionLoadingStatus
+    positiveStatus: Boolean,
+    maybeStatus: Boolean
 ) = when {
-    positiveStatus == SUCCESS -> {
+    positiveStatus -> {
         if (isPositiveButton) MaterialTheme.colors.graphicsGreenTransparent else Color.Transparent
     }
-    maybeStatus == SUCCESS -> {
-        if (isPositiveButton) Color.Transparent else MaterialTheme.colors.graphicsRedTransparent
+    maybeStatus -> {
+        if (isPositiveButton) Color.Transparent else MaterialTheme.colors.backgroundOrange
     }
     else -> Color.Transparent
 }
@@ -602,19 +613,19 @@ private fun getBackgroundColor(
 @Composable
 private fun getBorderColor(
     isPositiveButton: Boolean,
-    positiveStatus: ReactionLoadingStatus,
-    maybeStatus: ReactionLoadingStatus
+    positiveStatus: Boolean,
+    maybeStatus: Boolean
 ) = when {
-    positiveStatus == SUCCESS -> {
+    positiveStatus -> {
         if (isPositiveButton) Color.Transparent else MaterialTheme.colors.backgroundSecondary
     }
-    maybeStatus == SUCCESS -> {
+    maybeStatus -> {
         if (isPositiveButton) MaterialTheme.colors.backgroundSecondary else Color.Transparent
     }
     else -> if (isPositiveButton) {
         MaterialTheme.colors.textPositive.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
     } else {
-        MaterialTheme.colors.textNegative.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
+        MaterialTheme.colors.graphicsOrange.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
     }
 }
 

@@ -100,7 +100,7 @@ val moduleData = module {
      * MEETINGS
      */
     factory<MeetingsRepository> {
-        MeetingsRepositoryImpl(get(), get())
+        MeetingsRepositoryImpl(get(), get(), get())
     }
 
     /**
