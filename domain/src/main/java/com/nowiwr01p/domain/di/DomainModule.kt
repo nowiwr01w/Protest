@@ -10,6 +10,7 @@ import com.nowiwr01p.domain.location.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.location.usecase.local.SetCountryUseCase
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
+import com.nowiwr01p.domain.meetings.usecase.SetReactionUseCase
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
@@ -56,6 +57,7 @@ val moduleDomain = module {
      */
     factory { GetMeetingsUseCase(get()) }
     factory { GetCategoriesUseCase(get()) }
+    factory { SetReactionUseCase(get()) }
 
     /**
      * NEWS
