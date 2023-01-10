@@ -26,6 +26,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.EffectObserver
@@ -373,7 +374,7 @@ private fun MeetingItem(
             bottom.linkTo(date.bottom)
         }
     Text(
-        text = "${meeting.reaction.peopleGoCount} человека",
+        text = meeting.getPeopleGoCountShort(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = countModifier
