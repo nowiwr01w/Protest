@@ -18,6 +18,9 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.extenstion.formatToDate
 import com.nowiwr01p.core.model.Article
+import com.nowiwr01p.core.model.ArticleContentType.Image
+import com.nowiwr01p.core.model.ArticleContentType.Title
+import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.news.ui.NewsContract.*
@@ -30,14 +33,26 @@ fun NewsMainScreen(
     viewModel: NewsViewModel = getViewModel()
 ) {
     val state = viewModel.viewState.value
+
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
+        }
+        override fun onArticleClick(article: Article) {
+            viewModel.setEvent(Event.OnArticleClick(article))
         }
     }
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(Event.Init)
+    }
+
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.ShowArticle -> {
+                navigator.newsNavigator.navigateToArticle(it.article)
+            }
+        }
     }
 
     NewsContent(state, listener)
@@ -51,27 +66,27 @@ fun NewsContent(
     modifier = Modifier.fillMaxSize()
 ) {
     Toolbar()
-    Spacer(modifier = Modifier.height(16.dp))
     NewsList(state, listener)
 }
 
 @Composable
-fun Toolbar() =
-    Text(
-        text = "Новости",
-        style = MaterialTheme.typography.largeTitle,
-        color = MaterialTheme.colors.textPrimary,
-        modifier = Modifier
-            .statusBarsPadding()
-            .padding(start = 20.dp, top = 20.dp)
-    )
+fun Toolbar() = Text(
+    text = "Новости",
+    style = MaterialTheme.typography.largeTitle,
+    color = MaterialTheme.colors.textPrimary,
+    modifier = Modifier
+        .statusBarsPadding()
+        .padding(start = 20.dp, top = 20.dp)
+)
 
 @Composable
 fun NewsList(
     state: State,
     listener: Listener?
 ) = LazyColumn(
-    modifier = Modifier.fillMaxSize()
+    modifier = Modifier
+        .fillMaxSize()
+        .padding(top = 16.dp)
 ) {
     items(state.newsList) { article ->
         ArticleView(article, listener)
@@ -86,7 +101,7 @@ fun ArticleView(
 ) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
-        .clickable { }
+        .clickable { listener?.onArticleClick(article) }
         .padding(vertical = 12.dp, horizontal = 16.dp)
         .background(MaterialTheme.colors.background)
 ) {
@@ -103,7 +118,7 @@ fun ArticleView(
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { article.getField("image") }
+        imageModel = { article.getField(Image) }
     )
 
     val titleModifier = Modifier
@@ -116,7 +131,7 @@ fun ArticleView(
         }
 
     Text(
-        text = article.getField("title"),
+        text = article.getField(Title),
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title2Bold,
         modifier = titleModifier
