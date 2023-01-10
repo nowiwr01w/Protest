@@ -50,7 +50,7 @@ val moduleMeetings = module {
     /**
      * MEETING SCREEN
      */
-    viewModel { MeetingViewModel() }
+    viewModel { MeetingViewModel(get()) }
 }
 
 private const val meetingsScreenScopeId = "meetingsScreenScopeId"

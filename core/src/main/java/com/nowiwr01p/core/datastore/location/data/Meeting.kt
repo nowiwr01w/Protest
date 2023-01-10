@@ -84,7 +84,7 @@ data class OpenDate(
 ) {
     companion object {
         fun getSampleData() = OpenDate(
-            text = "Место и дата проведения появится либо 23.02, либо после того, как наберётся хотя бы 1000 человек. Это обязательное условие.",
+            text = "Место и дата проведения появится либо 23.02, либо после того, как наберётся хотя бы 1000 человек.\nЭто обязательное условие.",
             date = System.currentTimeMillis(),
             requiredPeopleCount = 1000
         )
