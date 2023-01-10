@@ -1,5 +1,6 @@
 package com.nowiwr01p.core.model
 
+import com.nowiwr01p.core.model.ArticleContentType.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,7 +12,10 @@ data class ContentItem(
     val type: String = "",
     @SerialName("value")
     val value: String = ""
-)
+) {
+    val articleType: ArticleContentType
+        get() = ArticleContentType.findByType(type)
+}
 
 @Serializable
 data class Article(
@@ -20,7 +24,7 @@ data class Article(
     @SerialName("content")
     val content: List<ContentItem> = listOf()
 ) {
-    fun getField(type: ArticleContentType) = content.find { it.type == type.type }?.value ?: ""
+    fun getField(type: ArticleContentType) = content.find { it.articleType == type }?.value ?: ""
 
     companion object {
         val article = Article(
