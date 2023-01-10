@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -29,6 +30,7 @@ import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDate
@@ -272,7 +274,22 @@ private fun MapPreview(state: State) {
     ) {
         GoogleMap(
             cameraPositionState = cameraPositionState,
-            uiSettings = MapUiSettings(zoomControlsEnabled = false),
+            properties = MapProperties(
+                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
+                    LocalContext.current,
+                    R.raw.test_map
+                )
+            ),
+            uiSettings = MapUiSettings(
+                compassEnabled = false,
+                mapToolbarEnabled = false,
+                myLocationButtonEnabled = false,
+                rotationGesturesEnabled = false,
+                scrollGesturesEnabled = false,
+                scrollGesturesEnabledDuringRotateOrZoom = false,
+                zoomControlsEnabled = false,
+                zoomGesturesEnabled = false
+            ),
             modifier = Modifier
                 .fillMaxWidth()
                 .height(200.dp)
