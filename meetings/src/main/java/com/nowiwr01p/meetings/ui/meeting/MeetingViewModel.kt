@@ -4,11 +4,11 @@ import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
+import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 
 class MeetingViewModel(
-    private val getLocalCityUseCase: GetLocalCityUseCase,
+    private val getLocalUserUseCase: GetLocalUserUseCase,
     private val openLinksHelper: OpenLinksHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -30,8 +30,8 @@ class MeetingViewModel(
     }
 
     private suspend fun getUserCity() {
-        val city = getLocalCityUseCase.execute()
-        setState { copy(city = city) }
+        val user = getLocalUserUseCase.execute()
+        setState { copy(user = user) }
     }
 
     private fun openLink(link: String) = io {

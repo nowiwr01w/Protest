@@ -10,14 +10,14 @@ private fun Int.formatPeopleCount(): String {
     return "$this $text"
 }
 
-fun Meeting.getPeopleGoCountShort() = reaction.peopleGoCount.let { definitelyGo ->
+fun Meeting.getPeopleGoCountShort() = reaction.peopleGoCount.size.let { definitelyGo ->
     if (definitelyGo == 0) "" else definitelyGo.formatPeopleCount()
 }
 
-fun Meeting.getPeopleGoCount() = reaction.peopleGoCount.let { definitelyGo ->
+fun Meeting.getPeopleGoCount() = reaction.peopleGoCount.size.let { definitelyGo ->
     if (definitelyGo == 0) "" else "${definitelyGo.formatPeopleCount()} точно пойдут\n"
 }
 
-fun Meeting.getPeopleMaybeGoCount() = reaction.peopleMaybeGoCount.let { maybeGo ->
+fun Meeting.getPeopleMaybeGoCount() = reaction.peopleMaybeGoCount.size.let { maybeGo ->
     if (maybeGo == 0) "" else "${maybeGo.formatPeopleCount()}, возможно, тоже\n"
 }

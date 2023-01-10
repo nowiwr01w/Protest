@@ -151,17 +151,14 @@ data class Details(
 @Serializable
 data class Reaction(
     @SerializedName("peopleGoCount")
-    val peopleGoCount: Int = 0,
+    val peopleGoCount: List<String> = listOf(),
     @SerializedName("peopleMaybeGoCount")
-    val peopleMaybeGoCount: Int = 0,
-    @SerializedName("yourChoiceToGo")
-    val yourChoiceToGo: Boolean? = null
+    val peopleMaybeGoCount: List<String> = listOf()
 ) {
     companion object {
         fun getSampleData() = Reaction(
-            peopleGoCount = 725,
-            peopleMaybeGoCount = 1327,
-            yourChoiceToGo = true
+            peopleGoCount = listOf(),
+            peopleMaybeGoCount = listOf()
         )
     }
 }
