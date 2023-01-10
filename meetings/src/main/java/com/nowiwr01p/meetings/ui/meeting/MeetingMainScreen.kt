@@ -44,6 +44,7 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
+import com.nowiwr01p.meetings.ui.meeting.MeetingContract.ReactionLoadingStatus.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
@@ -104,7 +105,7 @@ private fun MeetingMainScreenContent(
         item { WillYouGoTitle() }
         item { WillYouGoPeopleCount(meeting) }
         item { WillYouGoImage() }
-        item { WillYouGoActionButtons(meeting) }
+        item { WillYouGoActionButtons(state) }
         item { Spacer(modifier = Modifier.height(24.dp)) }
     }
 }
@@ -256,8 +257,8 @@ private fun LocationDate(date: String) = Text(
 
 @Composable
 private fun MapPreview(state: State) {
-    val coordinates = if (state.city.name.isNotEmpty() && state.meeting.openDate.date != 0L) {
-        LatLng(state.city.latitude, state.city.longitude)
+    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.openDate.date != 0L) {
+        LatLng(state.user.city.latitude, state.user.city.longitude)
     } else {
         with(state.meeting.locationInfo.coordinates) { LatLng(latitude, longitude) }
     }
@@ -509,32 +510,39 @@ private fun WillYouGoImage() = Row(
 }
 
 @Composable
-private fun WillYouGoActionButtons(meeting: Meeting) = Row(
-    horizontalArrangement = Arrangement.Center,
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 24.dp)
-) {
-    WillYouGoActionButton(
-        text = "Пойду",
-        borderColor = MaterialTheme.colors.graphicsGreen.copy(alpha = 0.1f),
-        textColor = MaterialTheme.colors.textPositive
-    )
-    Spacer(
-        modifier = Modifier.width(24.dp)
-    )
-    WillYouGoActionButton(
-        text = "Мб пойду",
-        borderColor = Color(0xFFD3D3D3).copy(alpha = 0.25f),
-        textColor = Color(0xFFD3D3D3)
-    )
+private fun WillYouGoActionButtons(state: State) {
+    val maybeStatus = state.negativeReaction
+    val positiveStatus = state.positiveReaction
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 24.dp)
+    ) {
+        WillYouGoActionButton(
+            text = "Пойду",
+            borderColor = getBorderColor(true, maybeStatus, positiveStatus),
+            textColor = getTextColor(true, maybeStatus, positiveStatus),
+            backgroundColor = getBackgroundColor(true, maybeStatus, positiveStatus)
+        )
+        Spacer(
+            modifier = Modifier.width(24.dp)
+        )
+        WillYouGoActionButton(
+            text = "Мб пойду",
+            borderColor = getBorderColor(false, maybeStatus, positiveStatus),
+            textColor = getTextColor(false, maybeStatus, positiveStatus),
+            backgroundColor = getBackgroundColor(false, maybeStatus, positiveStatus),
+        )
+    }
 }
 
 @Composable
 private fun WillYouGoActionButton(
     text: String,
     borderColor: Color,
-    textColor: Color
+    textColor: Color,
+    backgroundColor: Color
 ) {
     val width = LocalConfiguration.current.screenWidthDp * 1/3
     Box(
@@ -547,6 +555,10 @@ private fun WillYouGoActionButton(
                 color = borderColor,
                 shape = RoundedCornerShape(24.dp)
             )
+            .background(
+                color = backgroundColor,
+                shape = RoundedCornerShape(24.dp)
+            )
     ) {
         Text(
             text = text,
@@ -554,6 +566,55 @@ private fun WillYouGoActionButton(
             color = textColor,
             modifier = Modifier.padding(vertical = 12.dp)
         )
+    }
+}
+
+@Composable
+private fun getTextColor(
+    isPositiveButton: Boolean,
+    positiveStatus: ReactionLoadingStatus,
+    maybeStatus: ReactionLoadingStatus
+) = when {
+    positiveStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.graphicsTertiary
+    }
+    maybeStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.graphicsTertiary else MaterialTheme.colors.textNegative
+    }
+    else -> if (isPositiveButton) MaterialTheme.colors.textPositive else MaterialTheme.colors.textNegative
+}
+
+@Composable
+private fun getBackgroundColor(
+    isPositiveButton: Boolean,
+    positiveStatus: ReactionLoadingStatus,
+    maybeStatus: ReactionLoadingStatus
+) = when {
+    positiveStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.graphicsGreenTransparent else Color.Transparent
+    }
+    maybeStatus == SUCCESS -> {
+        if (isPositiveButton) Color.Transparent else MaterialTheme.colors.graphicsRedTransparent
+    }
+    else -> Color.Transparent
+}
+
+@Composable
+private fun getBorderColor(
+    isPositiveButton: Boolean,
+    positiveStatus: ReactionLoadingStatus,
+    maybeStatus: ReactionLoadingStatus
+) = when {
+    positiveStatus == SUCCESS -> {
+        if (isPositiveButton) Color.Transparent else MaterialTheme.colors.backgroundSecondary
+    }
+    maybeStatus == SUCCESS -> {
+        if (isPositiveButton) MaterialTheme.colors.backgroundSecondary else Color.Transparent
+    }
+    else -> if (isPositiveButton) {
+        MaterialTheme.colors.textPositive.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
+    } else {
+        MaterialTheme.colors.textNegative.copy(alpha = ButtonDefaults.OutlinedBorderOpacity)
     }
 }
 
