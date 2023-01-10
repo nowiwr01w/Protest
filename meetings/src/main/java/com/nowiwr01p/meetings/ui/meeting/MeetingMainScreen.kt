@@ -32,20 +32,21 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.getPeopleGoCount
+import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
+import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.shadowCard
+import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 @Composable
 fun MeetingMainScreen(
@@ -218,12 +219,14 @@ private fun LocationInfoContainer(state: State) = Row(
         .fillMaxWidth()
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
-    if (state.meeting.openDate.date != 0L) {
-        LocationPlace(state.meeting.openDate.text)
-    } else {
-        LocationPlace(state.meeting.locationInfo.shortName)
-        Spacer(modifier = Modifier.weight(1f))
-        LocationDate(state.meeting.date.formatToDate())
+    with(state.meeting) {
+        if (openDate.date != 0L) {
+            LocationPlace(openDate.text)
+        } else {
+            LocationPlace(locationInfo.shortName)
+            Spacer(modifier = Modifier.weight(1f))
+            LocationDate(date.formatToDate())
+        }
     }
 }
 
@@ -460,12 +463,18 @@ private fun WillYouGoTitle() = Text(
 )
 
 @Composable
-private fun WillYouGoPeopleCount(meeting: Meeting) = Text(
-    text = "${meeting.reaction.peopleGoCount} человек точно пойдут\nЕщё ${meeting.reaction.peopleMaybeGoCount}, возможно, тоже\nА ты?",
-    color = MaterialTheme.colors.textPrimary,
-    style = MaterialTheme.typography.body1,
-    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
-)
+private fun WillYouGoPeopleCount(meeting: Meeting) {
+    val maybeGoText = meeting.getPeopleMaybeGoCount()
+    val definitelyGoText = meeting.getPeopleGoCount()
+    if (definitelyGoText.isNotEmpty()) {
+        Text(
+            text = "${definitelyGoText}${maybeGoText}А ты?",
+            color = MaterialTheme.colors.textPrimary,
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
+        )
+    }
+}
 
 @Composable
 private fun WillYouGoImage() = Row(
