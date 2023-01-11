@@ -14,10 +14,12 @@ class MapViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
+            is Event.OnBackClick -> back()
         }
     }
 
     private fun init() = io {
+        changeStatusBarState(true)
         runCatching {
             getLocalUser()
         }.onSuccess {
@@ -28,5 +30,14 @@ class MapViewModel(
     private suspend fun getLocalUser() {
         val user = getLocalUserUseCase.execute()
         setState { copy(user = user) }
+    }
+
+    private fun changeStatusBarState(toTransparent: Boolean) = setState {
+        copy(transparentStatusBar = toTransparent)
+    }
+
+    private fun back() {
+        changeStatusBarState(false)
+        setEffect { Effect.OnBackClick }
     }
 }
