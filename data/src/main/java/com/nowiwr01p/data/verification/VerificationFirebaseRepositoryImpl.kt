@@ -1,7 +1,7 @@
 package com.nowiwr01p.data.verification
 
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.user.UserRemoteRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationRemoteRepository
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext

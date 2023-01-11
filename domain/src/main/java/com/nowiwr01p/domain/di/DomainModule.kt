@@ -12,6 +12,7 @@ import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
 import com.nowiwr01p.domain.meetings.usecase.SetReactionUseCase
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
+import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
@@ -19,6 +20,11 @@ import com.nowiwr01p.domain.verification.usecase.SetVerificationCompletedUseCase
 import org.koin.dsl.module
 
 val moduleDomain = module {
+
+    /**
+     * USER
+     */
+    factory { GetRemoteUserUseCase(get()) }
 
     /**
      * AUTH

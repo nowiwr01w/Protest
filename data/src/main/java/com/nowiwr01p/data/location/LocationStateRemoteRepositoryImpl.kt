@@ -3,7 +3,7 @@ package com.nowiwr01p.data.location
 import com.nowiwr01p.core.datastore.location.data.City
 import com.nowiwr01p.core.datastore.location.data.Country
 import com.nowiwr01p.domain.location.repository.LocationStateRemoteRepository
-import com.nowiwr01p.domain.user.UserRemoteRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 
 class LocationStateRemoteRepositoryImpl(
     private val userRemoteRepository: UserRemoteRepository
