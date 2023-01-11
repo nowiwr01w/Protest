@@ -10,21 +10,23 @@ interface MapContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        object OnBackClick: Event
     }
 
     data class State(
         val user: User = User(),
         val showProgress: Boolean = true,
+        val transparentStatusBar: Boolean = false
     ): ViewState {
         val coordinates: LatLng
             get() = LatLng(user.city.latitude, user.city.longitude)
     }
 
     sealed interface Effect: ViewSideEffect{
-
+        object OnBackClick: Effect
     }
 
     interface Listener {
-
+        fun onBack()
     }
 }
