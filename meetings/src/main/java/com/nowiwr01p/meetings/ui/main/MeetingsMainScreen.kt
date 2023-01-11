@@ -461,7 +461,7 @@ private fun FloatingActionButton(
     lazyListState: LazyListState,
     onItemClick: () -> Unit
 ) = AnimatedVisibility(
-    visible = lazyListState.isScrollingUp(),
+    visible = lazyListState.isScrollingUp() || !lazyListState.isScrollInProgress,
     enter = fadeIn() + expandVertically(),
     exit = fadeOut() + shrinkVertically()
 ) {
