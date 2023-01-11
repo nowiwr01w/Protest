@@ -40,6 +40,7 @@ import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.R.*
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -279,7 +280,7 @@ private fun MapPreview(state: State) {
             properties = MapProperties(
                 mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
                     LocalContext.current,
-                    R.raw.test_map
+                    raw.map_settings
                 )
             ),
             uiSettings = MapUiSettings(
