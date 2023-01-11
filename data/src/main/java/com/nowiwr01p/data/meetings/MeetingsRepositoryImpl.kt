@@ -6,7 +6,7 @@ import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
-import com.nowiwr01p.domain.user.UserDataStoreRepository
+import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
