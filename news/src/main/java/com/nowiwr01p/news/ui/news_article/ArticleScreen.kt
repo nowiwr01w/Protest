@@ -97,7 +97,7 @@ fun ArticleTitle(
     title: String,
 ) = Text(
     text = title,
-    style = MaterialTheme.typography.title1Bold,
+    style = MaterialTheme.typography.title2Bold,
     color = MaterialTheme.colors.textPrimary,
     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
@@ -182,7 +182,7 @@ private fun ArticleDate(
     color = MaterialTheme.colors.textColorSecondary,
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 4.dp)
+        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
 
 @Preview(showBackground = true)

@@ -14,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
@@ -29,6 +32,7 @@ import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.theme.bottomNavigationItem
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
@@ -127,16 +131,29 @@ fun MainActivityScreen(
                                 } == true
                                 BottomNavigationItem(
                                     selected = selected,
-                                    onClick = { navigator.onBottomNavigationSelected(item) },
+                                    selectedContentColor = Color(0xFFFC4C4C),
+                                    unselectedContentColor = MaterialTheme.colors.mainBackgroundColor,
+                                    onClick = {
+                                        navigator.onBottomNavigationSelected(item)
+                                    },
                                     icon = {
                                         Icon(
                                             painter = painterResource(item.iconId),
                                             contentDescription = "Current Bottom Navigation Item",
-                                            modifier = Modifier.padding(16.dp)
+                                            modifier = Modifier
+                                                .padding(4.dp)
+                                                .size(24.dp)
                                         )
                                     },
-                                    selectedContentColor = Color(0xFFFC4C4C),
-                                    unselectedContentColor = MaterialTheme.colors.mainBackgroundColor
+                                    label = {
+                                        Text(
+                                            text = stringResource(item.titleId),
+                                            style = MaterialTheme.typography.bottomNavigationItem,
+                                            textAlign = TextAlign.Center,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis
+                                        )
+                                    }
                                 )
                             }
                         }
