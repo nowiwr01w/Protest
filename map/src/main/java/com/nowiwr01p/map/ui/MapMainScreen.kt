@@ -8,10 +8,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberMarkerState
+import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.setStatusBarTransparent
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -33,6 +35,13 @@ fun MapMainScreen(
         override fun onBack() {
             viewModel.setEvent(Event.OnBackClick)
         }
+        override fun onMeetingClick(meeting: Meeting) {
+            Timber.tag("Zhopa").d("meeting id = ${meeting.id}")
+        }
+    }
+
+    BackHandler {
+        listener.onBack()
     }
 
     LaunchedEffect(Unit) {
@@ -45,10 +54,6 @@ fun MapMainScreen(
                 navigator.navigateUp()
             }
         }
-    }
-
-    BackHandler {
-        listener.onBack()
     }
 
     MapMainScreenContent(state, listener)
@@ -78,14 +83,27 @@ private fun Map(
         modifier = Modifier.fillMaxSize(),
         cameraPositionState = cameraPositionState
     ) {
-        Marker(
-            state = rememberMarkerState(position = state.coordinates),
-            onClick = {
-                Timber.tag("Zhopa").d("click")
-                true
+        state.meetings.forEach { meeting ->
+            Marker(meeting) {
+                listener?.onBack()
             }
-        )
+        }
     }
+}
+
+@Composable
+private fun Marker(meeting: Meeting, onClick: () -> Unit) = with(meeting) {
+    val position = LatLng(
+        locationInfo.coordinates.latitude,
+        locationInfo.coordinates.longitude
+    )
+    Marker(
+        state = rememberMarkerState(position = position),
+        onClick = {
+            onClick.invoke()
+            true
+        }
+    )
 }
 
 @Preview(showBackground = true)

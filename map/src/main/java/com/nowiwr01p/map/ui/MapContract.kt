@@ -1,6 +1,7 @@
 package com.nowiwr01p.map.ui
 
 import com.google.android.gms.maps.model.LatLng
+import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
@@ -15,6 +16,7 @@ interface MapContract {
 
     data class State(
         val user: User = User(),
+        val meetings: List<Meeting> = listOf(),
         val showProgress: Boolean = true,
         val transparentStatusBar: Boolean = false
     ): ViewState {
@@ -28,5 +30,6 @@ interface MapContract {
 
     interface Listener {
         fun onBack()
+        fun onMeetingClick(meeting: Meeting)
     }
 }
