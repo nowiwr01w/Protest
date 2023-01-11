@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.ModalBottomSheetValue.*
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -25,6 +23,7 @@ import androidx.navigation.compose.rememberNavController
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheet
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
@@ -113,16 +112,17 @@ fun MainActivityScreen(
                 scaffoldState = scaffoldState,
                 bottomBar = {
                     if (navigator.currentScreen().showBottomNavigation) {
-                        NavigationBar(
-                            containerColor = Color.White,
-                            modifier = Modifier.height(56.dp)
+                        BottomNavigation(
+                            backgroundColor = Color.White
                         ) {
                             navigator.getBottomNavigationItems().forEach { item ->
                                 val selected = currentDestination?.hierarchy?.any {
                                     it.route == item.route
                                 } == true
-                                NavigationBarItem(
+                                BottomNavigationItem(
                                     selected = selected,
+                                    selectedContentColor = Color(0xFFFC4C4C),
+                                    unselectedContentColor = MaterialTheme.colors.mainBackgroundColor,
                                     onClick = {
                                         navigator.onBottomNavigationSelected(item)
                                     },
@@ -130,7 +130,7 @@ fun MainActivityScreen(
                                         Icon(
                                             painter = painterResource(item.iconId),
                                             contentDescription = "Current Bottom Navigation Item",
-                                            modifier = Modifier.size(20.dp)
+                                            modifier = Modifier.size(24.dp)
                                         )
                                     }
                                 )
