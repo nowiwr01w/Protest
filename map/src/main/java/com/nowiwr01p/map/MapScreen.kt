@@ -14,11 +14,13 @@ sealed class MapScreen<T>(
     override val showBottomNavigation: Boolean = true
 ): Screen<T>() {
 
-    object MapMainScreen: MapScreen<Unit>(MapScreenType.MapMainScreen.route, rootRoute) {
+    object MapMainScreen: MapScreen<Unit>(
+        MapScreenType.MapMainScreen.route,
+        rootRoute,
+        false
+    ) {
         override fun navigate(args: Unit, navController: NavController) {
-            with(navController) {
-                navigateOrPopup(route) { navigateAndMakeStart(route) }
-            }
+            navController.navigate(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {

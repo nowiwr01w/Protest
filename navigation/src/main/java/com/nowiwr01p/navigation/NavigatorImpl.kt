@@ -37,20 +37,15 @@ class NavigatorImpl(
     }
 
     override fun getBottomNavigationItems() = listOf(
-        Meetings, Map, News, Profile
+        Meetings, News, Profile
     )
 
     override fun onBottomNavigationSelected(item: BottomNavigationItem) {
         when (item) {
-            Map -> navigateToMap()
             Meetings -> navigateToMeetings()
             News -> navigateToNews()
             Profile -> navigateToProfile()
         }
-    }
-
-    override fun navigateToMap() {
-        MapScreen.MapMainScreen.navigate(Unit, navController)
     }
 
     override fun navigateToMeetings() {
