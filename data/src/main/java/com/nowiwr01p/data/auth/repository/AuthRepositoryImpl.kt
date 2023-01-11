@@ -5,7 +5,7 @@ import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.repository.AuthRepository
 import com.nowiwr01p.domain.extensions.toUser
-import com.nowiwr01p.domain.user.UserRemoteRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import kotlinx.coroutines.tasks.asDeferred
 import kotlinx.coroutines.withContext
 

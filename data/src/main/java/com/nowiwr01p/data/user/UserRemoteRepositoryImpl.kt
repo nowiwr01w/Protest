@@ -7,8 +7,8 @@ import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.extensions.getAccount
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
-import com.nowiwr01p.domain.user.UserDataStoreRepository
-import com.nowiwr01p.domain.user.UserRemoteRepository
+import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext

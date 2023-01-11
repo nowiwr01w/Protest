@@ -10,7 +10,7 @@ import com.nowiwr01p.data.verification.VerificationDataStoreRepositoryImpl
 import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
 import com.nowiwr01p.domain.location.api.LocationApi
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
-import com.nowiwr01p.domain.user.UserDataStoreRepository
+import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
 import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
