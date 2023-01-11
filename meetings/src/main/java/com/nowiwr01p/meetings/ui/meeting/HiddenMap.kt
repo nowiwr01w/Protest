@@ -132,7 +132,7 @@ private fun MapUnknownPlaceItem(modifier: Modifier = Modifier) = Box(
             shape = CircleShape
         )
         .background(
-            color = MaterialTheme.colors.backgroundSecondary,
+            color = Color.White,
             shape = CircleShape
         )
 ) {

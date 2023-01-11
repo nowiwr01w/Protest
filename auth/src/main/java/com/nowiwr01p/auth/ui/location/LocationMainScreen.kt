@@ -72,7 +72,7 @@ fun LocationMainScreen(
             is Effect.ShowNextScreen -> {
                 when (it.location) {
                     is Country -> navigator.authNavigator.toChooseCity(it.location.name)
-                    else -> navigator.navigateToMap()
+                    else -> navigator.navigateToMeetings()
                 }
             }
         }
