@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings.ui.meeting
+package com.nowiwr01p.meetings.ui.meeting_info
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
@@ -48,8 +48,8 @@ import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
-import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
-import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
+import com.nowiwr01p.meetings.ui.meeting_info.MeetingContract.*
+import com.nowiwr01p.meetings.ui.meeting_info.MeetingContract.State
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 

@@ -6,7 +6,6 @@ import com.nowiwr01p.auth.AuthScreen
 import com.nowiwr01p.core_ui.bottom_navigation.BottomNavigationItem
 import com.nowiwr01p.core_ui.navigators.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.map.MapScreen
 import com.nowiwr01p.meetings.MeetingsScreen
 import com.nowiwr01p.navigation.BottomNavigationItems.*
 import com.nowiwr01p.news.NewsScreen
@@ -14,7 +13,6 @@ import com.nowiwr01p.profile.ProfileScreen
 
 class NavigatorImpl(
     override val authNavigator: AuthNavigator,
-    override val mapNavigator: MapNavigator,
     override val meetingsNavigator: MeetingsNavigator,
     override val newsNavigator: NewsNavigator,
     override val profileNavigator: ProfileNavigator
@@ -23,7 +21,7 @@ class NavigatorImpl(
     private lateinit var navController: NavHostController
 
     private val navigators = listOf(
-        authNavigator, mapNavigator, meetingsNavigator, newsNavigator, profileNavigator
+        authNavigator, meetingsNavigator, newsNavigator, profileNavigator
     )
 
     override fun navigateUp() {
@@ -81,11 +79,11 @@ class NavigatorImpl(
         AuthScreen.VerificationMainScreen.route -> AuthScreen.VerificationMainScreen
         AuthScreen.CountriesMainScreen.route -> AuthScreen.CountriesMainScreen
         AuthScreen.CitiesMainScreen.route -> AuthScreen.CitiesMainScreen
-        MapScreen.MapMainScreen.route -> MapScreen.MapMainScreen
         MeetingsScreen.MeetingsMainScreen.route -> MeetingsScreen.MeetingsMainScreen
         MeetingsScreen.MeetingMainScreen.route -> MeetingsScreen.MeetingMainScreen
+        MeetingsScreen.MapAllMeetingsScreen.route -> MeetingsScreen.MapAllMeetingsScreen
         NewsScreen.NewsMainScreen.route -> NewsScreen.NewsMainScreen
         ProfileScreen.ProfileMainScreen.route -> ProfileScreen.ProfileMainScreen
-        else -> MapScreen.MapMainScreen
+        else -> AuthScreen.AuthMainScreen
     }
 }

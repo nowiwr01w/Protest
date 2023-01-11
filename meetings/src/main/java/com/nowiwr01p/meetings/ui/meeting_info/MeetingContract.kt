@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings.ui.meeting
+package com.nowiwr01p.meetings.ui.meeting_info
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.model.User

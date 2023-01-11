@@ -1,4 +1,4 @@
-package com.nowiwr01p.map.ui
+package com.nowiwr01p.meetings.ui.map_all_meetings
 
 import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.datastore.location.data.Meeting

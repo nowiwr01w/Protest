@@ -1,4 +1,4 @@
-package com.nowiwr01p.meetings.ui.meeting
+package com.nowiwr01p.meetings.ui.meeting_info
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
