@@ -19,7 +19,6 @@ interface Navigator {
     fun getBottomNavigationItems(): List<BottomNavigationItem>
     fun onBottomNavigationSelected(item: BottomNavigationItem)
 
-    fun navigateToMap()
     fun navigateToMeetings()
     fun navigateToNews()
     fun navigateToProfile()

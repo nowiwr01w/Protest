@@ -16,6 +16,10 @@ class MapNavigatorImpl: MapNavigator {
         navController = curNavController
     }
 
+    override fun navigateToMap() {
+        MapMainScreen.navigate(Unit, navController)
+    }
+
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {
         builder.navigation(MapMainScreen.route, MapScreen.rootRoute) {
             MapMainScreen.createScreen(builder, navigator)

@@ -56,6 +56,9 @@ fun MeetingsMainScreen(
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
+        override fun toMap() {
+            navigator.mapNavigator.navigateToMap()
+        }
         override fun toMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMeeting(meeting)
         }
@@ -79,7 +82,7 @@ fun MeetingsMainScreen(
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = { CreateButton(state, listener, lazyListState) }
+        floatingActionButton = { FloatingActionButtons(state, listener, lazyListState) }
     ) {
         MeetingsMainScreenContent(state, listener, lazyListState)
     }
@@ -429,7 +432,7 @@ private fun Category(
  * CREATE MEETING FAB
  */
 @Composable
-private fun CreateButton(
+private fun FloatingActionButtons(
     state: State,
     listener: Listener?,
     lazyListState: LazyListState
@@ -450,7 +453,7 @@ private fun CreateButton(
             painter = painterResource(R.drawable.ic_map),
             lazyListState = lazyListState
         ) {
-            listener?.toCreateMeeting()
+            listener?.toMap()
         }
     }
 }
