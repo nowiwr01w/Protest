@@ -1,7 +1,7 @@
 package com.nowiwr01p.meetings.di
 
 import com.nowiwr01p.core_ui.navigators.MeetingsNavigator
-import com.nowiwr01p.domain.meetings.usecase.GetCachedMeetingsUseCase
+import com.nowiwr01p.domain.map.GetCachedMeetingsUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.SaveMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCache
@@ -11,7 +11,8 @@ import com.nowiwr01p.meetings.navigation.MeetingsNavigatorImpl
 import com.nowiwr01p.meetings.ui.create.CreateMeetingVewModel
 import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
-import com.nowiwr01p.meetings.ui.meeting.MeetingViewModel
+import com.nowiwr01p.meetings.ui.map_all_meetings.MapViewModel
+import com.nowiwr01p.meetings.ui.meeting_info.MeetingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -49,6 +50,18 @@ val moduleMeetings = module {
         scoped { GetMeetingsScreenCacheUseCase(get()) }
         scoped { SaveMeetingsScreenCacheUseCase(get()) }
         scoped { GetCachedMeetingsUseCase(get()) }
+    }
+
+    /**
+     * MAP ALL MEETINGS
+     */
+    viewModel {
+        val scope = getKoin().getScope(meetingsScreenScopeId)
+
+        MapViewModel(
+            get(),
+            scope.get()
+        )
     }
 
     /**

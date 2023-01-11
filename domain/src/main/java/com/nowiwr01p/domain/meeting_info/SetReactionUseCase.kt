@@ -1,9 +1,9 @@
-package com.nowiwr01p.domain.meetings.usecase
+package com.nowiwr01p.domain.meeting_info
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
-import com.nowiwr01p.domain.meetings.usecase.SetReactionUseCase.*
+import com.nowiwr01p.domain.meeting_info.SetReactionUseCase.*
 
 class SetReactionUseCase(
     private val repository: MeetingsRepository

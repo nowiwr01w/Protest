@@ -1,13 +1,13 @@
-package com.nowiwr01p.meetings.ui.meeting
+package com.nowiwr01p.meetings.ui.meeting_info
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
-import com.nowiwr01p.domain.meetings.usecase.SetReactionUseCase
-import com.nowiwr01p.domain.meetings.usecase.SetReactionUseCase.Args
-import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
+import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
+import com.nowiwr01p.domain.meeting_info.SetReactionUseCase.Args
+import com.nowiwr01p.meetings.ui.meeting_info.MeetingContract.*
 
 class MeetingViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,

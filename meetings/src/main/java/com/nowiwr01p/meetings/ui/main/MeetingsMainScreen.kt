@@ -56,7 +56,7 @@ fun MeetingsMainScreen(
 
     val listener = object : Listener {
         override fun toMap() {
-            navigator.mapNavigator.navigateToMap()
+            navigator.meetingsNavigator.navigateToMapAllMeetings()
         }
         override fun toMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMeeting(meeting)

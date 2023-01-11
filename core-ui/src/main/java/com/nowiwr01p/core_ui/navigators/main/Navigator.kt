@@ -8,7 +8,6 @@ import com.nowiwr01p.core_ui.navigators.*
 
 interface Navigator {
     val authNavigator: AuthNavigator
-    val mapNavigator: MapNavigator
     val meetingsNavigator: MeetingsNavigator
     val newsNavigator: NewsNavigator
     val profileNavigator: ProfileNavigator
