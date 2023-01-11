@@ -1,9 +1,12 @@
 package com.nowiwr01p.meetings.di
 
 import com.nowiwr01p.core_ui.navigators.MeetingsNavigator
+import com.nowiwr01p.domain.meetings.usecase.GetCachedMeetingsUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.SaveMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCache
+import com.nowiwr01p.domain.meetingsScreenScopeId
+import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.meetings.navigation.MeetingsNavigatorImpl
 import com.nowiwr01p.meetings.ui.create.CreateMeetingVewModel
 import com.nowiwr01p.meetings.ui.main.MeetingsMapper
@@ -18,9 +21,14 @@ val moduleMeetings = module {
         MeetingsNavigatorImpl()
     }
 
+    single {
+        getKoin().getOrCreateScope(meetingsScreenScopeId, named(meetingsScreenScopeName))
+    }
+
     /**
      * MAIN SCREEN
      */
+
     viewModel {
         val scope = getKoin().getOrCreateScope(meetingsScreenScopeId, named(meetingsScreenScopeName))
 
@@ -40,6 +48,7 @@ val moduleMeetings = module {
         scoped { MeetingsScreenCache() }
         scoped { GetMeetingsScreenCacheUseCase(get()) }
         scoped { SaveMeetingsScreenCacheUseCase(get()) }
+        scoped { GetCachedMeetingsUseCase(get()) }
     }
 
     /**
@@ -52,6 +61,3 @@ val moduleMeetings = module {
      */
     viewModel { MeetingViewModel(get(), get(), get()) }
 }
-
-private const val meetingsScreenScopeId = "meetingsScreenScopeId"
-private const val meetingsScreenScopeName = "meetingsScreenScopeName"
