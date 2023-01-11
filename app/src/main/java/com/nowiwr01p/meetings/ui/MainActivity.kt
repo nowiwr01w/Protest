@@ -9,34 +9,28 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.ModalBottomSheetValue.*
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.insets.LocalWindowInsets
-import com.google.accompanist.insets.rememberInsetsPaddingValues
-import com.google.accompanist.insets.ui.BottomNavigation
-import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheet
-import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
-import com.nowiwr01p.core_ui.theme.bottomNavigationItem
-import com.nowiwr01p.core_ui.theme.mainBackgroundColor
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheet
+import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -119,20 +113,16 @@ fun MainActivityScreen(
                 scaffoldState = scaffoldState,
                 bottomBar = {
                     if (navigator.currentScreen().showBottomNavigation) {
-                        BottomNavigation(
-                            contentPadding = rememberInsetsPaddingValues(
-                                LocalWindowInsets.current.navigationBars
-                            ),
-                            backgroundColor = Color.White
+                        NavigationBar(
+                            containerColor = Color.White,
+                            modifier = Modifier.height(56.dp)
                         ) {
                             navigator.getBottomNavigationItems().forEach { item ->
                                 val selected = currentDestination?.hierarchy?.any {
                                     it.route == item.route
                                 } == true
-                                BottomNavigationItem(
+                                NavigationBarItem(
                                     selected = selected,
-                                    selectedContentColor = Color(0xFFFC4C4C),
-                                    unselectedContentColor = MaterialTheme.colors.mainBackgroundColor,
                                     onClick = {
                                         navigator.onBottomNavigationSelected(item)
                                     },
@@ -140,18 +130,7 @@ fun MainActivityScreen(
                                         Icon(
                                             painter = painterResource(item.iconId),
                                             contentDescription = "Current Bottom Navigation Item",
-                                            modifier = Modifier
-                                                .padding(4.dp)
-                                                .size(24.dp)
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = stringResource(item.titleId),
-                                            style = MaterialTheme.typography.bottomNavigationItem,
-                                            textAlign = TextAlign.Center,
-                                            maxLines = 1,
-                                            overflow = TextOverflow.Ellipsis
+                                            modifier = Modifier.size(20.dp)
                                         )
                                     }
                                 )
