@@ -3,7 +3,6 @@ package com.nowiwr01p.navigation
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.nowiwr01p.core_ui.bottom_navigation.BottomNavigationItem
-import com.nowiwr01p.map.MapScreen
 import com.nowiwr01p.meetings.MeetingsScreen
 import com.nowiwr01p.news.NewsScreen
 import com.nowiwr01p.profile.ProfileScreen
@@ -14,11 +13,6 @@ enum class BottomNavigationItems(
     override val route: String
 ) : BottomNavigationItem {
 
-    Map(
-        titleId = R.string.map_title,
-        iconId = R.drawable.ic_map,
-        route = MapScreen.MapMainScreen.route
-    ),
     Meetings(
         titleId = R.string.meetings_title,
         iconId = R.drawable.ic_meetings,

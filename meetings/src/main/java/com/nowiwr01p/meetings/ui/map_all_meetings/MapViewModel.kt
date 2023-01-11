@@ -1,10 +1,10 @@
-package com.nowiwr01p.map.ui
+package com.nowiwr01p.meetings.ui.map_all_meetings
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
-import com.nowiwr01p.domain.meetings.usecase.GetCachedMeetingsUseCase
-import com.nowiwr01p.map.ui.MapContract.*
+import com.nowiwr01p.domain.map.GetCachedMeetingsUseCase
+import com.nowiwr01p.meetings.ui.map_all_meetings.MapContract.*
 
 class MapViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,

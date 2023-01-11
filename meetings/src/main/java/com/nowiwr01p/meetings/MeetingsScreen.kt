@@ -11,7 +11,8 @@ import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
-import com.nowiwr01p.meetings.ui.meeting.MeetingMainScreen
+import com.nowiwr01p.meetings.ui.map_all_meetings.MapAllMeetingsScreen
+import com.nowiwr01p.meetings.ui.meeting_info.MeetingMainScreen
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -22,6 +23,9 @@ sealed class MeetingsScreen<T>(
     override val showBottomNavigation: Boolean = true
 ): Screen<T>() {
 
+    /**
+     * MEETINGS LIST
+     */
     object MeetingsMainScreen: MeetingsScreen<Unit>(
         MeetingsScreenType.MeetingsMainScreen.route,
         rootRoute
@@ -36,6 +40,9 @@ sealed class MeetingsScreen<T>(
         }
     }
 
+    /**
+     * MEETING INFO
+     */
     object MeetingMainScreen: MeetingsScreen<Meeting>(
         MeetingsScreenType.MeetingMainScreen.route,
         rootRoute,
@@ -59,6 +66,24 @@ sealed class MeetingsScreen<T>(
                 val meetingJson = it.arguments?.getString(Keys.ARG_TO_MEETING).orEmpty()
                 val meeting = Json.decodeFromString<Meeting>(meetingJson)
                 MeetingMainScreen(meeting, navigator)
+            }
+        }
+    }
+
+    /**
+     * MAP ALL MEETINGS
+     */
+    object MapAllMeetingsScreen: MeetingsScreen<Unit>(
+        MeetingsScreenType.MapAllMeetingsScreen.route,
+        rootRoute,
+        false
+    ) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                MapAllMeetingsScreen(navigator)
             }
         }
     }

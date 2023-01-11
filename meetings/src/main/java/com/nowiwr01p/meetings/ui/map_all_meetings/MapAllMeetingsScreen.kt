@@ -1,4 +1,4 @@
-package com.nowiwr01p.map.ui
+package com.nowiwr01p.meetings.ui.map_all_meetings
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
@@ -19,12 +19,12 @@ import com.nowiwr01p.core_ui.extensions.setStatusBarTransparent
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
-import com.nowiwr01p.map.ui.MapContract.*
+import com.nowiwr01p.meetings.ui.map_all_meetings.MapContract.*
 import org.koin.androidx.compose.getViewModel
 import timber.log.Timber
 
 @Composable
-fun MapMainScreen(
+fun MapAllMeetingsScreen(
     navigator: Navigator,
     viewModel: MapViewModel = getViewModel()
 ) {
