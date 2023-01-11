@@ -62,7 +62,6 @@ fun DependencyHandler.commonUiDependencies() {
     implementation(Basic.LIFECYCLE_LIB)
     implementation(Basic.UI)
     implementation(Basic.MATERIAL)
-    implementation(Basic.MATERIAL3)
     implementation(Basic.MATERIAL_ICONS_EXTENDED)
     implementation(Basic.TOOLING)
     implementation(Basic.TOOLING_PREVIEW)

@@ -4,7 +4,6 @@ import com.nowiwr01p.buildsrc.dependency.Basic.Version.COMPOSE
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.COMPOSE_ACTIVITY
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.CONSTRAINT
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.COIL_VERSION
-import com.nowiwr01p.buildsrc.dependency.Basic.Version.COMPOSE_MATERIAL3
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.CUSTOM_TABS_VERSION
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.JODA
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.KOTLIN_KTX
@@ -18,7 +17,6 @@ object Basic {
 
     const val UI = "androidx.compose.ui:ui:$COMPOSE"
     const val MATERIAL = "androidx.compose.material:material:$COMPOSE"
-    const val MATERIAL3 = "androidx.compose.material3:material3:$COMPOSE_MATERIAL3"
     const val MATERIAL_ICONS_EXTENDED = "androidx.compose.material:material-icons-extended:$COMPOSE"
     const val TOOLING = "androidx.compose.ui:ui-tooling:$COMPOSE"
     const val TOOLING_PREVIEW = "androidx.compose.ui:ui-tooling-preview:$COMPOSE"
@@ -37,7 +35,6 @@ object Basic {
 
     object Version {
         const val COMPOSE = "1.4.0-alpha02"
-        const val COMPOSE_MATERIAL3 = "1.1.0-alpha03"
         const val CONSTRAINT = "1.1.0-alpha01"
         const val KOTLIN_KTX = "1.9.0"
         const val TIMBER = "5.0.1"
