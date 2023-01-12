@@ -27,7 +27,7 @@ interface MeetingsContract {
     }
 
     interface Listener {
-        fun toMap()
+        fun toMap(meeting: Meeting)
         fun toMeeting(meeting: Meeting)
         fun toCreateMeeting()
         fun onCategoryClick(category: Category)
