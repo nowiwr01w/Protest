@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.di
 
 import com.nowiwr01p.core_ui.navigators.MeetingsNavigator
+import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.map.GetCachedMeetingsUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.SaveMeetingsScreenCacheUseCase
@@ -20,10 +21,6 @@ import org.koin.dsl.module
 val moduleMeetings = module {
     single<MeetingsNavigator> {
         MeetingsNavigatorImpl()
-    }
-
-    single {
-        getKoin().getOrCreateScope(meetingsScreenScopeId, named(meetingsScreenScopeName))
     }
 
     /**
@@ -50,6 +47,7 @@ val moduleMeetings = module {
         scoped { GetMeetingsScreenCacheUseCase(get()) }
         scoped { SaveMeetingsScreenCacheUseCase(get()) }
         scoped { GetCachedMeetingsUseCase(get()) }
+        scoped { GetCachedCategoriesUseCase(get()) }
     }
 
     /**
@@ -62,7 +60,11 @@ val moduleMeetings = module {
     /**
      * CREATE MEETING
      */
-    viewModel { CreateMeetingVewModel() }
+    viewModel {
+        val scope = getKoin().getScope(meetingsScreenScopeId)
+
+        CreateMeetingVewModel(scope.get())
+    }
 
     /**
      * MEETING SCREEN

@@ -20,15 +20,20 @@ class MeetingsNavigatorImpl: MeetingsNavigator {
         MeetingMainScreen.navigate(meeting, navController)
     }
 
-    override fun navigateToCurrentMeetingMap(meeting: Meeting) {
-        MapDrawPathScreen.navigate(meeting, navController)
+    override fun navigateToCreateMeeting() {
+        CreateMeetingScreen.navigate(Unit, navController)
+    }
+
+    override fun navigateToMapDrawPath() {
+        MapDrawPathScreen.navigate(Unit, navController)
     }
 
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {
         builder.navigation(MeetingsMainScreen.route, MeetingsMainScreen.rootRoute) {
             MeetingsMainScreen.createScreen(builder, navigator)
-            MapDrawPathScreen.createScreen(this, navigator)
             MeetingMainScreen.createScreen(this, navigator)
+            CreateMeetingScreen.createScreen(this, navigator)
+            MapDrawPathScreen.createScreen(this, navigator)
         }
     }
 }

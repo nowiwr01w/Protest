@@ -56,13 +56,13 @@ fun MeetingsMainScreen(
 
     val listener = object : Listener {
         override fun toMap(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToCurrentMeetingMap(meeting)
+            navigator.meetingsNavigator.navigateToMapDrawPath()
         }
         override fun toMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMeetingInfo(meeting)
         }
         override fun toCreateMeeting() {
-            // TODO
+            navigator.meetingsNavigator.navigateToCreateMeeting()
         }
         override fun onCategoryClick(category: Category) {
             viewModel.setEvent(Event.SelectCategory(category))
@@ -410,7 +410,7 @@ private fun MeetingCategories(
 }
 
 @Composable
-private fun Category(
+internal fun Category(
     category: Category
 ) = Box(
     contentAlignment = Alignment.Center,
