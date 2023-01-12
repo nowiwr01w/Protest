@@ -1,5 +1,6 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
+import com.nowiwr01p.core.datastore.location.data.Poster
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.execute
@@ -17,6 +18,7 @@ class CreateMeetingVewModel(
         when (event) {
             is Event.Init -> init()
             is Event.SetCheckBoxState -> setCheckBoxState(event.type, event.value)
+            is Event.OnAddPosterClick -> addPosterField()
         }
     }
 
@@ -40,8 +42,17 @@ class CreateMeetingVewModel(
     private fun setCheckBoxState(type: CheckBoxType, value: Boolean) = setState {
         when (type) {
             DATE -> copy(isDateCheckBoxChecked = value)
-            POSTERS -> copy(isPostersCheckBoxChecked = value)
             OPEN_DATE -> copy(isOpenDateCheckBoxChecked = value)
         }
+    }
+
+    /**
+     * POSTERS
+     */
+    private fun addPosterField() = with(viewState.value) {
+        val updated = posters.toMutableList().apply {
+            add(Poster())
+        }
+        setState { copy(posters = updated) }
     }
 }
