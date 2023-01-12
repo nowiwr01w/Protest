@@ -26,6 +26,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -45,6 +46,8 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.DATE
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.OPEN_DATE
+import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
+import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -65,6 +68,12 @@ fun CreateMeetingMainScreen(
         }
         override fun onRemovePoster(index: Int) {
             viewModel.setEvent(Event.OnRemovePosterClick(index))
+        }
+        override fun onAddDetailsItem(type: DetailsItemType) {
+            viewModel.setEvent(Event.OnAddDetailsItemClick(type))
+        }
+        override fun onRemoveDetailsType(type: DetailsItemType, index: Int) {
+            viewModel.setEvent(Event.OnRemoveDetailsItemClick(type, index))
         }
     }
 
@@ -163,11 +172,11 @@ private fun FieldsContainer(
     item { CustomTextField(hint = "Описание") }
     item { Date(state, listener) }
     item { OpenDate(state, listener) }
-    item { CustomTextField(hint = "Что взять с собой") }
+    item { CustomTextField(hint = "Мотивация идти с плакатами") }
     item { Posters(state, listener) }
-    item { CustomTextField(hint = "Цели") }
-    item { CustomTextField(hint = "Лозунги") }
-    item { CustomTextField(hint = "Стратегия") }
+    item { Goals(state, listener) }
+    item { Slogans(state, listener) }
+    item { Strategy(state, listener) }
     item { Spacer(modifier = Modifier.height(120.dp)) }
 }
 
@@ -210,7 +219,9 @@ private fun CustomTextField(
         label = {
             Text(
                 text = hint,
-                modifier = Modifier.padding(top = 3.dp)
+                modifier = Modifier.padding(top = 3.dp),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         },
         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -343,7 +354,7 @@ private fun Date(
     if (!state.isOpenDateCheckBoxChecked) {
         Column {
             ExpandableItem("Точная дата") {
-                DateCheckBox(
+                CheckBox(
                     type = DATE,
                     checked = checked,
                     listener = listener
@@ -362,18 +373,6 @@ private fun Date(
     }
 }
 
-@Composable
-private fun DateCheckBox(
-    type: CheckBoxType,
-    checked: MutableState<Boolean>,
-    listener: Listener?
-) {
-    CheckBox(checked = checked.value) {
-        checked.value = !checked.value
-        listener?.setCheckBoxState(type, checked.value)
-    }
-}
-
 /**
  * OPEN DATE
  */
@@ -386,7 +385,7 @@ private fun OpenDate(
     if (!state.isDateCheckBoxChecked) {
         Column {
             ExpandableItem("Открытая дата") {
-                DateCheckBox(
+                CheckBox(
                     type = OPEN_DATE,
                     checked = checked,
                     listener = listener
@@ -410,6 +409,21 @@ private fun OpenDate(
 }
 
 /**
+ * CHECKBOX FOR DATE & OPEN DATE
+ */
+@Composable
+private fun CheckBox(
+    type: CheckBoxType,
+    checked: MutableState<Boolean>,
+    listener: Listener?
+) {
+    CheckBox(checked = checked.value) {
+        checked.value = !checked.value
+        listener?.setCheckBoxState(type, checked.value)
+    }
+}
+
+/**
  * POSTERS
  */
 @Composable
@@ -417,17 +431,88 @@ private fun Posters(
     state: State,
     listener: Listener?
 ) {
+    ExpandableItems(
+        title = "Ссылки на плакаты",
+        isVisible = state.posters.isNotEmpty(),
+        items = state.posters,
+        onAddItem = { listener?.onAddPosterClick() },
+        onRemoveItem = { listener?.onRemovePoster(it) }
+    )
+}
+
+/**
+ * GOALS
+ */
+@Composable
+private fun Goals(
+    state: State,
+    listener: Listener?
+) {
+    ExpandableItems(
+        title = "Цели",
+        isVisible = state.goals.isNotEmpty(),
+        items = state.goals,
+        onAddItem = { listener?.onAddDetailsItem(GOALS) },
+        onRemoveItem = { listener?.onRemoveDetailsType(GOALS, it) }
+    )
+}
+
+/**
+ * SLOGANS
+ */
+@Composable
+private fun Slogans(
+    state: State,
+    listener: Listener?
+) {
+    ExpandableItems(
+        title = "Лозунги",
+        isVisible = state.slogans.isNotEmpty(),
+        items = state.slogans,
+        onAddItem = { listener?.onAddDetailsItem(SLOGANS) },
+        onRemoveItem = { listener?.onRemoveDetailsType(SLOGANS, it) }
+    )
+}
+
+/**
+ * STRATEGY
+ */
+@Composable
+private fun Strategy(
+    state: State,
+    listener: Listener?
+) {
+    ExpandableItems(
+        title = "Стратегия",
+        isVisible = state.strategy.isNotEmpty(),
+        items = state.strategy,
+        onAddItem = { listener?.onAddDetailsItem(STRATEGY) },
+        onRemoveItem = { listener?.onRemoveDetailsType(STRATEGY, it) }
+    )
+}
+
+/**
+ * EXPANDABLE ITEMS
+ */
+@Composable
+private fun ExpandableItems(
+    title: String,
+    isVisible: Boolean,
+    items: List<*>,
+    onRemoveItem: (index: Int) -> Unit,
+    onAddItem: () -> Unit = {},
+) {
     Column {
-        ExpandableItem("Ссылки на плакаты") {
-            AddPosterIcon(listener)
+        ExpandableItem(title) {
+            AddIcon { onAddItem.invoke() }
         }
-        AnimatedVisibility(visible = state.posters.isNotEmpty()) {
+        AnimatedVisibility(visible = isVisible) {
             Column(
                 modifier = Modifier.animateContentSize()
             ) {
-                state.posters.forEachIndexed { index, _ ->
+                items.forEachIndexed { index, _ ->
                     CustomTextField(hint = "$index", showSubItemSlash = true) {
-                        listener?.onRemovePoster(index)
+                        onRemoveItem.invoke(index)
                     }
                 }
             }
@@ -435,9 +520,6 @@ private fun Posters(
     }
 }
 
-/**
- * EXPANDABLE ITEM
- */
 @Composable
 private fun ExpandableItem(
     hint: String,
@@ -486,11 +568,14 @@ private fun ExpandableItem(
     }
 }
 
+/**
+ * ADD ICON FOR EXPANDABLE ITEMS
+ */
 @Composable
-private fun AddPosterIcon(listener: Listener?) = Box(
+private fun AddIcon(onAddItem: () -> Unit) = Box(
     modifier = Modifier
         .clip(RoundedCornerShape(14.dp))
-        .clickable { listener?.onAddPosterClick() }
+        .clickable { onAddItem.invoke() }
 ) {
     Icon(
         painter = rememberVectorPainter(Icons.Default.AddCircleOutline),
