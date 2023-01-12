@@ -1,7 +1,7 @@
-package com.nowiwr01p.meetings.ui.create
+package com.nowiwr01p.meetings.ui.create_meeting
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.meetings.ui.create.CreateMeetingContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 
 class CreateMeetingVewModel: BaseViewModel<Event, State, Effect>() {
 

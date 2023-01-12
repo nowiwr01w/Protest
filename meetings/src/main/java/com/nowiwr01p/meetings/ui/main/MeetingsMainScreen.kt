@@ -55,11 +55,11 @@ fun MeetingsMainScreen(
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
-        override fun toMap() {
-            navigator.meetingsNavigator.navigateToMapAllMeetings()
+        override fun toMap(meeting: Meeting) {
+            navigator.meetingsNavigator.navigateToCurrentMeetingMap(meeting)
         }
         override fun toMeeting(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMeeting(meeting)
+            navigator.meetingsNavigator.navigateToMeetingInfo(meeting)
         }
         override fun toCreateMeeting() {
             // TODO
@@ -452,7 +452,7 @@ private fun FloatingActionButtons(
             painter = painterResource(R.drawable.ic_map),
             lazyListState = lazyListState
         ) {
-            listener?.toMap()
+            listener?.toMap(state.meetings[0])
         }
     }
 }
@@ -510,6 +510,7 @@ private fun EmptyListStub() = Column(
     StateButton(
         text = "Стать организатором",
         modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 32.dp, start = 48.dp, end = 48.dp)
             .clip(RoundedCornerShape(24.dp))
     )
