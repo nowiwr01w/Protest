@@ -245,6 +245,7 @@ private fun ChooseButton(
     state = DEFAULT,
     onSendRequest = { listener?.onConfirmClick() },
     modifier = modifier
+        .fillMaxWidth()
         .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
         .clip(RoundedCornerShape(24.dp))
 )

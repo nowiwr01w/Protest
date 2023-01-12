@@ -320,6 +320,7 @@ private fun AuthButton(
             listener?.toNextScreen()
         },
         modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
             .clip(RoundedCornerShape(24.dp))
     )

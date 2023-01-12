@@ -157,6 +157,7 @@ private fun ColumnScope.CheckButton(
         onSuccess = { listener?.toLocations() },
         onSendRequest = { listener?.onCheckCode() },
         modifier = Modifier
+            .fillMaxWidth()
             .padding(start = 24.dp, end = 24.dp)
             .clip(RoundedCornerShape(24.dp))
     )
