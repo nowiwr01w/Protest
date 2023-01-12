@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -14,7 +15,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.AddCircleOutline
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -31,7 +34,6 @@ import com.nowiwr01p.core_ui.extensions.ReversedRow
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.graphicsSecondary
-import com.nowiwr01p.core_ui.theme.graphicsTertiary
 import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -40,10 +42,9 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.*
+import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.DATE
+import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.OPEN_DATE
 import com.nowiwr01p.meetings.ui.main.Category
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -57,6 +58,9 @@ fun CreateMeetingMainScreen(
         }
         override fun setCheckBoxState(type: CheckBoxType, value: Boolean) {
             viewModel.setEvent(Event.SetCheckBoxState(type, value))
+        }
+        override fun onAddPosterClick() {
+            viewModel.setEvent(Event.OnAddPosterClick)
         }
     }
 
@@ -232,7 +236,6 @@ private fun CustomTextField(
                     Icon(
                         painter = rememberVectorPainter(Icons.Default.Close),
                         contentDescription = "Toolbar back icon",
-                        tint = MaterialTheme.colors.graphicsTertiary,
                         modifier = Modifier.padding(6.dp)
                     )
                 }
@@ -312,7 +315,6 @@ private fun CategoriesStub(
             Icon(
                 painter = rememberVectorPainter(Icons.Default.KeyboardArrowDown),
                 contentDescription = "Drop down icon",
-                tint = MaterialTheme.colors.graphicsTertiary,
                 modifier = Modifier
                     .padding(end = 16.dp)
                     .size(28.dp)
@@ -398,9 +400,16 @@ private fun OpenDate(
         Column {
             val checked = remember { mutableStateOf(false) }
             ReversedRow {
-                DateCheckBox(OPEN_DATE, checked, listener)
+                DateCheckBox(
+                    type = OPEN_DATE,
+                    checked = checked,
+                    listener = listener
+                )
                 Spacer(modifier = Modifier.width(16.dp))
-                CustomTextField(hint = "Открытая дата", readOnly = true)
+                CustomTextField(
+                    hint = "Открытая дата",
+                    readOnly = true
+                )
             }
             AnimatedVisibility(visible = checked.value) {
                 Column {
@@ -427,39 +436,48 @@ private fun Posters(
     state: State,
     listener: Listener?
 ) {
-    val scope = rememberCoroutineScope()
     Column {
-        val checked = remember { mutableStateOf(false) }
         ReversedRow {
-            DateCheckBox(POSTERS, checked, listener)
+            AddPosterIcon(listener)
             Spacer(modifier = Modifier.width(16.dp))
             CustomTextField(hint = "Ссылки на плакаты", readOnly = true)
         }
-        AnimatedVisibility(visible = checked.value) {
-            val showFourth = remember { mutableStateOf(true) }
-            val showFifth = remember { mutableStateOf(true) }
-            Column {
-                CustomTextField(hint = "1", showSubItemSlash = true)
-                CustomTextField(hint = "2", showSubItemSlash = true)
-                CustomTextField(hint = "3", showSubItemSlash = true)
-                AnimatedVisibility(visible = showFourth.value) {
-                    CustomTextField(hint = "4", showSubItemSlash = true) {
-                        scope.launch {
-                            delay(300)
-                            showFourth.value = false
-                        }
-                    }
-                }
-                AnimatedVisibility(visible = showFifth.value) {
-                    CustomTextField(hint = "5", showSubItemSlash = true) {
-                        scope.launch {
-                            delay(300)
-                            showFifth.value = false
-                        }
-                    }
+        AnimatedVisibility(visible = state.posters.isNotEmpty()) {
+            Column(
+                modifier = Modifier.animateContentSize()
+            ) {
+                state.posters.forEachIndexed { index, _ ->
+                    CustomTextField(hint = "$index", showSubItemSlash = true)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun AddPosterIcon(listener: Listener?) = Box(
+    contentAlignment = Alignment.Center,
+    modifier = Modifier
+        .size(72.dp)
+        .padding(top = 16.dp)
+        .border(
+            border = BorderStroke(
+                width = 1.25.dp,
+                color = MaterialTheme.colors.graphicsSecondary
+            ),
+            shape = RoundedCornerShape(12.dp)
+        )
+) {
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(14.dp))
+            .clickable { listener?.onAddPosterClick() }
+    ) {
+        Icon(
+            painter = rememberVectorPainter(Icons.Default.AddCircleOutline),
+            contentDescription = "Toolbar back icon",
+            modifier = Modifier.padding(6.dp)
+        )
     }
 }
 
