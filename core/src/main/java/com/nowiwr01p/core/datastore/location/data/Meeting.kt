@@ -1,12 +1,12 @@
 package com.nowiwr01p.core.datastore.location.data
 
 import com.nowiwr01p.core.model.Category
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Meeting(
     val id: String = "",
+    val cityName: String = "",
     val creatorId: String = "",
     val image: String = "",
     val date: Long = 0L,
@@ -25,6 +25,7 @@ data class Meeting(
     companion object {
         fun getSampleData() = Meeting(
             id = "123",
+            cityName = "Saint-Petersburg",
             creatorId = "1234",
             image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",
             date = System.currentTimeMillis(),
@@ -48,9 +49,7 @@ data class Meeting(
 
 @Serializable
 data class Coordinate(
-    @SerialName("latitude")
     val latitude: Double = .0,
-    @SerialName("longitude")
     val longitude: Double = .0,
 ) {
     companion object {
