@@ -1,12 +1,12 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
-import com.nowiwr01p.core.datastore.location.data.Poster
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.*
+import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.DATE
+import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.OPEN_DATE
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
@@ -20,8 +20,6 @@ class CreateMeetingVewModel(
         when (event) {
             is Event.Init -> init()
             is Event.SetCheckBoxState -> setCheckBoxState(event.type, event.value)
-            is Event.OnAddPosterClick -> addPosterField()
-            is Event.OnRemovePosterClick -> removePosterField(event.index)
             is Event.OnAddDetailsItemClick -> changeDetailsListState(event.type)
             is Event.OnRemoveDetailsItemClick -> changeDetailsListState(event.type, event.index)
         }
@@ -52,26 +50,14 @@ class CreateMeetingVewModel(
     }
 
     /**
-     * POSTERS
-     */
-    private fun addPosterField() = with(viewState.value) {
-        val updated = posters.toMutableList().apply { add(Poster()) }
-        setState { copy(posters = updated) }
-    }
-
-    private fun removePosterField(index: Int) = with(viewState.value) {
-        val updated = posters.toMutableList().apply { removeAt(index) }
-        setState { copy(posters = updated) }
-    }
-
-    /**
-     * DETAILS (GOALS, SLOGANS, STRATEGY)
+     * DETAILS (POSTER LINKS, GOALS, SLOGANS, STRATEGY)
      */
     private fun changeDetailsListState(type: DetailsItemType, index: Int = -1) = with(viewState.value) {
         val list = when (type) {
             GOALS -> goals
             SLOGANS -> slogans
             STRATEGY -> strategy
+            POSTER_LINKS -> posters
         }
         val updated = list.toMutableList().apply {
             if (index == -1) add("") else removeAt(index)
@@ -84,6 +70,7 @@ class CreateMeetingVewModel(
             GOALS -> copy(goals = list)
             SLOGANS -> copy(slogans = list)
             STRATEGY -> copy(strategy = list)
+            POSTER_LINKS -> copy(posters = list)
         }
     }
 }
