@@ -7,6 +7,8 @@ import com.nowiwr01p.domain.execute
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType
 import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.*
+import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
+import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
 class CreateMeetingVewModel(
     private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase
@@ -20,6 +22,8 @@ class CreateMeetingVewModel(
             is Event.SetCheckBoxState -> setCheckBoxState(event.type, event.value)
             is Event.OnAddPosterClick -> addPosterField()
             is Event.OnRemovePosterClick -> removePosterField(event.index)
+            is Event.OnAddDetailsItemClick -> changeDetailsListState(event.type)
+            is Event.OnRemoveDetailsItemClick -> changeDetailsListState(event.type, event.index)
         }
     }
 
@@ -58,5 +62,28 @@ class CreateMeetingVewModel(
     private fun removePosterField(index: Int) = with(viewState.value) {
         val updated = posters.toMutableList().apply { removeAt(index) }
         setState { copy(posters = updated) }
+    }
+
+    /**
+     * DETAILS (GOALS, SLOGANS, STRATEGY)
+     */
+    private fun changeDetailsListState(type: DetailsItemType, index: Int = -1) = with(viewState.value) {
+        val list = when (type) {
+            GOALS -> goals
+            SLOGANS -> slogans
+            STRATEGY -> strategy
+        }
+        val updated = list.toMutableList().apply {
+            if (index == -1) add("") else removeAt(index)
+        }
+        updateDetailsList(type, updated)
+    }
+
+    private fun updateDetailsList(type: DetailsItemType, list: List<String>) = setState {
+        when (type) {
+            GOALS -> copy(goals = list)
+            SLOGANS -> copy(slogans = list)
+            STRATEGY -> copy(strategy = list)
+        }
     }
 }
