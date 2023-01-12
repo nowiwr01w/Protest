@@ -63,12 +63,6 @@ fun CreateMeetingMainScreen(
         override fun setCheckBoxState(type: CheckBoxType, value: Boolean) {
             viewModel.setEvent(Event.SetCheckBoxState(type, value))
         }
-        override fun onAddPosterClick() {
-            viewModel.setEvent(Event.OnAddPosterClick)
-        }
-        override fun onRemovePoster(index: Int) {
-            viewModel.setEvent(Event.OnRemovePosterClick(index))
-        }
         override fun onAddDetailsItem(type: DetailsItemType) {
             viewModel.setEvent(Event.OnAddDetailsItemClick(type))
         }
@@ -284,11 +278,11 @@ private fun Categories(
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
-            .clickable(enabled = state.categories.isEmpty()) {
+            .clickable(enabled = state.selectedCategories.isEmpty()) {
                 expanded.value = !expanded.value
             }
     ) {
-        if (state.categories.isEmpty()) {
+        if (state.selectedCategories.isEmpty()) {
             CategoriesStub(expanded, rotateDegrees)
         } else {
             CategoriesList(state)
@@ -302,7 +296,7 @@ private fun CategoriesList(state: State) = LazyRow(
     verticalAlignment = Alignment.CenterVertically
 ) {
     item { Spacer(modifier = Modifier.width(16.dp)) }
-    items(state.categories) {
+    items(state.selectedCategories) {
         Category(it)
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
@@ -435,8 +429,8 @@ private fun Posters(
         title = "Ссылки на плакаты",
         isVisible = state.posters.isNotEmpty(),
         items = state.posters,
-        onAddItem = { listener?.onAddPosterClick() },
-        onRemoveItem = { listener?.onRemovePoster(it) }
+        onAddItem = { listener?.onAddDetailsItem(POSTER_LINKS) },
+        onRemoveItem = { listener?.onRemoveDetailsType(POSTER_LINKS, it) }
     )
 }
 
