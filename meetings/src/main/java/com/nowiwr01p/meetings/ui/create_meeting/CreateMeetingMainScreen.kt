@@ -30,6 +30,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.CheckBox
 import com.nowiwr01p.core_ui.extensions.ReversedRow
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
@@ -61,6 +62,9 @@ fun CreateMeetingMainScreen(
         }
         override fun onAddPosterClick() {
             viewModel.setEvent(Event.OnAddPosterClick)
+        }
+        override fun onRemovePoster(index: Int) {
+            viewModel.setEvent(Event.OnRemovePosterClick(index))
         }
     }
 
@@ -335,13 +339,15 @@ private fun Date(
     state: State,
     listener: Listener?
 ) {
+    val checked = remember { mutableStateOf(false) }
     if (!state.isOpenDateCheckBoxChecked) {
         Column {
-            val checked = remember { mutableStateOf(false) }
-            ReversedRow {
-                DateCheckBox(DATE, checked, listener)
-                Spacer(modifier = Modifier.width(16.dp))
-                CustomTextField(hint = "Дата", readOnly = true)
+            ExpandableItem("Точная дата") {
+                DateCheckBox(
+                    type = DATE,
+                    checked = checked,
+                    listener = listener
+                )
             }
             AnimatedVisibility(visible = checked.value) {
                 Column {
@@ -357,35 +363,15 @@ private fun Date(
 }
 
 @Composable
-private fun RowScope.DateCheckBox(
+private fun DateCheckBox(
     type: CheckBoxType,
     checked: MutableState<Boolean>,
     listener: Listener?
-) = Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier
-        .width(72.dp)
-        .height(72.dp)
-        .padding(top = 16.dp)
-        .border(
-            border = BorderStroke(
-                width = 1.25.dp,
-                color = MaterialTheme.colors.graphicsSecondary
-            ),
-            shape = RoundedCornerShape(12.dp)
-        )
 ) {
-    Checkbox(
-        checked = checked.value,
-        onCheckedChange = {
-            checked.value = !checked.value
-            listener?.setCheckBoxState(type, checked.value)
-        },
-        colors = CheckboxDefaults.colors(
-            checkedColor = Color.Black,
-            checkmarkColor = Color.White
-        )
-    )
+    CheckBox(checked = checked.value) {
+        checked.value = !checked.value
+        listener?.setCheckBoxState(type, checked.value)
+    }
 }
 
 /**
@@ -396,19 +382,14 @@ private fun OpenDate(
     state: State,
     listener: Listener?
 ) {
+    val checked = remember { mutableStateOf(false) }
     if (!state.isDateCheckBoxChecked) {
         Column {
-            val checked = remember { mutableStateOf(false) }
-            ReversedRow {
+            ExpandableItem("Открытая дата") {
                 DateCheckBox(
                     type = OPEN_DATE,
                     checked = checked,
                     listener = listener
-                )
-                Spacer(modifier = Modifier.width(16.dp))
-                CustomTextField(
-                    hint = "Открытая дата",
-                    readOnly = true
                 )
             }
             AnimatedVisibility(visible = checked.value) {
@@ -437,48 +418,85 @@ private fun Posters(
     listener: Listener?
 ) {
     Column {
-        ReversedRow {
+        ExpandableItem("Ссылки на плакаты") {
             AddPosterIcon(listener)
-            Spacer(modifier = Modifier.width(16.dp))
-            CustomTextField(hint = "Ссылки на плакаты", readOnly = true)
         }
         AnimatedVisibility(visible = state.posters.isNotEmpty()) {
             Column(
                 modifier = Modifier.animateContentSize()
             ) {
                 state.posters.forEachIndexed { index, _ ->
-                    CustomTextField(hint = "$index", showSubItemSlash = true)
+                    CustomTextField(hint = "$index", showSubItemSlash = true) {
+                        listener?.onRemovePoster(index)
+                    }
                 }
             }
         }
     }
 }
 
+/**
+ * EXPANDABLE ITEM
+ */
 @Composable
-private fun AddPosterIcon(listener: Listener?) = Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier
-        .size(72.dp)
-        .padding(top = 16.dp)
-        .border(
-            border = BorderStroke(
-                width = 1.25.dp,
-                color = MaterialTheme.colors.graphicsSecondary
-            ),
-            shape = RoundedCornerShape(12.dp)
-        )
+private fun ExpandableItem(
+    hint: String,
+    Icon: @Composable () -> Unit
+) = ReversedRow(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.padding(top = 16.dp)
 ) {
     Box(
+        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .clip(RoundedCornerShape(14.dp))
-            .clickable { listener?.onAddPosterClick() }
+            .size(56.dp)
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
     ) {
-        Icon(
-            painter = rememberVectorPainter(Icons.Default.AddCircleOutline),
-            contentDescription = "Toolbar back icon",
-            modifier = Modifier.padding(6.dp)
+        Icon()
+    }
+    Spacer(
+        modifier = Modifier.width(16.dp)
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+    ) {
+        Text(
+            text = hint,
+            color = Color(0x99000000),
+            style = MaterialTheme.typography.subHeadlineRegular,
+            modifier = Modifier.padding(start = 16.dp)
         )
     }
+}
+
+@Composable
+private fun AddPosterIcon(listener: Listener?) = Box(
+    modifier = Modifier
+        .clip(RoundedCornerShape(14.dp))
+        .clickable { listener?.onAddPosterClick() }
+) {
+    Icon(
+        painter = rememberVectorPainter(Icons.Default.AddCircleOutline),
+        contentDescription = "Toolbar back icon",
+        modifier = Modifier.padding(6.dp)
+    )
 }
 
 /**
