@@ -19,6 +19,7 @@ class CreateMeetingVewModel(
             is Event.Init -> init()
             is Event.SetCheckBoxState -> setCheckBoxState(event.type, event.value)
             is Event.OnAddPosterClick -> addPosterField()
+            is Event.OnRemovePosterClick -> removePosterField(event.index)
         }
     }
 
@@ -50,9 +51,12 @@ class CreateMeetingVewModel(
      * POSTERS
      */
     private fun addPosterField() = with(viewState.value) {
-        val updated = posters.toMutableList().apply {
-            add(Poster())
-        }
+        val updated = posters.toMutableList().apply { add(Poster()) }
+        setState { copy(posters = updated) }
+    }
+
+    private fun removePosterField(index: Int) = with(viewState.value) {
+        val updated = posters.toMutableList().apply { removeAt(index) }
         setState { copy(posters = updated) }
     }
 }
