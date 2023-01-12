@@ -1,13 +1,12 @@
-package com.nowiwr01p.meetings.ui.create
+package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.meetings.ui.create.CreateMeetingContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable

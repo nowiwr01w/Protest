@@ -11,7 +11,7 @@ import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
-import com.nowiwr01p.meetings.ui.map_all_meetings.MapAllMeetingsScreen
+import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.CurrentMeetingMapScreen
 import com.nowiwr01p.meetings.ui.meeting_info.MeetingMainScreen
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -51,7 +51,7 @@ sealed class MeetingsScreen<T>(
         override fun navigate(args: Meeting, navController: NavController) {
             navController.navigate(
                 route = route.replace(
-                    oldValue = "{${Keys.ARG_TO_MEETING}}",
+                    oldValue = "{${Keys.ARG_TO_MEETING_INFO}}",
                     newValue = Json.encodeToString(args)
                 )
             )
@@ -60,10 +60,10 @@ sealed class MeetingsScreen<T>(
             navGraphBuilder.composable(
                 route = route,
                 arguments = listOf(
-                    navArgument(Keys.ARG_TO_MEETING) { type = NavType.StringType }
+                    navArgument(Keys.ARG_TO_MEETING_INFO) { type = NavType.StringType }
                 )
             ) {
-                val meetingJson = it.arguments?.getString(Keys.ARG_TO_MEETING).orEmpty()
+                val meetingJson = it.arguments?.getString(Keys.ARG_TO_MEETING_INFO).orEmpty()
                 val meeting = Json.decodeFromString<Meeting>(meetingJson)
                 MeetingMainScreen(meeting, navigator)
             }
@@ -71,19 +71,17 @@ sealed class MeetingsScreen<T>(
     }
 
     /**
-     * MAP ALL MEETINGS
+     * MAP CURRENT MEETING
      */
-    object MapAllMeetingsScreen: MeetingsScreen<Unit>(
-        MeetingsScreenType.MapAllMeetingsScreen.route,
-        rootRoute,
-        false
+    object MapDrawPathScreen: MeetingsScreen<Meeting>(
+        MeetingsScreenType.MapDrawPathScreen.route, rootRoute, false
     ) {
-        override fun navigate(args: Unit, navController: NavController) {
+        override fun navigate(args: Meeting, navController: NavController) {
             navController.navigate(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
-                MapAllMeetingsScreen(navigator)
+                CurrentMeetingMapScreen(navigator)
             }
         }
     }

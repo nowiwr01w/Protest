@@ -8,10 +8,10 @@ import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCache
 import com.nowiwr01p.domain.meetingsScreenScopeId
 import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.meetings.navigation.MeetingsNavigatorImpl
-import com.nowiwr01p.meetings.ui.create.CreateMeetingVewModel
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingVewModel
 import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
-import com.nowiwr01p.meetings.ui.map_all_meetings.MapViewModel
+import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.MapDrawPathContractViewModel
 import com.nowiwr01p.meetings.ui.meeting_info.MeetingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -56,12 +56,7 @@ val moduleMeetings = module {
      * MAP ALL MEETINGS
      */
     viewModel {
-        val scope = getKoin().getScope(meetingsScreenScopeId)
-
-        MapViewModel(
-            get(),
-            scope.get()
-        )
+        MapDrawPathContractViewModel(get())
     }
 
     /**
