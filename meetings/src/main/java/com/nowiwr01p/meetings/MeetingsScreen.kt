@@ -10,6 +10,7 @@ import com.nowiwr01p.core_ui.Keys
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMainScreen
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
 import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.CurrentMeetingMapScreen
 import com.nowiwr01p.meetings.ui.meeting_info.MeetingMainScreen
@@ -71,12 +72,28 @@ sealed class MeetingsScreen<T>(
     }
 
     /**
-     * MAP CURRENT MEETING
+     * CREATE MEETING
      */
-    object MapDrawPathScreen: MeetingsScreen<Meeting>(
+    object CreateMeetingScreen: MeetingsScreen<Unit>(
+        MeetingsScreenType.CreateMeetingMainScreen.route, rootRoute, false
+    ) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                CreateMeetingMainScreen(navigator)
+            }
+        }
+    }
+
+    /**
+     * MAP DRAW PATH
+     */
+    object MapDrawPathScreen: MeetingsScreen<Unit>(
         MeetingsScreenType.MapDrawPathScreen.route, rootRoute, false
     ) {
-        override fun navigate(args: Meeting, navController: NavController) {
+        override fun navigate(args: Unit, navController: NavController) {
             navController.navigate(route)
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
