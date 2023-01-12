@@ -12,6 +12,7 @@ interface CreateMeetingContract {
     sealed interface Event: ViewEvent {
         object Init: Event
         object OnAddPosterClick: Event
+        data class OnRemovePosterClick(val index: Int): Event
         data class SetCheckBoxState(val type: CheckBoxType, val value: Boolean): Event
     }
 
@@ -28,5 +29,6 @@ interface CreateMeetingContract {
         fun onBackClick()
         fun onAddPosterClick()
         fun setCheckBoxState(type: CheckBoxType, value: Boolean)
+        fun onRemovePoster(index: Int)
     }
 }
