@@ -31,6 +31,8 @@ import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core.model.CreateMeetingMapType
+import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.isScrollingUp
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
@@ -56,7 +58,7 @@ fun MeetingsMainScreen(
 
     val listener = object : Listener {
         override fun toMap(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMapDrawPath()
+            navigator.meetingsNavigator.navigateToMapDrawPath(DRAW_PATH)
         }
         override fun toMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMeetingInfo(meeting)
