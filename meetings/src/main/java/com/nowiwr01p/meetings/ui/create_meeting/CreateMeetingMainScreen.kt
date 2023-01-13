@@ -31,6 +31,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.CheckBox
+import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.extensions.ReversedRow
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
@@ -165,7 +166,7 @@ private fun Toolbar(listener: Listener?) = ToolbarTop(
     },
     backIcon = {
         ToolbarBackButton { listener?.onBackClick() }
-    },
+    }
 )
 
 /**
@@ -258,18 +259,11 @@ private fun CustomTextField(
             ),
         trailingIcon = {
             if (trailingIconCallback != null) {
-                Box(
-                    modifier = Modifier
-                        .padding(end = 12.dp)
-                        .clip(RoundedCornerShape(14.dp))
-                        .clickable { trailingIconCallback.invoke() }
-                ) {
-                    Icon(
-                        painter = rememberVectorPainter(Icons.Default.Close),
-                        contentDescription = "Toolbar back icon",
-                        modifier = Modifier.padding(6.dp)
-                    )
-                }
+                ClickableIcon(
+                    icon = Icons.Default.Close,
+                    modifier = Modifier.padding(end = 12.dp),
+                    onClick = { trailingIconCallback.invoke() }
+                )
             }
         }
     )
@@ -453,7 +447,7 @@ private fun OpenDate(
     val checked = remember { mutableStateOf(false) }
     Column {
         ExpandableItem("Открытая дата") {
-            CheckBox(checked = checked)
+            CheckBox(checked.value) { checked.value = !checked.value }
         }
         AnimatedVisibility(visible = checked.value) {
             CustomTextField(
@@ -462,18 +456,6 @@ private fun OpenDate(
                 showSubItemSlash = true
             )
         }
-    }
-}
-
-/**
- * CHECKBOX FOR DATE & OPEN DATE
- */
-@Composable
-private fun CheckBox(
-    checked: MutableState<Boolean>,
-) {
-    CheckBox(checked = checked.value) {
-        checked.value = !checked.value
     }
 }
 
@@ -602,7 +584,7 @@ private fun ExpandableItems(
 ) {
     Column {
         ExpandableItem(title) {
-            AddIcon { onAddItem.invoke() }
+            ClickableIcon(icon = Icons.Default.AddCircleOutline) { onAddItem.invoke() }
         }
         AnimatedVisibility(visible = isVisible) {
             Column(
@@ -664,22 +646,6 @@ private fun ExpandableItem(
             modifier = Modifier.padding(start = 16.dp)
         )
     }
-}
-
-/**
- * ADD ICON FOR EXPANDABLE ITEMS
- */
-@Composable
-private fun AddIcon(onAddItem: () -> Unit) = Box(
-    modifier = Modifier
-        .clip(RoundedCornerShape(14.dp))
-        .clickable { onAddItem.invoke() }
-) {
-    Icon(
-        painter = rememberVectorPainter(Icons.Default.AddCircleOutline),
-        contentDescription = "Toolbar back icon",
-        modifier = Modifier.padding(6.dp)
-    )
 }
 
 /**
