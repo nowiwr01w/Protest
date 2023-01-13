@@ -1,5 +1,6 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
+import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
@@ -28,6 +29,8 @@ class CreateMeetingVewModel(
             is Event.ShowDateTimePicker -> showDateTimePicker()
             is Event.SelectDate -> selectDate(event.date)
             is Event.SelectTime -> selectTime(event.time)
+            is Event.SetDrawnPath -> setPath(event.path)
+            is Event.SetStartLocationPath -> setStartLocation(event.position)
         }
     }
 
@@ -93,5 +96,16 @@ class CreateMeetingVewModel(
 
     private fun selectTime(time: String) = setState {
         copy(selectedTime = time, showTimePicker = false)
+    }
+
+    /**
+     * LOCATION
+     */
+    private fun setPath(path: List<LatLng>) = setState {
+        copy(path = path)
+    }
+
+    private fun setStartLocation(position: LatLng) = setState {
+        copy(startLocation = position)
     }
 }

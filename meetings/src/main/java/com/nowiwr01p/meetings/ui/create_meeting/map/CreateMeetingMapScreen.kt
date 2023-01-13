@@ -1,5 +1,3 @@
-@file:JvmName("CreateMeetingMapContractKt")
-
 package com.nowiwr01p.meetings.ui.create_meeting.map
 
 import androidx.compose.animation.AnimatedVisibility
@@ -26,6 +24,11 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
+import com.nowiwr01p.core.model.CreateMeetingMapType
+import com.nowiwr01p.core.model.CreateMeetingMapType.*
+import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_PATH
+import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
@@ -35,8 +38,6 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.*
-import com.nowiwr01p.core.model.CreateMeetingMapType
-import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -47,7 +48,7 @@ fun CurrentMeetingMapScreen(
 ) {
     val listener = object : Listener {
         override fun onBackClick() {
-            navigator.navigateUp()
+            viewModel.setEvent(Event.OnBackClick)
         }
         override fun onSavePathClick() {
             // TODO
@@ -62,6 +63,16 @@ fun CurrentMeetingMapScreen(
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(Event.Init)
+    }
+
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.NavigateBack -> {
+                val arg = if (type == DRAW_PATH) NAV_ARG_PATH else NAV_ARG_START_LOCATION
+                navigator.setScreenResult(arg, it.path)
+                navigator.navigateUp()
+            }
+        }
     }
 
     CurrentMeetingScreenContent(
@@ -80,7 +91,7 @@ private fun CurrentMeetingScreenContent(
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
-        Toolbar(listener)
+        Toolbar(type, listener)
         if (state.cityCoordinates.latitude != .0) {
             Map(type, state, listener)
         }
@@ -91,10 +102,14 @@ private fun CurrentMeetingScreenContent(
  * TOOLBAR
  */
 @Composable
-private fun Toolbar(listener: Listener?) {
+private fun Toolbar(
+    type: CreateMeetingMapType,
+    listener: Listener?
+) {
     ToolbarTop(
         title = {
-            ToolbarTitle(title = "Нарисуйте путь")
+            val title = if (type == DRAW_PATH) "Нарисуйте путь" else "Выберите место встречи"
+            ToolbarTitle(title = title)
         },
         backIcon = {
             ToolbarBackButton { listener?.onBackClick() }

@@ -2,10 +2,7 @@ package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -22,11 +19,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.lifecycle.Observer
+import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.*
@@ -44,6 +44,8 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.core.model.CreateMeetingMapType.*
+import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_PATH
+import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -100,6 +102,29 @@ fun CreateMeetingMainScreen(
             is Effect.NavigateToChooseStartLocation -> {
                 navigator.meetingsNavigator.navigateToMapDrawPath(SELECT_START_LOCATION)
             }
+        }
+    }
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(true) {
+        /** DRAW PATH **/
+        val pathLiveData = navigator.getLiveDataResult<List<LatLng>>(NAV_ARG_PATH)
+        val pathObserver = Observer<List<LatLng>> {
+            if (it.isNotEmpty()) viewModel.setEvent(Event.SetDrawnPath(it))
+        }
+        pathLiveData?.observe(lifecycleOwner, pathObserver)
+
+        /** SELECT START LOCATION **/
+        val startLocationLiveData = navigator.getLiveDataResult<List<LatLng>>(NAV_ARG_START_LOCATION)
+        val startLocationObserver = Observer<List<LatLng>> {
+            if (it.isNotEmpty()) viewModel.setEvent(Event.SetStartLocationPath(it.first()))
+        }
+        startLocationLiveData?.observe(lifecycleOwner, startLocationObserver)
+
+        /** DISPOSE **/
+        onDispose {
+            pathLiveData?.removeObserver(pathObserver)
+            startLocationLiveData?.removeObserver(startLocationObserver)
         }
     }
 
@@ -386,10 +411,10 @@ private fun Date(
         AnimatedVisibility(visible = checked.value) {
             Column {
                 DateTimeSubItem(state, listener)
-                ChooseStartLocationItem(listener)
+                ChooseStartLocationItem(state, listener)
                 CustomTextField(hint = "Название места встречи", showSubItemSlash = true)
                 CustomTextField(hint = "Детали места встречи", showSubItemSlash = true)
-                DrawPathItem(listener)
+                DrawPathItem(state, listener)
             }
         }
     }
@@ -424,29 +449,40 @@ private fun DateTimeSubItem(
 }
 
 @Composable
-private fun ChooseStartLocationItem(listener: Listener?) = FakeTextField(
-    showSubItemSlash = true,
-    onClick = { listener?.navigateChooseStartLocation() }
+private fun ChooseStartLocationItem(
+    state: State,
+    listener: Listener?
 ) {
-    Text(
-        text = "Место встречи",
-        color = Color(0x99000000),
-        style = MaterialTheme.typography.subHeadlineRegular,
-        modifier = Modifier.padding(start = 16.dp)
-    )
+    FakeTextField(
+        showSubItemSlash = true,
+        onClick = { listener?.navigateChooseStartLocation() }
+    ) {
+        Text(
+            text = if (state.startLocation.latitude == .0) "Место встречи" else "Место встречи сохранено",
+            color = Color(0x99000000),
+            style = MaterialTheme.typography.subHeadlineRegular,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+    }
 }
 
 @Composable
-private fun DrawPathItem(listener: Listener?) = FakeTextField(
-    showSubItemSlash = true,
-    onClick = { listener?.navigateToMapDrawPath() }
+private fun DrawPathItem(
+    state: State,
+    listener: Listener?
 ) {
-    Text(
-        text = "Путь",
-        color = Color(0x99000000),
-        style = MaterialTheme.typography.subHeadlineRegular,
-        modifier = Modifier.padding(start = 16.dp)
-    )
+    FakeTextField(
+        showSubItemSlash = true,
+        onClick = { listener?.navigateToMapDrawPath() }
+    ) {
+        Text(
+            text = if (state.path.isEmpty()) "Путь" else "Путь сохранён",
+            color = Color(0x99000000),
+            style = MaterialTheme.typography.subHeadlineRegular,
+            maxLines = 1,
+            modifier = Modifier.padding(start = 16.dp)
+        )
+    }
 }
 
 /**

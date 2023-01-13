@@ -9,6 +9,7 @@ interface CreateMeetingMapContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        object OnBackClick: Event
         object RemoveLastCoordinate: Event
         data class SelectCoordinates(val position: LatLng): Event
     }
@@ -18,7 +19,9 @@ interface CreateMeetingMapContract {
         val selectedCoordinates: List<LatLng> = listOf()
     ): ViewState
 
-    sealed interface Effect: ViewSideEffect
+    sealed interface Effect: ViewSideEffect {
+        data class NavigateBack(val path: List<LatLng>): Effect
+    }
 
     interface Listener {
         fun onBackClick()
