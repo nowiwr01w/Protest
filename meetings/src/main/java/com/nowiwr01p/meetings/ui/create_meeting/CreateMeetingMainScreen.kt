@@ -68,8 +68,11 @@ fun CreateMeetingMainScreen(
         override fun onAddDetailsItem(type: DetailsItemType) {
             viewModel.setEvent(Event.OnAddDetailsItemClick(type))
         }
-        override fun onRemoveDetailsType(type: DetailsItemType, index: Int) {
+        override fun onRemoveDetailsItem(type: DetailsItemType, index: Int) {
             viewModel.setEvent(Event.OnRemoveDetailsItemClick(type, index))
+        }
+        override fun onEditDetailsItem(type: DetailsItemType, index: Int, value: String) {
+            viewModel.setEvent(Event.OnEditDetailsItemClick(type, index, value))
         }
         override fun showCategoriesBottomSheet() {
             viewModel.setEvent(Event.ShowCategoriesBottomSheet(categoriesBottomSheet))
@@ -240,9 +243,11 @@ private fun FieldsContainer(
 @Composable
 private fun CustomTextField(
     hint: String = "Тестик",
+    value: String = "",
     readOnly: Boolean = false,
     keyboardType: KeyboardType = KeyboardType.Text,
     showSubItemSlash: Boolean = false,
+    onValueChanged: (String) -> Unit = { },
     trailingIconCallback: (() -> Unit)? = null
 ) = Row(
     modifier = Modifier.fillMaxWidth(),
@@ -261,10 +266,8 @@ private fun CustomTextField(
         Spacer(modifier = Modifier.width(24.dp))
     }
     TextField(
-        value = "",
-        onValueChange = {
-
-        },
+        value = value,
+        onValueChange = { onValueChanged(it) },
         readOnly = readOnly,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType
@@ -513,65 +516,45 @@ private fun OpenDate(
  * POSTERS
  */
 @Composable
-private fun Posters(
-    state: State,
-    listener: Listener?
-) {
-    ExpandableItems(
-        title = "Ссылки на плакаты",
-        items = state.posters,
-        onAddItem = { listener?.onAddDetailsItem(POSTER_LINKS) },
-        onRemoveItem = { listener?.onRemoveDetailsType(POSTER_LINKS, it) }
-    )
-}
+private fun Posters(state: State, listener: Listener?) = ExpandableItems(
+    type = POSTER_LINKS,
+    title = "Ссылки на плакаты",
+    items = state.posters,
+    listener = listener
+)
 
 /**
  * GOALS
  */
 @Composable
-private fun Goals(
-    state: State,
-    listener: Listener?
-) {
-    ExpandableItems(
-        title = "Цели",
-        items = state.goals,
-        onAddItem = { listener?.onAddDetailsItem(GOALS) },
-        onRemoveItem = { listener?.onRemoveDetailsType(GOALS, it) }
-    )
-}
+private fun Goals(state: State, listener: Listener?) = ExpandableItems(
+    type = GOALS,
+    title = "Цели",
+    items = state.goals,
+    listener = listener
+)
 
 /**
  * SLOGANS
  */
 @Composable
-private fun Slogans(
-    state: State,
-    listener: Listener?
-) {
-    ExpandableItems(
-        title = "Лозунги",
-        items = state.slogans,
-        onAddItem = { listener?.onAddDetailsItem(SLOGANS) },
-        onRemoveItem = { listener?.onRemoveDetailsType(SLOGANS, it) }
-    )
-}
+private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
+    type = SLOGANS,
+    title = "Лозунги",
+    items = state.slogans,
+    listener = listener
+)
 
 /**
  * STRATEGY
  */
 @Composable
-private fun Strategy(
-    state: State,
-    listener: Listener?
-) {
-    ExpandableItems(
-        title = "Стратегия",
-        items = state.strategy,
-        onAddItem = { listener?.onAddDetailsItem(STRATEGY) },
-        onRemoveItem = { listener?.onRemoveDetailsType(STRATEGY, it) }
-    )
-}
+private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
+    type = STRATEGY,
+    title = "Стратегия",
+    items = state.strategy,
+    listener = listener
+)
 
 /**
  * FAKE TEXT FIELD
@@ -622,26 +605,31 @@ private fun FakeTextField(
  */
 @Composable
 private fun ExpandableItems(
+    type: DetailsItemType,
     title: String,
-    items: List<*>,
-    onRemoveItem: (index: Int) -> Unit,
-    onAddItem: () -> Unit = {},
+    items: List<String>,
+    listener: Listener?
 ) {
     val isVisible = rememberSaveable { mutableStateOf(false) }
     Column {
         ExpandableItem(title) {
             ClickableIcon(icon = Icons.Default.AddCircleOutline) {
                 isVisible.value = true
-                onAddItem.invoke()
+                listener?.onAddDetailsItem(type)
             }
         }
         AnimatedVisibility(visible = isVisible.value) {
             Column(
                 modifier = Modifier.animateContentSize()
             ) {
-                items.forEachIndexed { index, _ ->
-                    CustomTextField(hint = "$index", showSubItemSlash = true) {
-                        onRemoveItem.invoke(index)
+                items.forEachIndexed { index, item ->
+                    CustomTextField(
+                        value = item,
+                        hint = "$index",
+                        showSubItemSlash = true,
+                        onValueChanged = { listener?.onEditDetailsItem(type, index, it) }
+                    ) {
+                        listener?.onRemoveDetailsItem(type, index)
                         if (items.isEmpty()) isVisible.value = false
                     }
                 }

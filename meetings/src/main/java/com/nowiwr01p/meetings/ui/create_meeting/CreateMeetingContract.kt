@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.extensions.DatePickerListener
@@ -25,13 +26,14 @@ interface CreateMeetingContract {
         data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsItemType): Event
         data class OnRemoveDetailsItemClick(val type: DetailsItemType, val index: Int): Event
+        data class OnEditDetailsItemClick(val type: DetailsItemType, val index: Int, val value: String): Event
     }
 
     data class State(
-        val posters: List<String> = listOf(),
-        val goals: List<String> = listOf(),
-        val slogans: List<String> = listOf(),
-        val strategy: List<String> = listOf(),
+        val posters: List<String> = mutableStateListOf(),
+        val goals: List<String> = mutableStateListOf(),
+        val slogans: List<String> = mutableStateListOf(),
+        val strategy: List<String> = mutableStateListOf(),
         val categories: List<Category> = listOf(),
         val selectedCategories: Set<Category> = setOf(),
         val showDatePicker: Boolean = false,
@@ -50,7 +52,8 @@ interface CreateMeetingContract {
     interface Listener: DatePickerListener, TimePickerListener {
         fun onBackClick()
         fun onAddDetailsItem(type: DetailsItemType)
-        fun onRemoveDetailsType(type: DetailsItemType, index: Int)
+        fun onRemoveDetailsItem(type: DetailsItemType, index: Int)
+        fun onEditDetailsItem(type: DetailsItemType, index: Int, value: String)
         fun showCategoriesBottomSheet()
         fun showDateTimePicker()
         fun navigateToMapDrawPath()
