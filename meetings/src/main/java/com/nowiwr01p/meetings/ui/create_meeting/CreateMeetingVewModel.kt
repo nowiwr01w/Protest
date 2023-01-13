@@ -7,6 +7,8 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
@@ -23,6 +25,7 @@ class CreateMeetingVewModel(
             is Event.OnAddDetailsItemClick -> addRemoveDetailsItem(event.type)
             is Event.OnEditDetailsItemClick -> editDetailsItem(event.type, event.index, event.value)
             is Event.OnRemoveDetailsItemClick -> addRemoveDetailsItem(event.type, event.index)
+            is Event.OnEditCustomTextField -> editCustomTextField(event.type, event.value)
             is Event.OnSelectedCategoryClick -> selectCategory(event.category)
             is Event.ShowCategoriesBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)
             is Event.NavigateToMapDrawPath -> setEffect { Effect.NavigateToMapDrawPath }
@@ -91,6 +94,22 @@ class CreateMeetingVewModel(
             SLOGANS -> copy(slogans = list)
             STRATEGY -> copy(strategy = list)
             POSTER_LINKS -> copy(posters = list)
+        }
+    }
+
+    /**
+     * CUSTOM TEXT FIELD (IMAGE, TITLE, DESCRIPTION, OPEN DATE, LOCATION...)
+     */
+    private fun editCustomTextField(type: CustomTextFieldType, value: String) = setState {
+        when (type) {
+            TOP_IMAGE -> copy(imageLink = value)
+            TITLE -> copy(title = value)
+            DESCRIPTION -> copy(description = value)
+            OPEN_DATE -> copy(requiresPeopleCount = value)
+            TELEGRAM -> copy(telegram = value)
+            POSTER_MOTIVATION -> copy(postersMotivation = value)
+            LOCATION -> copy(location = value)
+            else -> copy(locationDetails = value)
         }
     }
 
