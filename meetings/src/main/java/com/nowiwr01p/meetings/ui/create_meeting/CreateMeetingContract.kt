@@ -1,5 +1,6 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
+import androidx.compose.runtime.Composable
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
@@ -11,6 +12,8 @@ interface CreateMeetingContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        data class ShowCategoriesBottomSheet(val content: @Composable () -> Unit): Event
+        data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsItemType): Event
         data class OnRemoveDetailsItemClick(val type: DetailsItemType, val index: Int): Event
         data class SetCheckBoxState(val type: CheckBoxType, val value: Boolean): Event
@@ -22,7 +25,7 @@ interface CreateMeetingContract {
         val slogans: List<String> = listOf(),
         val strategy: List<String> = listOf(),
         val categories: List<Category> = listOf(),
-        val selectedCategories: List<Category> = listOf(),
+        val selectedCategories: Set<Category> = setOf(),
         val isDateCheckBoxChecked: Boolean = false,
         val isOpenDateCheckBoxChecked: Boolean = false
     ): ViewState
@@ -34,5 +37,6 @@ interface CreateMeetingContract {
         fun setCheckBoxState(type: CheckBoxType, value: Boolean)
         fun onAddDetailsItem(type: DetailsItemType)
         fun onRemoveDetailsType(type: DetailsItemType, index: Int)
+        fun showCategoriesBottomSheet()
     }
 }
