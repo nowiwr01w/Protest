@@ -26,6 +26,8 @@ class CreateMeetingVewModel(
             is Event.NavigateToMapDrawPath -> setEffect { Effect.NavigateToMapDrawPath }
             is Event.NavigateToChooseStartLocation -> setEffect { Effect.NavigateToChooseStartLocation }
             is Event.ShowDateTimePicker -> showDateTimePicker()
+            is Event.SelectDate -> selectDate(event.date)
+            is Event.SelectTime -> selectTime(event.time)
         }
     }
 
@@ -82,6 +84,14 @@ class CreateMeetingVewModel(
      * DATE TIME PICKER
      */
     private fun showDateTimePicker() {
-        // TODO
+        setState { copy(showDatePicker = true) }
+    }
+
+    private fun selectDate(date: String) = setState {
+        copy(selectedDate = date, showDatePicker = false, showTimePicker = true)
+    }
+
+    private fun selectTime(time: String) = setState {
+        copy(selectedTime = time, showTimePicker = false)
     }
 }

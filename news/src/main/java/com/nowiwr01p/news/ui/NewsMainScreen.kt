@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core.model.ArticleContentType.Image
 import com.nowiwr01p.core.model.ArticleContentType.Title
@@ -144,7 +144,7 @@ fun ArticleView(
             top.linkTo(title.bottom)
         }
     Text(
-        text = article.date.formatToDate(),
+        text = article.date.formatToDateTime(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier

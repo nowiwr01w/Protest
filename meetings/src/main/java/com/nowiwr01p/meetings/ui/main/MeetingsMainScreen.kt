@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.location.data.Meeting
-import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
@@ -372,7 +372,7 @@ private fun MeetingItem(
             top.linkTo(title.bottom)
         }
     Text(
-        text = meeting.date.formatToDate(),
+        text = meeting.date.formatToDateTime(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier
