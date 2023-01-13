@@ -43,9 +43,6 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.DATE
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.OPEN_DATE
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.meetings.ui.main.Category
@@ -66,9 +63,6 @@ fun CreateMeetingMainScreen(
         override fun onBackClick() {
             navigator.navigateUp()
         }
-        override fun setCheckBoxState(type: CheckBoxType, value: Boolean) {
-            viewModel.setEvent(Event.SetCheckBoxState(type, value))
-        }
         override fun onAddDetailsItem(type: DetailsItemType) {
             viewModel.setEvent(Event.OnAddDetailsItemClick(type))
         }
@@ -78,6 +72,15 @@ fun CreateMeetingMainScreen(
         override fun showCategoriesBottomSheet() {
             viewModel.setEvent(Event.ShowCategoriesBottomSheet(categoriesBottomSheet))
         }
+        override fun navigateToMapDrawPath() {
+            viewModel.setEvent(Event.NavigateToMapDrawPath)
+        }
+        override fun navigateChooseStartLocation() {
+            viewModel.setEvent(Event.NavigateToChooseStartLocation)
+        }
+        override fun showDateTimePicker() {
+            viewModel.setEvent(Event.ShowDateTimePicker)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -85,7 +88,14 @@ fun CreateMeetingMainScreen(
     }
 
     EffectObserver(viewModel.effect) {
-
+        when (it) {
+            is Effect.NavigateToMapDrawPath -> {
+                navigator.meetingsNavigator.navigateToMapDrawPath()
+            }
+            is Effect.NavigateToChooseStartLocation -> {
+                navigator.meetingsNavigator.navigateToMapDrawPath()
+            }
+        }
     }
 
     CreateMeetingScreenContent(
@@ -167,7 +177,9 @@ private fun FieldsContainer(
     listener: Listener?,
     modifier: Modifier
 ) = LazyColumn(
-    modifier = modifier.padding(horizontal = 16.dp)
+    modifier = modifier
+        .padding(horizontal = 16.dp)
+        .animateContentSize()
 ) {
     item { CustomTextField(hint = "Ссылка на картинку") }
     item { Categories(state, listener) }
@@ -175,6 +187,7 @@ private fun FieldsContainer(
     item { CustomTextField(hint = "Описание") }
     item { Date(state, listener) }
     item { OpenDate(state, listener) }
+    item { CustomTextField(hint = "Ссылка на чат в Telegram") }
     item { CustomTextField(hint = "Мотивация идти с плакатами") }
     item { Posters(state, listener) }
     item { Goals(state, listener) }
@@ -270,21 +283,8 @@ private fun Categories(
     state: State,
     listener: Listener?
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(72.dp)
-            .padding(top = 16.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .border(
-                border = BorderStroke(
-                    width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
-                ),
-                shape = RoundedCornerShape(12.dp)
-            )
-            .clickable { listener?.showCategoriesBottomSheet() }
+    FakeTextField(
+        onClick = { listener?.showCategoriesBottomSheet() }
     ) {
         if (state.selectedCategories.isEmpty()) {
             CategoriesStub()
@@ -369,7 +369,7 @@ private fun CategoriesBottomSheetItem(
 }
 
 /**
- * DATE
+ * DATE & LOCATION
  */
 @Composable
 private fun Date(
@@ -377,26 +377,69 @@ private fun Date(
     listener: Listener?
 ) {
     val checked = remember { mutableStateOf(false) }
-    if (!state.isOpenDateCheckBoxChecked) {
-        Column {
-            ExpandableItem("Точная дата") {
-                CheckBox(
-                    type = DATE,
-                    checked = checked,
-                    listener = listener
-                )
-            }
-            AnimatedVisibility(visible = checked.value) {
-                Column {
-                    CustomTextField(hint = "Дата", showSubItemSlash = true)
-                    CustomTextField(hint = "Место встречи", showSubItemSlash = true)
-                    CustomTextField(hint = "Название места встречи", showSubItemSlash = true)
-                    CustomTextField(hint = "Детали места встречи", showSubItemSlash = true)
-                    CustomTextField(hint = "Путь (не будет показан до начала митинга)", showSubItemSlash = true)
-                }
+    Column {
+        DateMainItem(checked)
+        AnimatedVisibility(visible = checked.value) {
+            Column {
+                DateTimeSubItem(listener)
+                ChooseStartLocationItem(listener)
+                CustomTextField(hint = "Название места встречи", showSubItemSlash = true)
+                CustomTextField(hint = "Детали места встречи", showSubItemSlash = true)
+                DrawPathItem(listener)
             }
         }
     }
+}
+
+@Composable
+private fun DateMainItem(checked: MutableState<Boolean>) = FakeTextField(
+    onClick = { checked.value = !checked.value }
+) {
+    Text(
+        text = "Дата и локация",
+        color = Color(0x99000000),
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+}
+
+@Composable
+private fun DateTimeSubItem(listener: Listener?) = FakeTextField(
+    showSubItemSlash = true,
+    onClick = { listener?.showDateTimePicker() }
+) {
+    Text(
+        text = "Дата и время",
+        color = Color(0x99000000),
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+}
+
+@Composable
+private fun ChooseStartLocationItem(listener: Listener?) = FakeTextField(
+    showSubItemSlash = true,
+    onClick = { listener?.navigateChooseStartLocation() }
+) {
+    Text(
+        text = "Место встречи",
+        color = Color(0x99000000),
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+}
+
+@Composable
+private fun DrawPathItem(listener: Listener?) = FakeTextField(
+    showSubItemSlash = true,
+    onClick = { listener?.navigateToMapDrawPath() }
+) {
+    Text(
+        text = "Путь",
+        color = Color(0x99000000),
+        style = MaterialTheme.typography.subHeadlineRegular,
+        modifier = Modifier.padding(start = 16.dp)
+    )
 }
 
 /**
@@ -408,28 +451,16 @@ private fun OpenDate(
     listener: Listener?
 ) {
     val checked = remember { mutableStateOf(false) }
-    if (!state.isDateCheckBoxChecked) {
-        Column {
-            ExpandableItem("Открытая дата") {
-                CheckBox(
-                    type = OPEN_DATE,
-                    checked = checked,
-                    listener = listener
-                )
-            }
-            AnimatedVisibility(visible = checked.value) {
-                Column {
-                    CustomTextField(
-                        hint = "Дата, до которой нужно будет собрать народ",
-                        showSubItemSlash = true
-                    )
-                    CustomTextField(
-                        hint = "Сколько людей должно присоединиться",
-                        keyboardType = KeyboardType.Number,
-                        showSubItemSlash = true
-                    )
-                }
-            }
+    Column {
+        ExpandableItem("Открытая дата") {
+            CheckBox(checked = checked)
+        }
+        AnimatedVisibility(visible = checked.value) {
+            CustomTextField(
+                hint = "Сколько людей должно пойти",
+                keyboardType = KeyboardType.Number,
+                showSubItemSlash = true
+            )
         }
     }
 }
@@ -439,13 +470,10 @@ private fun OpenDate(
  */
 @Composable
 private fun CheckBox(
-    type: CheckBoxType,
     checked: MutableState<Boolean>,
-    listener: Listener?
 ) {
     CheckBox(checked = checked.value) {
         checked.value = !checked.value
-        listener?.setCheckBoxState(type, checked.value)
     }
 }
 
@@ -515,6 +543,50 @@ private fun Strategy(
         onAddItem = { listener?.onAddDetailsItem(STRATEGY) },
         onRemoveItem = { listener?.onRemoveDetailsType(STRATEGY, it) }
     )
+}
+
+/**
+ * FAKE TEXT FIELD
+ */
+@Composable
+private fun FakeTextField(
+    onClick: () -> Unit,
+    showSubItemSlash: Boolean = false,
+    content: @Composable () -> Unit
+) = Row(
+    modifier = Modifier.fillMaxWidth(),
+    verticalAlignment = Alignment.CenterVertically
+) {
+    if (showSubItemSlash) {
+        Spacer(modifier = Modifier.width(8.dp))
+        Text(
+            text = "—",
+            color = Color.Black,
+            style = MaterialTheme.typography.body1,
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = 16.dp)
+        )
+        Spacer(modifier = Modifier.width(24.dp))
+    }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(72.dp)
+            .padding(top = 16.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { onClick() }
+    ) {
+        content()
+    }
 }
 
 /**

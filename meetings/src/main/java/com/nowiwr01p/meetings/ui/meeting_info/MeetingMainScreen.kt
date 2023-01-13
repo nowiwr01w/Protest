@@ -238,8 +238,11 @@ private fun LocationInfoContainer(state: State) = Row(
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
     with(state.meeting) {
-        if (openDate.date != 0L) {
-            LocationPlace(openDate.text)
+        if (openDate.requiredPeopleCount != 0) {
+            val text = "Митинг будет на следующий день после того, как наберётся " +
+                    "${openDate.requiredPeopleCount} человек.\n" +
+                    "Это обязательное условие."
+            LocationPlace(text)
         } else {
             LocationPlace(locationInfo.shortName)
             Spacer(modifier = Modifier.weight(1f))
@@ -264,7 +267,7 @@ private fun LocationDate(date: String) = Text(
 
 @Composable
 private fun MapPreview(state: State) {
-    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.openDate.date != 0L) {
+    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.openDate.requiredPeopleCount != 0) {
         LatLng(state.user.city.latitude, state.user.city.longitude)
     } else {
         with(state.meeting.locationInfo.coordinates) { LatLng(latitude, longitude) }
@@ -299,13 +302,13 @@ private fun MapPreview(state: State) {
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .clip(RoundedCornerShape(16.dp))
         ) {
-            if (state.meeting.openDate.date == 0L) {
+            if (state.meeting.openDate.requiredPeopleCount == 0) {
                 Marker(
                     state = rememberMarkerState(position = coordinates)
                 )
             }
         }
-        if (state.meeting.openDate.date != 0L) {
+        if (state.meeting.openDate.requiredPeopleCount != 0) {
             MapUnknownPlaceContainer()
         }
     }
@@ -313,7 +316,7 @@ private fun MapPreview(state: State) {
 
 @Composable
 private fun MapPlaceComment(meeting: Meeting) {
-    if (meeting.openDate.date == 0L) {
+    if (meeting.openDate.requiredPeopleCount == 0) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,

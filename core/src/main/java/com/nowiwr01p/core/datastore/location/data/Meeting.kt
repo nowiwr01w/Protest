@@ -59,16 +59,10 @@ data class Coordinate(
 
 @Serializable
 data class OpenDate(
-    val text: String = "",
-    val date: Long = 0L,
     val requiredPeopleCount: Int = 0
 ) {
     companion object {
-        fun getSampleData() = OpenDate(
-            text = "Место и дата проведения появится либо 23.02, либо после того, как наберётся хотя бы 1000 человек.\nЭто обязательное условие.",
-            date = System.currentTimeMillis(),
-            requiredPeopleCount = 1000
-        )
+        fun getSampleData() = OpenDate(requiredPeopleCount = 1000)
     }
 }
 
