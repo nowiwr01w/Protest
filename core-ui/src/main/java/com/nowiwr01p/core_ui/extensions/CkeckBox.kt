@@ -7,7 +7,9 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -32,40 +34,42 @@ fun CheckBox(
     var isChecked by remember { mutableStateOf(false) }
 
     Box(
-        contentAlignment = Alignment.Center,
         modifier = Modifier
-            .size(20.dp)
-            .clip(RoundedCornerShape(4.dp))
-            .background(Color.White)
-            .border(
-                width = 1.25.dp,
-                color = Color.Black,
-                shape = RoundedCornerShape(4.dp)
-            )
-            .toggleable(
-                value = checked,
-                role = Role.Checkbox,
-                onValueChange = {
-                    isChecked = !isChecked
-                    checkCallback.invoke()
-                }
-            )
+            .clip(RoundedCornerShape(14.dp))
+            .clickable {
+                isChecked = !isChecked
+                checkCallback.invoke()
+            }
     ) {
-        AnimatedVisibility(
-            visible = checked,
-            enter = slideInHorizontally(
-                animationSpec = tween(200)
-            ) + expandHorizontally(
-                expandFrom = Alignment.Start,
-                animationSpec = tween(200)
-            ),
-            exit = fadeOut()
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .padding(8.dp)
+                .size(20.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(Color.White)
+                .border(
+                    width = 1.25.dp,
+                    color = Color.Black,
+                    shape = RoundedCornerShape(4.dp)
+                )
         ) {
-            Icon(
-                imageVector = Icons.Default.Check,
-                contentDescription = "Check box",
-                modifier = Modifier.size(16.dp)
-            )
+            AnimatedVisibility(
+                visible = checked,
+                enter = slideInHorizontally(
+                    animationSpec = tween(200)
+                ) + expandHorizontally(
+                    expandFrom = Alignment.Start,
+                    animationSpec = tween(200)
+                ),
+                exit = fadeOut()
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = "Check box",
+                    modifier = Modifier.size(16.dp)
+                )
+            }
         }
     }
 }
