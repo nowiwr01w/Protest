@@ -53,7 +53,7 @@ class MainActivity : ComponentActivity() {
             LaunchedEffect(Unit) {
                 snapshotFlow { bottomSheetState.currentValue }
                     .collect {
-                        if (it == HalfExpanded) showBottomSheetHelper.closeBottomSheet()
+                        if (it == Hidden) showBottomSheetHelper.closeBottomSheet()
                     }
             }
 

@@ -283,9 +283,7 @@ private fun Categories(
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
-            .clickable(enabled = state.selectedCategories.isEmpty()) {
-                listener?.showCategoriesBottomSheet()
-            }
+            .clickable { listener?.showCategoriesBottomSheet() }
     ) {
         if (state.selectedCategories.isEmpty()) {
             CategoriesStub()
