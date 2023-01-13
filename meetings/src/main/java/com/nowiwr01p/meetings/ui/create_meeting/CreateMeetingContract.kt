@@ -9,6 +9,7 @@ import com.nowiwr01p.core_ui.extensions.TimePickerListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 
 interface CreateMeetingContract {
@@ -26,22 +27,31 @@ interface CreateMeetingContract {
         data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsItemType): Event
         data class OnRemoveDetailsItemClick(val type: DetailsItemType, val index: Int): Event
+        data class OnEditCustomTextField(val type: CustomTextFieldType, val value: String): Event
         data class OnEditDetailsItemClick(val type: DetailsItemType, val index: Int, val value: String): Event
     }
 
     data class State(
-        val posters: List<String> = mutableStateListOf(),
-        val goals: List<String> = mutableStateListOf(),
-        val slogans: List<String> = mutableStateListOf(),
-        val strategy: List<String> = mutableStateListOf(),
+        val imageLink: String = "",
         val categories: List<Category> = listOf(),
         val selectedCategories: Set<Category> = setOf(),
+        val title: String = "",
+        val description: String = "",
         val showDatePicker: Boolean = false,
         val showTimePicker: Boolean = false,
         val selectedDate: String = "",
         val selectedTime: String = "",
+        val startLocation: LatLng = LatLng(.0, .0),
+        val location: String = "",
+        val locationDetails: String = "",
         val path: List<LatLng> = listOf(),
-        val startLocation: LatLng = LatLng(.0, .0)
+        val requiresPeopleCount: String = "",
+        val telegram: String = "",
+        val postersMotivation: String = "",
+        val posters: List<String> = mutableStateListOf(),
+        val goals: List<String> = mutableStateListOf(),
+        val slogans: List<String> = mutableStateListOf(),
+        val strategy: List<String> = mutableStateListOf()
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
@@ -58,5 +68,6 @@ interface CreateMeetingContract {
         fun showDateTimePicker()
         fun navigateToMapDrawPath()
         fun navigateChooseStartLocation()
+        fun onEditCustomTextField(type: CustomTextFieldType, value: String)
     }
 }
