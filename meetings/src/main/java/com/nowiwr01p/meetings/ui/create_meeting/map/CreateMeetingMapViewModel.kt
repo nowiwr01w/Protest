@@ -1,12 +1,12 @@
-package com.nowiwr01p.meetings.ui.create_meeting.map_draw_path
+package com.nowiwr01p.meetings.ui.create_meeting.map
 
 import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
-import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.MapDrawPathContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.*
 
-class MapDrawPathContractViewModel(
+class CreateMeetingMapViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
