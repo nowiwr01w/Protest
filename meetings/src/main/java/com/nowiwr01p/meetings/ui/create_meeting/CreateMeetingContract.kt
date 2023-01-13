@@ -2,6 +2,8 @@ package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.runtime.Composable
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core_ui.extensions.DatePickerListener
+import com.nowiwr01p.core_ui.extensions.TimePickerListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
@@ -14,6 +16,8 @@ interface CreateMeetingContract {
         object ShowDateTimePicker: Event
         object NavigateToMapDrawPath: Event
         object NavigateToChooseStartLocation: Event
+        data class SelectDate(val date: String): Event
+        data class SelectTime(val time: String): Event
         data class ShowCategoriesBottomSheet(val content: @Composable () -> Unit): Event
         data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsItemType): Event
@@ -26,7 +30,11 @@ interface CreateMeetingContract {
         val slogans: List<String> = listOf(),
         val strategy: List<String> = listOf(),
         val categories: List<Category> = listOf(),
-        val selectedCategories: Set<Category> = setOf()
+        val selectedCategories: Set<Category> = setOf(),
+        val showDatePicker: Boolean = false,
+        val showTimePicker: Boolean = false,
+        val selectedDate: String = "",
+        val selectedTime: String = ""
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
@@ -34,7 +42,7 @@ interface CreateMeetingContract {
         object NavigateToChooseStartLocation: Effect
     }
 
-    interface Listener {
+    interface Listener: DatePickerListener, TimePickerListener {
         fun onBackClick()
         fun onAddDetailsItem(type: DetailsItemType)
         fun onRemoveDetailsType(type: DetailsItemType, index: Int)

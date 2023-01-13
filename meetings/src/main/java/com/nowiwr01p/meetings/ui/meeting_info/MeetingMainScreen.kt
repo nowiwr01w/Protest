@@ -35,7 +35,7 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.datastore.location.data.Poster
-import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
 import com.nowiwr01p.core.model.Category
@@ -246,7 +246,7 @@ private fun LocationInfoContainer(state: State) = Row(
         } else {
             LocationPlace(locationInfo.shortName)
             Spacer(modifier = Modifier.weight(1f))
-            LocationDate(date.formatToDate())
+            LocationDate(date.formatToDateTime())
         }
     }
 }
