@@ -21,7 +21,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,6 +46,10 @@ import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_PATH
 import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -73,6 +76,9 @@ fun CreateMeetingMainScreen(
         }
         override fun onEditDetailsItem(type: DetailsItemType, index: Int, value: String) {
             viewModel.setEvent(Event.OnEditDetailsItemClick(type, index, value))
+        }
+        override fun onEditCustomTextField(type: CustomTextFieldType, value: String) {
+            viewModel.setEvent(Event.OnEditCustomTextField(type, value))
         }
         override fun showCategoriesBottomSheet() {
             viewModel.setEvent(Event.ShowCategoriesBottomSheet(categoriesBottomSheet))
@@ -221,14 +227,14 @@ private fun FieldsContainer(
         .padding(horizontal = 16.dp)
         .animateContentSize()
 ) {
-    item { CustomTextField(hint = "Ссылка на картинку") }
+    item { TopImageItem(state, listener).toUiItem() }
     item { Categories(state, listener) }
-    item { CustomTextField(hint = "Название") }
-    item { CustomTextField(hint = "Описание") }
+    item { TitleItem(state, listener).toUiItem()}
+    item { DescriptionItem(state, listener).toUiItem() }
     item { Date(state, listener) }
     item { OpenDate(state, listener) }
-    item { CustomTextField(hint = "Ссылка на чат в Telegram") }
-    item { CustomTextField(hint = "Мотивация идти с плакатами") }
+    item { TelegramItem(state, listener).toUiItem() }
+    item { PosterMotivationItem(state, listener).toUiItem() }
     item { Posters(state, listener) }
     item { Goals(state, listener) }
     item { Slogans(state, listener) }
@@ -237,23 +243,20 @@ private fun FieldsContainer(
 }
 
 /**
+ * MODIFY [CustomTextFieldData] into [CustomTextField]
+ */
+@Composable
+private fun CustomTextFieldData.toUiItem() = CustomTextField(this)
+
+/**
  * TEXT FIELD
  */
-@Preview(showBackground = true)
 @Composable
-private fun CustomTextField(
-    hint: String = "Тестик",
-    value: String = "",
-    readOnly: Boolean = false,
-    keyboardType: KeyboardType = KeyboardType.Text,
-    showSubItemSlash: Boolean = false,
-    onValueChanged: (String) -> Unit = { },
-    trailingIconCallback: (() -> Unit)? = null
-) = Row(
+private fun CustomTextField(item: CustomTextFieldData) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    if (showSubItemSlash) {
+    if (item.showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "—",
@@ -266,15 +269,14 @@ private fun CustomTextField(
         Spacer(modifier = Modifier.width(24.dp))
     }
     TextField(
-        value = value,
-        onValueChange = { onValueChanged(it) },
-        readOnly = readOnly,
+        value = item.value,
+        onValueChange = { item.onValueChanged(it) },
         keyboardOptions = KeyboardOptions(
-            keyboardType = keyboardType
+            keyboardType = item.keyboardType
         ),
         label = {
             Text(
-                text = hint,
+                text = item.hint,
                 modifier = Modifier.padding(top = 3.dp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -297,11 +299,11 @@ private fun CustomTextField(
                 shape = RoundedCornerShape(12.dp)
             ),
         trailingIcon = {
-            if (trailingIconCallback != null) {
+            if (item.trailingIconCallback != null) {
                 ClickableIcon(
                     icon = Icons.Default.Close,
                     modifier = Modifier.padding(end = 12.dp),
-                    onClick = { trailingIconCallback.invoke() }
+                    onClick = { item.trailingIconCallback!!.invoke() }
                 )
             }
         }
@@ -320,20 +322,12 @@ private fun Categories(
         onClick = { listener?.showCategoriesBottomSheet() }
     ) {
         if (state.selectedCategories.isEmpty()) {
-            CategoriesStub()
+            FakeTitle("Категории")
         } else {
             CategoriesList(state)
         }
     }
 }
-
-@Composable
-private fun CategoriesStub() = Text(
-    text = "Категории",
-    color = Color(0x99000000),
-    style = MaterialTheme.typography.subHeadlineRegular,
-    modifier = Modifier.padding(start = 16.dp)
-)
 
 @Composable
 private fun CategoriesList(state: State) = LazyRow(
@@ -416,8 +410,8 @@ private fun Date(
             Column {
                 DateTimeSubItem(state, listener)
                 ChooseStartLocationItem(state, listener)
-                CustomTextField(hint = "Название места встречи", showSubItemSlash = true)
-                CustomTextField(hint = "Детали места встречи", showSubItemSlash = true)
+                LocationItem(state, listener).toUiItem()
+                LocationDetailsItem(state, listener).toUiItem()
                 DrawPathItem(state, listener)
             }
         }
@@ -426,89 +420,57 @@ private fun Date(
 
 @Composable
 private fun DateMainItem(checked: MutableState<Boolean>) = FakeTextField(
-    onClick = { checked.value = !checked.value }
-) {
-    Text(
-        text = "Дата и локация",
-        color = Color(0x99000000),
-        style = MaterialTheme.typography.subHeadlineRegular,
-        modifier = Modifier.padding(start = 16.dp)
-    )
-}
+    onClick = { checked.value = !checked.value },
+    content = { FakeTitle("Дата и локация") }
+)
 
 @Composable
-private fun DateTimeSubItem(
-    state: State,
-    listener: Listener?
-) = FakeTextField(
+private fun DateTimeSubItem(state: State, listener: Listener?) = FakeTextField(
     showSubItemSlash = true,
     onClick = { listener?.showDateTimePicker() }
 ) {
-    Text(
-        text = (state.selectedDate + " " + state.selectedTime).trim().ifEmpty { "Дата и время" },
-        color = Color(0x99000000),
-        style = MaterialTheme.typography.subHeadlineRegular,
-        modifier = Modifier.padding(start = 16.dp)
+    val text = (state.selectedDate + " " + state.selectedTime).trim()
+    FakeTitle(
+        hint = "Дата и время",
+        text = text
     )
 }
 
 @Composable
-private fun ChooseStartLocationItem(
-    state: State,
-    listener: Listener?
+private fun ChooseStartLocationItem(state: State, listener: Listener?) = FakeTextField(
+    showSubItemSlash = true,
+    onClick = { listener?.navigateChooseStartLocation() }
 ) {
-    FakeTextField(
-        showSubItemSlash = true,
-        onClick = { listener?.navigateChooseStartLocation() }
-    ) {
-        Text(
-            text = if (state.startLocation.latitude == .0) "Место встречи" else "Место встречи сохранено",
-            color = Color(0x99000000),
-            style = MaterialTheme.typography.subHeadlineRegular,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-    }
+    val text = if (state.startLocation.latitude == .0) "" else "Место встречи сохранено"
+    FakeTitle(
+        hint = "Место встречи",
+        text = text
+    )
 }
 
 @Composable
-private fun DrawPathItem(
-    state: State,
-    listener: Listener?
+private fun DrawPathItem(state: State, listener: Listener?) = FakeTextField(
+    showSubItemSlash = true,
+    onClick = { listener?.navigateToMapDrawPath() }
 ) {
-    FakeTextField(
-        showSubItemSlash = true,
-        onClick = { listener?.navigateToMapDrawPath() }
-    ) {
-        Text(
-            text = if (state.path.isEmpty()) "Путь" else "Путь сохранён",
-            color = Color(0x99000000),
-            style = MaterialTheme.typography.subHeadlineRegular,
-            maxLines = 1,
-            modifier = Modifier.padding(start = 16.dp)
-        )
-    }
+    val text = if (state.path.isEmpty()) "" else "Путь сохранён"
+    FakeTitle(
+        hint = "Путь",
+        text = text
+    )
 }
 
 /**
  * OPEN DATE
  */
 @Composable
-private fun OpenDate(
-    state: State,
-    listener: Listener?
-) {
+private fun OpenDate(state: State, listener: Listener?) = Column {
     val checked = rememberSaveable { mutableStateOf(false) }
-    Column {
-        ExpandableItem("Открытая дата") {
-            CheckBox(checked.value) { checked.value = !checked.value }
-        }
-        AnimatedVisibility(visible = checked.value) {
-            CustomTextField(
-                hint = "Сколько людей должно пойти",
-                keyboardType = KeyboardType.Number,
-                showSubItemSlash = true
-            )
-        }
+    ExpandableItem("Открытая дата") {
+        CheckBox(checked.value) { checked.value = !checked.value }
+    }
+    AnimatedVisibility(visible = checked.value) {
+        OpenDateItem(state, listener).toUiItem()
     }
 }
 
@@ -600,6 +562,14 @@ private fun FakeTextField(
     }
 }
 
+@Composable
+private fun FakeTitle(hint: String, text: String = "") = Text(
+    text = text.ifEmpty { hint },
+    color = if (text.isEmpty()) Color(0x99000000) else Color.Black,
+    style = MaterialTheme.typography.subHeadlineRegular,
+    modifier = Modifier.padding(start = 16.dp)
+)
+
 /**
  * EXPANDABLE ITEMS
  */
@@ -623,15 +593,18 @@ private fun ExpandableItems(
                 modifier = Modifier.animateContentSize()
             ) {
                 items.forEachIndexed { index, item ->
-                    CustomTextField(
+                    val customTextFieldItem = CustomTextFieldData(
+                        type = NONE,
                         value = item,
                         hint = "$index",
                         showSubItemSlash = true,
-                        onValueChanged = { listener?.onEditDetailsItem(type, index, it) }
-                    ) {
-                        listener?.onRemoveDetailsItem(type, index)
-                        if (items.isEmpty()) isVisible.value = false
-                    }
+                        onValueChanged = { listener?.onEditDetailsItem(type, index, it) },
+                        trailingIconCallback = {
+                            listener?.onRemoveDetailsItem(type, index)
+                            if (items.isEmpty()) isVisible.value = false
+                        }
+                    )
+                    CustomTextField(customTextFieldItem)
                 }
             }
         }
@@ -677,12 +650,7 @@ private fun ExpandableItem(
                 shape = RoundedCornerShape(12.dp)
             )
     ) {
-        Text(
-            text = hint,
-            color = Color(0x99000000),
-            style = MaterialTheme.typography.subHeadlineRegular,
-            modifier = Modifier.padding(start = 16.dp)
-        )
+        FakeTitle(hint)
     }
 }
 
