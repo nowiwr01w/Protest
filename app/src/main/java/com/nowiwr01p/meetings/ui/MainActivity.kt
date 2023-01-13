@@ -46,7 +46,11 @@ class MainActivity : ComponentActivity() {
 
             val scope = rememberCoroutineScope()
             val scaffoldState = rememberScaffoldState()
-            val bottomSheetState = rememberModalBottomSheetState(Hidden)
+            val bottomSheetState = rememberModalBottomSheetState(
+                initialValue = Hidden,
+                skipHalfExpanded = true
+            )
+
             showSnackBarHelper.init(scope, scaffoldState)
             showBottomSheetHelper.init(scope, bottomSheetState)
 
