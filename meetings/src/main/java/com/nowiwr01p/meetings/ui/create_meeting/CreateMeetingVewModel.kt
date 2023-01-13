@@ -20,8 +20,9 @@ class CreateMeetingVewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
-            is Event.OnAddDetailsItemClick -> changeDetailsListState(event.type)
-            is Event.OnRemoveDetailsItemClick -> changeDetailsListState(event.type, event.index)
+            is Event.OnAddDetailsItemClick -> addRemoveDetailsItem(event.type)
+            is Event.OnEditDetailsItemClick -> editDetailsItem(event.type, event.index, event.value)
+            is Event.OnRemoveDetailsItemClick -> addRemoveDetailsItem(event.type, event.index)
             is Event.OnSelectedCategoryClick -> selectCategory(event.category)
             is Event.ShowCategoriesBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)
             is Event.NavigateToMapDrawPath -> setEffect { Effect.NavigateToMapDrawPath }
@@ -61,17 +62,27 @@ class CreateMeetingVewModel(
     /**
      * DETAILS (POSTER LINKS, GOALS, SLOGANS, STRATEGY)
      */
-    private fun changeDetailsListState(type: DetailsItemType, index: Int = -1) = with(viewState.value) {
-        val list = when (type) {
+    private fun addRemoveDetailsItem(type: DetailsItemType, index: Int = -1) = with(viewState.value) {
+        val updated = getDetailsList(type).toMutableList().apply {
+            if (index == -1) add("") else removeAt(index)
+        }
+        updateDetailsList(type, updated)
+    }
+
+    private fun editDetailsItem(type: DetailsItemType, index: Int, value: String) = with(viewState.value) {
+        val updated = getDetailsList(type).mapIndexed { curIndex, item ->
+            if (index == curIndex) value else item
+        }
+        updateDetailsList(type, updated)
+    }
+
+    private fun getDetailsList(type: DetailsItemType) = with(viewState.value) {
+        when (type) {
             GOALS -> goals
             SLOGANS -> slogans
             STRATEGY -> strategy
             POSTER_LINKS -> posters
         }
-        val updated = list.toMutableList().apply {
-            if (index == -1) add("") else removeAt(index)
-        }
-        updateDetailsList(type, updated)
     }
 
     private fun updateDetailsList(type: DetailsItemType, list: List<String>) = setState {
