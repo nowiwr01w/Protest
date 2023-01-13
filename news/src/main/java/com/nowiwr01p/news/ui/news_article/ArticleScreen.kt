@@ -13,7 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.nowiwr01p.core.extenstion.formatToDate
+import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core.model.ArticleContentType.*
 import com.nowiwr01p.core.model.ContentItem
@@ -74,7 +74,7 @@ fun NewsItem(
 ) {
     when (content.articleType) {
         Title -> ArticleTitle(content.value)
-        Date -> ArticleDate(content.value.toLong().formatToDate())
+        Date -> ArticleDate(content.value.toLong().formatToDateTime())
         Description -> ArticleDescription(content.value)
         Image -> ArticleImage(content.value)
         Step -> StepItem(content.value)

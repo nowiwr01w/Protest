@@ -30,9 +30,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
-import com.nowiwr01p.core_ui.extensions.CheckBox
-import com.nowiwr01p.core_ui.extensions.ClickableIcon
-import com.nowiwr01p.core_ui.extensions.ReversedRow
+import com.nowiwr01p.core_ui.extensions.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.bodyRegular
@@ -82,6 +80,12 @@ fun CreateMeetingMainScreen(
         override fun showDateTimePicker() {
             viewModel.setEvent(Event.ShowDateTimePicker)
         }
+        override fun onDateSelected(date: String) {
+            viewModel.setEvent(Event.SelectDate(date))
+        }
+        override fun onTimeSelected(time: String) {
+            viewModel.setEvent(Event.SelectTime(time))
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -99,6 +103,12 @@ fun CreateMeetingMainScreen(
         }
     }
 
+    if (state.showDatePicker) {
+        DatePicker(listener)
+    }
+    if (state.showTimePicker) {
+        TimePicker(listener)
+    }
     CreateMeetingScreenContent(
         state = state,
         listener = listener
@@ -375,7 +385,7 @@ private fun Date(
         DateMainItem(checked)
         AnimatedVisibility(visible = checked.value) {
             Column {
-                DateTimeSubItem(listener)
+                DateTimeSubItem(state, listener)
                 ChooseStartLocationItem(listener)
                 CustomTextField(hint = "Название места встречи", showSubItemSlash = true)
                 CustomTextField(hint = "Детали места встречи", showSubItemSlash = true)
@@ -398,12 +408,15 @@ private fun DateMainItem(checked: MutableState<Boolean>) = FakeTextField(
 }
 
 @Composable
-private fun DateTimeSubItem(listener: Listener?) = FakeTextField(
+private fun DateTimeSubItem(
+    state: State,
+    listener: Listener?
+) = FakeTextField(
     showSubItemSlash = true,
     onClick = { listener?.showDateTimePicker() }
 ) {
     Text(
-        text = "Дата и время",
+        text = (state.selectedDate + " " + state.selectedTime).trim().ifEmpty { "Дата и время" },
         color = Color(0x99000000),
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = Modifier.padding(start = 16.dp)
