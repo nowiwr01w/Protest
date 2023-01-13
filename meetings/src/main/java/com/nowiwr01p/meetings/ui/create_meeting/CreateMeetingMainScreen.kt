@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -405,7 +406,7 @@ private fun Date(
     state: State,
     listener: Listener?
 ) {
-    val checked = remember { mutableStateOf(false) }
+    val checked = rememberSaveable { mutableStateOf(false) }
     Column {
         DateMainItem(checked)
         AnimatedVisibility(visible = checked.value) {
@@ -493,7 +494,7 @@ private fun OpenDate(
     state: State,
     listener: Listener?
 ) {
-    val checked = remember { mutableStateOf(false) }
+    val checked = rememberSaveable { mutableStateOf(false) }
     Column {
         ExpandableItem("Открытая дата") {
             CheckBox(checked.value) { checked.value = !checked.value }
@@ -518,7 +519,6 @@ private fun Posters(
 ) {
     ExpandableItems(
         title = "Ссылки на плакаты",
-        isVisible = state.posters.isNotEmpty(),
         items = state.posters,
         onAddItem = { listener?.onAddDetailsItem(POSTER_LINKS) },
         onRemoveItem = { listener?.onRemoveDetailsType(POSTER_LINKS, it) }
@@ -535,7 +535,6 @@ private fun Goals(
 ) {
     ExpandableItems(
         title = "Цели",
-        isVisible = state.goals.isNotEmpty(),
         items = state.goals,
         onAddItem = { listener?.onAddDetailsItem(GOALS) },
         onRemoveItem = { listener?.onRemoveDetailsType(GOALS, it) }
@@ -552,7 +551,6 @@ private fun Slogans(
 ) {
     ExpandableItems(
         title = "Лозунги",
-        isVisible = state.slogans.isNotEmpty(),
         items = state.slogans,
         onAddItem = { listener?.onAddDetailsItem(SLOGANS) },
         onRemoveItem = { listener?.onRemoveDetailsType(SLOGANS, it) }
@@ -569,7 +567,6 @@ private fun Strategy(
 ) {
     ExpandableItems(
         title = "Стратегия",
-        isVisible = state.strategy.isNotEmpty(),
         items = state.strategy,
         onAddItem = { listener?.onAddDetailsItem(STRATEGY) },
         onRemoveItem = { listener?.onRemoveDetailsType(STRATEGY, it) }
@@ -626,22 +623,26 @@ private fun FakeTextField(
 @Composable
 private fun ExpandableItems(
     title: String,
-    isVisible: Boolean,
     items: List<*>,
     onRemoveItem: (index: Int) -> Unit,
     onAddItem: () -> Unit = {},
 ) {
+    val isVisible = rememberSaveable { mutableStateOf(false) }
     Column {
         ExpandableItem(title) {
-            ClickableIcon(icon = Icons.Default.AddCircleOutline) { onAddItem.invoke() }
+            ClickableIcon(icon = Icons.Default.AddCircleOutline) {
+                isVisible.value = true
+                onAddItem.invoke()
+            }
         }
-        AnimatedVisibility(visible = isVisible) {
+        AnimatedVisibility(visible = isVisible.value) {
             Column(
                 modifier = Modifier.animateContentSize()
             ) {
                 items.forEachIndexed { index, _ ->
                     CustomTextField(hint = "$index", showSubItemSlash = true) {
                         onRemoveItem.invoke(index)
+                        if (items.isEmpty()) isVisible.value = false
                     }
                 }
             }
