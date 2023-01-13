@@ -61,7 +61,7 @@ class MainActivity : ComponentActivity() {
                 showBottomSheetHelper.content.collectAsState(null).value.let { content ->
                     if (content != null) BottomSheet(content)
                 }
-                Spacer(modifier = Modifier.height(48.dp))
+                Spacer(modifier = Modifier.height(1.dp))
             }
 
             val context = LocalContext.current

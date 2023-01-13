@@ -2,7 +2,6 @@ package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -17,12 +16,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,11 +27,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.CheckBox
 import com.nowiwr01p.core_ui.extensions.ReversedRow
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.theme.bodyRegular
 import com.nowiwr01p.core_ui.theme.graphicsSecondary
 import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.ui.button.StateButton
@@ -56,6 +55,12 @@ fun CreateMeetingMainScreen(
     navigator: Navigator,
     viewModel: CreateMeetingVewModel = getViewModel()
 ) {
+    val state = viewModel.viewState.value
+
+    val categoriesBottomSheet = CategoriesBottomSheet(state) {
+        viewModel.setEvent(Event.OnSelectedCategoryClick(it))
+    }
+
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
@@ -69,6 +74,9 @@ fun CreateMeetingMainScreen(
         override fun onRemoveDetailsType(type: DetailsItemType, index: Int) {
             viewModel.setEvent(Event.OnRemoveDetailsItemClick(type, index))
         }
+        override fun showCategoriesBottomSheet() {
+            viewModel.setEvent(Event.ShowCategoriesBottomSheet(categoriesBottomSheet))
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -80,7 +88,7 @@ fun CreateMeetingMainScreen(
     }
 
     CreateMeetingScreenContent(
-        state = viewModel.viewState.value,
+        state = state,
         listener = listener
     )
 }
@@ -161,7 +169,7 @@ private fun FieldsContainer(
     modifier = modifier.padding(horizontal = 16.dp)
 ) {
     item { CustomTextField(hint = "Ссылка на картинку") }
-    item { Categories(state) }
+    item { Categories(state, listener) }
     item { CustomTextField(hint = "Название") }
     item { CustomTextField(hint = "Описание") }
     item { Date(state, listener) }
@@ -258,12 +266,9 @@ private fun CustomTextField(
  */
 @Composable
 private fun Categories(
-    state: State
+    state: State,
+    listener: Listener?
 ) {
-    val expanded = remember { mutableStateOf(false) }
-    val rotateDegrees by animateFloatAsState(
-        targetValue = if (expanded.value) 180f else 0f,
-    )
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -279,11 +284,11 @@ private fun Categories(
                 shape = RoundedCornerShape(12.dp)
             )
             .clickable(enabled = state.selectedCategories.isEmpty()) {
-                expanded.value = !expanded.value
+                listener?.showCategoriesBottomSheet()
             }
     ) {
         if (state.selectedCategories.isEmpty()) {
-            CategoriesStub(expanded, rotateDegrees)
+            CategoriesStub()
         } else {
             CategoriesList(state)
         }
@@ -291,48 +296,75 @@ private fun Categories(
 }
 
 @Composable
+private fun CategoriesStub() = Text(
+    text = "Категории",
+    color = Color(0x99000000),
+    style = MaterialTheme.typography.subHeadlineRegular,
+    modifier = Modifier.padding(start = 16.dp)
+)
+
+@Composable
 private fun CategoriesList(state: State) = LazyRow(
     modifier = Modifier.fillMaxSize(),
     verticalAlignment = Alignment.CenterVertically
 ) {
+    val selectedCategories = state.selectedCategories.toList().sortedBy { it.backgroundColor }
+
     item { Spacer(modifier = Modifier.width(16.dp)) }
-    items(state.selectedCategories) {
+    items(selectedCategories) {
         Category(it)
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
+/**
+ * CATEGORIES BOTTOM SHEET
+ */
 @Composable
-private fun CategoriesStub(
-    expanded: MutableState<Boolean>,
-    rotateDegrees: Float
+private fun CategoriesBottomSheet(
+    state: State,
+    onCategoryClick: (category: Category) -> Unit
+): @Composable () -> Unit = {
+    LazyColumn(
+        modifier = Modifier.heightIn(max = 500.dp)
+    ) {
+        items(state.categories) { category ->
+            CategoriesBottomSheetItem(state, category) {
+                onCategoryClick.invoke(category)
+            }
+        }
+    }
+}
+
+@Composable
+private fun CategoriesBottomSheetItem(
+    state: State,
+    category: Category,
+    onCategoryClick: () -> Unit
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onCategoryClick() },
     ) {
         Text(
-            text = "Категории",
-            color = Color(0x99000000),
-            style = MaterialTheme.typography.subHeadlineRegular,
-            modifier = Modifier.padding(start = 16.dp)
+            text = category.name,
+            color = Color.Black,
+            style = MaterialTheme.typography.bodyRegular,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(start = 20.dp, top = 16.dp, bottom = 16.dp, end = 16.dp)
         )
-        Spacer(modifier = Modifier.weight(1f))
-        Box(
-            modifier = Modifier.clip(RoundedCornerShape(16.dp))
-        ) {
-            Icon(
-                painter = rememberVectorPainter(Icons.Default.KeyboardArrowDown),
-                contentDescription = "Drop down icon",
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(28.dp)
-                    .clip(RoundedCornerShape(14.dp))
-                    .rotate(rotateDegrees)
-                    .clickable { expanded.value = !expanded.value }
-
-            )
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+        CheckBox(checked = category in state.selectedCategories) {
+            onCategoryClick()
         }
+        Spacer(
+            modifier = Modifier.width(16.dp)
+        )
     }
 }
 

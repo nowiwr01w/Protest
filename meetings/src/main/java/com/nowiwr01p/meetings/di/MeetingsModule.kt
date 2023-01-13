@@ -63,7 +63,10 @@ val moduleMeetings = module {
     viewModel {
         val scope = getKoin().getScope(meetingsScreenScopeId)
 
-        CreateMeetingVewModel(scope.get())
+        CreateMeetingVewModel(
+            scope.get(),
+            get()
+        )
     }
 
     /**
