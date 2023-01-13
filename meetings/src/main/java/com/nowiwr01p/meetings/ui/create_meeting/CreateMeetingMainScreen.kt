@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -323,8 +324,9 @@ private fun CategoriesBottomSheet(
     state: State,
     onCategoryClick: (category: Category) -> Unit
 ): @Composable () -> Unit = {
+    val maxHeight = LocalConfiguration.current.screenHeightDp.dp - 232.dp
     LazyColumn(
-        modifier = Modifier.heightIn(max = 500.dp)
+        modifier = Modifier.heightIn(max = maxHeight)
     ) {
         items(state.categories) { category ->
             CategoriesBottomSheetItem(state, category) {
