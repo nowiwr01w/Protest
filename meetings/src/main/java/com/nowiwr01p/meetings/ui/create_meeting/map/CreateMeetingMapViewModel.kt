@@ -17,6 +17,7 @@ class CreateMeetingMapViewModel(
             is Event.Init -> init()
             is Event.SelectCoordinates -> selectCoordinates(event.position)
             is Event.RemoveLastCoordinate -> removeLastCoordinate()
+            is Event.OnBackClick -> back()
         }
     }
 
@@ -51,5 +52,12 @@ class CreateMeetingMapViewModel(
             remove(last())
         }
         setState { copy(selectedCoordinates = updated) }
+    }
+
+    /**
+     * BACK CLICK
+     */
+    private fun back() = setEffect {
+        Effect.NavigateBack(viewState.value.selectedCoordinates)
     }
 }
