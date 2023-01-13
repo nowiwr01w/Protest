@@ -6,9 +6,6 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.DATE
-import com.nowiwr01p.meetings.ui.create_meeting.data.CheckBoxType.OPEN_DATE
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
@@ -22,11 +19,13 @@ class CreateMeetingVewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
-            is Event.SetCheckBoxState -> setCheckBoxState(event.type, event.value)
             is Event.OnAddDetailsItemClick -> changeDetailsListState(event.type)
             is Event.OnRemoveDetailsItemClick -> changeDetailsListState(event.type, event.index)
             is Event.OnSelectedCategoryClick -> selectCategory(event.category)
             is Event.ShowCategoriesBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)
+            is Event.NavigateToMapDrawPath -> setEffect { Effect.NavigateToMapDrawPath }
+            is Event.NavigateToChooseStartLocation -> setEffect { Effect.NavigateToChooseStartLocation }
+            is Event.ShowDateTimePicker -> showDateTimePicker()
         }
     }
 
@@ -55,16 +54,6 @@ class CreateMeetingVewModel(
     }
 
     /**
-     * CHECKBOX STATE
-     */
-    private fun setCheckBoxState(type: CheckBoxType, value: Boolean) = setState {
-        when (type) {
-            DATE -> copy(isDateCheckBoxChecked = value)
-            OPEN_DATE -> copy(isOpenDateCheckBoxChecked = value)
-        }
-    }
-
-    /**
      * DETAILS (POSTER LINKS, GOALS, SLOGANS, STRATEGY)
      */
     private fun changeDetailsListState(type: DetailsItemType, index: Int = -1) = with(viewState.value) {
@@ -87,5 +76,12 @@ class CreateMeetingVewModel(
             STRATEGY -> copy(strategy = list)
             POSTER_LINKS -> copy(posters = list)
         }
+    }
+
+    /**
+     * DATE TIME PICKER
+     */
+    private fun showDateTimePicker() {
+        // TODO
     }
 }
