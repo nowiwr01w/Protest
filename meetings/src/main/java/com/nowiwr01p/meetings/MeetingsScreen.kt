@@ -6,13 +6,14 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.model.CreateMeetingMapType
 import com.nowiwr01p.core_ui.Keys
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMainScreen
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
-import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.CurrentMeetingMapScreen
+import com.nowiwr01p.meetings.ui.create_meeting.map.CurrentMeetingMapScreen
 import com.nowiwr01p.meetings.ui.meeting_info.MeetingMainScreen
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -78,7 +79,12 @@ sealed class MeetingsScreen<T>(
         MeetingsScreenType.CreateMeetingMainScreen.route, rootRoute, false
     ) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route)
+            navController.navigate(route) {
+                popUpTo(route) {
+                    saveState = true
+                }
+                restoreState = true
+            }
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
@@ -90,15 +96,25 @@ sealed class MeetingsScreen<T>(
     /**
      * MAP DRAW PATH
      */
-    object MapDrawPathScreen: MeetingsScreen<Unit>(
-        MeetingsScreenType.MapDrawPathScreen.route, rootRoute, false
+    object CreateMeetingMapScreen: MeetingsScreen<CreateMeetingMapType>(
+        MeetingsScreenType.CreateMeetingMapScreen.route, rootRoute, false
     ) {
-        override fun navigate(args: Unit, navController: NavController) {
-            navController.navigate(route)
+        override fun navigate(args: CreateMeetingMapType, navController: NavController) {
+            navController.navigate(
+                route.replace("{${Keys.ARG_CREATE_MEETING_TO_MAP}}", args.type)
+            )
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
-            navGraphBuilder.composable(route) {
-                CurrentMeetingMapScreen(navigator)
+            navGraphBuilder.composable(
+                route = route,
+                arguments = listOf(
+                    navArgument(Keys.ARG_CREATE_MEETING_TO_MAP) { type = NavType.StringType }
+                )
+            ) {
+                val type = it.arguments!!.getString(Keys.ARG_CREATE_MEETING_TO_MAP)!!.let { type ->
+                    CreateMeetingMapType.findByType(type)
+                }
+                CurrentMeetingMapScreen(type, navigator)
             }
         }
     }

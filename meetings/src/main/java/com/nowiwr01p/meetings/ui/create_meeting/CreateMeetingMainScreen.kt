@@ -21,7 +21,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextOverflow
@@ -44,6 +43,7 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
+import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -95,10 +95,10 @@ fun CreateMeetingMainScreen(
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.NavigateToMapDrawPath -> {
-                navigator.meetingsNavigator.navigateToMapDrawPath()
+                navigator.meetingsNavigator.navigateToMapDrawPath(DRAW_PATH)
             }
             is Effect.NavigateToChooseStartLocation -> {
-                navigator.meetingsNavigator.navigateToMapDrawPath()
+                navigator.meetingsNavigator.navigateToMapDrawPath(SELECT_START_LOCATION)
             }
         }
     }

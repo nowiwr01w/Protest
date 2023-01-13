@@ -1,4 +1,6 @@
-package com.nowiwr01p.meetings.ui.create_meeting.map_draw_path
+@file:JvmName("CreateMeetingMapContractKt")
+
+package com.nowiwr01p.meetings.ui.create_meeting.map
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
@@ -24,7 +26,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
-import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
@@ -33,13 +34,16 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
-import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.MapDrawPathContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.*
+import com.nowiwr01p.core.model.CreateMeetingMapType
+import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun CurrentMeetingMapScreen(
+    type: CreateMeetingMapType,
     navigator: Navigator,
-    viewModel: MapDrawPathContractViewModel = getViewModel()
+    viewModel: CreateMeetingMapViewModel = getViewModel()
 ) {
     val listener = object : Listener {
         override fun onBackClick() {
@@ -61,6 +65,7 @@ fun CurrentMeetingMapScreen(
     }
 
     CurrentMeetingScreenContent(
+        type = type,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -68,6 +73,7 @@ fun CurrentMeetingMapScreen(
 
 @Composable
 private fun CurrentMeetingScreenContent(
+    type: CreateMeetingMapType,
     state: State,
     listener: Listener?
 ) {
@@ -76,7 +82,7 @@ private fun CurrentMeetingScreenContent(
     ) {
         Toolbar(listener)
         if (state.cityCoordinates.latitude != .0) {
-            Map(state, listener)
+            Map(type, state, listener)
         }
     }
 }
@@ -115,6 +121,7 @@ private fun Toolbar(listener: Listener?) {
  */
 @Composable
 private fun Map(
+    type: CreateMeetingMapType,
     state: State,
     listener: Listener?
 ) {
@@ -156,6 +163,7 @@ private fun Map(
                 bottom.linkTo(parent.bottom, 32.dp)
             }
         BottomButtons(
+            type = type,
             state = state,
             listener = listener,
             markerState = markerState,
@@ -169,6 +177,7 @@ private fun Map(
  */
 @Composable
 private fun BottomButtons(
+    type: CreateMeetingMapType,
     state: State,
     listener: Listener?,
     markerState: MarkerState,
@@ -196,6 +205,7 @@ private fun BottomButtons(
         }
         StateButton(
             text = "Выбрать",
+            enabled = if (type == SELECT_START_LOCATION) state.selectedCoordinates.isEmpty() else true,
             onSendRequest = { listener?.selectCoordinates(markerState.position) },
             modifier = Modifier
                 .fillMaxWidth()
@@ -212,6 +222,7 @@ private fun BottomButtons(
 @Composable
 private fun Preview() = MeetingsTheme {
     Map(
+        type = DRAW_PATH,
         state = State(),
         listener = null
     )

@@ -12,7 +12,7 @@ import com.nowiwr01p.meetings.navigation.MeetingsNavigatorImpl
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingVewModel
 import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
-import com.nowiwr01p.meetings.ui.create_meeting.map_draw_path.MapDrawPathContractViewModel
+import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapViewModel
 import com.nowiwr01p.meetings.ui.meeting_info.MeetingViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
@@ -54,7 +54,7 @@ val moduleMeetings = module {
      * MAP ALL MEETINGS
      */
     viewModel {
-        MapDrawPathContractViewModel(get())
+        CreateMeetingMapViewModel(get())
     }
 
     /**
