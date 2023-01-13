@@ -357,7 +357,7 @@ private fun CategoriesBottomSheetItem(
         Spacer(
             modifier = Modifier.weight(1f)
         )
-        CheckBox(checked = category in state.selectedCategories) {
+        CheckBox(checked = state.selectedCategories.contains(category)) {
             onCategoryClick()
         }
         Spacer(

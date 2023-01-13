@@ -49,7 +49,7 @@ class CreateMeetingVewModel(
      */
     private fun selectCategory(category: Category) = with(viewState.value) {
         val updated = selectedCategories.toMutableSet().apply {
-            if (category.isSelected) remove(category) else add(category)
+            if (selectedCategories.contains(category)) remove(category) else add(category)
         }
         setState { copy(selectedCategories = updated) }
     }
