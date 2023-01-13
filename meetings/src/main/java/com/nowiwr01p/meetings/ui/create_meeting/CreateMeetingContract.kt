@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.runtime.Composable
+import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.extensions.DatePickerListener
 import com.nowiwr01p.core_ui.extensions.TimePickerListener
@@ -18,6 +19,8 @@ interface CreateMeetingContract {
         object NavigateToChooseStartLocation: Event
         data class SelectDate(val date: String): Event
         data class SelectTime(val time: String): Event
+        data class SetDrawnPath(val path: List<LatLng>): Event
+        data class SetStartLocationPath(val position: LatLng): Event
         data class ShowCategoriesBottomSheet(val content: @Composable () -> Unit): Event
         data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsItemType): Event
@@ -34,7 +37,9 @@ interface CreateMeetingContract {
         val showDatePicker: Boolean = false,
         val showTimePicker: Boolean = false,
         val selectedDate: String = "",
-        val selectedTime: String = ""
+        val selectedTime: String = "",
+        val path: List<LatLng> = listOf(),
+        val startLocation: LatLng = LatLng(.0, .0)
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {

@@ -1,5 +1,6 @@
 package com.nowiwr01p.navigation
 
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.nowiwr01p.auth.AuthScreen
@@ -86,5 +87,13 @@ class NavigatorImpl(
         NewsScreen.NewsMainScreen.route -> NewsScreen.NewsMainScreen
         ProfileScreen.ProfileMainScreen.route -> ProfileScreen.ProfileMainScreen
         else -> AuthScreen.AuthMainScreen
+    }
+
+    override fun <T> setScreenResult(key: String, result: T) {
+        navController.previousBackStackEntry?.savedStateHandle?.set(key, result)
+    }
+
+    override fun <T> getLiveDataResult(key: String): LiveData<T>? {
+        return navController.currentBackStackEntry?.savedStateHandle?.getLiveData(key)
     }
 }
