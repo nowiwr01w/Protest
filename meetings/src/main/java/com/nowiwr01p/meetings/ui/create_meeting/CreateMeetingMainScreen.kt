@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.nowiwr01p.meetings.ui.create_meeting
 
 import androidx.compose.animation.AnimatedVisibility
@@ -16,11 +18,14 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -286,8 +291,14 @@ private fun Categories(
     state: State,
     listener: Listener?
 ) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     FakeTextField(
-        onClick = { listener?.showCategoriesBottomSheet() }
+        onClick = {
+            focusManager.clearFocus()
+            keyboard?.hide()
+            listener?.showCategoriesBottomSheet()
+        }
     ) {
         if (state.selectedCategories.isEmpty()) {
             FakeTitle("Категории")
@@ -387,10 +398,18 @@ private fun Date(
 }
 
 @Composable
-private fun DateMainItem(checked: MutableState<Boolean>) = FakeTextField(
-    onClick = { checked.value = !checked.value },
-    content = { FakeTitle("Дата и локация") }
-)
+private fun DateMainItem(checked: MutableState<Boolean>) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    FakeTextField(
+        content = { FakeTitle("Дата и локация") },
+        onClick = {
+            focusManager.clearFocus()
+            keyboard?.hide()
+            checked.value = !checked.value
+        },
+    )
+}
 
 @Composable
 private fun DateTimeSubItem(state: State, listener: Listener?) = FakeTextField(
@@ -434,8 +453,14 @@ private fun DrawPathItem(state: State, listener: Listener?) = FakeTextField(
 @Composable
 private fun OpenDate(state: State, listener: Listener?) = Column {
     val checked = rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     ExpandableItem("Открытая дата") {
-        CheckBox(checked.value) { checked.value = !checked.value }
+        CheckBox(checked.value) {
+            focusManager.clearFocus()
+            keyboard?.hide()
+            checked.value = !checked.value
+        }
     }
     AnimatedVisibility(visible = checked.value) {
         OpenDateItem(state, listener).toUiItem()
@@ -562,9 +587,13 @@ private fun ExpandableItems(
     listener: Listener?
 ) {
     val isVisible = rememberSaveable { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
     Column {
         ExpandableItem(title) {
             ClickableIcon(icon = Icons.Default.AddCircleOutline) {
+                focusManager.clearFocus()
+                keyboard?.hide()
                 isVisible.value = true
                 listener?.onAddDetailsItem(type)
             }
