@@ -1,6 +1,7 @@
 package com.nowiwr01p.domain.di
 
 import com.nowiwr01p.domain.auth.usecase.*
+import com.nowiwr01p.domain.cteate_meeting.CreateMeetingUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
@@ -10,7 +11,9 @@ import com.nowiwr01p.domain.location.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.location.usecase.local.SetCountryUseCase
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
+import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
+import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
@@ -18,6 +21,11 @@ import com.nowiwr01p.domain.verification.usecase.SetVerificationCompletedUseCase
 import org.koin.dsl.module
 
 val moduleDomain = module {
+
+    /**
+     * USER
+     */
+    factory { GetRemoteUserUseCase(get()) }
 
     /**
      * AUTH
@@ -56,6 +64,12 @@ val moduleDomain = module {
      */
     factory { GetMeetingsUseCase(get()) }
     factory { GetCategoriesUseCase(get()) }
+    factory { SetReactionUseCase(get()) }
+
+    /**
+     * CREATE MEETING
+     */
+    factory { CreateMeetingUseCase(get()) }
 
     /**
      * NEWS

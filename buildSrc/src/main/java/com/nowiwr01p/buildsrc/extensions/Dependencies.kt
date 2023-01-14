@@ -83,6 +83,7 @@ fun DependencyHandler.accompanistDependencies() {
 
 fun DependencyHandler.dateTimeDependencies() {
     implementation(Basic.JODA_TIME)
+    implementation(Basic.DATE_TIME_DIALOGS)
 }
 
 fun DependencyHandler.unitTestDependencies() {
