@@ -27,7 +27,7 @@ import com.nowiwr01p.domain.location.repository.LocationRepository
 import com.nowiwr01p.domain.location.repository.LocationStateRemoteRepository
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.news.repository.NewsRepository
-import com.nowiwr01p.domain.user.UserRemoteRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationRemoteRepository
 import org.koin.dsl.module
 
@@ -100,7 +100,7 @@ val moduleData = module {
      * MEETINGS
      */
     factory<MeetingsRepository> {
-        MeetingsRepositoryImpl(get(), get())
+        MeetingsRepositoryImpl(get(), get(), get())
     }
 
     /**

@@ -20,7 +20,7 @@ enum class ArticleContentType(val type: String) {
     Step("step"),
     Link("link"),
     OrderedListTitle("orderedListTitle"),
-    ImageDescription("imageDescription"),;
+    ImageDescription("imageDescription");
 
     companion object {
         fun findByType(type: String) = values().find {

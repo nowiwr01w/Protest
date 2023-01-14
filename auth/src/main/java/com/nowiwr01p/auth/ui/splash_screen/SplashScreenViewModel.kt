@@ -1,18 +1,18 @@
 package com.nowiwr01p.auth.ui.splash_screen
 
-import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.auth.AuthScreen.*
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
+import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
 import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class SplashScreenViewModel(
-    private val auth: FirebaseAuth,
+    private val getRemoteUserUseCase: GetRemoteUserUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalCountryUseCase: GetLocalCountryUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
@@ -32,10 +32,19 @@ class SplashScreenViewModel(
     }
 
     private suspend fun checkLocalData() = listOf(
+        async { isAuthorized() },
         async { isCitySet() },
         async { isCountrySet() },
         async { isVerificationCompleted() },
     ).awaitAll()
+
+    private suspend fun isAuthorized() = runCatching {
+        getRemoteUserUseCase.execute()
+    }.onSuccess {
+        setState { copy(isAuthorized = true) }
+    }.onFailure {
+        setState { copy(isAuthorized = false) }
+    }
 
     private suspend fun isCitySet() {
         val set = getLocalCityUseCase.execute().name.isNotEmpty()
@@ -54,7 +63,7 @@ class SplashScreenViewModel(
 
     private fun getStartScreenRoute() = with(viewState.value) {
         val startScreen = when {
-            auth.currentUser == null -> AuthMainScreen.route
+            !isAuthorized -> AuthMainScreen.route
             !isVerificationCompleted -> VerificationMainScreen.route
             !isCountrySet || !isCitySet -> CountriesMainScreen.route
             else -> "meetings_main_screen"
