@@ -1,10 +1,14 @@
 package com.nowiwr01p.news.di
 
 import com.nowiwr01p.core_ui.navigators.NewsNavigator
+import com.nowiwr01p.domain.news.usecase.GetNewsScreenCacheUseCase
+import com.nowiwr01p.domain.news.usecase.SaveNewsScreenCacheUseCase
+import com.nowiwr01p.domain.news.usecase.data.NewsScreenCache
 import com.nowiwr01p.news.navigation.NewsNavigatorImpl
 import com.nowiwr01p.news.ui.NewsViewModel
 import com.nowiwr01p.news.ui.news_article.ArticleViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val moduleNews = module {
@@ -15,10 +19,26 @@ val moduleNews = module {
     /**
      * NEWS
      */
-    viewModel { NewsViewModel(get()) }
+    scope(named(newsScreenScopeName)) {
+        scoped { NewsScreenCache() }
+        scoped { GetNewsScreenCacheUseCase(get()) }
+        scoped { SaveNewsScreenCacheUseCase(get()) }
+    }
+
+    viewModel {
+        val scope = getKoin().getOrCreateScope(newsScreenScopeId, named(newsScreenScopeName))
+        NewsViewModel(
+            get(),
+            scope.get(),
+            scope.get()
+        )
+    }
 
     /**
      * ARTICLE
      */
     viewModel { ArticleViewModel(get()) }
 }
+
+private const val newsScreenScopeId = "newsScreenScopeId"
+private const val newsScreenScopeName = "newsScreenScopeName"
