@@ -15,6 +15,7 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMainScreen
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
 import com.nowiwr01p.meetings.ui.create_meeting.map.CurrentMeetingMapScreen
 import com.nowiwr01p.meetings.ui.meeting_info.MeetingMainScreen
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -45,12 +46,18 @@ sealed class MeetingsScreen<T>(
     /**
      * MEETING INFO
      */
-    object MeetingMainScreen: MeetingsScreen<Meeting>(
+    object MeetingMainScreen: MeetingsScreen<MeetingMainScreen.Args>(
         MeetingsScreenType.MeetingMainScreen.route,
         rootRoute,
         false
     ) {
-        override fun navigate(args: Meeting, navController: NavController) {
+        @Serializable
+        data class Args(
+            val isPreviewMode: Boolean,
+            val meeting: Meeting
+        )
+
+        override fun navigate(args: Args, navController: NavController) {
             navController.navigate(
                 route = route.replace(
                     oldValue = "{${Keys.ARG_TO_MEETING_INFO}}",
@@ -66,8 +73,13 @@ sealed class MeetingsScreen<T>(
                 )
             ) {
                 val meetingJson = it.arguments?.getString(Keys.ARG_TO_MEETING_INFO).orEmpty()
-                val meeting = Json.decodeFromString<Meeting>(meetingJson)
-                MeetingMainScreen(meeting, navigator)
+                val args = Json.decodeFromString<Args>(meetingJson)
+
+                MeetingMainScreen(
+                    isPreviewMode = args.isPreviewMode,
+                    meeting = args.meeting,
+                    navigator = navigator
+                )
             }
         }
     }
