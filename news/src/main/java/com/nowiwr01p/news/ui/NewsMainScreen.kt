@@ -23,6 +23,7 @@ import com.nowiwr01p.core.model.ArticleContentType.Title
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.news.ui.NewsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
@@ -66,7 +67,11 @@ fun NewsContent(
     modifier = Modifier.fillMaxSize()
 ) {
     Toolbar()
-    NewsList(state, listener)
+    if (state.isLoading) {
+        CenterScreenProgressBar()
+    } else {
+        NewsList(state, listener)
+    }
 }
 
 @Composable
