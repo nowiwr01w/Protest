@@ -38,7 +38,6 @@ import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
@@ -122,6 +121,7 @@ private fun MeetingMainScreenContent(
 
         val contentModifier = Modifier
             .fillMaxWidth()
+            .animateContentSize()
             .constrainAs(content) {
                 height = Dimension.fillToConstraints
                 start.linkTo(parent.start)
@@ -170,7 +170,9 @@ private fun ScrollableContent(
         item { Description(meeting) }
         item { LocationTitle() }
         item { LocationInfoContainer(state) }
-        item { MapPreview(state) }
+        if (state.loaded) {
+            item { MapPreview(state) }
+        }
         item { MapPlaceComment(meeting) }
         item { TakeWithYouTitle() }
         item { TakeWithYouDetails(meeting) }
@@ -342,24 +344,20 @@ private fun LocationDate(date: String) = Text(
 
 @Composable
 private fun MapPreview(state: State) {
-    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.requiredPeopleCount != 0) {
-        LatLng(state.user.city.latitude, state.user.city.longitude)
-    } else {
-        with(state.meeting.locationInfo.locationStartPoint) { LatLng(latitude, longitude) }
+    val coordinates = with(state) {
+        if (meeting.requiredPeopleCount != 0) cityCoordinates else meetingCoordinates
     }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(coordinates, 11f)
     }
+
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
         GoogleMap(
             cameraPositionState = cameraPositionState,
             properties = MapProperties(
-                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(
-                    LocalContext.current,
-                    raw.map_settings
-                )
+                mapStyleOptions = MapStyleOptions.loadRawResourceStyle(LocalContext.current, raw.map_settings)
             ),
             uiSettings = MapUiSettings(
                 compassEnabled = false,

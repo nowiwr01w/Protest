@@ -32,11 +32,8 @@ class MeetingViewModel(
     }
 
     private fun init(meeting: Meeting) = io {
-        runCatching {
-            getUserData()
-        }.onSuccess {
-            setState { copy(meeting = meeting) }
-        }
+        setState { copy(meeting = meeting, loaded = true) }
+        getUserData()
     }
 
     /**
