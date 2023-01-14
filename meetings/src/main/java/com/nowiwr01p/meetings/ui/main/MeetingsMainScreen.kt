@@ -67,6 +67,9 @@ fun MeetingsMainScreen(
         override fun onCategoryClick(category: Category) {
             viewModel.setEvent(Event.SelectCategory(category))
         }
+        override fun showBecomeOrganizerBottomSheet() {
+            // TODO
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -302,7 +305,7 @@ private fun LazyListScope.Meetings(
         found || selectedName.isEmpty()
     }
     if (filtered.isEmpty()) {
-        item { EmptyListStub() }
+        item { EmptyListStub(state, listener) }
     } else {
         item { Spacer(modifier = Modifier.height(8.dp)) }
         items(filtered) { meeting ->
@@ -436,7 +439,7 @@ private fun FloatingActionButton(
     listener: Listener?,
     lazyListState: LazyListState
 ) {
-    if (!state.showProgress && state.user.organizer) {
+    if (!state.showProgress && state.user.organizer && state.meetings.isNotEmpty()) {
         FloatingActionButton(
             painter = rememberVectorPainter(image = Icons.Filled.Add),
             lazyListState = lazyListState,
@@ -474,7 +477,7 @@ private fun FloatingActionButton(
  * NO MEETINGS STUB
  */
 @Composable
-private fun EmptyListStub() = Column(
+private fun EmptyListStub(state: State, listener: Listener?) = Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(top = 48.dp)
@@ -485,15 +488,24 @@ private fun EmptyListStub() = Column(
         style = MaterialTheme.typography.title1Bold,
         modifier = Modifier.padding(start = 16.dp)
     )
+    val titleText = if (state.user.organizer) {
+        "Теперь вы организатор\nДействуйте"
+    } else {
+        "В этом городе ничего не запланировано\nИсправь это"
+    }
     Text(
-        text = "В этом городе ничего не запланировано\nИсправь это",
+        text = titleText,
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.bodyRegular,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
     )
+    val buttonText = if (state.user.organizer) "Создать митинг" else "Стать организатором"
     StateButton(
-        text = "Стать организатором",
+        text = buttonText,
+        onSendRequest = {
+            if (state.user.organizer) listener?.toCreateMeeting() else listener?.showBecomeOrganizerBottomSheet()
+        },
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 32.dp, start = 48.dp, end = 48.dp)
