@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
 import com.nowiwr01p.core.model.Category
@@ -323,7 +324,7 @@ private fun LocationInfoContainer(state: State) = Row(
         } else {
             LocationPlace(locationInfo.locationName)
             Spacer(modifier = Modifier.weight(1f))
-            LocationDate(date)
+            LocationDate(date.formatToDateTime())
         }
     }
 }

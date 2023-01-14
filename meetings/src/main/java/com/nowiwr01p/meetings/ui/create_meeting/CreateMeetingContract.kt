@@ -1,5 +1,6 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import com.google.android.gms.maps.model.LatLng
@@ -22,8 +23,8 @@ interface CreateMeetingContract {
         object NavigateToPreview: Event
         object NavigateToMapDrawPath: Event
         object NavigateToChooseStartLocation: Event
-        data class SelectDate(val date: String): Event
-        data class SelectTime(val time: String): Event
+        data class SelectDate(val date: Long): Event
+        data class SelectTime(val time: Long): Event
         data class SetDrawnPath(val path: List<LatLng>): Event
         data class SetStartLocationPath(val position: LatLng): Event
         data class ShowCategoriesBottomSheet(val content: @Composable () -> Unit): Event
@@ -43,8 +44,7 @@ interface CreateMeetingContract {
         val description: String = "",
         val showDatePicker: Boolean = false,
         val showTimePicker: Boolean = false,
-        val selectedDate: String = "",
-        val selectedTime: String = "",
+        val selectedDate: Long = 0L,
         val startLocation: LatLng = LatLng(.0, .0),
         val location: String = "",
         val locationDetails: String = "",

@@ -4,8 +4,6 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.window.DialogProperties
-import com.nowiwr01p.core.extenstion.formatToDate
-import com.nowiwr01p.core.extenstion.formatToTime
 import com.nowiwr01p.core_ui.theme.backgroundSecondary
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -16,7 +14,7 @@ import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 
 interface DatePickerListener {
-    fun onDateSelected(date: String)
+    fun onDateSelected(date: Long)
 }
 
 @Composable
@@ -45,7 +43,7 @@ fun DatePicker(listener: DatePickerListener) {
                 dateActiveBackgroundColor = Color(0xFFFC4C4C)
             )
         ) { date ->
-            val resultDate = date.formatToDate()
+            val resultDate = date.toEpochDay() * 86400000
             listener.onDateSelected(resultDate)
         }
     }
@@ -53,7 +51,7 @@ fun DatePicker(listener: DatePickerListener) {
 }
 
 interface TimePickerListener {
-    fun onTimeSelected(time: String)
+    fun onTimeSelected(time: Long)
 }
 
 @Composable
@@ -84,8 +82,10 @@ fun TimePicker(listener: TimePickerListener) {
                 selectorColor = Color(0xFFFC4C4C)
             )
         ) { time ->
-            val resultTime = time.formatToTime()
-            listener.onTimeSelected(resultTime)
+            val hoursToSeconds = time.hour * 3600
+            val minutesToSeconds = time.minute * 60
+            val timeMillis = (hoursToSeconds + minutesToSeconds) * 1000L
+            listener.onTimeSelected(timeMillis)
         }
     }
     dialogState.show()
