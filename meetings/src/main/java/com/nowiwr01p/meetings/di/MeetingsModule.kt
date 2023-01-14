@@ -65,6 +65,7 @@ val moduleMeetings = module {
 
         CreateMeetingVewModel(
             scope.get(),
+            get(),
             get()
         )
     }

@@ -374,7 +374,7 @@ private fun MeetingItem(
             top.linkTo(title.bottom)
         }
     Text(
-        text = meeting.date.formatToDateTime(),
+        text = meeting.date,
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier
