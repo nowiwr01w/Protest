@@ -161,7 +161,7 @@ class CreateMeetingVewModel(
             cityName = user.city.name,
             creatorId = user.id,
             image = imageLink,
-            date = selectedDate,
+            date = "$selectedDate $selectedTime",
             requiredPeopleCount = requiresPeopleCount.toIntOrNull() ?: 0,
             categories = selectedCategories.toList(),
             title = title,
