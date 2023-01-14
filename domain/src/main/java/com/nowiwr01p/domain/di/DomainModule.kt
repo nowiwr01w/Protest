@@ -1,6 +1,7 @@
 package com.nowiwr01p.domain.di
 
 import com.nowiwr01p.domain.auth.usecase.*
+import com.nowiwr01p.domain.cteate_meeting.CreateMeetingUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
@@ -64,6 +65,11 @@ val moduleDomain = module {
     factory { GetMeetingsUseCase(get()) }
     factory { GetCategoriesUseCase(get()) }
     factory { SetReactionUseCase(get()) }
+
+    /**
+     * CREATE MEETING
+     */
+    factory { CreateMeetingUseCase(get()) }
 
     /**
      * NEWS
