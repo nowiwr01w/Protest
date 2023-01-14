@@ -30,9 +30,11 @@ class MeetingsRepositoryImpl(
      * MEETINGS
      */
     override suspend fun getMeetings() = withContext(dispatchers.io) {
+        val userCity = userDataStoreRepository.getUser().city.name
         references.getMeetingsReference().get().await()
             .children
             .map { snapshot -> snapshot.getValue<Meeting>()!! }
+            .filter { meeting -> userCity == meeting.cityName }
             .sortedByDescending { meeting -> meeting.date }
     }
 
