@@ -2,6 +2,7 @@ package com.nowiwr01p.meetings.ui.meeting_info
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.model.User
+import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
@@ -9,6 +10,7 @@ import com.nowiwr01p.core_ui.view_model.ViewState
 interface MeetingContract {
 
     sealed interface Event: ViewEvent {
+        object CreateMeeting: Event
         data class Init(val meeting: Meeting): Event
         data class OpenLink(val link: String): Event
         data class SetReaction(val isPositiveButtonClicked: Boolean): Event
@@ -16,7 +18,8 @@ interface MeetingContract {
 
     data class State(
         val user: User = User(),
-        val meeting: Meeting = Meeting.getSampleData()
+        val meeting: Meeting = Meeting.getSampleData(),
+        val createMeetingButtonState: ButtonState = ButtonState.DEFAULT
     ): ViewState
 
     sealed interface Effect: ViewSideEffect
@@ -24,6 +27,7 @@ interface MeetingContract {
     interface Listener {
         fun onBack()
         fun openLink(link: String)
+        fun createMeeting()
         fun setReaction(isPositiveButtonClicked: Boolean)
     }
 }

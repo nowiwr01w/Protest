@@ -39,6 +39,16 @@ class MeetingsRepositoryImpl(
     }
 
     /**
+     * CREATE MEETING
+     */
+    override suspend fun createMeeting(meeting: Meeting): Unit = withContext(dispatchers.io) {
+        references.getMeetingsReference()
+            .child(meeting.title)
+            .setValue(meeting)
+            .await()
+    }
+
+    /**
      * REACTION
      */
     override suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean) = withContext(dispatchers.io) {
