@@ -11,16 +11,17 @@ import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
@@ -38,6 +39,7 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.State
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -143,7 +145,6 @@ private fun Map(
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(state.cityCoordinates, 13f)
     }
-    val markerState = rememberMarkerState(position = cameraPositionState.position.target)
 
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
@@ -151,8 +152,8 @@ private fun Map(
         val (map, container) = createRefs()
 
         val mapsModifier = Modifier
-            .fillMaxSize()
             .constrainAs(map) {
+                height = Dimension.fillToConstraints
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 top.linkTo(parent.top)
@@ -163,11 +164,18 @@ private fun Map(
             cameraPositionState = cameraPositionState,
             uiSettings = MapUiSettings(zoomControlsEnabled = false)
         ) {
-            Marker(
-                state = markerState,
-                draggable = true
-            )
             Polyline(points = state.selectedCoordinates)
+        }
+
+        Box(
+            modifier = mapsModifier.padding(bottom = 48.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_location_marker),
+                contentDescription = "Location Marker",
+                tint = Color(0xFFFC4C4C)
+            )
         }
 
         val bottomButtonsModifier = Modifier
@@ -181,7 +189,7 @@ private fun Map(
             type = type,
             state = state,
             listener = listener,
-            markerState = markerState,
+            position = cameraPositionState.position.target,
             modifier = bottomButtonsModifier
         )
     }
@@ -195,7 +203,7 @@ private fun BottomButtons(
     type: CreateMeetingMapType,
     state: State,
     listener: Listener?,
-    markerState: MarkerState,
+    position: LatLng,
     modifier: Modifier
 ) {
     Row(modifier = modifier) {
@@ -221,7 +229,7 @@ private fun BottomButtons(
         StateButton(
             text = "Выбрать",
             enabled = if (type == SELECT_START_LOCATION) state.selectedCoordinates.isEmpty() else true,
-            onSendRequest = { listener?.selectCoordinates(markerState.position) },
+            onSendRequest = { listener?.selectCoordinates(position) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp)
