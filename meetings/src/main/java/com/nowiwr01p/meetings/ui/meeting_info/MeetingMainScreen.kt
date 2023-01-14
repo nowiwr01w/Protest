@@ -238,15 +238,15 @@ private fun LocationInfoContainer(state: State) = Row(
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
     with(state.meeting) {
-        if (openDate.requiredPeopleCount != 0) {
+        if (requiredPeopleCount != 0) {
             val text = "Митинг будет на следующий день после того, как наберётся " +
-                    "${openDate.requiredPeopleCount} человек.\n" +
+                    "$requiredPeopleCount человек.\n" +
                     "Это обязательное условие."
             LocationPlace(text)
         } else {
-            LocationPlace(locationInfo.shortName)
+            LocationPlace(locationInfo.locationName)
             Spacer(modifier = Modifier.weight(1f))
-            LocationDate(date.formatToDateTime())
+            LocationDate(date)
         }
     }
 }
@@ -267,10 +267,10 @@ private fun LocationDate(date: String) = Text(
 
 @Composable
 private fun MapPreview(state: State) {
-    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.openDate.requiredPeopleCount != 0) {
+    val coordinates = if (state.user.city.name.isNotEmpty() && state.meeting.requiredPeopleCount != 0) {
         LatLng(state.user.city.latitude, state.user.city.longitude)
     } else {
-        with(state.meeting.locationInfo.coordinates) { LatLng(latitude, longitude) }
+        with(state.meeting.locationInfo.locationStartPoint) { LatLng(latitude, longitude) }
     }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(coordinates, 11f)
@@ -302,13 +302,13 @@ private fun MapPreview(state: State) {
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .clip(RoundedCornerShape(16.dp))
         ) {
-            if (state.meeting.openDate.requiredPeopleCount == 0) {
+            if (state.meeting.requiredPeopleCount == 0) {
                 Marker(
                     state = rememberMarkerState(position = coordinates)
                 )
             }
         }
-        if (state.meeting.openDate.requiredPeopleCount != 0) {
+        if (state.meeting.requiredPeopleCount != 0) {
             MapUnknownPlaceContainer()
         }
     }
@@ -316,7 +316,7 @@ private fun MapPreview(state: State) {
 
 @Composable
 private fun MapPlaceComment(meeting: Meeting) {
-    if (meeting.openDate.requiredPeopleCount == 0) {
+    if (meeting.requiredPeopleCount == 0) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
@@ -325,7 +325,7 @@ private fun MapPlaceComment(meeting: Meeting) {
                 .padding(top = 8.dp, start = 16.dp, end = 16.dp),
         ) {
             Text(
-                text = meeting.locationInfo.placeDetails,
+                text = meeting.locationInfo.locationDetails,
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.footnoteRegular,
                 color = MaterialTheme.colors.textColorSecondary,
@@ -347,7 +347,7 @@ private fun TakeWithYouTitle() = Text(
 
 @Composable
 private fun TakeWithYouDetails(meeting: Meeting) = Text(
-    text = meeting.takeWithYouInfo.description,
+    text = meeting.takeWithYouInfo.postersMotivation,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1,
     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
@@ -364,7 +364,7 @@ private fun Posters(
 ) {
     items(meeting.takeWithYouInfo.posters) { poster ->
         Poster(poster) {
-            listener?.openLink(poster.link)
+            listener?.openLink(poster)
         }
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
@@ -372,7 +372,7 @@ private fun Posters(
 
 @Composable
 private fun Poster(
-    poster: Poster,
+    name: String,
     onClick: () -> Unit
 ) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -380,7 +380,7 @@ private fun Poster(
 ) {
     CoilImage(
         imageModel = {
-            poster.image.ifEmpty { R.drawable.ic_poster }
+            R.drawable.ic_poster
         },
         modifier = Modifier
             .size(96.dp)
@@ -388,7 +388,7 @@ private fun Poster(
             .clickable { onClick() }
     )
     Text(
-        text = poster.name,
+        text = name,
         style = MaterialTheme.typography.caption2Regular,
         color = MaterialTheme.colors.textPrimary,
         maxLines = 2,

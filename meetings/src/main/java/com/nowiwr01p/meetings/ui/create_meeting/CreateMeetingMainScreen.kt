@@ -83,6 +83,9 @@ fun CreateMeetingMainScreen(
         override fun showCategoriesBottomSheet() {
             viewModel.setEvent(Event.ShowCategoriesBottomSheet(categoriesBottomSheet))
         }
+        override fun navigateToPreview() {
+            viewModel.setEvent(Event.NavigateToPreview)
+        }
         override fun navigateToMapDrawPath() {
             viewModel.setEvent(Event.NavigateToMapDrawPath)
         }
@@ -111,6 +114,9 @@ fun CreateMeetingMainScreen(
             }
             is Effect.NavigateToChooseStartLocation -> {
                 navigator.meetingsNavigator.navigateToMapDrawPath(SELECT_START_LOCATION)
+            }
+            is Effect.NavigateToPreview -> {
+                navigator.meetingsNavigator.navigateToMeetingInfo(it.meeting)
             }
         }
     }
@@ -486,6 +492,7 @@ private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun PreviewButton(state: State, listener: Listener?) = StateButton(
     text = "Превью",
+    onSendRequest = { listener?.navigateToPreview() },
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
