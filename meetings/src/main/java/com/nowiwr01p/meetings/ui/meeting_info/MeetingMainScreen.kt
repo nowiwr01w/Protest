@@ -32,6 +32,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.flowlayout.SizeMode
@@ -75,6 +77,9 @@ fun MeetingMainScreen(
        override fun setReaction(isPositiveButtonClicked: Boolean) {
             viewModel.setEvent(Event.SetReaction(isPositiveButtonClicked))
        }
+       override fun createMeeting() {
+            viewModel.setEvent(Event.CreateMeeting)
+       }
    }
 
     LaunchedEffect(Unit) {
@@ -97,14 +102,68 @@ private fun MeetingMainScreenContent(
     isPreviewMode: Boolean,
     state: State,
     listener: Listener?
-) = Column(
-    modifier = Modifier.fillMaxSize()
 ) {
-    val meeting = state.meeting
-    Toolbar(meeting, listener)
-    LazyColumn(
+    ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
+        val (toolbar, content, publishButton) = createRefs()
+
+        val toolbarModifier = Modifier
+            .constrainAs(toolbar) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(parent.top)
+            }
+        Toolbar(
+            state = state,
+            listener = listener,
+            modifier = toolbarModifier
+        )
+
+        val contentModifier = Modifier
+            .fillMaxWidth()
+            .constrainAs(content) {
+                height = Dimension.fillToConstraints
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(toolbar.bottom)
+                bottom.linkTo(parent.bottom)
+            }
+        ScrollableContent(
+            isPreviewMode = isPreviewMode,
+            state = state,
+            listener = listener,
+            modifier = contentModifier
+        )
+
+        val publishButtonModifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .constrainAs(publishButton) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            }
+        if (isPreviewMode) {
+            PublishButton(
+                state = state,
+                listener = listener,
+                modifier = publishButtonModifier
+            )
+        }
+    }
+}
+
+@Composable
+private fun ScrollableContent(
+    isPreviewMode: Boolean,
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) {
+    val meeting = state.meeting
+    LazyColumn(modifier) {
         item { TopImage(meeting) }
         item { Categories(meeting) }
         item { Title(meeting) }
@@ -118,12 +177,13 @@ private fun MeetingMainScreenContent(
         item { Posters(meeting, listener) }
         item { DropdownItems(meeting) }
         if (isPreviewMode) {
-            item { PublishButton(state, listener) }
+            item { Spacer(modifier = Modifier.height(120.dp)) }
         } else {
             item { WillYouGoTitle() }
             item { WillYouGoPeopleCount(meeting) }
             item { WillYouGoImage() }
             item { WillYouGoActionButtons(state, listener) }
+            item { Spacer(modifier = Modifier.height(24.dp)) }
         }
     }
 }
@@ -133,31 +193,35 @@ private fun MeetingMainScreenContent(
  */
 @Composable
 private fun Toolbar(
-    meeting: Meeting,
-    listener: Listener?
-) = ToolbarTop(
-    backIcon = {
-        ToolbarBackButton {
-            listener?.onBack()
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) {
+    ToolbarTop(
+        modifier = modifier,
+        backIcon = {
+            ToolbarBackButton {
+                listener?.onBack()
+            }
+        },
+        actions = {
+            Box(
+                modifier = Modifier
+                    .padding(end = 10.dp)
+                    .clip(RoundedCornerShape(14.dp))
+                    .clickable {
+                        listener?.openLink(state.meeting.telegram)
+                    }
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_telegram),
+                    contentDescription = "Telegram chat icon",
+                    modifier = Modifier.padding(6.dp)
+                )
+            }
         }
-    },
-    actions = {
-        Box(
-            modifier = Modifier
-                .padding(end = 10.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .clickable {
-                    listener?.openLink(meeting.telegram)
-                }
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_telegram),
-                contentDescription = "Telegram chat icon",
-                modifier = Modifier.padding(6.dp)
-            )
-        }
-    }
-)
+    )
+}
 
 /**
  * IMAGE
@@ -669,13 +733,24 @@ private fun getBorderColor(
  * PUBLISH BUTTON
  */
 @Composable
-private fun PublishButton(state: State, listener: Listener?) = StateButton(
-    text = "Опубликовать",
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
-        .clip(RoundedCornerShape(24.dp))
-)
+private fun PublishButton(
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) {
+    StateButton(
+        text = "Опубликовать",
+        state = state.createMeetingButtonState,
+        onSendRequest = {
+            listener?.createMeeting()
+        },
+        onSuccess = {
+            listener?.onBack()
+            listener?.onBack()
+        },
+        modifier = modifier
+    )
+}
 
 /**
  * PREVIEWS

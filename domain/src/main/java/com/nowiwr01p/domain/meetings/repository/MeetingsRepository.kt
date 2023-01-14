@@ -7,4 +7,5 @@ interface MeetingsRepository {
     suspend fun getMeetings(): List<Meeting>
     suspend fun getCategories(): List<Category>
     suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean): Meeting
+    suspend fun createMeeting(meeting: Meeting)
 }

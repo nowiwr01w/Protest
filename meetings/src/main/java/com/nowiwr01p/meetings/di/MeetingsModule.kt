@@ -73,5 +73,5 @@ val moduleMeetings = module {
     /**
      * MEETING SCREEN
      */
-    viewModel { MeetingViewModel(get(), get(), get()) }
+    viewModel { MeetingViewModel(get(), get(), get(), get()) }
 }
