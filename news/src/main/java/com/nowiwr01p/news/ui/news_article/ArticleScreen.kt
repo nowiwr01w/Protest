@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core.extenstion.formatToDate
@@ -64,6 +65,7 @@ fun ArticleContent(
         items(contentSorted) { content ->
             NewsItem(content, listener)
         }
+        item{ Spacer(modifier = Modifier.height(32.dp)) }
     }
 }
 
@@ -80,6 +82,7 @@ fun NewsItem(
         Step -> StepItem(content.value)
         Link -> ArticleLink(content.value, listener)
         OrderedListTitle -> OrderedListTitle(content.value)
+        ImageDescription -> ImageDescription(content.value)
     }
 }
 
@@ -97,7 +100,7 @@ fun ArticleTitle(
     title: String,
 ) = Text(
     text = title,
-    style = MaterialTheme.typography.title1Bold,
+    style = MaterialTheme.typography.title2Bold,
     color = MaterialTheme.colors.textPrimary,
     modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
@@ -124,6 +127,19 @@ fun ArticleImage(
         .height(200.dp)
         .padding(top = 8.dp, start = 8.dp, end = 8.dp)
         .clip(RoundedCornerShape(16.dp))
+)
+
+@Composable
+fun ImageDescription(
+    description: String
+) = Text(
+    text = description,
+    style = MaterialTheme.typography.footnoteRegular,
+    color = MaterialTheme.colors.textColorSecondary,
+    textAlign = TextAlign.Center,
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 4.dp, start = 48.dp, end = 48.dp)
 )
 
 @Composable
@@ -182,10 +198,10 @@ private fun ArticleDate(
     color = MaterialTheme.colors.textColorSecondary,
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp, bottom = 4.dp)
+        .padding(top = 14.dp, start = 16.dp, end = 16.dp)
 )
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, heightDp = 2000)
 @Composable
 fun Preview() = MeetingsTheme {
     ArticleContent(State(article = Article.article))
