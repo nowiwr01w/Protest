@@ -160,45 +160,7 @@ private fun CreateMeetingScreenContent(
         .background(Color.White)
 ) {
     Toolbar(listener)
-    Content(state, listener)
-}
-
-@Composable
-private fun Content(
-    state: State,
-    listener: Listener?
-) = ConstraintLayout(
-    modifier = Modifier.fillMaxWidth()
-) {
-    val (fieldsContainer, createButton) = createRefs()
-
-    val fieldsContainerModifier = Modifier
-        .fillMaxSize()
-        .constrainAs(fieldsContainer) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            top.linkTo(parent.top)
-            bottom.linkTo(parent.bottom)
-        }
-    FieldsContainer(
-        state = state,
-        listener = listener,
-        modifier = fieldsContainerModifier
-    )
-
-    val createButtonModifier = Modifier
-        .fillMaxWidth()
-        .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
-        .clip(RoundedCornerShape(24.dp))
-        .constrainAs(createButton) {
-            start.linkTo(parent.start)
-            end.linkTo(parent.end)
-            bottom.linkTo(parent.bottom)
-        }
-    StateButton(
-        text = "Создать",
-        modifier = createButtonModifier
-    )
+    FieldsContainer(state, listener)
 }
 
 /**
@@ -220,10 +182,10 @@ private fun Toolbar(listener: Listener?) = ToolbarTop(
 @Composable
 private fun FieldsContainer(
     state: State,
-    listener: Listener?,
-    modifier: Modifier
+    listener: Listener?
 ) = LazyColumn(
-    modifier = modifier
+    modifier = Modifier
+        .fillMaxSize()
         .padding(horizontal = 16.dp)
         .animateContentSize()
 ) {
@@ -239,7 +201,7 @@ private fun FieldsContainer(
     item { Goals(state, listener) }
     item { Slogans(state, listener) }
     item { Strategy(state, listener) }
-    item { Spacer(modifier = Modifier.height(120.dp)) }
+    item { PreviewButton(state, listener) }
 }
 
 /**
@@ -516,6 +478,18 @@ private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
     title = "Стратегия",
     items = state.strategy,
     listener = listener
+)
+
+/**
+ * PREVIEW BUTTON
+ */
+@Composable
+private fun PreviewButton(state: State, listener: Listener?) = StateButton(
+    text = "Превью",
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
+        .clip(RoundedCornerShape(24.dp))
 )
 
 /**
