@@ -1,11 +1,13 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
 import com.google.android.gms.maps.model.LatLng
+import com.nowiwr01p.core.datastore.location.data.*
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
@@ -14,6 +16,7 @@ import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
 class CreateMeetingVewModel(
     private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase,
+    private val getLocalUserUseCase: GetLocalUserUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -35,12 +38,14 @@ class CreateMeetingVewModel(
             is Event.SelectTime -> selectTime(event.time)
             is Event.SetDrawnPath -> setPath(event.path)
             is Event.SetStartLocationPath -> setStartLocation(event.position)
+            is Event.NavigateToPreview -> setEffect { Effect.NavigateToPreview(buildMeeting()) }
         }
     }
 
     private fun init() = io {
         runCatching {
             getCategories()
+            getUserData()
         }
     }
 
@@ -50,6 +55,14 @@ class CreateMeetingVewModel(
     private suspend fun getCategories() {
         val categories = getCachedCategoriesUseCase.execute()
         setState { copy(categories = categories) }
+    }
+
+    /**
+     * USER
+     */
+    private suspend fun getUserData() {
+        val user = getLocalUserUseCase.execute()
+        setState { copy(user = user) }
     }
 
     /**
@@ -137,5 +150,38 @@ class CreateMeetingVewModel(
 
     private fun setStartLocation(position: LatLng) = setState {
         copy(startLocation = position)
+    }
+
+    /**
+     * BUILD MEETING
+     */
+    private fun buildMeeting() = with(viewState.value) {
+        Meeting(
+            id = "", // TODO
+            cityName = user.city.name,
+            creatorId = user.id,
+            image = imageLink,
+            date = selectedDate,
+            requiredPeopleCount = requiresPeopleCount.toIntOrNull() ?: 0,
+            categories = selectedCategories.toList(),
+            title = title,
+            description = description,
+            locationInfo = LocationInfo(
+                locationName = location,
+                locationStartPoint = Coordinate(startLocation.latitude, startLocation.longitude),
+                locationDetails = locationDetails,
+                path = path.map { Coordinate(it.latitude, it.longitude) }
+            ),
+            takeWithYouInfo = TakeWithYouInfo(
+                postersMotivation = postersMotivation,
+                posters = posters
+            ),
+            details = Details(
+                goals =  goals,
+                slogans = slogans,
+                strategy = strategy
+            ),
+            telegram = telegram
+        )
     }
 }

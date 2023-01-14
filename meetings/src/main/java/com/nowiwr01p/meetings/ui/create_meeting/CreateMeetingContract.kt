@@ -3,7 +3,9 @@ package com.nowiwr01p.meetings.ui.create_meeting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import com.google.android.gms.maps.model.LatLng
+import com.nowiwr01p.core.datastore.location.data.Meeting
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.extensions.DatePickerListener
 import com.nowiwr01p.core_ui.extensions.TimePickerListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
@@ -17,6 +19,7 @@ interface CreateMeetingContract {
     sealed interface Event: ViewEvent {
         object Init: Event
         object ShowDateTimePicker: Event
+        object NavigateToPreview: Event
         object NavigateToMapDrawPath: Event
         object NavigateToChooseStartLocation: Event
         data class SelectDate(val date: String): Event
@@ -32,6 +35,7 @@ interface CreateMeetingContract {
     }
 
     data class State(
+        val user: User = User(),
         val imageLink: String = "",
         val categories: List<Category> = listOf(),
         val selectedCategories: Set<Category> = setOf(),
@@ -57,6 +61,7 @@ interface CreateMeetingContract {
     sealed interface Effect: ViewSideEffect {
         object NavigateToMapDrawPath: Effect
         object NavigateToChooseStartLocation: Effect
+        data class NavigateToPreview(val meeting: Meeting): Effect
     }
 
     interface Listener: DatePickerListener, TimePickerListener {
@@ -69,5 +74,6 @@ interface CreateMeetingContract {
         fun navigateToMapDrawPath()
         fun navigateChooseStartLocation()
         fun onEditCustomTextField(type: CustomTextFieldType, value: String)
+        fun navigateToPreview()
     }
 }
