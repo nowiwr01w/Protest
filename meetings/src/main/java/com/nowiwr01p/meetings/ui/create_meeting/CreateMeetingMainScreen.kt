@@ -29,11 +29,14 @@ import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.Observer
 import com.google.android.gms.maps.model.LatLng
+import com.nowiwr01p.core.extenstion.getFromPicker
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_PATH
+import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
 import com.nowiwr01p.core_ui.extensions.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
@@ -46,15 +49,12 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
-import com.nowiwr01p.core.model.CreateMeetingMapType.*
-import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_PATH
-import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
+import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
+import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -100,10 +100,10 @@ fun CreateMeetingMainScreen(
         override fun showDateTimePicker() {
             viewModel.setEvent(Event.ShowDateTimePicker)
         }
-        override fun onDateSelected(date: String) {
+        override fun onDateSelected(date: Long) {
             viewModel.setEvent(Event.SelectDate(date))
         }
-        override fun onTimeSelected(time: String) {
+        override fun onTimeSelected(time: Long) {
             viewModel.setEvent(Event.SelectTime(time))
         }
     }
@@ -416,10 +416,9 @@ private fun DateTimeSubItem(state: State, listener: Listener?) = FakeTextField(
     showSubItemSlash = true,
     onClick = { listener?.showDateTimePicker() }
 ) {
-    val text = (state.selectedDate + " " + state.selectedTime).trim()
     FakeTitle(
         hint = "Дата и время",
-        text = text
+        text = if (state.selectedDate == 0L) "" else state.selectedDate.getFromPicker()
     )
 }
 
