@@ -19,7 +19,8 @@ enum class ArticleContentType(val type: String) {
     Description("description"),
     Step("step"),
     Link("link"),
-    OrderedListTitle("orderedListTitle");
+    OrderedListTitle("orderedListTitle"),
+    ImageDescription("imageDescription"),;
 
     companion object {
         fun findByType(type: String) = values().find {
