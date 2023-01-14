@@ -28,10 +28,8 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.location.data.Meeting
-import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.core.model.CreateMeetingMapType
 import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.isScrollingUp
@@ -83,7 +81,7 @@ fun MeetingsMainScreen(
 
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = { FloatingActionButtons(state, listener, lazyListState) }
+        floatingActionButton = { FloatingActionButton(state, listener, lazyListState) }
     ) {
         MeetingsMainScreenContent(state, listener, lazyListState)
     }
@@ -433,28 +431,17 @@ internal fun Category(
  * CREATE MEETING FAB
  */
 @Composable
-private fun FloatingActionButtons(
+private fun FloatingActionButton(
     state: State,
     listener: Listener?,
     lazyListState: LazyListState
-) = Column {
+) {
     if (!state.showProgress && state.user.organizer) {
         FloatingActionButton(
             painter = rememberVectorPainter(image = Icons.Filled.Add),
             lazyListState = lazyListState,
         ) {
             listener?.toCreateMeeting()
-        }
-    }
-
-    Spacer(modifier = Modifier.height(24.dp))
-
-    if (state.meetings.isNotEmpty()) {
-        FloatingActionButton(
-            painter = painterResource(R.drawable.ic_map),
-            lazyListState = lazyListState
-        ) {
-            listener?.toMap(state.meetings[0])
         }
     }
 }
@@ -492,15 +479,11 @@ private fun EmptyListStub() = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(top = 48.dp)
 ) {
-    Image(
-        painter = painterResource(R.drawable.image_no_meetings),
-        contentDescription = "No meetings image stub"
-    )
     Text(
         text = "Тут пусто",
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title1Bold,
-        modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+        modifier = Modifier.padding(start = 16.dp)
     )
     Text(
         text = "В этом городе ничего не запланировано\nИсправь это",
