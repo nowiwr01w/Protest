@@ -133,12 +133,12 @@ class CreateMeetingVewModel(
         setState { copy(showDatePicker = true) }
     }
 
-    private fun selectDate(date: String) = setState {
+    private fun selectDate(date: Long) = setState {
         copy(selectedDate = date, showDatePicker = false, showTimePicker = true)
     }
 
-    private fun selectTime(time: String) = setState {
-        copy(selectedTime = time, showTimePicker = false)
+    private fun selectTime(time: Long) = setState {
+        copy(selectedDate = viewState.value.selectedDate + time, showTimePicker = false)
     }
 
     /**
@@ -161,7 +161,7 @@ class CreateMeetingVewModel(
             cityName = user.city.name,
             creatorId = user.id,
             image = imageLink,
-            date = "$selectedDate $selectedTime",
+            date = selectedDate,
             requiredPeopleCount = requiresPeopleCount.toIntOrNull() ?: 0,
             categories = selectedCategories.toList(),
             title = title,
