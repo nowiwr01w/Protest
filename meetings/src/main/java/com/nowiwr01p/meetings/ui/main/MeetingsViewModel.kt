@@ -27,6 +27,7 @@ class MeetingsViewModel(
         when (event) {
             is Event.Init -> init()
             is Event.SelectCategory -> selectCategory(event.category)
+            is Event.ShowBottomSheet -> { } // TODO
         }
     }
 
