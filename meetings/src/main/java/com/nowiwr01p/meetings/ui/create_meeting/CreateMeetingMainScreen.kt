@@ -271,8 +271,8 @@ private fun CustomTextField(item: CustomTextFieldData) = Row(
                 ),
                 shape = RoundedCornerShape(12.dp)
             ),
-        trailingIcon = {
-            if (item.trailingIconCallback != null) {
+        trailingIcon = if (item.trailingIconCallback == null) null else {
+            {
                 ClickableIcon(
                     icon = Icons.Default.Close,
                     modifier = Modifier.padding(end = 12.dp),
