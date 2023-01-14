@@ -50,10 +50,10 @@ fun CurrentMeetingMapScreen(
 ) {
     val listener = object : Listener {
         override fun onBackClick() {
-            viewModel.setEvent(Event.OnBackClick)
+            navigator.navigateUp()
         }
         override fun onSavePathClick() {
-            // TODO
+            viewModel.setEvent(Event.OnSavePathClick)
         }
         override fun selectCoordinates(position: LatLng) {
             viewModel.setEvent(Event.SelectCoordinates(position))
@@ -69,7 +69,7 @@ fun CurrentMeetingMapScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
-            is Effect.NavigateBack -> {
+            is Effect.OnSavePathClick -> {
                 val arg = if (type == DRAW_PATH) NAV_ARG_PATH else NAV_ARG_START_LOCATION
                 navigator.setScreenResult(arg, it.path)
                 navigator.navigateUp()
