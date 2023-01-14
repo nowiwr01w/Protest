@@ -2,14 +2,20 @@ package com.nowiwr01p.meetings.ui.meeting_info
 
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.runtime.*
@@ -34,17 +40,16 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.location.data.Meeting
-import com.nowiwr01p.core.datastore.location.data.Poster
-import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
-import com.nowiwr01p.core_ui.R.*
+import com.nowiwr01p.core_ui.R.raw
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.R
@@ -55,6 +60,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MeetingMainScreen(
+    isPreviewMode: Boolean,
     meeting: Meeting,
     navigator: Navigator,
     viewModel: MeetingViewModel = getViewModel()
@@ -80,6 +86,7 @@ fun MeetingMainScreen(
     }
 
     MeetingMainScreenContent(
+        isPreviewMode = isPreviewMode,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -87,6 +94,7 @@ fun MeetingMainScreen(
 
 @Composable
 private fun MeetingMainScreenContent(
+    isPreviewMode: Boolean,
     state: State,
     listener: Listener?
 ) = Column(
@@ -109,11 +117,14 @@ private fun MeetingMainScreenContent(
         item { TakeWithYouDetails(meeting) }
         item { Posters(meeting, listener) }
         item { DropdownItems(meeting) }
-        item { WillYouGoTitle() }
-        item { WillYouGoPeopleCount(meeting) }
-        item { WillYouGoImage() }
-        item { WillYouGoActionButtons(state, listener) }
-        item { Spacer(modifier = Modifier.height(24.dp)) }
+        if (isPreviewMode) {
+            item { PublishButton(state, listener) }
+        } else {
+            item { WillYouGoTitle() }
+            item { WillYouGoPeopleCount(meeting) }
+            item { WillYouGoImage() }
+            item { WillYouGoActionButtons(state, listener) }
+        }
     }
 }
 
@@ -363,16 +374,13 @@ private fun Posters(
         .padding(top = 16.dp)
 ) {
     items(meeting.takeWithYouInfo.posters) { poster ->
-        Poster(poster) {
-            listener?.openLink(poster)
-        }
+        Poster { listener?.openLink(poster) }
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }
 
 @Composable
 private fun Poster(
-    name: String,
     onClick: () -> Unit
 ) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
@@ -388,7 +396,7 @@ private fun Poster(
             .clickable { onClick() }
     )
     Text(
-        text = name,
+        text = "Плакат",
         style = MaterialTheme.typography.caption2Regular,
         color = MaterialTheme.colors.textPrimary,
         maxLines = 2,
@@ -658,12 +666,25 @@ private fun getBorderColor(
 }
 
 /**
+ * PUBLISH BUTTON
+ */
+@Composable
+private fun PublishButton(state: State, listener: Listener?) = StateButton(
+    text = "Опубликовать",
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
+        .clip(RoundedCornerShape(24.dp))
+)
+
+/**
  * PREVIEWS
  */
 @Preview(showBackground = true)
 @Composable
 private fun MeetingMainScreenContent() = MeetingsTheme {
     MeetingMainScreenContent(
+        isPreviewMode = false,
         state = State(),
         listener = null
     )

@@ -61,7 +61,7 @@ fun MeetingsMainScreen(
             navigator.meetingsNavigator.navigateToMapDrawPath(DRAW_PATH)
         }
         override fun toMeeting(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMeetingInfo(meeting)
+            navigator.meetingsNavigator.navigateToMeetingInfo(false, meeting)
         }
         override fun toCreateMeeting() {
             navigator.meetingsNavigator.navigateToCreateMeeting()
