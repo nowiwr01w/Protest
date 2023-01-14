@@ -1,50 +1,34 @@
 package com.nowiwr01p.core.datastore.location.data
 
-import com.google.gson.annotations.SerializedName
 import com.nowiwr01p.core.model.Category
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Meeting(
-    @SerializedName("id")
     val id: String = "",
-    @SerializedName("creatorId")
+    val cityName: String = "",
     val creatorId: String = "",
-    @SerializedName("image")
     val image: String = "",
-    @SerializedName("date")
-    val date: Long = 0L,
-    @SerializedName("openDate")
-    val openDate: OpenDate = OpenDate(),
-    @SerializedName("categories")
+    val date: String = "",
+    val requiredPeopleCount: Int = 0,
     val categories: List<Category> = listOf(),
-    @SerializedName("title")
     val title: String = "",
-    @SerializedName("description")
     val description: String = "",
-    @SerializedName("locationInfo")
     val locationInfo: LocationInfo = LocationInfo(),
-    @SerializedName("takeWithYouInfo")
     val takeWithYouInfo: TakeWithYouInfo = TakeWithYouInfo(),
-    @SerializedName("details")
     val details: Details = Details(),
-    @SerializedName("reaction")
     val reaction: Reaction = Reaction(),
-    @SerializedName("telegram")
     val telegram: String = "",
-    @SerializedName("path")
-    val path: List<Coordinate> = listOf(),
-    @SerializedName("currentPosition")
     val currentPosition: Coordinate = Coordinate()
 ) {
     companion object {
         fun getSampleData() = Meeting(
             id = "123",
+            cityName = "Saint-Petersburg",
             creatorId = "1234",
             image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",
-            date = System.currentTimeMillis(),
-            openDate = OpenDate.getSampleData(),
+            date = "24.02.2023 17:30",
+            requiredPeopleCount = 0,
             categories = Category.getSampleData(),
             title = "Свободу Навальному",
             description = "Ни для кого не секрет, что в России права человека считаются чем-то, что всегда " +
@@ -56,16 +40,15 @@ data class Meeting(
             takeWithYouInfo = TakeWithYouInfo.getSampleData(),
             details = Details.getSampleData(),
             reaction = Reaction.getSampleData(),
-            telegram = "nowiwr01p"
+            telegram = "nowiwr01p",
+            currentPosition = Coordinate.getSampleData()
         )
     }
 }
 
 @Serializable
 data class Coordinate(
-    @SerialName("latitude")
     val latitude: Double = .0,
-    @SerialName("longitude")
     val longitude: Double = .0,
 ) {
     companion object {
@@ -74,69 +57,51 @@ data class Coordinate(
 }
 
 @Serializable
-data class OpenDate(
-    @SerializedName("text")
-    val text: String = "",
-    @SerializedName("date")
-    val date: Long = 0L,
-    @SerializedName("requiredPeopleCount")
-    val requiredPeopleCount: Int = 0
-) {
-    companion object {
-        fun getSampleData() = OpenDate(
-            text = "Место и дата проведения появится либо 23.02, либо после того, как наберётся хотя бы 1000 человек.\nЭто обязательное условие.",
-            date = System.currentTimeMillis(),
-            requiredPeopleCount = 1000
-        )
-    }
-}
-
-@Serializable
 data class LocationInfo(
-    @SerializedName("shortName")
-    val shortName: String = "",
-    @SerializedName("coordinates")
-    val coordinates: Coordinate = Coordinate(),
-    @SerializedName("placeDetails")
-    val placeDetails: String = ""
+    val locationName: String = "",
+    val locationStartPoint: Coordinate = Coordinate(),
+    val locationDetails: String = "",
+    val path: List<Coordinate> = listOf()
 ) {
     companion object {
         fun getSampleData() = LocationInfo(
-            shortName = "Дворцовая площадь",
-            coordinates = Coordinate(59.938946, 30.314982),
-            placeDetails = "Рядом со сценой"
+            locationName = "Дворцовая площадь",
+            locationStartPoint = Coordinate(59.938946, 30.314982),
+            locationDetails = "Рядом со сценой"
         )
     }
 }
 
 @Serializable
 data class TakeWithYouInfo(
-    @SerializedName("description")
-    val description: String = "",
-    @SerializedName("posterLinks")
-    val posterLinks: List<String> = listOf()
+    val postersMotivation: String = "",
+    val posters: List<String> = listOf()
 ) {
     companion object {
         fun getSampleData() = TakeWithYouInfo(
-            description = "Плакаты, флаги, что угодно\nВот примеры:",
-            posterLinks = listOf(
+            postersMotivation = "Плакаты, флаги, что угодно\nВот примеры:",
+            posters = listOf(
                 "https://google.com/search?q=first",
                 "https://google.com/search?q=second",
                 "https://google.com/search?q=third",
                 "https://google.com/search?q=fourth",
-                "https://google.com/search?q=fifth",
+                "https://google.com/search?q=fifth"
             )
         )
     }
 }
 
 @Serializable
+data class Poster(
+    val name: String = "",
+    val link: String = "",
+    val image: String = ""
+)
+
+@Serializable
 data class Details(
-    @SerializedName("goals")
     val goals: List<String> = listOf(),
-    @SerializedName("slogans")
     val slogans: List<String> = listOf(),
-    @SerializedName("strategy")
     val strategy: List<String> = listOf(),
 ) {
     companion object {
@@ -150,9 +115,7 @@ data class Details(
 
 @Serializable
 data class Reaction(
-    @SerializedName("peopleGoCount")
     val peopleGoCount: List<String> = listOf(),
-    @SerializedName("peopleMaybeGoCount")
     val peopleMaybeGoCount: List<String> = listOf()
 ) {
     companion object {

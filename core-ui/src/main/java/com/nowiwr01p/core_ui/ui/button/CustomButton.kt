@@ -61,7 +61,6 @@ fun StateButton(
             if (state == DEFAULT) onSendRequest.invoke()
         },
         modifier = modifier
-            .fillMaxWidth()
             .height(56.dp)
             .clip(RoundedCornerShape(4.dp))
     ) {

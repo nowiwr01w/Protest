@@ -1,11 +1,12 @@
 package com.nowiwr01p.meetings.ui.main
 
-import androidx.compose.foundation.*
+import androidx.compose.animation.*
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -17,6 +18,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,17 +28,18 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.location.data.Meeting
-import com.nowiwr01p.core.extenstion.formatToDate
 import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
-import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core.model.CreateMeetingMapType.*
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.isScrollingUp
 import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
+import com.nowiwr01p.core_ui.extensions.toColor
+import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
-import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
@@ -51,14 +55,20 @@ fun MeetingsMainScreen(
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
+        override fun toMap(meeting: Meeting) {
+            navigator.meetingsNavigator.navigateToMapDrawPath(DRAW_PATH)
+        }
         override fun toMeeting(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMeeting(meeting)
+            navigator.meetingsNavigator.navigateToMeetingInfo(false, meeting)
         }
         override fun toCreateMeeting() {
-            // TODO
+            navigator.meetingsNavigator.navigateToCreateMeeting()
         }
         override fun onCategoryClick(category: Category) {
             viewModel.setEvent(Event.SelectCategory(category))
+        }
+        override fun showBecomeOrganizerBottomSheet() {
+            // TODO
         }
     }
 
@@ -70,18 +80,21 @@ fun MeetingsMainScreen(
 
     }
 
+    val lazyListState = rememberLazyListState()
+
     Scaffold(
         floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = { CreateButton(state, listener) }
+        floatingActionButton = { FloatingActionButton(state, listener, lazyListState) }
     ) {
-        MeetingsMainScreenContent(state, listener)
+        MeetingsMainScreenContent(state, listener, lazyListState)
     }
 }
 
 @Composable
 private fun MeetingsMainScreenContent(
     state: State,
-    listener: Listener?
+    listener: Listener?,
+    lazyListState: LazyListState
 ) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
@@ -90,6 +103,7 @@ private fun MeetingsMainScreenContent(
         CenterScreenProgressBar()
     } else {
         LazyColumn(
+            state = lazyListState,
             modifier = Modifier.background(MaterialTheme.colors.background)
         ) {
             item { Stories(state) }
@@ -291,7 +305,7 @@ private fun LazyListScope.Meetings(
         found || selectedName.isEmpty()
     }
     if (filtered.isEmpty()) {
-        item { EmptyListStub() }
+        item { EmptyListStub(state, listener) }
     } else {
         item { Spacer(modifier = Modifier.height(8.dp)) }
         items(filtered) { meeting ->
@@ -361,7 +375,7 @@ private fun MeetingItem(
             top.linkTo(title.bottom)
         }
     Text(
-        text = meeting.date.formatToDate(),
+        text = meeting.date,
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier
@@ -399,7 +413,7 @@ private fun MeetingCategories(
 }
 
 @Composable
-private fun Category(
+internal fun Category(
     category: Category
 ) = Box(
     contentAlignment = Alignment.Center,
@@ -420,21 +434,42 @@ private fun Category(
  * CREATE MEETING FAB
  */
 @Composable
-private fun CreateButton(
+private fun FloatingActionButton(
     state: State,
-    listener: Listener?
+    listener: Listener?,
+    lazyListState: LazyListState
 ) {
-    if (!state.showProgress && state.user.organizer) {
+    if (!state.showProgress && state.user.organizer && state.meetings.isNotEmpty()) {
         FloatingActionButton(
-            contentColor = Color.White,
-            backgroundColor = MaterialTheme.colors.mainBackgroundColor,
-            onClick = { listener?.toCreateMeeting() }
+            painter = rememberVectorPainter(image = Icons.Filled.Add),
+            lazyListState = lazyListState,
         ) {
-            Icon(
-                imageVector = Icons.Filled.Add,
-                contentDescription = "Create new meeting button"
-            )
+            listener?.toCreateMeeting()
         }
+    }
+}
+
+@Composable
+private fun FloatingActionButton(
+    painter: Painter,
+    lazyListState: LazyListState,
+    onItemClick: () -> Unit
+) = AnimatedVisibility(
+    visible = lazyListState.isScrollingUp() || !lazyListState.isScrollInProgress,
+    enter = fadeIn() + expandVertically(),
+    exit = fadeOut() + shrinkVertically()
+) {
+    FloatingActionButton(
+        shape = RoundedCornerShape(14.dp),
+        backgroundColor = MaterialTheme.colors.mainBackgroundColor,
+        onClick = { onItemClick() }
+    ) {
+        Icon(
+            painter = painter,
+            contentDescription = "Floating Action Button",
+            tint = Color.White,
+            modifier = Modifier.size(20 .dp)
+        )
     }
 }
 
@@ -442,31 +477,37 @@ private fun CreateButton(
  * NO MEETINGS STUB
  */
 @Composable
-private fun EmptyListStub() = Column(
+private fun EmptyListStub(state: State, listener: Listener?) = Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier.padding(top = 48.dp)
 ) {
-    Image(
-        painter = painterResource(R.drawable.image_no_meetings),
-        contentDescription = "No meetings image stub"
-    )
     Text(
         text = "Тут пусто",
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title1Bold,
-        modifier = Modifier.padding(top = 16.dp, start = 16.dp)
+        modifier = Modifier.padding(start = 16.dp)
     )
+    val titleText = if (state.user.organizer) {
+        "Теперь вы организатор\nДействуйте"
+    } else {
+        "В этом городе ничего не запланировано\nИсправь это"
+    }
     Text(
-        text = "В этом городе ничего не запланировано\nИсправь это",
+        text = titleText,
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.bodyRegular,
         textAlign = TextAlign.Center,
         modifier = Modifier.padding(top = 12.dp, start = 20.dp, end = 20.dp)
     )
+    val buttonText = if (state.user.organizer) "Создать митинг" else "Стать организатором"
     StateButton(
-        text = "Стать организатором",
+        text = buttonText,
+        onSendRequest = {
+            if (state.user.organizer) listener?.toCreateMeeting() else listener?.showBecomeOrganizerBottomSheet()
+        },
         modifier = Modifier
+            .fillMaxWidth()
             .padding(top = 32.dp, start = 48.dp, end = 48.dp)
             .clip(RoundedCornerShape(24.dp))
     )
@@ -482,7 +523,8 @@ private fun Preview() = MeetingsTheme {
         state = State(
             meetings = listOf(Meeting())
         ),
-        listener = null
+        listener = null,
+        lazyListState = rememberLazyListState()
     )
 }
 
@@ -491,6 +533,7 @@ private fun Preview() = MeetingsTheme {
 private fun PreviewEmpty() = MeetingsTheme {
     MeetingsMainScreenContent(
         state = State(),
-        listener = null
+        listener = null,
+        lazyListState = rememberLazyListState()
     )
 }

@@ -14,6 +14,7 @@ interface SplashScreenContract {
         val route: String = "",
         val isCitySet: Boolean = false,
         val isCountrySet: Boolean = false,
+        val isAuthorized: Boolean = false,
         val isVerificationCompleted: Boolean = false
     ): ViewState
 

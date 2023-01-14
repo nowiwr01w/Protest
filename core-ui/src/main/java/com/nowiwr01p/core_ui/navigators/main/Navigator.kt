@@ -1,5 +1,6 @@
 package com.nowiwr01p.core_ui.navigators.main
 
+import androidx.lifecycle.LiveData
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.nowiwr01p.core_ui.base_screen.Screen
@@ -8,7 +9,6 @@ import com.nowiwr01p.core_ui.navigators.*
 
 interface Navigator {
     val authNavigator: AuthNavigator
-    val mapNavigator: MapNavigator
     val meetingsNavigator: MeetingsNavigator
     val newsNavigator: NewsNavigator
     val profileNavigator: ProfileNavigator
@@ -19,7 +19,6 @@ interface Navigator {
     fun getBottomNavigationItems(): List<BottomNavigationItem>
     fun onBottomNavigationSelected(item: BottomNavigationItem)
 
-    fun navigateToMap()
     fun navigateToMeetings()
     fun navigateToNews()
     fun navigateToProfile()
@@ -28,4 +27,7 @@ interface Navigator {
     fun setNavController(navHostController: NavHostController)
 
     fun currentScreen(): Screen<*>
+
+    fun <T> setScreenResult(key: String, result: T)
+    fun <T> getLiveDataResult(key: String): LiveData<T>?
 }
