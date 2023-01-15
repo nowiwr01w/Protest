@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.*
+import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -68,8 +69,8 @@ class MainActivity : ComponentActivity() {
             }
 
             val bottomSheetContent: @Composable () -> Unit = {
-                showBottomSheetHelper.content.collectAsState(null).value.let { params ->
-                    if (params != null) BottomSheet(params)
+                showBottomSheetHelper.content.collectAsState(null).value?.let { params ->
+                    BottomSheet(params)
                 }
                 Spacer(modifier = Modifier.height(1.dp))
             }
@@ -78,8 +79,12 @@ class MainActivity : ComponentActivity() {
                 showSnackBarHelper.text.collectAsState(null).value.let { params ->
                     AnimatedVisibility(
                         visible = params != null,
-                        enter = fadeIn() + slideInVertically(animationSpec = tween(350)),
-                        exit = fadeOut() + slideOutVertically(animationSpec = tween(350))
+                        enter = fadeIn() + slideInVertically(
+                            animationSpec = tween(durationMillis = 350, easing = LinearEasing)
+                        ),
+                        exit = fadeOut() + slideOutVertically(
+                            animationSpec = tween(durationMillis = 350, easing = LinearEasing)
+                        )
                     ) {
                         params?.let {
                             ErrorSnackBar(it)

@@ -2,21 +2,29 @@ package com.nowiwr01p.core_ui.extensions
 
 import android.app.Activity
 import android.content.Context
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.FastOutLinearInEasing
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.core.view.WindowCompat
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import com.nowiwr01p.core_ui.theme.graphicsRed
 import com.nowiwr01p.core_ui.theme.mainBackgroundColor
 
 @Composable
-fun setSystemUiColor(
-    color: Color = MaterialTheme.colors.mainBackgroundColor
-) {
+fun setSystemUiColor(color: Color) {
+    val animatedColor by animateColorAsState(
+        targetValue = color,
+        animationSpec = tween(durationMillis = 350, easing = LinearEasing),
+    )
     rememberSystemUiController().apply {
-        setStatusBarColor(color)
+        setStatusBarColor(animatedColor)
     }
 }
 
