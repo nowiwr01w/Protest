@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core_ui.theme.*
 
 @Composable
-fun ErrorSnackBar(text: String) {
+fun ErrorSnackBar(params: SnackBarParams) {
     val statusBarHeight = WindowInsets.statusBars.getTop(LocalDensity.current)
 
     Column(
@@ -23,12 +23,12 @@ fun ErrorSnackBar(text: String) {
             .background(MaterialTheme.colors.graphicsRed)
     ) {
         Text(
-            text = text,
+            text = params.text,
             color = Color.White,
             style = MaterialTheme.typography.body2,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp, horizontal = 16.dp)
+                .padding(horizontal = 16.dp)
         )
     }
 }

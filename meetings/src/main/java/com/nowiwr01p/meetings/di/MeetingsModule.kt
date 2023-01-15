@@ -65,6 +65,7 @@ val moduleMeetings = module {
         val scope = getKoin().getScope(meetingsScreenScopeId)
 
         CreateMeetingVewModel(
+            get(),
             scope.get(),
             get(),
             get(),
