@@ -1,0 +1,15 @@
+package com.nowiwr01p.domain.cteate_meeting.usecase
+
+import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.domain.UseCase
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
+import com.nowiwr01p.domain.cteate_meeting.validators.CreateMeetingValidator
+
+class ValidateMeetingDataUseCase(
+    private val validator: CreateMeetingValidator
+): UseCase<Meeting, List<CreateMeetingError?>> {
+
+    override suspend fun execute(input: Meeting): List<CreateMeetingError?> {
+        return validator.validate(input)
+    }
+}
