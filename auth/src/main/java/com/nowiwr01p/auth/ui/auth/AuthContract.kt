@@ -1,8 +1,8 @@
 package com.nowiwr01p.auth.ui.auth
 
-import androidx.compose.runtime.Composable
 import com.nowiwr01p.auth.ui.auth.data.AuthType
 import com.nowiwr01p.auth.ui.auth.data.AuthType.*
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.ViewEvent
@@ -21,7 +21,7 @@ interface AuthContract {
         object NavigateToChooseCountry: Event
         object NavigateToMeetings: Event
         object TogglePasswordVisibility: Event
-        data class ShowBottomSheet(val content: @Composable () -> Unit): Event
+        data class ShowBottomSheet(val params: BottomSheetParams): Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
     }
 

@@ -40,7 +40,7 @@ class AuthViewModel(
             is Event.NavigateToMeetings -> setEffect { Effect.NavigateToMeetings }
             is Event.NavigateToVerification -> setEffect { Effect.NavigateToVerification }
             is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
-            is Event.ShowBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)
+            is Event.ShowBottomSheet -> showBottomSheetHelper.showBottomSheet(event.params)
         }
     }
 

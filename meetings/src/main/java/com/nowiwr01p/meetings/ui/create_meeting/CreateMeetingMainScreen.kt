@@ -22,7 +22,6 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -40,21 +39,21 @@ import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
 import com.nowiwr01p.core_ui.extensions.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DynamicDetailsItem.*
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
+import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -65,9 +64,10 @@ fun CreateMeetingMainScreen(
 ) {
     val state = viewModel.viewState.value
 
-    val categoriesBottomSheet = CategoriesBottomSheet(state) {
-        viewModel.setEvent(Event.OnSelectedCategoryClick(it))
-    }
+    val bottomSheetParams = BottomSheetParams(
+        topPadding = 216.dp,
+        content = CategoriesBottomSheet(state) { viewModel.setEvent(Event.OnSelectedCategoryClick(it)) }
+    )
 
     val listener = object : Listener {
         override fun onBackClick() {
@@ -86,7 +86,7 @@ fun CreateMeetingMainScreen(
             viewModel.setEvent(Event.OnEditCustomTextField(type, value))
         }
         override fun showCategoriesBottomSheet() {
-            viewModel.setEvent(Event.ShowCategoriesBottomSheet(categoriesBottomSheet))
+            viewModel.setEvent(Event.ShowCategoriesBottomSheet(bottomSheetParams))
         }
         override fun navigateToPreview() {
             viewModel.setEvent(Event.NavigateToPreview)
@@ -337,10 +337,7 @@ private fun CategoriesBottomSheet(
     state: State,
     onCategoryClick: (category: Category) -> Unit
 ): @Composable () -> Unit = {
-    val maxHeight = LocalConfiguration.current.screenHeightDp.dp - 232.dp
-    LazyColumn(
-        modifier = Modifier.heightIn(max = maxHeight)
-    ) {
+    LazyColumn {
         items(state.categories) { category ->
             CategoriesBottomSheetItem(state, category) {
                 onCategoryClick.invoke(category)
