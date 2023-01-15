@@ -5,20 +5,28 @@ import com.nowiwr01p.core.datastore.location.data.*
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
+import com.nowiwr01p.domain.cteate_meeting.usecase.GetCachedCategoriesUseCase
+import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
 class CreateMeetingVewModel(
     private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
-    private val showBottomSheetHelper: ShowBottomSheetHelper
+    private val validateMeetingDataUseCase: ValidateMeetingDataUseCase,
+    private val showBottomSheetHelper: ShowBottomSheetHelper,
+    private val mapper: CreateMeetingMapper
 ): BaseViewModel<Event, State, Effect>() {
+
+    init {
+        mapper.viewModel = this
+    }
 
     override fun setInitialState() = State()
 
@@ -38,7 +46,7 @@ class CreateMeetingVewModel(
             is Event.SelectTime -> selectTime(event.time)
             is Event.SetDrawnPath -> setPath(event.path)
             is Event.SetStartLocationPath -> setStartLocation(event.position)
-            is Event.NavigateToPreview -> setEffect { Effect.NavigateToPreview(buildMeeting()) }
+            is Event.NavigateToPreview -> validateMeetingData()
         }
     }
 
@@ -121,7 +129,7 @@ class CreateMeetingVewModel(
             OPEN_DATE -> copy(requiresPeopleCount = value)
             TELEGRAM -> copy(telegram = value)
             POSTER_MOTIVATION -> copy(postersMotivation = value)
-            LOCATION -> copy(location = value)
+            LOCATION_TITLE -> copy(location = value)
             else -> copy(locationDetails = value)
         }
     }
@@ -153,35 +161,22 @@ class CreateMeetingVewModel(
     }
 
     /**
-     * BUILD MEETING
+     * VALIDATE MEETING DATA
      */
-    private fun buildMeeting() = with(viewState.value) {
-        Meeting(
-            id = "", // TODO
-            cityName = user.city.name,
-            creatorId = user.id,
-            image = imageLink,
-            date = selectedDate,
-            requiredPeopleCount = requiresPeopleCount.toIntOrNull() ?: 0,
-            categories = selectedCategories.toList(),
-            title = title,
-            description = description,
-            locationInfo = LocationInfo(
-                locationName = location,
-                locationStartPoint = Coordinate(startLocation.latitude, startLocation.longitude),
-                locationDetails = locationDetails,
-                path = path.map { Coordinate(it.latitude, it.longitude) }
-            ),
-            takeWithYouInfo = TakeWithYouInfo(
-                postersMotivation = postersMotivation,
-                posters = posters
-            ),
-            details = Details(
-                goals =  goals,
-                slogans = slogans,
-                strategy = strategy
-            ),
-            telegram = telegram
-        )
+    private fun validateMeetingData() = io {
+        val meeting = mapper.getMeeting()
+        runCatching {
+            validateMeetingDataUseCase.execute(meeting)
+        }.onSuccess {
+            onDataValidated(meeting, it)
+        }
+    }
+
+    private fun onDataValidated(meeting: Meeting, errors: List<CreateMeetingError?>) {
+        if (errors.isEmpty()) {
+            setEffect { Effect.NavigateToPreview(meeting) }
+        } else {
+            setState { copy(validationErrors = errors) }
+        }
     }
 }

@@ -1,8 +1,9 @@
 package com.nowiwr01p.meetings.ui.create_meeting.data
 
 import androidx.compose.ui.text.input.KeyboardType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 
 /**
  * LISTENER REQUIRED HERE BECAUSE WE HAVE DYNAMIC ITEMS - ExpandableItems
@@ -47,9 +48,9 @@ open class CustomTextFieldData(
         val state: State,
         val listener: Listener?,
         override val type: CustomTextFieldType = OPEN_DATE,
-        override val value: String = state.requiresPeopleCount,
+        override val value: String = state.requiresPeopleCount.filter { it.isDigit() },
         override val hint: String = "Необходимое количество человек",
-        override val keyboardType: KeyboardType = KeyboardType.Number,
+        override val keyboardType: KeyboardType = KeyboardType.Decimal,
         override  val showSubItemSlash: Boolean = true,
         override val onValueChanged: (String) -> Unit = { listener?.onEditCustomTextField(type, it) }
     ): CustomTextFieldData(type, value, hint, keyboardType, showSubItemSlash)
@@ -59,7 +60,7 @@ open class CustomTextFieldData(
         val listener: Listener?,
         override val type: CustomTextFieldType = TELEGRAM,
         override val value: String = state.telegram,
-        override val hint: String = "Telegram",
+        override val hint: String = "Ссылка на Telegram канал",
         override val onValueChanged: (String) -> Unit = { listener?.onEditCustomTextField(type, it) }
     ): CustomTextFieldData(type, value, hint)
 
@@ -75,7 +76,7 @@ open class CustomTextFieldData(
     data class LocationItem(
         val state: State,
         val listener: Listener?,
-        override val type: CustomTextFieldType = LOCATION,
+        override val type: CustomTextFieldType = LOCATION_TITLE,
         override val value: String = state.location,
         override val hint: String = "Название места встречи",
         override  val showSubItemSlash: Boolean = true,

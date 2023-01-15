@@ -1,7 +1,8 @@
 package com.nowiwr01p.domain.di
 
 import com.nowiwr01p.domain.auth.usecase.*
-import com.nowiwr01p.domain.cteate_meeting.CreateMeetingUseCase
+import com.nowiwr01p.domain.cteate_meeting.usecase.CreateMeetingUseCase
+import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
@@ -70,6 +71,7 @@ val moduleDomain = module {
      * CREATE MEETING
      */
     factory { CreateMeetingUseCase(get()) }
+    factory { ValidateMeetingDataUseCase(get()) }
 
     /**
      * NEWS

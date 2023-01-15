@@ -7,6 +7,7 @@ import com.nowiwr01p.data.auth.repository.AuthRepositoryImpl
 import com.nowiwr01p.data.auth.repository.ValidateAuthDataRepositoryImpl
 import com.nowiwr01p.data.auth.validators.EmailValidatorImpl
 import com.nowiwr01p.data.auth.validators.PasswordValidatorImpl
+import com.nowiwr01p.data.create_meeting.CreateMeetingValidatorImpl
 import com.nowiwr01p.data.firebase.FirebaseReferencesRepositoryImpl
 import com.nowiwr01p.data.location.LocationRepositoryImpl
 import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
@@ -21,6 +22,7 @@ import com.nowiwr01p.domain.auth.repository.AuthRepository
 import com.nowiwr01p.domain.auth.repository.ValidateAuthDataRepository
 import com.nowiwr01p.domain.auth.validators.EmailValidator
 import com.nowiwr01p.domain.auth.validators.PasswordValidator
+import com.nowiwr01p.domain.cteate_meeting.validators.CreateMeetingValidator
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
 import com.nowiwr01p.domain.location.repository.LocationRepository
@@ -101,6 +103,13 @@ val moduleData = module {
      */
     factory<MeetingsRepository> {
         MeetingsRepositoryImpl(get(), get(), get())
+    }
+
+    /**
+     * CREATE MEETING
+     */
+    factory< CreateMeetingValidator> {
+        CreateMeetingValidatorImpl()
     }
 
     /**
