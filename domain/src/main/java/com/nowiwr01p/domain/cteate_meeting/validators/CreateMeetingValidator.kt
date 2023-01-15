@@ -6,7 +6,7 @@ import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
 
 interface CreateMeetingValidator {
-    suspend fun validate(meeting: Meeting): List<CreateMeetingError?>
+    suspend fun validate(meeting: Meeting): List<CreateMeetingError>
     suspend fun validateImageLink(link: String): CreateMeetingError?
     suspend fun validateCategories(categories: List<Category>): CreateMeetingError?
     suspend fun validateTitle(title: String): CreateMeetingError?
