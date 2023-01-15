@@ -8,18 +8,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core_ui.theme.graphicsNeutral
 
 @Composable
-fun BottomSheet(
-    content: @Composable () -> Unit,
-) {
+fun BottomSheet(params: BottomSheetParams) {
+    val maxHeight = LocalConfiguration.current.screenHeightDp.dp - params.topPadding
     Column(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .heightIn(max = maxHeight)
     ) {
         DraggableTop()
-        content()
+        params.content()
         Spacer(modifier = Modifier.height(4.dp))
     }
 }

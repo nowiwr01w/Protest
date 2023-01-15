@@ -2,13 +2,12 @@ package com.nowiwr01p.core_ui.ui.bottom_sheet
 
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
-import androidx.compose.runtime.Composable
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-typealias Input = (@Composable () -> Unit)?
+typealias Input = BottomSheetParams?
 
 @OptIn(ExperimentalMaterialApi::class)
 class ShowBottomSheetHelper {

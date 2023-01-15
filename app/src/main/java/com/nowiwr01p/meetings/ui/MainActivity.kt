@@ -65,8 +65,8 @@ class MainActivity : ComponentActivity() {
             }
 
             val bottomSheetContent: @Composable () -> Unit = {
-                showBottomSheetHelper.content.collectAsState(null).value.let { content ->
-                    if (content != null) BottomSheet(content)
+                showBottomSheetHelper.content.collectAsState(null).value.let { params ->
+                    if (params != null) BottomSheet(params)
                 }
                 Spacer(modifier = Modifier.height(1.dp))
             }
