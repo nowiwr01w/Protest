@@ -1,7 +1,8 @@
 package com.nowiwr01p.domain.cteate_meeting.validators.data
 
-enum class CreateMeetingFieldItemType {
-    NONE,
+interface CreateMeetingFieldItemType
+
+enum class CustomTextFieldType: CreateMeetingFieldItemType {
     TOP_IMAGE,
     CATEGORIES,
     TITLE,
@@ -13,9 +14,16 @@ enum class CreateMeetingFieldItemType {
     LOCATION_DETAILS,
     PATH,
     TELEGRAM,
-    POSTER_MOTIVATION,
+    POSTER_MOTIVATION
+}
+
+enum class DetailsFieldType: CreateMeetingFieldItemType {
     POSTER_LINKS,
     GOALS,
     SLOGANS,
     STRATEGY
+}
+
+enum class DynamicDetailsItem: CreateMeetingFieldItemType {
+    DYNAMIC
 }

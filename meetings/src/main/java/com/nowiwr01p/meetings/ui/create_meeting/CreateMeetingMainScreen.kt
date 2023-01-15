@@ -50,8 +50,9 @@ import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.DynamicDetailsItem.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
 
@@ -70,13 +71,13 @@ fun CreateMeetingMainScreen(
         override fun onBackClick() {
             navigator.navigateUp()
         }
-        override fun onAddDetailsItem(type: DetailsItemType) {
+        override fun onAddDetailsItem(type: DetailsFieldType) {
             viewModel.setEvent(Event.OnAddDetailsItemClick(type))
         }
-        override fun onRemoveDetailsItem(type: DetailsItemType, index: Int) {
+        override fun onRemoveDetailsItem(type: DetailsFieldType, index: Int) {
             viewModel.setEvent(Event.OnRemoveDetailsItemClick(type, index))
         }
-        override fun onEditDetailsItem(type: DetailsItemType, index: Int, value: String) {
+        override fun onEditDetailsItem(type: DetailsFieldType, index: Int, value: String) {
             viewModel.setEvent(Event.OnEditDetailsItemClick(type, index, value))
         }
         override fun onEditCustomTextField(type: CreateMeetingFieldItemType, value: String) {
@@ -474,7 +475,7 @@ private fun OpenDate(state: State, listener: Listener?) = Column {
 @Composable
 private fun Posters(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsItemType.POSTER_LINKS,
+    type = DetailsFieldType.POSTER_LINKS,
     title = "Ссылки на плакаты",
     items = state.posters,
     listener = listener
@@ -486,7 +487,7 @@ private fun Posters(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Goals(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsItemType.GOALS,
+    type = DetailsFieldType.GOALS,
     title = "Цели",
     items = state.goals,
     listener = listener
@@ -498,7 +499,7 @@ private fun Goals(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsItemType.SLOGANS,
+    type = DetailsFieldType.SLOGANS,
     title = "Лозунги",
     items = state.slogans,
     listener = listener
@@ -510,7 +511,7 @@ private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsItemType.STRATEGY,
+    type = DetailsFieldType.STRATEGY,
     title = "Стратегия",
     items = state.strategy,
     listener = listener
@@ -587,7 +588,7 @@ private fun FakeTitle(hint: String, text: String = "") = Text(
 @Composable
 private fun ExpandableItems(
     state: State,
-    type: DetailsItemType,
+    type: DetailsFieldType,
     title: String,
     items: List<String>,
     listener: Listener?
@@ -610,7 +611,7 @@ private fun ExpandableItems(
             ) {
                 items.forEachIndexed { index, item ->
                     val customTextFieldItem = CustomTextFieldData(
-                        type = NONE,
+                        type = DYNAMIC,
                         value = item,
                         hint = "$index",
                         showSubItemSlash = true,
