@@ -40,7 +40,7 @@ class CreateMeetingVewModel(
             is Event.OnRemoveDetailsItemClick -> addRemoveDetailsItem(event.type, event.index)
             is Event.OnEditCustomTextField -> editCustomTextField(event.type, event.value)
             is Event.OnSelectedCategoryClick -> selectCategory(event.category)
-            is Event.ShowCategoriesBottomSheet -> showBottomSheetHelper.showBottomSheet(event.content)
+            is Event.ShowCategoriesBottomSheet -> showBottomSheetHelper.showBottomSheet(event.params)
             is Event.NavigateToMapDrawPath -> setEffect { Effect.NavigateToMapDrawPath }
             is Event.NavigateToChooseStartLocation -> setEffect { Effect.NavigateToChooseStartLocation }
             is Event.ShowDateTimePicker -> showDateTimePicker()
