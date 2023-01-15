@@ -93,8 +93,8 @@ class AuthViewModel(
 
     private fun getUserData() = with(viewState.value) {
         when (viewState.value.authType) {
-            SIGN_IN -> UserDataSignIn(email, password)
-            SIGN_UP -> UserDataSignUp(email, password, passwordRepeat)
+            SIGN_IN -> UserDataSignIn(email.trim(), password)
+            SIGN_UP -> UserDataSignUp(email.trim(), password, passwordRepeat)
         }
     }
 

@@ -1,4 +1,4 @@
-@file:OptIn(ExperimentalComposeUiApi::class)
+@file:OptIn(ExperimentalComposeUiApi::class, ExperimentalFoundationApi::class)
 
 package com.nowiwr01p.meetings.ui.create_meeting
 
@@ -323,8 +323,14 @@ private fun CategoriesList(state: State) = LazyRow(
     val selectedCategories = state.selectedCategories.toList().sortedBy { it.backgroundColor }
 
     item { Spacer(modifier = Modifier.width(16.dp)) }
-    items(selectedCategories) {
-        Category(it)
+    items(
+        key = { it.name },
+        items = selectedCategories
+    ) {
+        Category(
+            category = it,
+            modifier = Modifier.animateItemPlacement()
+        )
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }

@@ -245,7 +245,7 @@ private fun Categories(
         .padding(top = 8.dp)
 ) {
     items(state.categories) { category ->
-        Category(category) {
+        CategoryItem(category) {
             listener?.onCategoryClick(category)
         }
     }
@@ -253,7 +253,7 @@ private fun Categories(
 }
 
 @Composable
-private fun Category(
+private fun CategoryItem(
     category: Category,
     onItemClick: () -> Unit = {},
 ) {
@@ -415,10 +415,11 @@ private fun MeetingCategories(
 
 @Composable
 internal fun Category(
-    category: Category
+    category: Category,
+    modifier: Modifier = Modifier
 ) = Box(
     contentAlignment = Alignment.Center,
-    modifier = Modifier
+    modifier = modifier
         .padding(end = 8.dp)
         .clip(RoundedCornerShape(40))
         .background(category.backgroundColor.toColor())
