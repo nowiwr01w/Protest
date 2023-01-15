@@ -48,8 +48,8 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.meetings.ui.main.Category
@@ -79,7 +79,7 @@ fun CreateMeetingMainScreen(
         override fun onEditDetailsItem(type: DetailsItemType, index: Int, value: String) {
             viewModel.setEvent(Event.OnEditDetailsItemClick(type, index, value))
         }
-        override fun onEditCustomTextField(type: CustomTextFieldType, value: String) {
+        override fun onEditCustomTextField(type: CreateMeetingFieldItemType, value: String) {
             viewModel.setEvent(Event.OnEditCustomTextField(type, value))
         }
         override fun showCategoriesBottomSheet() {
@@ -474,7 +474,7 @@ private fun OpenDate(state: State, listener: Listener?) = Column {
 @Composable
 private fun Posters(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = POSTER_LINKS,
+    type = DetailsItemType.POSTER_LINKS,
     title = "Ссылки на плакаты",
     items = state.posters,
     listener = listener
@@ -486,7 +486,7 @@ private fun Posters(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Goals(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = GOALS,
+    type = DetailsItemType.GOALS,
     title = "Цели",
     items = state.goals,
     listener = listener
@@ -498,7 +498,7 @@ private fun Goals(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = SLOGANS,
+    type = DetailsItemType.SLOGANS,
     title = "Лозунги",
     items = state.slogans,
     listener = listener
@@ -510,7 +510,7 @@ private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = STRATEGY,
+    type = DetailsItemType.STRATEGY,
     title = "Стратегия",
     items = state.strategy,
     listener = listener
