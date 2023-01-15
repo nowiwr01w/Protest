@@ -1,6 +1,6 @@
 package com.nowiwr01p.domain.meetings.usecase.data
 
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core.model.Category
 

@@ -4,12 +4,9 @@ import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.cteate_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
-import com.nowiwr01p.domain.location.usecase.GetCitiesUseCase
-import com.nowiwr01p.domain.location.usecase.GetCountriesUseCase
-import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
-import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
-import com.nowiwr01p.domain.location.usecase.local.SetCityUseCase
-import com.nowiwr01p.domain.location.usecase.local.SetCountryUseCase
+import com.nowiwr01p.domain.cities.usecase.GetCitiesUseCase
+import com.nowiwr01p.domain.cities.usecase.local.GetLocalCityUseCase
+import com.nowiwr01p.domain.cities.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
 import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
@@ -49,11 +46,8 @@ val moduleDomain = module {
      * LOCATION
      */
     factory { GetCitiesUseCase(get()) }
-    factory { GetCountriesUseCase(get()) }
     factory { SetCityUseCase(get(), get()) }
-    factory { SetCountryUseCase(get(), get()) }
     factory { GetLocalCityUseCase(get()) }
-    factory { GetLocalCountryUseCase(get()) }
 
     /**
      * MAP

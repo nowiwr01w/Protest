@@ -11,7 +11,7 @@ interface VerificationContract {
     sealed interface Event: ViewEvent {
         object Init: Event
         object ResendCode: Event
-        object NavigateToLocations: Event
+        object NavigateToCities: Event
         object CheckIsEmailVerified: Event
     }
 
@@ -23,12 +23,12 @@ interface VerificationContract {
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
-        object NavigateToLocations: Effect
+        object NavigateToCities: Effect
     }
 
     interface Listener {
         fun resendCode()
         fun onCheckCode()
-        fun toLocations()
+        fun toCities()
     }
 }

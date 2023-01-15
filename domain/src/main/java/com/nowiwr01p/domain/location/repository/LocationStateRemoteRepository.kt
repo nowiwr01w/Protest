@@ -1,3 +1,0 @@
-package com.nowiwr01p.domain.location.repository
-
-interface LocationStateRemoteRepository: LocationStateLocalRepository

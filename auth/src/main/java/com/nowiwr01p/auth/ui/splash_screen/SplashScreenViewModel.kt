@@ -4,8 +4,7 @@ import com.nowiwr01p.auth.AuthScreen.*
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.location.usecase.local.GetLocalCityUseCase
-import com.nowiwr01p.domain.location.usecase.local.GetLocalCountryUseCase
+import com.nowiwr01p.domain.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
 import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
 import kotlinx.coroutines.async
@@ -14,7 +13,6 @@ import kotlinx.coroutines.awaitAll
 class SplashScreenViewModel(
     private val getRemoteUserUseCase: GetRemoteUserUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
-    private val getLocalCountryUseCase: GetLocalCountryUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -34,7 +32,6 @@ class SplashScreenViewModel(
     private suspend fun checkLocalData() = listOf(
         async { isAuthorized() },
         async { isCitySet() },
-        async { isCountrySet() },
         async { isVerificationCompleted() },
     ).awaitAll()
 
@@ -51,11 +48,6 @@ class SplashScreenViewModel(
         setState { copy(isCitySet = set) }
     }
 
-    private suspend fun isCountrySet() {
-        val set = getLocalCountryUseCase.execute().name.isNotEmpty()
-        setState { copy(isCountrySet = set) }
-    }
-
     private suspend fun isVerificationCompleted() {
         val completed = getLocalVerificationUseCase.execute()
         setState { copy(isVerificationCompleted = completed) }
@@ -65,7 +57,7 @@ class SplashScreenViewModel(
         val startScreen = when {
             !isAuthorized -> AuthMainScreen.route
             !isVerificationCompleted -> VerificationMainScreen.route
-            !isCountrySet || !isCitySet -> CountriesMainScreen.route
+            !isCitySet -> CitiesMainScreen.route
             else -> "meetings_main_screen"
         }
         setState { copy(route = startScreen) }

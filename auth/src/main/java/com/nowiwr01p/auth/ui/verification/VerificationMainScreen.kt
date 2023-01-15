@@ -43,8 +43,8 @@ fun VerificationMainScreen(
         override fun onCheckCode() {
             viewModel.setEvent(Event.CheckIsEmailVerified)
         }
-        override fun toLocations() {
-            viewModel.setEvent(Event.NavigateToLocations)
+        override fun toCities() {
+            viewModel.setEvent(Event.NavigateToCities)
         }
     }
 
@@ -54,8 +54,8 @@ fun VerificationMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
-            is Effect.NavigateToLocations -> {
-                navigator.authNavigator.toChooseCountry()
+            is Effect.NavigateToCities -> {
+                navigator.authNavigator.toChooseCity()
             }
         }
     }
@@ -154,7 +154,7 @@ private fun ColumnScope.CheckButton(
     StateButton(
         text = "Проверить",
         state = state.buttonState,
-        onSuccess = { listener?.toLocations() },
+        onSuccess = { listener?.toCities() },
         onSendRequest = { listener?.onCheckCode() },
         modifier = Modifier
             .fillMaxWidth()

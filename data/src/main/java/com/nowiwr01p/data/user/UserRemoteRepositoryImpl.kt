@@ -6,7 +6,7 @@ import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.extensions.getAccount
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
+import com.nowiwr01p.domain.cities.repository.CityStateLocalRepository
 import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
@@ -17,7 +17,7 @@ class UserRemoteRepositoryImpl(
     private val auth: FirebaseAuth,
     private val references: FirebaseReferencesRepository,
     private val verificationLocalRepository: VerificationLocalRepository,
-    private val locationStateLocalRepository: LocationStateLocalRepository,
+    private val cityStateLocalRepository: CityStateLocalRepository,
     private val userDataStoreRepository: UserDataStoreRepository,
     private val dispatchers: AppDispatchers
 ): UserRemoteRepository {
@@ -43,8 +43,7 @@ class UserRemoteRepositoryImpl(
     }
 
     private suspend fun User.setLocalData() {
-        locationStateLocalRepository.setCity(city)
-        locationStateLocalRepository.setCounty(country)
+        cityStateLocalRepository.setCity(city)
         verificationLocalRepository.setVerificationCompleted(verified)
         userDataStoreRepository.setUser(this)
     }

@@ -1,7 +1,7 @@
 package com.nowiwr01p.data.create_meeting
 
-import com.nowiwr01p.core.datastore.location.data.Coordinate
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Coordinate
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError.*
