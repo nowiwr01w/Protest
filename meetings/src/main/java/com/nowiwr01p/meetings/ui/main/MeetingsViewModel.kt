@@ -1,6 +1,8 @@
 package com.nowiwr01p.meetings.ui.main
 
+import androidx.compose.ui.graphics.Color
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
@@ -9,6 +11,8 @@ import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCacheData
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 
 class MeetingsViewModel(
+    private val statusBarColor: Color,
+    private val statusBarColorHelper: StatusBarColorHelper,
     private val getMeetingsUseCase: GetMeetingsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
@@ -34,6 +38,7 @@ class MeetingsViewModel(
     private fun init() = io {
         setState { copy(showProgress = true) }
         runCatching {
+            setStatusBarColor()
             getScreenCache()
             getUserData()
             getMeetings()
@@ -42,6 +47,10 @@ class MeetingsViewModel(
             saveScreenCache()
             setState { copy(showProgress = false) }
         }
+    }
+
+    private fun setStatusBarColor() {
+        statusBarColorHelper.setStatusBarColor(statusBarColor)
     }
 
     /**
