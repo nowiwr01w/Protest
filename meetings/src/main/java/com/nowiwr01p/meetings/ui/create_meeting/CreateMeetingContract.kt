@@ -3,7 +3,7 @@ package com.nowiwr01p.meetings.ui.create_meeting
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import com.google.android.gms.maps.model.LatLng
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.extensions.DatePickerListener

@@ -1,6 +1,6 @@
 package com.nowiwr01p.domain.meetings.repository
 
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
 
 interface MeetingsRepository {

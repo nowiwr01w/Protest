@@ -1,6 +1,6 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
-import com.nowiwr01p.core.datastore.location.data.*
+import com.nowiwr01p.core.datastore.cities.data.*
 import com.nowiwr01p.core_ui.mapper.ViewModelMapper
 
 class CreateMeetingMapper: ViewModelMapper<CreateMeetingVewModel>() {

@@ -1,7 +1,6 @@
 package com.nowiwr01p.core.model
 
-import com.nowiwr01p.core.datastore.location.data.City
-import com.nowiwr01p.core.datastore.location.data.Country
+import com.nowiwr01p.core.datastore.cities.data.City
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -11,8 +10,6 @@ data class User(
     val id: String = "",
     @SerialName("email")
     val email: String = "",
-    @SerialName("country")
-    val country: Country = Country(),
     @SerialName("city")
     val city: City = City(),
     @SerialName("verified")

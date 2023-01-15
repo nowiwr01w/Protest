@@ -93,7 +93,7 @@ fun AuthMainScreen(
                 navigator.authNavigator.toVerification()
             }
             is Effect.NavigateToChooseCountry -> {
-                navigator.authNavigator.toChooseCountry()
+                navigator.authNavigator.toChooseCity()
             }
             is Effect.ShowAuthSecurityWarning -> {
                 viewModel.setEvent(Event.ShowBottomSheet(bottomSheetContent))

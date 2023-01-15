@@ -4,12 +4,12 @@ import com.google.gson.Gson
 import com.nowiwr01p.core.BuildConfig
 import com.nowiwr01p.core.datastore.*
 import com.nowiwr01p.data.auth.repository.AuthSecurityDataStoreRepositoryImpl
-import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
+import com.nowiwr01p.data.cities.CitiesStateLocalRepositoryImpl
 import com.nowiwr01p.data.user.UserDataStoreRepositoryImpl
 import com.nowiwr01p.data.verification.VerificationDataStoreRepositoryImpl
 import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
-import com.nowiwr01p.domain.location.api.LocationApi
-import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
+import com.nowiwr01p.domain.cities.api.CitiesApi
+import com.nowiwr01p.domain.cities.repository.CityStateLocalRepository
 import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
 import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
 import org.koin.android.ext.koin.androidContext
@@ -24,7 +24,7 @@ val moduleCore = module {
     single(named(DataStoreType.AUTH_SECURITY)) {
         BuildConfig.AUTH_SECURITY_DATA_STORE
     }
-    single(named(DataStoreType.LOCATION)) {
+    single(named(DataStoreType.CITIES)) {
         BuildConfig.LOCATION_DATA_STORE
     }
     single(named(DataStoreType.VERIFICATION)) {
@@ -44,10 +44,10 @@ val moduleCore = module {
             dataStore.create(androidContext())
         )
     }
-    single<LocationStateLocalRepository> {
-        val fileName = get<String>(named(DataStoreType.LOCATION))
-        val dataStore = LocationDataStore(fileName)
-        LocationStateLocalRepositoryImpl(
+    single<CityStateLocalRepository> {
+        val fileName = get<String>(named(DataStoreType.CITIES))
+        val dataStore = CitiesDataStore(fileName)
+        CitiesStateLocalRepositoryImpl(
             dataStore.create(androidContext())
         )
     }
@@ -74,6 +74,6 @@ val moduleCore = module {
         Gson()
     }
     single {
-        LocationApi(androidContext(), get())
+        CitiesApi(androidContext(), get())
     }
 }

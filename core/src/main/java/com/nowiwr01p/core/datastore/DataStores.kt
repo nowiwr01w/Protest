@@ -3,13 +3,13 @@ package com.nowiwr01p.core.datastore
 import android.content.Context
 import androidx.datastore.dataStore
 import com.nowiwr01p.core.datastore.auth.AuthSecurityWarningSerializer
-import com.nowiwr01p.core.datastore.location.LocationPreferencesSerializer
+import com.nowiwr01p.core.datastore.cities.CitiesPreferencesSerializer
 import com.nowiwr01p.core.datastore.user.UserPreferenceSerializer
 import com.nowiwr01p.core.datastore.verification.VerificationPreferenceSerializer
 
 enum class DataStoreType {
     AUTH_SECURITY,
-    LOCATION,
+    CITIES,
     VERIFICATION,
     USER
 }
@@ -24,14 +24,14 @@ class AuthSecurityWarningDataStore(fileName: String) {
     fun create(context: Context) = context.authSecurityWarningDataStore
 }
 
-class LocationDataStore(fileName: String) {
+class CitiesDataStore(fileName: String) {
 
-    private val Context.locationDataStore by dataStore(
+    private val Context.citiesDataStore by dataStore(
         fileName = fileName,
-        serializer = LocationPreferencesSerializer
+        serializer = CitiesPreferencesSerializer
     )
 
-    fun create(context: Context) = context.locationDataStore
+    fun create(context: Context) = context.citiesDataStore
 }
 
 class VerificationDataStore(fileName: String) {
