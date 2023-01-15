@@ -24,6 +24,8 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
         validateTelegramLink(telegram)
     }.let {
         errors.distinct().filterNotNull()
+    }.also {
+        errors.clear()
     }
 
     /**
