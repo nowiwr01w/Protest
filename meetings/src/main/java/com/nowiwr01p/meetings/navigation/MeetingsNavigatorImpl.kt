@@ -3,7 +3,7 @@ package com.nowiwr01p.meetings.navigation
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.navigation
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.CreateMeetingMapType
 import com.nowiwr01p.core_ui.navigators.MeetingsNavigator
 import com.nowiwr01p.core_ui.navigators.main.Navigator

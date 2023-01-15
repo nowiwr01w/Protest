@@ -1,7 +1,7 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
 import com.google.android.gms.maps.model.LatLng
-import com.nowiwr01p.core.datastore.location.data.*
+import com.nowiwr01p.core.datastore.cities.data.*
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper

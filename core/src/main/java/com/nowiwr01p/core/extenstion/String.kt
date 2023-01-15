@@ -1,6 +1,6 @@
 package com.nowiwr01p.core.extenstion
 
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 
 private fun Int.formatPeopleCount(): String {
     val text = when (this % 10) {

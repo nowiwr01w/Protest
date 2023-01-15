@@ -2,8 +2,8 @@ package com.nowiwr01p.auth.di
 
 import com.nowiwr01p.auth.navigation.AuthNavigatorImpl
 import com.nowiwr01p.auth.ui.auth.AuthViewModel
-import com.nowiwr01p.auth.ui.location.LocationMapper
-import com.nowiwr01p.auth.ui.location.LocationViewModel
+import com.nowiwr01p.auth.ui.cities.CitiesMapper
+import com.nowiwr01p.auth.ui.cities.CitiesViewModel
 import com.nowiwr01p.auth.ui.verification.VerificationViewModel
 import com.nowiwr01p.core_ui.navigators.AuthNavigator
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -29,8 +29,8 @@ val moduleAuth = module {
      * LOCATION
      */
     factory {
-        LocationMapper()
+        CitiesMapper()
     }
 
-    viewModel { LocationViewModel(get(), get(), get(), get(), get()) }
+    viewModel { CitiesViewModel(get(), get(), get()) }
 }
