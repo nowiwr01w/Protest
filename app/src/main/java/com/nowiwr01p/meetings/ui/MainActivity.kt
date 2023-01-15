@@ -5,6 +5,8 @@ package com.nowiwr01p.meetings.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -30,6 +32,7 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.ErrorSnackBar
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -68,6 +71,18 @@ class MainActivity : ComponentActivity() {
                 Spacer(modifier = Modifier.height(1.dp))
             }
 
+            val errorShackBarContent: @Composable () -> Unit = {
+                showSnackBarHelper.text.collectAsState("").value.let { text ->
+                    AnimatedVisibility(
+                        visible = text.isNotEmpty(),
+                        enter = fadeIn() + slideInVertically(animationSpec = tween(350)),
+                        exit = fadeOut() + slideOutVertically(animationSpec = tween(350))
+                    ) {
+                        ErrorSnackBar(text)
+                    }
+                }
+            }
+
             val context = LocalContext.current
             OpenLinkObserver(openLinksHelper.openLink) {
                 openLink(it, context)
@@ -78,7 +93,8 @@ class MainActivity : ComponentActivity() {
                 navController = navController,
                 scaffoldState = scaffoldState,
                 bottomSheetState = bottomSheetState,
-                bottomSheetContent = bottomSheetContent
+                bottomSheetContent = bottomSheetContent,
+                errorShackBarContent = errorShackBarContent
             ) {
                 NavHost(
                     navController = navController,
@@ -99,6 +115,7 @@ fun MainActivityScreen(
     scaffoldState: ScaffoldState,
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable () -> Unit,
+    errorShackBarContent: @Composable () -> Unit,
     setGraphs: @Composable () -> Unit
 ) {
     navigator.setNavController(navController)
@@ -151,10 +168,11 @@ fun MainActivityScreen(
                 }
             ) {
                 setSystemUiColor(color = Color.White)
-                Column(
+                Box(
                     modifier = Modifier.padding(it)
                 ) {
                     setGraphs()
+                    errorShackBarContent()
                 }
             }
         }

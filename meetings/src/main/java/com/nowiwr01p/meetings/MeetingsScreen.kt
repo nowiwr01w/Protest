@@ -34,7 +34,7 @@ sealed class MeetingsScreen<T>(
         rootRoute
     ) {
         override fun navigate(args: Unit, navController: NavController) {
-            navController.navigateOrPopup(route)
+            navController.navigateOrPopup(route) { navController.navigateAndMakeStart(route) }
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {

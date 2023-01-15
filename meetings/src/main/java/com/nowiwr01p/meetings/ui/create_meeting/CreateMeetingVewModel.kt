@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.datastore.location.data.*
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.usecase.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
@@ -21,6 +22,7 @@ class CreateMeetingVewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val validateMeetingDataUseCase: ValidateMeetingDataUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
+    private val showSnackBarHelper: ShowSnackBarHelper,
     private val mapper: CreateMeetingMapper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -172,10 +174,12 @@ class CreateMeetingVewModel(
         }
     }
 
-    private fun onDataValidated(meeting: Meeting, errors: List<CreateMeetingError?>) {
+    private fun onDataValidated(meeting: Meeting, errors: List<CreateMeetingError>) {
         if (errors.isEmpty()) {
             setEffect { Effect.NavigateToPreview(meeting) }
         } else {
+            val errorText = errors.sortedBy { it.priority }.first().errorText
+            showSnackBarHelper.showErrorSnackBar(errorText)
             setState { copy(validationErrors = errors) }
         }
     }
