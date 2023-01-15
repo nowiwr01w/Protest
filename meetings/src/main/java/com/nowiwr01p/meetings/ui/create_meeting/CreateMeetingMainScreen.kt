@@ -50,6 +50,8 @@ import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DynamicDetailsItem.*
@@ -297,6 +299,8 @@ private fun Categories(
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     FakeTextField(
+        state = state,
+        type = CATEGORIES,
         onClick = {
             focusManager.clearFocus()
             keyboard?.hide()
@@ -387,7 +391,7 @@ private fun Date(
 ) {
     val checked = rememberSaveable { mutableStateOf(false) }
     Column {
-        DateMainItem(checked)
+        DateMainItem(state, checked)
         AnimatedVisibility(visible = checked.value) {
             Column {
                 DateTimeSubItem(state, listener)
@@ -401,10 +405,12 @@ private fun Date(
 }
 
 @Composable
-private fun DateMainItem(checked: MutableState<Boolean>) {
+private fun DateMainItem(state: State, checked: MutableState<Boolean>) {
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     FakeTextField(
+        state = state,
+        type = DATE,
         content = { FakeTitle("Дата и локация") },
         onClick = {
             focusManager.clearFocus()
@@ -416,6 +422,8 @@ private fun DateMainItem(checked: MutableState<Boolean>) {
 
 @Composable
 private fun DateTimeSubItem(state: State, listener: Listener?) = FakeTextField(
+    state = state,
+    type = DATE,
     showSubItemSlash = true,
     onClick = { listener?.showDateTimePicker() }
 ) {
@@ -427,6 +435,8 @@ private fun DateTimeSubItem(state: State, listener: Listener?) = FakeTextField(
 
 @Composable
 private fun ChooseStartLocationItem(state: State, listener: Listener?) = FakeTextField(
+    state = state,
+    type = LOCATION_COORDINATES,
     showSubItemSlash = true,
     onClick = { listener?.navigateChooseStartLocation() }
 ) {
@@ -439,6 +449,8 @@ private fun ChooseStartLocationItem(state: State, listener: Listener?) = FakeTex
 
 @Composable
 private fun DrawPathItem(state: State, listener: Listener?) = FakeTextField(
+    state = state,
+    type = PATH,
     showSubItemSlash = true,
     onClick = { listener?.navigateToMapDrawPath() }
 ) {
@@ -475,7 +487,7 @@ private fun OpenDate(state: State, listener: Listener?) = Column {
 @Composable
 private fun Posters(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsFieldType.POSTER_LINKS,
+    type = POSTER_LINKS,
     title = "Ссылки на плакаты",
     items = state.posters,
     listener = listener
@@ -487,7 +499,7 @@ private fun Posters(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Goals(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsFieldType.GOALS,
+    type = GOALS,
     title = "Цели",
     items = state.goals,
     listener = listener
@@ -499,7 +511,7 @@ private fun Goals(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsFieldType.SLOGANS,
+    type = SLOGANS,
     title = "Лозунги",
     items = state.slogans,
     listener = listener
@@ -511,7 +523,7 @@ private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
 @Composable
 private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
     state = state,
-    type = DetailsFieldType.STRATEGY,
+    type = STRATEGY,
     title = "Стратегия",
     items = state.strategy,
     listener = listener
@@ -535,13 +547,16 @@ private fun PreviewButton(state: State, listener: Listener?) = StateButton(
  */
 @Composable
 private fun FakeTextField(
-    onClick: () -> Unit,
+    state: State,
+    type: CreateMeetingFieldItemType,
     showSubItemSlash: Boolean = false,
+    onClick: () -> Unit,
     content: @Composable () -> Unit
 ) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
+    val wrongInput = state.validationErrors.find { type == it?.type } != null
     if (showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -564,7 +579,11 @@ private fun FakeTextField(
             .border(
                 border = BorderStroke(
                     width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
+                    color = if (wrongInput) {
+                        MaterialTheme.colors.graphicsRed
+                    } else {
+                        MaterialTheme.colors.graphicsSecondary
+                    }
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
