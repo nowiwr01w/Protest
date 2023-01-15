@@ -147,6 +147,7 @@ private fun Toolbar(
     modifier: Modifier,
 ) = ToolbarTop(
     showElevation = true,
+    blackColors = true,
     modifier = modifier.background(MaterialTheme.colors.mainBackgroundColor),
     title = {
         ToolbarTitle(
@@ -155,7 +156,7 @@ private fun Toolbar(
         )
     },
     backIcon = {
-        ToolbarBackButton { listener?.onBackClick() }
+        ToolbarBackButton(blackColors = true) { listener?.onBackClick() }
     }
 )
 
@@ -172,6 +173,7 @@ private fun CitiesList(
         items(state.cities) { item ->
             CityItem(item, listener)
         }
+        item { Spacer(modifier = Modifier.height(156.dp)) }
     }
 }
 
