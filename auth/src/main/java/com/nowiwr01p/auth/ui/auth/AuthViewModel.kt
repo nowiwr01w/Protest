@@ -1,5 +1,6 @@
 package com.nowiwr01p.auth.ui.auth
 
+import androidx.compose.ui.graphics.Color
 import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.*
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
@@ -9,6 +10,7 @@ import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.domain.auth.data.user.UserData
 import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
@@ -18,6 +20,8 @@ import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
 import kotlinx.coroutines.delay
 
 class AuthViewModel(
+    private val statusBarColor: Color,
+    private val statusBarColorHelper: StatusBarColorHelper,
     private val authDataValidator: ValidateAuthDataUseCase,
     private val authSecurityWarning: GetAuthSecurityWarningUseCase,
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
@@ -45,7 +49,12 @@ class AuthViewModel(
     }
 
     private fun init() = io {
+        setStatusBarColor()
         getAuthSecurityWarning()
+    }
+
+    private fun setStatusBarColor() {
+        statusBarColorHelper.setStatusBarColor(statusBarColor)
     }
 
     private fun togglePasswordVisibility() = setState {

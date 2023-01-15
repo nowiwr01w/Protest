@@ -23,15 +23,16 @@ import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.cities.CitiesContract.*
 import com.nowiwr01p.core.datastore.cities.data.City
 import com.nowiwr01p.core_ui.EffectObserver
-import com.nowiwr01p.core_ui.extensions.setSystemUiColor
+import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.theme.graphicsSecondary
+import com.nowiwr01p.core_ui.theme.mainBackgroundColor
+import com.nowiwr01p.core_ui.ui.button.ButtonState.DEFAULT
+import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.core_ui.ui.button.ButtonState.DEFAULT
-import com.nowiwr01p.core_ui.ui.button.StateButton
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -39,8 +40,6 @@ fun CitiesMainScreen(
     navigator: Navigator,
     viewModel: CitiesViewModel = getViewModel()
 ) {
-    setSystemUiColor()
-
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
