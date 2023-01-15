@@ -9,7 +9,7 @@ class ValidateMeetingDataUseCase(
     private val validator: CreateMeetingValidator
 ): UseCase<Meeting, List<CreateMeetingError?>> {
 
-    override suspend fun execute(input: Meeting): List<CreateMeetingError?> {
+    override suspend fun execute(input: Meeting): List<CreateMeetingError> {
         return validator.validate(input)
     }
 }
