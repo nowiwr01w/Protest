@@ -1,11 +1,10 @@
 package com.nowiwr01p.meetings.ui.meeting_info
 
 import com.nowiwr01p.core.datastore.location.data.Meeting
-import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.cteate_meeting.CreateMeetingUseCase
+import com.nowiwr01p.domain.cteate_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
@@ -49,7 +48,7 @@ class MeetingViewModel(
      */
     private fun setReaction(isPositiveButtonClicked: Boolean) = io {
         runCatching {
-            val args = Args(viewState.value.meeting.id, isPositiveButtonClicked)
+            val args = Args(viewState.value.meeting.title, isPositiveButtonClicked)
             setReactionUseCase.execute(args)
         }.onSuccess {
             setState { copy(meeting = it) }

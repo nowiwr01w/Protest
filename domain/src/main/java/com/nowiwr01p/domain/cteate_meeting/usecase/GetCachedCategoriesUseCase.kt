@@ -1,4 +1,4 @@
-package com.nowiwr01p.domain.cteate_meeting
+package com.nowiwr01p.domain.cteate_meeting.usecase
 
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.UseCase

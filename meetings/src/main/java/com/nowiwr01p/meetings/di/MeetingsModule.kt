@@ -1,7 +1,7 @@
 package com.nowiwr01p.meetings.di
 
 import com.nowiwr01p.core_ui.navigators.MeetingsNavigator
-import com.nowiwr01p.domain.cteate_meeting.GetCachedCategoriesUseCase
+import com.nowiwr01p.domain.cteate_meeting.usecase.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.map.GetCachedMeetingsUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsScreenCacheUseCase
 import com.nowiwr01p.domain.meetings.usecase.SaveMeetingsScreenCacheUseCase
@@ -9,6 +9,7 @@ import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCache
 import com.nowiwr01p.domain.meetingsScreenScopeId
 import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.meetings.navigation.MeetingsNavigatorImpl
+import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMapper
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingVewModel
 import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
@@ -66,9 +67,13 @@ val moduleMeetings = module {
         CreateMeetingVewModel(
             scope.get(),
             get(),
+            get(),
+            get(),
             get()
         )
     }
+
+    factory { CreateMeetingMapper() }
 
     /**
      * MEETING SCREEN

@@ -39,10 +39,7 @@ import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_PATH
 import com.nowiwr01p.core_ui.NavKeys.NAV_ARG_START_LOCATION
 import com.nowiwr01p.core_ui.extensions.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.theme.MeetingsTheme
-import com.nowiwr01p.core_ui.theme.bodyRegular
-import com.nowiwr01p.core_ui.theme.graphicsSecondary
-import com.nowiwr01p.core_ui.theme.subHeadlineRegular
+import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
@@ -51,8 +48,8 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 import com.nowiwr01p.meetings.ui.main.Category
@@ -200,14 +197,14 @@ private fun FieldsContainer(
         .padding(horizontal = 16.dp)
         .animateContentSize()
 ) {
-    item { TopImageItem(state, listener).toUiItem() }
+    item { TopImageItem(state, listener).toUiItem(state) }
     item { Categories(state, listener) }
-    item { TitleItem(state, listener).toUiItem()}
-    item { DescriptionItem(state, listener).toUiItem() }
+    item { TitleItem(state, listener).toUiItem(state)}
+    item { DescriptionItem(state, listener).toUiItem(state) }
     item { Date(state, listener) }
     item { OpenDate(state, listener) }
-    item { TelegramItem(state, listener).toUiItem() }
-    item { PosterMotivationItem(state, listener).toUiItem() }
+    item { TelegramItem(state, listener).toUiItem(state) }
+    item { PosterMotivationItem(state, listener).toUiItem(state) }
     item { Posters(state, listener) }
     item { Goals(state, listener) }
     item { Slogans(state, listener) }
@@ -219,16 +216,17 @@ private fun FieldsContainer(
  * MODIFY [CustomTextFieldData] into [CustomTextField]
  */
 @Composable
-private fun CustomTextFieldData.toUiItem() = CustomTextField(this)
+private fun CustomTextFieldData.toUiItem(state: State) = CustomTextField(state, this)
 
 /**
  * TEXT FIELD
  */
 @Composable
-private fun CustomTextField(item: CustomTextFieldData) = Row(
+private fun CustomTextField(state: State, item: CustomTextFieldData) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
+    val wrongInput = state.validationErrors.find { item.type == it?.type } != null
     if (item.showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -267,7 +265,11 @@ private fun CustomTextField(item: CustomTextFieldData) = Row(
             .border(
                 border = BorderStroke(
                     width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
+                    color = if (wrongInput) {
+                        MaterialTheme.colors.graphicsRed
+                    } else {
+                        MaterialTheme.colors.graphicsSecondary
+                    }
                 ),
                 shape = RoundedCornerShape(12.dp)
             ),
@@ -389,8 +391,8 @@ private fun Date(
             Column {
                 DateTimeSubItem(state, listener)
                 ChooseStartLocationItem(state, listener)
-                LocationItem(state, listener).toUiItem()
-                LocationDetailsItem(state, listener).toUiItem()
+                LocationItem(state, listener).toUiItem(state)
+                LocationDetailsItem(state, listener).toUiItem(state)
                 DrawPathItem(state, listener)
             }
         }
@@ -462,7 +464,7 @@ private fun OpenDate(state: State, listener: Listener?) = Column {
         }
     }
     AnimatedVisibility(visible = checked.value) {
-        OpenDateItem(state, listener).toUiItem()
+        OpenDateItem(state, listener).toUiItem(state)
     }
 }
 
@@ -471,6 +473,7 @@ private fun OpenDate(state: State, listener: Listener?) = Column {
  */
 @Composable
 private fun Posters(state: State, listener: Listener?) = ExpandableItems(
+    state = state,
     type = POSTER_LINKS,
     title = "Ссылки на плакаты",
     items = state.posters,
@@ -482,6 +485,7 @@ private fun Posters(state: State, listener: Listener?) = ExpandableItems(
  */
 @Composable
 private fun Goals(state: State, listener: Listener?) = ExpandableItems(
+    state = state,
     type = GOALS,
     title = "Цели",
     items = state.goals,
@@ -493,6 +497,7 @@ private fun Goals(state: State, listener: Listener?) = ExpandableItems(
  */
 @Composable
 private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
+    state = state,
     type = SLOGANS,
     title = "Лозунги",
     items = state.slogans,
@@ -504,6 +509,7 @@ private fun Slogans(state: State, listener: Listener?) = ExpandableItems(
  */
 @Composable
 private fun Strategy(state: State, listener: Listener?) = ExpandableItems(
+    state = state,
     type = STRATEGY,
     title = "Стратегия",
     items = state.strategy,
@@ -580,6 +586,7 @@ private fun FakeTitle(hint: String, text: String = "") = Text(
  */
 @Composable
 private fun ExpandableItems(
+    state: State,
     type: DetailsItemType,
     title: String,
     items: List<String>,
@@ -613,7 +620,7 @@ private fun ExpandableItems(
                             if (items.isEmpty()) isVisible.value = false
                         }
                     )
-                    CustomTextField(customTextFieldItem)
+                    CustomTextField(state, customTextFieldItem)
                 }
             }
         }

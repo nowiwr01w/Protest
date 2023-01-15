@@ -5,7 +5,6 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Meeting(
-    val id: String = "",
     val cityName: String = "",
     val creatorId: String = "",
     val image: String = "",
@@ -23,7 +22,6 @@ data class Meeting(
 ) {
     companion object {
         fun getSampleData() = Meeting(
-            id = "123",
             cityName = "Saint-Petersburg",
             creatorId = "1234",
             image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",

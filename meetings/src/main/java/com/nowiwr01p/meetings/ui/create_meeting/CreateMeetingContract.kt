@@ -1,6 +1,5 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import com.google.android.gms.maps.model.LatLng
@@ -12,7 +11,8 @@ import com.nowiwr01p.core_ui.extensions.TimePickerListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
-import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 
 interface CreateMeetingContract {
@@ -55,7 +55,8 @@ interface CreateMeetingContract {
         val posters: List<String> = mutableStateListOf(),
         val goals: List<String> = mutableStateListOf(),
         val slogans: List<String> = mutableStateListOf(),
-        val strategy: List<String> = mutableStateListOf()
+        val strategy: List<String> = mutableStateListOf(),
+        val validationErrors: List<CreateMeetingError?> = listOf()
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
