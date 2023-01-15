@@ -12,7 +12,7 @@ import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 
 interface CreateMeetingContract {
@@ -31,7 +31,7 @@ interface CreateMeetingContract {
         data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsItemType): Event
         data class OnRemoveDetailsItemClick(val type: DetailsItemType, val index: Int): Event
-        data class OnEditCustomTextField(val type: CustomTextFieldType, val value: String): Event
+        data class OnEditCustomTextField(val type: CreateMeetingFieldItemType, val value: String): Event
         data class OnEditDetailsItemClick(val type: DetailsItemType, val index: Int, val value: String): Event
     }
 
@@ -74,7 +74,7 @@ interface CreateMeetingContract {
         fun showDateTimePicker()
         fun navigateToMapDrawPath()
         fun navigateChooseStartLocation()
-        fun onEditCustomTextField(type: CustomTextFieldType, value: String)
+        fun onEditCustomTextField(type: CreateMeetingFieldItemType, value: String)
         fun navigateToPreview()
     }
 }

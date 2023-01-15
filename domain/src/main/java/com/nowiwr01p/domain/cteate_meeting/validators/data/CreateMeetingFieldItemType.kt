@@ -1,6 +1,6 @@
 package com.nowiwr01p.domain.cteate_meeting.validators.data
 
-enum class CustomTextFieldType {
+enum class CreateMeetingFieldItemType {
     NONE,
     TOP_IMAGE,
     CATEGORIES,
@@ -8,10 +8,14 @@ enum class CustomTextFieldType {
     DESCRIPTION,
     DATE,
     OPEN_DATE,
-    POSTER_MOTIVATION,
     LOCATION_COORDINATES,
     LOCATION_TITLE,
     LOCATION_DETAILS,
     PATH,
-    TELEGRAM
+    TELEGRAM,
+    POSTER_MOTIVATION,
+    POSTER_LINKS,
+    GOALS,
+    SLOGANS,
+    STRATEGY
 }

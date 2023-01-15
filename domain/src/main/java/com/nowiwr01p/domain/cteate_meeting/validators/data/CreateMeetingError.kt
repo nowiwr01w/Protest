@@ -1,9 +1,9 @@
 package com.nowiwr01p.domain.cteate_meeting.validators.data
 
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
 
 sealed class CreateMeetingError(
-    open val type: CustomTextFieldType,
+    open val type: CreateMeetingFieldItemType,
     open val errorText: String
 ) {
 
@@ -11,17 +11,17 @@ sealed class CreateMeetingError(
      * TOP IMAGE LINK
      */
     sealed class ImageLinkError(
-        override val type: CustomTextFieldType = TOP_IMAGE,
+        override val type: CreateMeetingFieldItemType = TOP_IMAGE,
         override val errorText: String
     ): CreateMeetingError(type, errorText) {
 
         data class ExtensionError(
-            override val type: CustomTextFieldType = TOP_IMAGE,
+            override val type: CreateMeetingFieldItemType = TOP_IMAGE,
             override val errorText: String = "Ссылка должна начинаться с https://"
         ): ImageLinkError(type, errorText)
 
         data class ImageTypeError(
-            override val type: CustomTextFieldType = TOP_IMAGE,
+            override val type: CreateMeetingFieldItemType = TOP_IMAGE,
             override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg"
         ): ImageLinkError(type, errorText)
     }
@@ -30,7 +30,7 @@ sealed class CreateMeetingError(
      * CATEGORIES
      */
     data class CategoriesError(
-        override val type: CustomTextFieldType = CATEGORIES,
+        override val type: CreateMeetingFieldItemType = CATEGORIES,
         override val errorText: String = "Выберите хотя бы одну категорию"
     ): CreateMeetingError(type, errorText)
 
@@ -38,17 +38,17 @@ sealed class CreateMeetingError(
      * TITLE
      */
     sealed class TitleError(
-        override val type: CustomTextFieldType = TITLE,
+        override val type: CreateMeetingFieldItemType = TITLE,
         override val errorText: String
     ): CreateMeetingError(type, errorText) {
 
         data class EmptyTitleError(
-            override val type: CustomTextFieldType = TITLE,
+            override val type: CreateMeetingFieldItemType = TITLE,
             override val errorText: String = "Заголовок не может быть пустым"
         ): TitleError(type, errorText)
 
         data class LongTitleError(
-            override val type: CustomTextFieldType = TITLE,
+            override val type: CreateMeetingFieldItemType = TITLE,
             override val errorText: String = "Максимум 48 символов"
         ): TitleError(type, errorText)
     }
@@ -57,17 +57,17 @@ sealed class CreateMeetingError(
      * DESCRIPTION
      */
     sealed class DescriptionError(
-        override val type: CustomTextFieldType = DESCRIPTION,
+        override val type: CreateMeetingFieldItemType = DESCRIPTION,
         override val errorText: String
     ): CreateMeetingError(type, errorText) {
 
         data class EmptyDescriptionError(
-            override val type: CustomTextFieldType = DESCRIPTION,
+            override val type: CreateMeetingFieldItemType = DESCRIPTION,
             override val errorText: String = "Описание не может быть пустым"
         ): DescriptionError(type, errorText)
 
         data class LongDescriptionError(
-            override val type: CustomTextFieldType = DESCRIPTION,
+            override val type: CreateMeetingFieldItemType = DESCRIPTION,
             override val errorText: String = "Максимум 300 символов"
         ): TitleError(type, errorText)
     }
@@ -76,7 +76,7 @@ sealed class CreateMeetingError(
      * MEETING DATE
      */
     data class DateError(
-        override val type: CustomTextFieldType = DATE,
+        override val type: CreateMeetingFieldItemType = DATE,
         override val errorText: String = "Разница с текущей датой должна быть не менее 4 часов"
     ): CreateMeetingError(type, errorText)
 
@@ -84,7 +84,7 @@ sealed class CreateMeetingError(
      * START LOCATION COORDINATES
      */
     data class StartLocationError(
-        override val type: CustomTextFieldType = LOCATION_COORDINATES,
+        override val type: CreateMeetingFieldItemType = LOCATION_COORDINATES,
         override val errorText: String = "Вы вышли за пределы допустимых локаций"
     ): CreateMeetingError(type, errorText)
 
@@ -92,17 +92,17 @@ sealed class CreateMeetingError(
      * START LOCATION TITLE
      */
     sealed class LocationTitleError(
-        override val type: CustomTextFieldType = LOCATION_TITLE,
+        override val type: CreateMeetingFieldItemType = LOCATION_TITLE,
         override val errorText: String
     ): CreateMeetingError(type, errorText) {
 
         data class EmptyLocationTitleError(
-            override val type: CustomTextFieldType = LOCATION_TITLE,
+            override val type: CreateMeetingFieldItemType = LOCATION_TITLE,
             override val errorText: String = "Название места встречи не может быть пустым"
         ): LocationTitleError(type, errorText)
 
         data class LongLocationTitleError(
-            override val type: CustomTextFieldType = LOCATION_TITLE,
+            override val type: CreateMeetingFieldItemType = LOCATION_TITLE,
             override val errorText: String = "Максимум 18 символов"
         ): LocationTitleError(type, errorText)
     }
@@ -111,17 +111,17 @@ sealed class CreateMeetingError(
      * START LOCATION DETAILS
      */
     sealed class LocationDetailsError(
-        override val type: CustomTextFieldType = LOCATION_DETAILS,
+        override val type: CreateMeetingFieldItemType = LOCATION_DETAILS,
         override val errorText: String
     ): CreateMeetingError(type, errorText) {
 
         data class EmptyLocationDetailsError(
-            override val type: CustomTextFieldType = LOCATION_DETAILS,
+            override val type: CreateMeetingFieldItemType = LOCATION_DETAILS,
             override val errorText: String = "Описание места встречи не может быть пустым"
         ): LocationDetailsError(type, errorText)
 
         data class LongLocationDetailsError(
-            override val type: CustomTextFieldType = LOCATION_DETAILS,
+            override val type: CreateMeetingFieldItemType = LOCATION_DETAILS,
             override val errorText: String = "Максимум 48 символов"
         ): LocationDetailsError(type, errorText)
     }
@@ -130,7 +130,7 @@ sealed class CreateMeetingError(
      * LOCATION PATH
      */
     data class PathError(
-        override val type: CustomTextFieldType = PATH,
+        override val type: CreateMeetingFieldItemType = PATH,
         override val errorText: String = "Путь должен содержать не менее 4 точек"
     ): CreateMeetingError(type, errorText)
 
@@ -138,17 +138,17 @@ sealed class CreateMeetingError(
      * TELEGRAM LINK
      */
     sealed class TelegramLinkError(
-        override val type: CustomTextFieldType = TELEGRAM,
+        override val type: CreateMeetingFieldItemType = TELEGRAM,
         override val errorText: String
     ): CreateMeetingError(type, errorText) {
 
         data class ExtensionError(
-            override val type: CustomTextFieldType = TELEGRAM,
+            override val type: CreateMeetingFieldItemType = TELEGRAM,
             override val errorText: String = "Ссылка должна начинаться с https://"
         ): ImageLinkError(type, errorText)
 
         data class DomainError(
-            override val type: CustomTextFieldType = TELEGRAM,
+            override val type: CreateMeetingFieldItemType = TELEGRAM,
             override val errorText: String = "Ссылка должна вести на Telegram"
         ): ImageLinkError(type, errorText)
     }

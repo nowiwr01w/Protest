@@ -11,8 +11,8 @@ import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
 import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
 
@@ -102,26 +102,26 @@ class CreateMeetingVewModel(
 
     private fun getDetailsList(type: DetailsItemType) = with(viewState.value) {
         when (type) {
-            GOALS -> goals
-            SLOGANS -> slogans
-            STRATEGY -> strategy
-            POSTER_LINKS -> posters
+            DetailsItemType.GOALS -> goals
+            DetailsItemType.SLOGANS -> slogans
+            DetailsItemType.STRATEGY -> strategy
+            DetailsItemType.POSTER_LINKS -> posters
         }
     }
 
     private fun updateDetailsList(type: DetailsItemType, list: List<String>) = setState {
         when (type) {
-            GOALS -> copy(goals = list)
-            SLOGANS -> copy(slogans = list)
-            STRATEGY -> copy(strategy = list)
-            POSTER_LINKS -> copy(posters = list)
+            DetailsItemType.GOALS -> copy(goals = list)
+            DetailsItemType.SLOGANS -> copy(slogans = list)
+            DetailsItemType.STRATEGY -> copy(strategy = list)
+            DetailsItemType.POSTER_LINKS -> copy(posters = list)
         }
     }
 
     /**
      * CUSTOM TEXT FIELD (IMAGE, TITLE, DESCRIPTION, OPEN DATE, LOCATION...)
      */
-    private fun editCustomTextField(type: CustomTextFieldType, value: String) = setState {
+    private fun editCustomTextField(type: CreateMeetingFieldItemType, value: String) = setState {
         when (type) {
             TOP_IMAGE -> copy(imageLink = value)
             TITLE -> copy(title = value)
