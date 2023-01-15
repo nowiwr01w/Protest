@@ -13,7 +13,7 @@ import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
 
 interface CreateMeetingContract {
 
@@ -29,10 +29,10 @@ interface CreateMeetingContract {
         data class SetStartLocationPath(val position: LatLng): Event
         data class ShowCategoriesBottomSheet(val content: @Composable () -> Unit): Event
         data class OnSelectedCategoryClick(val category: Category): Event
-        data class OnAddDetailsItemClick(val type: DetailsItemType): Event
-        data class OnRemoveDetailsItemClick(val type: DetailsItemType, val index: Int): Event
+        data class OnAddDetailsItemClick(val type: DetailsFieldType): Event
+        data class OnRemoveDetailsItemClick(val type: DetailsFieldType, val index: Int): Event
         data class OnEditCustomTextField(val type: CreateMeetingFieldItemType, val value: String): Event
-        data class OnEditDetailsItemClick(val type: DetailsItemType, val index: Int, val value: String): Event
+        data class OnEditDetailsItemClick(val type: DetailsFieldType, val index: Int, val value: String): Event
     }
 
     data class State(
@@ -67,9 +67,9 @@ interface CreateMeetingContract {
 
     interface Listener: DatePickerListener, TimePickerListener {
         fun onBackClick()
-        fun onAddDetailsItem(type: DetailsItemType)
-        fun onRemoveDetailsItem(type: DetailsItemType, index: Int)
-        fun onEditDetailsItem(type: DetailsItemType, index: Int, value: String)
+        fun onAddDetailsItem(type: DetailsFieldType)
+        fun onRemoveDetailsItem(type: DetailsFieldType, index: Int)
+        fun onEditDetailsItem(type: DetailsFieldType, index: Int, value: String)
         fun showCategoriesBottomSheet()
         fun showDateTimePicker()
         fun navigateToMapDrawPath()

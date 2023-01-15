@@ -1,6 +1,6 @@
 package com.nowiwr01p.domain.cteate_meeting.validators.data
 
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 
 sealed class CreateMeetingError(
     open val type: CreateMeetingFieldItemType,

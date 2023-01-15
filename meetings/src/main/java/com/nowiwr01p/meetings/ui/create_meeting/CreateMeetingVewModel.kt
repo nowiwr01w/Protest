@@ -12,9 +12,9 @@ import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType
-import com.nowiwr01p.meetings.ui.create_meeting.data.DetailsItemType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
+import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
 
 class CreateMeetingVewModel(
     private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase,
@@ -86,35 +86,35 @@ class CreateMeetingVewModel(
     /**
      * DETAILS (POSTER LINKS, GOALS, SLOGANS, STRATEGY)
      */
-    private fun addRemoveDetailsItem(type: DetailsItemType, index: Int = -1) = with(viewState.value) {
+    private fun addRemoveDetailsItem(type: DetailsFieldType, index: Int = -1) = with(viewState.value) {
         val updated = getDetailsList(type).toMutableList().apply {
             if (index == -1) add("") else removeAt(index)
         }
         updateDetailsList(type, updated)
     }
 
-    private fun editDetailsItem(type: DetailsItemType, index: Int, value: String) = with(viewState.value) {
+    private fun editDetailsItem(type: DetailsFieldType, index: Int, value: String) = with(viewState.value) {
         val updated = getDetailsList(type).mapIndexed { curIndex, item ->
             if (index == curIndex) value else item
         }
         updateDetailsList(type, updated)
     }
 
-    private fun getDetailsList(type: DetailsItemType) = with(viewState.value) {
+    private fun getDetailsList(type: DetailsFieldType) = with(viewState.value) {
         when (type) {
-            DetailsItemType.GOALS -> goals
-            DetailsItemType.SLOGANS -> slogans
-            DetailsItemType.STRATEGY -> strategy
-            DetailsItemType.POSTER_LINKS -> posters
+            GOALS -> goals
+            SLOGANS -> slogans
+            STRATEGY -> strategy
+            POSTER_LINKS -> posters
         }
     }
 
-    private fun updateDetailsList(type: DetailsItemType, list: List<String>) = setState {
+    private fun updateDetailsList(type: DetailsFieldType, list: List<String>) = setState {
         when (type) {
-            DetailsItemType.GOALS -> copy(goals = list)
-            DetailsItemType.SLOGANS -> copy(slogans = list)
-            DetailsItemType.STRATEGY -> copy(strategy = list)
-            DetailsItemType.POSTER_LINKS -> copy(posters = list)
+            GOALS -> copy(goals = list)
+            SLOGANS -> copy(slogans = list)
+            STRATEGY -> copy(strategy = list)
+            POSTER_LINKS -> copy(posters = list)
         }
     }
 
