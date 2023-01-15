@@ -31,10 +31,9 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.core.model.CreateMeetingMapType.*
+import com.nowiwr01p.core.model.CreateMeetingMapType.DRAW_PATH
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.isScrollingUp
-import com.nowiwr01p.core_ui.extensions.setSystemUiColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -45,14 +44,13 @@ import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun MeetingsMainScreen(
     navigator: Navigator,
-    viewModel: MeetingsViewModel = getViewModel()
+    viewModel: MeetingsViewModel = getViewModel { parametersOf(Color.White) }
 ) {
-    setSystemUiColor(Color.White)
-
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
