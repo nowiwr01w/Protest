@@ -2,18 +2,22 @@ package com.nowiwr01p.core_ui.ui.snack_bar
 
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.SnackbarDuration
+import com.nowiwr01p.core_ui.theme.lightGraphicsRed
+import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class ShowSnackBarHelper {
+class ShowSnackBarHelper(
+    private val statusBarColorHelper: StatusBarColorHelper
+) {
 
     private lateinit var scope: CoroutineScope
     private lateinit var scaffoldState: ScaffoldState
 
-    private val _text: Channel<String> = Channel()
+    private val _text: Channel<SnackBarParams?> = Channel()
     val text = _text.receiveAsFlow()
 
     fun init(coroutineScope: CoroutineScope, state: ScaffoldState) {
@@ -28,9 +32,19 @@ class ShowSnackBarHelper {
         )
     }
 
-    fun showErrorSnackBar(text: String) = scope.launch {
-        _text.send(text)
+    fun showErrorSnackBar(params: SnackBarParams) = scope.launch {
+        show(params)
         delay(4000)
-        _text.send("")
+        hide(params)
+    }
+
+    private suspend fun show(params: SnackBarParams) {
+        _text.send(params)
+        statusBarColorHelper.setStatusBarColor(lightGraphicsRed)
+    }
+
+    private suspend fun hide(params: SnackBarParams) {
+        _text.send(null)
+        statusBarColorHelper.setStatusBarColor(params.fromStatusBarColor)
     }
 }
