@@ -23,7 +23,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
         validateLocationPath(locationInfo.path)
         validateTelegramLink(telegram)
     }.let {
-        errors.distinct().filterNot { it == null }
+        errors.distinct().filterNotNull()
     }
 
     /**
@@ -77,7 +77,9 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      * MEETING DATE
      */
     override suspend fun validateDate(date: Long) = when {
-        date - System.currentTimeMillis() > 4 * 60 * 60 * 1000 -> DateError()
+        date == 0L -> DateError.DateNotSelectedError()
+        date < System.currentTimeMillis() -> DateError.DateBeforeError()
+        date - System.currentTimeMillis() > 4 * 60 * 60 * 1000 -> DateError.EarlyDateError()
         else -> null
     }.also {
         addError(it)
