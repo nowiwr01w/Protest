@@ -333,19 +333,25 @@ private fun AuthButton(
 private fun ToggleText(
     state: State,
     listener: Listener?
-) = Box(
-    modifier = Modifier
-        .clip(RoundedCornerShape(8.dp))
-        .clickable {
-            listener?.toggleAccountMode()
-        }
 ) {
-    Text(
-        text = if (state.authType == SIGN_IN) "Ещё нет аккаунта" else "Уже есть аккаунт",
-        style = MaterialTheme.typography.subHeadlineRegular,
-        color = MaterialTheme.colors.textColorSecondary,
-        modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
-    )
+    val keyboard = LocalSoftwareKeyboardController.current
+    Box(
+        modifier = Modifier
+            .clip(RoundedCornerShape(8.dp))
+            .clickable {
+                if (state.authType == SIGN_IN && !state.authSecurityWarningWasShown) {
+                    keyboard?.hide()
+                }
+                listener?.toggleAccountMode()
+            }
+    ) {
+        Text(
+            text = if (state.authType == SIGN_IN) "Ещё нет аккаунта" else "Уже есть аккаунт",
+            style = MaterialTheme.typography.subHeadlineRegular,
+            color = MaterialTheme.colors.textColorSecondary,
+            modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
+        )
+    }
 }
 
 /***
