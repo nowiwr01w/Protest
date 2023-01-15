@@ -40,7 +40,7 @@ import com.google.accompanist.flowlayout.SizeMode
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.maps.android.compose.*
-import com.nowiwr01p.core.datastore.location.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount

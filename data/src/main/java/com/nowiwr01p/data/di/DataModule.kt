@@ -9,9 +9,9 @@ import com.nowiwr01p.data.auth.validators.EmailValidatorImpl
 import com.nowiwr01p.data.auth.validators.PasswordValidatorImpl
 import com.nowiwr01p.data.create_meeting.CreateMeetingValidatorImpl
 import com.nowiwr01p.data.firebase.FirebaseReferencesRepositoryImpl
-import com.nowiwr01p.data.location.LocationRepositoryImpl
-import com.nowiwr01p.data.location.LocationStateLocalRepositoryImpl
-import com.nowiwr01p.data.location.LocationStateRemoteRepositoryImpl
+import com.nowiwr01p.data.cities.CitiesRepositoryImpl
+import com.nowiwr01p.data.cities.CitiesStateLocalRepositoryImpl
+import com.nowiwr01p.data.cities.CitiesStateRemoteRepositoryImpl
 import com.nowiwr01p.data.meetings.MeetingsRepositoryImpl
 import com.nowiwr01p.data.news.NewsRepositoryImpl
 import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
@@ -24,9 +24,9 @@ import com.nowiwr01p.domain.auth.validators.EmailValidator
 import com.nowiwr01p.domain.auth.validators.PasswordValidator
 import com.nowiwr01p.domain.cteate_meeting.validators.CreateMeetingValidator
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.location.repository.LocationStateLocalRepository
-import com.nowiwr01p.domain.location.repository.LocationRepository
-import com.nowiwr01p.domain.location.repository.LocationStateRemoteRepository
+import com.nowiwr01p.domain.cities.repository.CityStateLocalRepository
+import com.nowiwr01p.domain.cities.repository.CitiesRepository
+import com.nowiwr01p.domain.cities.repository.CityStateRemoteRepository
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.news.repository.NewsRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -88,14 +88,14 @@ val moduleData = module {
     /**
      * LOCATION
      */
-    factory<LocationRepository> {
-        LocationRepositoryImpl(get(), get())
+    factory<CitiesRepository> {
+        CitiesRepositoryImpl(get(), get())
     }
-    factory<LocationStateLocalRepository> {
-        LocationStateLocalRepositoryImpl(get())
+    factory<CityStateLocalRepository> {
+        CitiesStateLocalRepositoryImpl(get())
     }
-    factory<LocationStateRemoteRepository> {
-        LocationStateRemoteRepositoryImpl(get())
+    factory<CityStateRemoteRepository> {
+        CitiesStateRemoteRepositoryImpl(get())
     }
 
     /**

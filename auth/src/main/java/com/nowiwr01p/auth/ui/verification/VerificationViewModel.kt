@@ -25,7 +25,7 @@ class VerificationViewModel(
             is Event.Init -> startTimer()
             is Event.ResendCode -> resendCode()
             is Event.CheckIsEmailVerified -> checkVerified()
-            is Event.NavigateToLocations -> setEffect { Effect.NavigateToLocations }
+            is Event.NavigateToCities -> setEffect { Effect.NavigateToCities }
         }
     }
 
