@@ -1,10 +1,12 @@
 package com.nowiwr01p.meetings.ui.create_meeting
 
+import androidx.compose.ui.graphics.Color
 import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.datastore.cities.data.*
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.cteate_meeting.usecase.GetCachedCategoriesUseCase
 import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
@@ -18,6 +20,7 @@ import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
 
 class CreateMeetingVewModel(
+    private val statusBarColor: Color,
     private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val validateMeetingDataUseCase: ValidateMeetingDataUseCase,
@@ -178,8 +181,11 @@ class CreateMeetingVewModel(
         if (errors.isEmpty()) {
             setEffect { Effect.NavigateToPreview(meeting) }
         } else {
-            val errorText = errors.sortedBy { it.priority }.first().errorText
-            showSnackBarHelper.showErrorSnackBar(errorText)
+            val params = SnackBarParams(
+                fromStatusBarColor = statusBarColor,
+                text = errors.sortedBy { it.priority }.first().errorText
+            )
+            showSnackBarHelper.showErrorSnackBar(params)
             setState { copy(validationErrors = errors) }
         }
     }

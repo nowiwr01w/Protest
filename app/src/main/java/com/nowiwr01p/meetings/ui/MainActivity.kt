@@ -31,14 +31,16 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
-import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ErrorSnackBar
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
 
     private val navigator by inject<Navigator>()
     private val showSnackBarHelper by inject<ShowSnackBarHelper>()
+    private val statusBarColorHelper by inject<StatusBarColorHelper>()
     private val showBottomSheetHelper by inject<ShowBottomSheetHelper>()
     private val openLinksHelper by inject<OpenLinksHelper>()
 
@@ -54,6 +56,7 @@ class MainActivity : ComponentActivity() {
                 skipHalfExpanded = true
             )
 
+            statusBarColorHelper.init(scope)
             showSnackBarHelper.init(scope, scaffoldState)
             showBottomSheetHelper.init(scope, bottomSheetState)
 
@@ -72,15 +75,24 @@ class MainActivity : ComponentActivity() {
             }
 
             val errorShackBarContent: @Composable () -> Unit = {
-                showSnackBarHelper.text.collectAsState("").value.let { text ->
+                showSnackBarHelper.text.collectAsState(null).value.let { params ->
                     AnimatedVisibility(
-                        visible = text.isNotEmpty(),
+                        visible = params != null,
                         enter = fadeIn() + slideInVertically(animationSpec = tween(350)),
                         exit = fadeOut() + slideOutVertically(animationSpec = tween(350))
                     ) {
-                        ErrorSnackBar(text)
+                        params?.let {
+                            ErrorSnackBar(it)
+                        }
                     }
                 }
+            }
+
+            val changeStatusBarColor: @Composable () -> Unit = {
+                statusBarColorHelper.statusBarColor
+                    .collectAsState(Color.White)
+                    .value
+                    .let { color -> setSystemUiColor(color) }
             }
 
             val context = LocalContext.current
@@ -94,7 +106,8 @@ class MainActivity : ComponentActivity() {
                 scaffoldState = scaffoldState,
                 bottomSheetState = bottomSheetState,
                 bottomSheetContent = bottomSheetContent,
-                errorShackBarContent = errorShackBarContent
+                errorShackBarContent = errorShackBarContent,
+                changeStatusBarColor = changeStatusBarColor
             ) {
                 NavHost(
                     navController = navController,
@@ -116,6 +129,7 @@ fun MainActivityScreen(
     bottomSheetState: ModalBottomSheetState,
     bottomSheetContent: @Composable () -> Unit,
     errorShackBarContent: @Composable () -> Unit,
+    changeStatusBarColor: @Composable () -> Unit,
     setGraphs: @Composable () -> Unit
 ) {
     navigator.setNavController(navController)
@@ -167,7 +181,7 @@ fun MainActivityScreen(
                     }
                 }
             ) {
-                setSystemUiColor(color = Color.White)
+                changeStatusBarColor()
                 Box(
                     modifier = Modifier.padding(it)
                 ) {

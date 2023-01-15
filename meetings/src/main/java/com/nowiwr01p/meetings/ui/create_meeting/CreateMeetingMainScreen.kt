@@ -45,7 +45,6 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
 import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
@@ -56,11 +55,12 @@ import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.meetings.ui.main.Category
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CreateMeetingMainScreen(
     navigator: Navigator,
-    viewModel: CreateMeetingVewModel = getViewModel()
+    viewModel: CreateMeetingVewModel = getViewModel { parametersOf(Color.White) }
 ) {
     val state = viewModel.viewState.value
 
