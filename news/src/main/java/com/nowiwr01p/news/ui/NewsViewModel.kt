@@ -46,9 +46,7 @@ class NewsViewModel(
      */
     private suspend fun getScreenCache() = getNewsScreenCache.execute().let { cache ->
         if (cache.data.news.isNotEmpty()) {
-            setState {
-                copy(newsList = cache.data.news, isLoading = false)
-            }
+            setState { copy(newsList = cache.data.news, isLoading = false) }
         }
     }
 
