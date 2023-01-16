@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Category(
-    val name: String = "Политика",
+    val name: String = "",
     val priority: Int = 0,
     val textColor: Long = 0,
     val backgroundColor: Long = 0,

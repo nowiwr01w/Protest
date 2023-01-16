@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.main
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.view_model.ViewEvent
@@ -20,7 +21,7 @@ interface MeetingsContract {
         val showProgress: Boolean = false,
         val user: User = User(),
         val meetings: List<Meeting> = listOf(),
-        val categories: List<Category> = listOf(),
+        val categories: List<Category> = mutableStateListOf(),
         val selectedCategory: Category = Category()
     ): ViewState
 
