@@ -234,10 +234,7 @@ private fun MeetingsTitle(state: State) = Text(
  * CATEGORIES LIST
  */
 @Composable
-private fun Categories(
-    state: State,
-    listener: Listener?
-) = LazyRow(
+private fun Categories(state: State, listener: Listener?) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp)
@@ -298,16 +295,11 @@ private fun LazyListScope.Meetings(
     state: State,
     listener: Listener?
 ) {
-    val filtered = state.meetings.filter { meeting ->
-        val selectedName = state.selectedCategory.name
-        val found = meeting.categories.find { category -> category.name == selectedName } != null
-        found || selectedName.isEmpty()
-    }
-    if (filtered.isEmpty()) {
+    if (state.meetings.isEmpty()) {
         item { EmptyListStub(state, listener) }
     } else {
         item { Spacer(modifier = Modifier.height(8.dp)) }
-        items(filtered) { meeting ->
+        items(state.meetings) { meeting ->
             MeetingItem(meeting, listener)
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }

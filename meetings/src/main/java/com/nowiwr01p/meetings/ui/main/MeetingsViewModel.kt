@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.main
 
 import androidx.compose.ui.graphics.Color
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
@@ -20,6 +21,8 @@ class MeetingsViewModel(
     private val saveMeetingsScreenCacheUseCase: SaveMeetingsScreenCacheUseCase,
     private val mapper: MeetingsMapper
 ): BaseViewModel<Event, State, Effect>() {
+
+    internal var allMeetings = listOf<Meeting>()
 
     init {
         mapper.viewModel = this
@@ -64,9 +67,10 @@ class MeetingsViewModel(
     /**
      * MEETINGS
      */
-    private suspend fun getMeetings() {
-        val meetings = getMeetingsUseCase.execute()
-        setState { copy(meetings = meetings) }
+    private suspend fun getMeetings() = with(viewState.value) {
+        getMeetingsUseCase.execute().also { allMeetings = it }
+        val filtered = mapper.updateMeetings(selectedCategory)
+        setState { copy(meetings = filtered) }
     }
 
     /**
@@ -103,9 +107,14 @@ class MeetingsViewModel(
     /**
      * SELECT CATEGORY
      */
-    private fun selectCategory(category: Category) = with(viewState.value) {
-        val updatedCategories = mapper.updateCategories(category)
-        val updatedCategory = mapper.updateSelectedCategory(category)
-        setState { copy(categories = updatedCategories, selectedCategory = updatedCategory) }
+    private fun selectCategory(category: Category) = io {
+        setState {
+            copy(
+                meetings = mapper.updateMeetings(category),
+                categories = mapper.updateCategories(category),
+                selectedCategory = mapper.updateSelectedCategory(category)
+            )
+        }
+        saveScreenCache()
     }
 }
