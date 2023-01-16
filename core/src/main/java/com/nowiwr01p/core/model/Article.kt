@@ -18,7 +18,8 @@ data class ContentItem(
 }
 
 @Serializable
-data class Article(
+data class
+Article(
     @SerialName("date")
     val date: Long = 0,
     @SerialName("content")
@@ -31,48 +32,79 @@ data class Article(
             date = 1673103472373,
             content = listOf(
                 ContentItem(
-                    order = 3,
-                    type = "title",
-                    value = "Defiant Navalny has opposed Putin’s war in Ukraine from prison. His team fear for his safety"
+                    order = 1,
+                    type = Image.type,
+                    value = "https://meduza.io/impro/AkUHLyZq701-3BQtp471Bc69owpX3N3PUEE0RguMJPs/fill/2670/0/ce/1/aHR0cHM6Ly9tZWR1/emEuaW8vaW1hZ2Uv/YXR0YWNobWVudHMv/aW1hZ2VzLzAwOC82/NTAvNjQ0L29yaWdp/bmFsLzZoaHR0aXpk/Z0t6S1B6XzlnV3Bp/aUEuanBn.webp"
                 ),
                 ContentItem(
                     order = 2,
-                    type = "date",
+                    type = Date.type,
                     value = "1673698311454"
                 ),
                 ContentItem(
-                    order = 1,
-                    type = "image",
-                    value = "https://media.cnn.com/api/v1/images/stellar/prod/220322082848-05-alexei-navalny-guilty-032222.jpg"
+                    order = 3,
+                    type = Title.type,
+                    value = "В Днепре из-за ракетного удара погибли 40 человек, больше 70 пострадали. Зеленский призвал россиян перестать «трусливо молчать»"
                 ),
                 ContentItem(
                     order = 4,
-                    type = "description",
-                    value = "Surviving President Vladimir Putin’s poisoners was just a warm-up, not a warning, for Russian opposition politician Alexey Navalny. But his defiance, according to his political team, has put him in a race against time with the Russian autocrat.\n" +
-                            "The question, according to Navalny’s chief investigator, Maria Pevchikh, is whether he can outlast Putin and his war in Ukraine – and on that the verdict is still out. “So far, touch wood, they haven’t gone ahead with trying to kill him again,” she told CNN.\n" +
-                            "On January 17, 2021, undaunted and freshly recovered from an attempt on his life five months earlier – a near lethal dose of the deadly nerve agent Novichok delivered by Putin’s henchmen – Navalny boldly boarded a flight taking him right back into the Kremlin’s hands.\n" +
-                            "By then, Navalny had become Putin’s nemesis. So strong is the Russian leader’s aversion to his challenger that even to this day he refuses to say his name.\n" +
-                            "As Navalny stepped off the flight from Berlin onto the frigid tarmac at Moscow’s Sheremetyevo airport that snowy evening, he knew exactly what he was getting into. Just weeks before leaving Germany, he told CNN: “I understand that Putin hates me, I understand that people in the Kremlin are ready to kill.”\n" +
-                            "Navalny’s path to understanding had come at a high cost. He knew in intimate and excruciating detail exactly how close he had come to death at the hands of Putin’s poisoners while on the political campaign trail in Siberia to support local candidates."
-                ),
-                ContentItem(
-                    order = 7,
-                    type = "description",
-                    value = "When Putin was asked if he’d tried to have Navalny killed, he smirked, saying: “If there was such a desire, it would have been done.”\n" +
-                            "Despite his denials, Putin’s desire was transparent: Navalny’s magnetism was positioning him as the Russian leader’s biggest political threat.\n" +
-                            "Today he is the best-known anti-Putin politician in Russia and is putting his life on the line to break Putin’s stranglehold over Russians.\n" +
-                            "Navalny’s team, who are in self-imposed exile for their safety, believe their boss is in a race for survival against Putin.\n" +
-                            "Pevchikh, who heads Navalny’s investigative team and helped winkle out his would-be assassins, says the war in Ukraine – which Navalny has condemned from his prison cell behind bars – will bring Putin down. The question, she says, is whether Navalny can survive Putin. “It’s a bit of a race. You know, at this point, who lasts longer?”"
+                    type = Description.type,
+                    value = "По последним официальным данным, 40 человек погибли из-за российского ракетного удара по Днепру, совершенного 14 января, в результате которого обрушились два подъезда девятиэтажного дома. Об этом днем 16 января сообщил телеканал «Суспiльне», ссылаясь на Днепропетровскую областную администрацию."
                 ),
                 ContentItem(
                     order = 5,
-                    type = "image",
-                    value = "https://media.cnn.com/api/v1/images/stellar/prod/221006132130-06-alexey-navalny-nobel.jpg"
+                    type = Description.type,
+                    value = "Утром 16 января в МВД Украины сообщили, что погибли 36 человек (в том числе двое детей), еще 75 человек пострадали (из них 15 детей). Спасли 39 человек, в том числе шестерых детей. Неизвестна судьба еще около 30 человек."
                 ),
                 ContentItem(
                     order = 6,
-                    type = "imageDescription",
-                    value = "Alexey Navalny, his wife Yulia, opposition politician Lyubov Sobol and other demonstrators march in memory of murdered Kremlin critic Boris Nemtsov in downtown Moscow on February 29, 2020."
+                    type = Description.type,
+                    value = "В доме разрушены 72 квартиры, еще 230 получили повреждения, сообщил глава Днепропетровского облсовета Николай Лукашук. По его словам, к утру 16 января с места происшествия вывезли более 7,4 тысячи тонн разрушенных конструкций. Спасатели продолжают искать людей уже почти двое суток. К поисково-спасательной операции привлекли свыше 500 человек и 140 единиц техники."
+                ),
+                ContentItem(
+                    order = 7,
+                    type = Image.type,
+                    value = "https://meduza.io/impro/tv3AfQB-YR8oBY9Img7KqZwt7B-kQWJ6CqDOHDOk1QM/fill/1960/0/ce/1/aHR0cHM6Ly9tZWR1/emEuaW8vaW1hZ2Uv/YXR0YWNobWVudHMv/aW1hZ2VzLzAwOC82/NTAvNTU2L29yaWdp/bmFsL2lQYmJ0RzFk/QTY3ZlVfOXJrN1o0/LUEuanBn.webp"
+                ),
+                ContentItem(
+                    order = 8,
+                    type = ImageDescription.type,
+                    value = "Спасатели ищут людей"
+                ),
+                ContentItem(
+                    order = 9,
+                    type = OrderedListTitle.type,
+                    value = "Что мы можем с этим сделать?"
+                ),
+                ContentItem(
+                    order = 10,
+                    type = Step.type,
+                    value = "Выйти на митинг"
+                ),
+                ContentItem(
+                    order = 11,
+                    type = Step.type,
+                    value = "Взять с собой кучу плакатов"
+                ),
+                ContentItem(
+                    order = 12,
+                    type = Step.type,
+                    value = "Пройтись по центральным улицам"
+                ),
+                ContentItem(
+                    order = 13,
+                    type = Step.type,
+                    value = "Послать чертилу нахуй"
+                ),
+                ContentItem(
+                    order = 14,
+                    type = Step.type,
+                    value = "Заставить власть прекратить войну"
+                ),
+                ContentItem(
+                    order = 15,
+                    type = Description.type,
+                    value = "24 февраля в 17:30.\nЦентральные площади городов.\nДо встречи!!"
                 ),
             )
         )

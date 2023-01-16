@@ -33,8 +33,6 @@ fun NewsMainScreen(
     navigator: Navigator,
     viewModel: NewsViewModel = getViewModel()
 ) {
-    val state = viewModel.viewState.value
-
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
@@ -56,14 +54,11 @@ fun NewsMainScreen(
         }
     }
 
-    NewsContent(state, listener)
+    NewsContent(viewModel.viewState.value, listener)
 }
 
 @Composable
-fun NewsContent(
-    state: State,
-    listener: Listener?
-) = Column(
+fun NewsContent(state: State, listener: Listener?) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
     Toolbar()
@@ -85,10 +80,7 @@ fun Toolbar() = Text(
 )
 
 @Composable
-fun NewsList(
-    state: State,
-    listener: Listener?
-) = LazyColumn(
+fun NewsList(state: State, listener: Listener?) = LazyColumn(
     modifier = Modifier
         .fillMaxSize()
         .padding(top = 16.dp)
@@ -100,10 +92,7 @@ fun NewsList(
 }
 
 @Composable
-fun ArticleView(
-    article: Article,
-    listener: Listener?
-) = ConstraintLayout(
+fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable { listener?.onArticleClick(article) }
