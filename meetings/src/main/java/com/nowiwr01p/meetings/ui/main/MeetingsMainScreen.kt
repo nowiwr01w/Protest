@@ -38,6 +38,7 @@ import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.meetings.R
@@ -182,6 +183,7 @@ private fun Story(
     modifier = Modifier
         .padding(start = if (index == 0) 12.dp else 6.dp, end = 6.dp)
         .width(72.dp)
+        .pressedAnimation()
 ) {
     Box(
         modifier = Modifier
