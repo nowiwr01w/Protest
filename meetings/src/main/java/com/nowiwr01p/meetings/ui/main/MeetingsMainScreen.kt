@@ -1,25 +1,26 @@
 package com.nowiwr01p.meetings.ui.main
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.Card
+import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -32,8 +33,7 @@ import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core.model.CreateMeetingMapType.DRAW_PATH
-import com.nowiwr01p.core_ui.EffectObserver
-import com.nowiwr01p.core_ui.extensions.isScrollingUp
+import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -52,8 +52,6 @@ fun MeetingsMainScreen(
     navigator: Navigator,
     viewModel: MeetingsViewModel = getViewModel { parametersOf(Color.White) }
 ) {
-    val state = viewModel.viewState.value
-
     val listener = object : Listener {
         override fun toMap(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMapDrawPath(DRAW_PATH)
@@ -76,34 +74,24 @@ fun MeetingsMainScreen(
         viewModel.setEvent(Event.Init)
     }
 
-    EffectObserver(viewModel.effect) {
-
-    }
-
-    val lazyListState = rememberLazyListState()
-
-    Scaffold(
-        floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = { FloatingActionButton(state, listener, lazyListState) }
-    ) {
-        MeetingsMainScreenContent(state, listener, lazyListState)
-    }
+    MeetingsMainScreenContent(
+        state = viewModel.viewState.value,
+        listener = listener
+    )
 }
 
 @Composable
 private fun MeetingsMainScreenContent(
     state: State,
-    listener: Listener?,
-    lazyListState: LazyListState
+    listener: Listener?
 ) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
-    Toolbar(state)
+    Toolbar(state, listener)
     if (state.showProgress) {
         CenterScreenProgressBar()
     } else {
         LazyColumn(
-            state = lazyListState,
             modifier = Modifier.background(MaterialTheme.colors.background)
         ) {
             item { Stories(state) }
@@ -119,7 +107,8 @@ private fun MeetingsMainScreenContent(
  */
 @Composable
 private fun Toolbar(
-    state: State
+    state: State,
+    listener: Listener?
 ) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
@@ -156,6 +145,14 @@ private fun Toolbar(
                 .size(16.dp)
         )
     }
+    Spacer(
+        modifier = Modifier.weight(1f)
+    )
+    ClickableIcon(
+        icon = R.drawable.ic_add,
+        modifier = Modifier.padding(end = 16.dp),
+        onClick = { listener?.toCreateMeeting() }
+    )
 }
 
 /**
@@ -425,49 +422,6 @@ internal fun Category(
 }
 
 /**
- * CREATE MEETING FAB
- */
-@Composable
-private fun FloatingActionButton(
-    state: State,
-    listener: Listener?,
-    lazyListState: LazyListState
-) {
-    if (!state.showProgress && state.user.organizer && state.meetings.isNotEmpty()) {
-        FloatingActionButton(
-            painter = rememberVectorPainter(image = Icons.Filled.Add),
-            lazyListState = lazyListState,
-        ) {
-            listener?.toCreateMeeting()
-        }
-    }
-}
-
-@Composable
-private fun FloatingActionButton(
-    painter: Painter,
-    lazyListState: LazyListState,
-    onItemClick: () -> Unit
-) = AnimatedVisibility(
-    visible = lazyListState.isScrollingUp() || !lazyListState.isScrollInProgress,
-    enter = fadeIn() + expandVertically(),
-    exit = fadeOut() + shrinkVertically()
-) {
-    FloatingActionButton(
-        shape = RoundedCornerShape(14.dp),
-        backgroundColor = MaterialTheme.colors.mainBackgroundColor,
-        onClick = { onItemClick() }
-    ) {
-        Icon(
-            painter = painter,
-            contentDescription = "Floating Action Button",
-            tint = Color.White,
-            modifier = Modifier.size(20 .dp)
-        )
-    }
-}
-
-/**
  * NO MEETINGS STUB
  */
 @Composable
@@ -517,8 +471,7 @@ private fun Preview() = MeetingsTheme {
         state = State(
             meetings = listOf(Meeting())
         ),
-        listener = null,
-        lazyListState = rememberLazyListState()
+        listener = null
     )
 }
 
@@ -527,7 +480,6 @@ private fun Preview() = MeetingsTheme {
 private fun PreviewEmpty() = MeetingsTheme {
     MeetingsMainScreenContent(
         state = State(),
-        listener = null,
-        lazyListState = rememberLazyListState()
+        listener = null
     )
 }
