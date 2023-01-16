@@ -6,12 +6,15 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -24,6 +27,7 @@ import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
+import com.nowiwr01p.news.R
 import com.nowiwr01p.news.ui.NewsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
@@ -83,7 +87,7 @@ fun Toolbar() = Text(
 fun NewsList(state: State, listener: Listener?) = LazyColumn(
     modifier = Modifier
         .fillMaxSize()
-        .padding(top = 16.dp)
+        .padding(top = 12.dp)
 ) {
     items(state.newsList) { article ->
         ArticleView(article, listener)
@@ -96,14 +100,15 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable { listener?.onArticleClick(article) }
-        .padding(vertical = 12.dp, horizontal = 16.dp)
+        .padding(vertical = 4.dp)
         .background(MaterialTheme.colors.background)
 ) {
-    val (image, title, date) = createRefs()
+    val (image, title, date, viewsCount) = createRefs()
 
     val imageModifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
+        .padding(horizontal = 6.dp)
         .clip(RoundedCornerShape(16.dp))
         .constrainAs(image) {
             start.linkTo(parent.start)
@@ -116,7 +121,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     )
 
     val titleModifier = Modifier
-        .padding(top = 8.dp)
+        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
         .constrainAs(title) {
             width = Dimension.fillToConstraints
             start.linkTo(image.start)
@@ -127,12 +132,12 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     Text(
         text = article.getField(Title),
         color = MaterialTheme.colors.textPrimary,
-        style = MaterialTheme.typography.title2Bold,
+        style = MaterialTheme.typography.title3Bold,
         modifier = titleModifier
     )
 
     val dateModifier = Modifier
-        .padding(top = 4.dp)
+        .padding(top = 4.dp, start = 16.dp)
         .constrainAs(date) {
             start.linkTo(title.start)
             top.linkTo(title.bottom)
@@ -140,9 +145,34 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     Text(
         text = article.date.formatToDateTime(),
         color = MaterialTheme.colors.textColorSecondary,
-        style = MaterialTheme.typography.subHeadlineRegular,
+        style = MaterialTheme.typography.footnoteRegular,
         modifier = dateModifier
     )
+
+    val viewsCountModifier = Modifier
+        .padding(end = 16.dp)
+        .constrainAs(viewsCount) {
+            end.linkTo(title.end)
+            top.linkTo(date.top)
+            bottom.linkTo(date.bottom)
+        }
+    Row(
+        modifier = viewsCountModifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_eye),
+            contentDescription = "Views count icon",
+            tint = MaterialTheme.colors.textColorSecondary,
+            modifier = Modifier.size(17.dp)
+        )
+        Text(
+            text = "2752",
+            style = MaterialTheme.typography.footnoteRegular,
+            color = MaterialTheme.colors.textColorSecondary,
+            modifier = Modifier.padding(start = 8.dp)
+        )
+    }
 }
 
 @Preview(showBackground = true)
