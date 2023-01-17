@@ -1,4 +1,4 @@
-package com.nowiwr01p.news.ui
+package com.nowiwr01p.news.ui.news
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
@@ -6,7 +6,7 @@ import com.nowiwr01p.domain.news.usecase.GetNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.news.usecase.SaveNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.usecase.data.NewsScreenCacheData
-import com.nowiwr01p.news.ui.NewsContract.*
+import com.nowiwr01p.news.ui.news.NewsContract.*
 
 class NewsViewModel(
     private val getNews: GetNewsUseCase,
@@ -20,6 +20,7 @@ class NewsViewModel(
         when (event) {
             is Event.Init -> init()
             is Event.OnArticleClick -> setEffect { Effect.ShowArticle(event.article) }
+            is Event.NavigateToCreateArticle -> setEffect { Effect.NavigateToCreateArticle }
         }
     }
 

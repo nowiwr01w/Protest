@@ -10,8 +10,9 @@ import com.nowiwr01p.core_ui.Keys.ARG_ARTICLE
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.news.navigation.NewsScreenType
-import com.nowiwr01p.news.ui.news_article.ArticleScreen
-import com.nowiwr01p.news.ui.NewsMainScreen
+import com.nowiwr01p.news.ui.article.ArticleScreen
+import com.nowiwr01p.news.ui.create_article.CreateArticleMainScreen
+import com.nowiwr01p.news.ui.news.NewsMainScreen
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -22,7 +23,10 @@ sealed class NewsScreen<T>(
     override val showBottomNavigation: Boolean = true
 ): Screen<T>() {
 
-    object NewsMainScreen: NewsScreen<Unit>(NewsScreenType.NewsMainScreen.route, rootRoute) {
+    /**
+     * NEWS LIST
+     */
+    object NewsMainScreen: NewsScreen<Unit>(NewsScreenType.NewsScreen.route, rootRoute) {
         override fun navigate(args: Unit, navController: NavController) {
             navController.navigateOrPopup(route)
         }
@@ -33,17 +37,29 @@ sealed class NewsScreen<T>(
         }
     }
 
-    object NewsArticleScreen: NewsScreen<Article>(
-        NewsScreenType.NewsArticleScreen.route,
-        rootRoute,
-        false
+    /**
+     * CREATE ARTICLE
+     */
+    object CreateArticleScreen: NewsScreen<Unit>(NewsScreenType.CreateArticleScreen.route, rootRoute) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                CreateArticleMainScreen()
+            }
+        }
+    }
+
+    /**
+     * ARTICLE
+     */
+    object ArticleScreen: NewsScreen<Article>(
+        NewsScreenType.ArticleScreen.route, rootRoute, false
     ) {
         override fun navigate(args: Article, navController: NavController) {
             navController.navigate(
-                route.replace(
-                    "{$ARG_ARTICLE}",
-                    Json.encodeToString(args)
-                )
+                route.replace("{$ARG_ARTICLE}", Json.encodeToString(args))
             )
         }
 
