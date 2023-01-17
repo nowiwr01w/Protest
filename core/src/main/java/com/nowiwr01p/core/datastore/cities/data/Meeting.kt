@@ -5,6 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Meeting(
+    val id: String = "",
     val cityName: String = "",
     val creatorId: String = "",
     val image: String = "",
