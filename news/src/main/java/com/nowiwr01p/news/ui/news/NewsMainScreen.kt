@@ -21,8 +21,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.Article
-import com.nowiwr01p.core.model.ArticleContentType.Image
-import com.nowiwr01p.core.model.ArticleContentType.Title
+import com.nowiwr01p.core.model.ArticleData
+import com.nowiwr01p.core.model.ArticleData.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -138,7 +138,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { article.getField(Image) }
+        imageModel = { article.topImage.link }
     )
 
     val titleModifier = Modifier
@@ -151,7 +151,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
         }
 
     Text(
-        text = article.getField(Title),
+        text = article.title.text,
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.title3Bold,
         modifier = titleModifier
@@ -164,7 +164,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
             top.linkTo(title.bottom)
         }
     Text(
-        text = article.date.formatToDateTime(),
+        text = article.dateViewers.date.formatToDateTime(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.footnoteRegular,
         modifier = dateModifier

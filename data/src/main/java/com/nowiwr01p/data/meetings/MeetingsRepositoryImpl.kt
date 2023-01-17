@@ -1,5 +1,6 @@
 package com.nowiwr01p.data.meetings
 
+import android.util.Log
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.domain.AppDispatchers
@@ -33,7 +34,10 @@ class MeetingsRepositoryImpl(
         val userCity = userDataStoreRepository.getUser().city.name
         references.getMeetingsReference().get().await()
             .children
-            .map { snapshot -> snapshot.getValue<Meeting>()!! }
+            .map { snapshot ->
+                Log.d("Zhopa", "meeting = ${snapshot.value}")
+                snapshot.getValue<Meeting>()!!
+            }
             .filter { meeting -> userCity == meeting.cityName }
             .sortedByDescending { meeting -> meeting.date }
     }
