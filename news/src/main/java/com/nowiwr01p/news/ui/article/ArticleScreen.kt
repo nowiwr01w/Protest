@@ -1,8 +1,8 @@
 package com.nowiwr01p.news.ui.article
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -20,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core.model.Article.Companion.article
-import com.nowiwr01p.core.model.ArticleContentType.*
-import com.nowiwr01p.core.model.ContentItem
+import com.nowiwr01p.core.model.ArticleData.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -50,42 +49,38 @@ fun ArticleScreen(
         viewModel.setEvent(Event.Init(article))
     }
 
-    ArticleContent(viewModel.viewState.value, listener)
+    ArticleContent(
+        state = viewModel.viewState.value,
+        listener = listener
+    )
 }
 
 @Composable
-fun ArticleContent(
-    state: State,
-    listener: Listener? = null
-) = Column(
+fun ArticleContent(state: State, listener: Listener?) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
     Toolbar(listener)
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        val contentSorted = article.content.sortedBy { it.order }
-        items(contentSorted) { content ->
-            NewsItem(content, listener)
+        val sortedContent = state.article.buildContent()
+        items(sortedContent) { content ->
+            when (content) {
+                is TopImage -> TopImage(content)
+                is DateViewers -> Date(content)
+                is Title -> TopTitle(content)
+                is Description -> Description(content)
+                is ImageList -> ImageListItem(content)
+                is OrderedList -> OrderedListItem(content)
+            }
         }
         item{ Spacer(modifier = Modifier.height(32.dp)) }
     }
 }
 
-@Composable
-fun NewsItem(content: ContentItem, listener: Listener?) = with(content) {
-    when (content.articleType) {
-        Title -> TopTitle(value)
-        Date -> Date(value.toLong().formatToDateTime())
-        Description -> Description(value)
-        Image -> TopImage(value)
-        Step -> StepItem(value)
-        Link -> Link(value, listener)
-        OrderedListTitle -> OrderedListTitle(value)
-        ImageDescription -> ImageDescription(value)
-    }
-}
-
+/**
+ * TOOLBAR
+ */
 @Composable
 fun Toolbar(listener: Listener?) = ToolbarTop(
     backIcon = {
@@ -93,9 +88,12 @@ fun Toolbar(listener: Listener?) = ToolbarTop(
     }
 )
 
+/**
+ * TOP IMAGE
+ */
 @Composable
-fun TopImage(image: String) = CoilImage(
-    imageModel = { image },
+fun TopImage(image: TopImage) = CoilImage(
+    imageModel = { image.link },
     modifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
@@ -103,15 +101,18 @@ fun TopImage(image: String) = CoilImage(
         .clip(RoundedCornerShape(16.dp))
 )
 
+/**
+ * DATE
+ */
 @Composable
-private fun Date(date: String) = Row(
+private fun Date(date: DateViewers) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 12.dp, start = 16.dp, end = 16.dp)
 ) {
     Text(
-        text = date,
+        text = date.date.formatToDateTime(),
         style = MaterialTheme.typography.footnoteRegular,
         color = MaterialTheme.colors.textColorSecondary
     )
@@ -132,17 +133,23 @@ private fun Date(date: String) = Row(
     )
 }
 
+/**
+ * TOP TITLE
+ */
 @Composable
-fun TopTitle(title: String) = Text(
-    text = title,
+private fun TopTitle(title: Title) = Text(
+    text = title.text,
     style = MaterialTheme.typography.title2Bold,
     color = MaterialTheme.colors.textPrimary,
     modifier = Modifier.padding(top = 4.dp, start = 16.dp, end = 16.dp)
 )
 
+/**
+ * DESCRIPTION
+ */
 @Composable
-fun Description(description: String) = Text(
-    text = description,
+private fun Description(description: Description) = Text(
+    text = description.text,
     style = MaterialTheme.typography.body1,
     color = MaterialTheme.colors.textPrimary,
     modifier = Modifier
@@ -150,26 +157,64 @@ fun Description(description: String) = Text(
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
 
+/**
+ * IMAGES
+ */
 @Composable
-fun ImageDescription(description: String) = Text(
-    text = description,
-    style = MaterialTheme.typography.footnoteRegular,
-    color = MaterialTheme.colors.textColorSecondary,
-    textAlign = TextAlign.Center,
+private fun ImageListItem(imageList: ImageList) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 4.dp, start = 24.dp, end = 24.dp)
-)
+        .padding(top = 8.dp)
+) {
+    items(imageList.images) { image ->
+        ImageItem(image)
+    }
+}
 
 @Composable
-fun OrderedListTitle(title: String) = Text(
-    text = title,
-    style = MaterialTheme.typography.headline,
-    color = MaterialTheme.colors.textPrimary,
+private fun ImageItem(image: Image) = Column(
+    modifier = Modifier.fillMaxWidth()
+) {
+    CoilImage(
+        imageModel = { image.link },
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(start = 6.dp, end = 6.dp)
+            .clip(RoundedCornerShape(16.dp))
+    )
+    Text(
+        text = image.description,
+        style = MaterialTheme.typography.footnoteRegular,
+        color = MaterialTheme.colors.textColorSecondary,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp, start = 24.dp, end = 24.dp)
+    )
+}
+
+/**
+ * ORDERED LIST
+ */
+@Composable
+private fun OrderedListItem(orderedList: OrderedList) = Column(
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
-)
+        .padding(top = 8.dp)
+) {
+    Text(
+        text = orderedList.title,
+        style = MaterialTheme.typography.headline,
+        color = MaterialTheme.colors.textPrimary,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp)
+    )
+    orderedList.steps.forEach { item ->
+        StepItem(item)
+    }
+}
 
 @Composable
 private fun StepItem(text: String) = Row(
@@ -190,23 +235,14 @@ private fun StepItem(text: String) = Row(
     )
 }
 
-@Composable
-private fun Link(text: String, listener: Listener?) = Text(
-    text = text,
-    style = MaterialTheme.typography.body1,
-    color = MaterialTheme.colors.link,
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
-        .clickable {
-            listener?.onLinkClick(text)
-        }
-)
-
-@Preview(showBackground = true, heightDp = 2000)
+/**
+ * PREVIEW
+ */
+@Preview(showBackground = true, heightDp = 1600)
 @Composable
 fun Preview() = MeetingsTheme {
     ArticleContent(
-        state = State(article = article)
+        state = State(article = article),
+        listener = null
     )
 }
