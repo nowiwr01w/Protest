@@ -8,6 +8,8 @@ class CreateArticleViewModel: BaseViewModel<Event, State, Effect>() {
     override fun setInitialState() = State()
 
     override fun handleEvents(event: Event) {
-
+        when (event) {
+            is Event.NavigateBack -> setEffect { Effect.NavigateBack }
+        }
     }
 }
