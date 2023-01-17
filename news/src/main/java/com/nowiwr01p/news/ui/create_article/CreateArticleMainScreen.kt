@@ -3,10 +3,10 @@ package com.nowiwr01p.news.ui.create_article
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -27,13 +27,15 @@ import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
-import com.nowiwr01p.core_ui.theme.graphicsRed
+import com.nowiwr01p.core_ui.theme.bodyRegular
 import com.nowiwr01p.core_ui.theme.graphicsSecondary
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
+import com.nowiwr01p.news.ui.create_article.data.AddFieldType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
 import org.koin.androidx.compose.getViewModel
@@ -43,9 +45,16 @@ fun CreateArticleMainScreen(
     navigator: Navigator,
     viewModel: CreateArticleViewModel = getViewModel()
 ) {
+    val addFieldBottomSheetParams = BottomSheetParams(
+        content = AddFieldBottomSheet { viewModel.setEvent(Event.OnBottomSheetTypeClick(it)) }
+    )
+
     val listener = object : Listener {
         override fun onBackClick() {
             viewModel.setEvent(Event.NavigateBack)
+        }
+        override fun showBottomSheet() {
+            viewModel.setEvent(Event.ShowBottomSheet(addFieldBottomSheetParams))
         }
     }
 
@@ -112,6 +121,7 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
         }
     StateButton(
         text = "Добавить поле",
+        onSendRequest = { listener?.showBottomSheet() },
         modifier = buttonModifier
     )
 }
@@ -194,6 +204,42 @@ private fun CustomTextField(state: State, item: CreateArticleDataType) = Row(
             }
         }
     )
+}
+
+/**
+ * ADD FIELD BOTTOM SHEET
+ */
+@Composable
+private fun AddFieldBottomSheet(onTypeClick: (AddFieldType) -> Unit): @Composable () -> Unit = {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        AddFieldType.values().forEach { type ->
+            AddFieldBottomSheetItem(type) { onTypeClick.invoke(type) }
+        }
+    }
+}
+
+@Composable
+private fun AddFieldBottomSheetItem(
+    type: AddFieldType,
+    onTypeClick: () -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { onTypeClick() },
+    ) {
+        Text(
+            text = type.type,
+            color = Color.Black,
+            style = MaterialTheme.typography.bodyRegular,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.padding(start = 20.dp, top = 16.dp, bottom = 16.dp, end = 16.dp)
+        )
+    }
 }
 
 /**
