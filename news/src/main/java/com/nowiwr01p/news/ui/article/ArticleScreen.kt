@@ -1,4 +1,4 @@
-package com.nowiwr01p.news.ui.news_article
+package com.nowiwr01p.news.ui.article
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,7 +27,7 @@ import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.R
-import com.nowiwr01p.news.ui.news_article.ArticleContract.*
+import com.nowiwr01p.news.ui.article.ArticleContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 

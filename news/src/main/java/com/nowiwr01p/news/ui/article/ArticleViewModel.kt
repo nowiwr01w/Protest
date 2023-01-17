@@ -1,9 +1,9 @@
-package com.nowiwr01p.news.ui.news_article
+package com.nowiwr01p.news.ui.article
 
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.news.ui.news_article.ArticleContract.*
+import com.nowiwr01p.news.ui.article.ArticleContract.*
 
 class ArticleViewModel(
     private val openLinksHelper: OpenLinksHelper
