@@ -2,7 +2,6 @@ package com.nowiwr01p.news.ui.article
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -18,9 +17,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core.extenstion.formatToDateTime
-import com.nowiwr01p.core.model.Article
+import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core.model.Article.Companion.article
-import com.nowiwr01p.core.model.ArticleData.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -126,7 +124,7 @@ private fun Date(date: DateViewers) = Row(
         modifier = Modifier.size(17.dp)
     )
     Text(
-        text = "2752",
+        text = date.viewers.size.toString(),
         style = MaterialTheme.typography.footnoteRegular,
         color = MaterialTheme.colors.textColorSecondary,
         modifier = Modifier.padding(start = 8.dp)
@@ -161,19 +159,20 @@ private fun Description(description: Description) = Text(
  * IMAGES
  */
 @Composable
-private fun ImageListItem(imageList: ImageList) = LazyRow(
+private fun ImageListItem(imageList: ImageList) = Row(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp)
 ) {
-    items(imageList.images) { image ->
+    imageList.images.forEach { image ->
         ImageItem(image)
     }
 }
 
 @Composable
 private fun ImageItem(image: Image) = Column(
-    modifier = Modifier.fillMaxWidth()
+    modifier = Modifier.fillMaxWidth(),
+    horizontalAlignment = Alignment.CenterHorizontally
 ) {
     CoilImage(
         imageModel = { image.link },
