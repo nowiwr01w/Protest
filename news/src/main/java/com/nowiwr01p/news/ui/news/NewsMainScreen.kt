@@ -188,7 +188,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
             modifier = Modifier.size(17.dp)
         )
         Text(
-            text = "2752",
+            text = article.dateViewers.viewers.size.toString(),
             style = MaterialTheme.typography.footnoteRegular,
             color = MaterialTheme.colors.textColorSecondary,
             modifier = Modifier.padding(start = 8.dp)

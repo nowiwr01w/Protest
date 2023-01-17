@@ -14,12 +14,10 @@ interface ArticleContract {
 
     data class State(
         val article: Article = Article(),
-        val isLoading: Boolean = true
+        val viewsCount: Int = 0
     ) : ViewState
 
-    sealed interface Effect : ViewSideEffect {
-
-    }
+    sealed interface Effect : ViewSideEffect
 
     interface Listener {
         fun onBackClick()

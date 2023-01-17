@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Article(
+    val id: String = "",
     val dateViewers: DateViewers = DateViewers(),
     val topImage: TopImage = TopImage(),
     val title: Title = Title(),
