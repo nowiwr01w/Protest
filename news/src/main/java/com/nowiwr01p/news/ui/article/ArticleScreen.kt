@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalPagerApi::class)
+
 package com.nowiwr01p.news.ui.article
 
 import androidx.compose.foundation.layout.*
@@ -16,11 +18,16 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core.model.Article.Companion.article
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.horizontal_pager.PagerIndicator
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.R
@@ -159,13 +166,45 @@ private fun Description(description: Description) = Text(
  * IMAGES
  */
 @Composable
-private fun ImageListItem(imageList: ImageList) = Row(
+private fun ImageListItem(imageList: ImageList) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 8.dp)
+        .padding(top = 12.dp)
 ) {
-    imageList.images.forEach { image ->
+    val (pager, dots) = createRefs()
+    val state = rememberPagerState()
+
+    val pagerModifier = Modifier
+        .fillMaxWidth()
+        .constrainAs(pager) {
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            top.linkTo(parent.top)
+        }
+    HorizontalPager(
+        count = imageList.images.size,
+        state = state,
+        modifier = pagerModifier
+    ) { page ->
+        val image = imageList.images[page]
         ImageItem(image)
+    }
+
+    if (imageList.images.size > 1) {
+        val dotsModifier = Modifier
+            .padding(top = 4.dp, start = 8.dp, end = 8.dp)
+            .constrainAs(dots) {
+                start.linkTo(pager.start)
+                end.linkTo(pager.end)
+                top.linkTo(pager.bottom)
+            }
+        PagerIndicator(
+            pagerState = state,
+            space = 4.dp,
+            indicatorSize = 12.dp,
+            indicatorCount = imageList.images.size,
+            modifier = dotsModifier
+        )
     }
 }
 
