@@ -1,4 +1,4 @@
-package com.nowiwr01p.news.ui
+package com.nowiwr01p.news.ui.news
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -24,11 +24,12 @@ import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core.model.ArticleContentType.Image
 import com.nowiwr01p.core.model.ArticleContentType.Title
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
 import com.nowiwr01p.news.R
-import com.nowiwr01p.news.ui.NewsContract.*
+import com.nowiwr01p.news.ui.news.NewsContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
@@ -44,6 +45,9 @@ fun NewsMainScreen(
         override fun onArticleClick(article: Article) {
             viewModel.setEvent(Event.OnArticleClick(article))
         }
+        override fun toCreateArticle() {
+            viewModel.setEvent(Event.NavigateToCreateArticle)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -55,6 +59,9 @@ fun NewsMainScreen(
             is Effect.ShowArticle -> {
                 navigator.newsNavigator.navigateToArticle(it.article)
             }
+            is Effect.NavigateToCreateArticle -> {
+                navigator.newsNavigator.navigateToCreateArticle()
+            }
         }
     }
 
@@ -65,7 +72,7 @@ fun NewsMainScreen(
 fun NewsContent(state: State, listener: Listener?) = Column(
     modifier = Modifier.fillMaxSize()
 ) {
-    Toolbar()
+    Toolbar(state, listener)
     if (state.isLoading) {
         CenterScreenProgressBar()
     } else {
@@ -74,14 +81,28 @@ fun NewsContent(state: State, listener: Listener?) = Column(
 }
 
 @Composable
-fun Toolbar() = Text(
-    text = "Новости",
-    style = MaterialTheme.typography.largeTitle,
-    color = MaterialTheme.colors.textPrimary,
+fun Toolbar(state: State, listener: Listener?) = Row(
+    verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
+        .fillMaxWidth()
         .statusBarsPadding()
-        .padding(start = 20.dp, top = 20.dp)
-)
+        .padding(top = 20.dp),
+) {
+    Text(
+        text = "Новости",
+        style = MaterialTheme.typography.largeTitle,
+        color = MaterialTheme.colors.textPrimary,
+        modifier = Modifier.padding(start = 16.dp)
+    )
+    Spacer(
+        modifier = Modifier.weight(1f)
+    )
+    ClickableIcon(
+        icon = R.drawable.ic_add,
+        modifier = Modifier.padding(end = 16.dp),
+        onClick = { listener?.toCreateArticle() }
+    )
+}
 
 @Composable
 fun NewsList(state: State, listener: Listener?) = LazyColumn(

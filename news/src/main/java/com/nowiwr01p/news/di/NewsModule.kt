@@ -5,8 +5,9 @@ import com.nowiwr01p.domain.news.usecase.GetNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.usecase.SaveNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.usecase.data.NewsScreenCache
 import com.nowiwr01p.news.navigation.NewsNavigatorImpl
-import com.nowiwr01p.news.ui.NewsViewModel
-import com.nowiwr01p.news.ui.news_article.ArticleViewModel
+import com.nowiwr01p.news.ui.news.NewsViewModel
+import com.nowiwr01p.news.ui.article.ArticleViewModel
+import com.nowiwr01p.news.ui.create_article.CreateArticleViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -33,6 +34,11 @@ val moduleNews = module {
             scope.get()
         )
     }
+
+    /**
+     * CREATE ARTICLE
+     */
+    viewModel { CreateArticleViewModel() }
 
     /**
      * ARTICLE

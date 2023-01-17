@@ -5,4 +5,5 @@ import com.nowiwr01p.core_ui.navigators.module.ModuleNavigator
 
 interface NewsNavigator: ModuleNavigator {
     fun navigateToArticle(article: Article)
+    fun navigateToCreateArticle()
 }
