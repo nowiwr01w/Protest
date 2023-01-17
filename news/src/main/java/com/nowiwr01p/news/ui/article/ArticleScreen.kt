@@ -72,7 +72,7 @@ fun ArticleContent(state: State, listener: Listener?) = Column(
         items(sortedContent) { content ->
             when (content) {
                 is TopImage -> TopImage(content)
-                is DateViewers -> Date(content)
+                is DateViewers -> Date(state, content)
                 is Title -> TopTitle(content)
                 is Description -> Description(content)
                 is ImageList -> ImageListItem(content)
@@ -110,7 +110,7 @@ fun TopImage(image: TopImage) = CoilImage(
  * DATE
  */
 @Composable
-private fun Date(date: DateViewers) = Row(
+private fun Date(state: State, date: DateViewers) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
@@ -130,8 +130,9 @@ private fun Date(date: DateViewers) = Row(
         tint = MaterialTheme.colors.textColorSecondary,
         modifier = Modifier.size(17.dp)
     )
+    val viewsCount = if (state.viewsCount == 0) date.viewers.size else state.viewsCount
     Text(
-        text = date.viewers.size.toString(),
+        text = viewsCount.toString(),
         style = MaterialTheme.typography.footnoteRegular,
         color = MaterialTheme.colors.textColorSecondary,
         modifier = Modifier.padding(start = 8.dp)

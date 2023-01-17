@@ -28,6 +28,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(MEETINGS_PREVIEW_REFERENCE)
     }
 
+    override suspend fun getArticleReference(id: String): DatabaseReference {
+        return database.getReference(NEWS_REFERENCE).child(id)
+    }
+
     private companion object {
         const val USER_REFERENCE = "users"
         const val NEWS_REFERENCE = "news"

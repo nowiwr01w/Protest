@@ -1,5 +1,6 @@
 package com.nowiwr01p.domain.di
 
+import com.nowiwr01p.domain.article.SetArticleViewedUseCase
 import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.cteate_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
@@ -82,4 +83,9 @@ val moduleDomain = module {
      * NEWS
      */
     factory { GetNewsUseCase(get()) }
+
+    /**
+     * ARTICLE
+     */
+    factory { SetArticleViewedUseCase(get()) }
 }

@@ -3,6 +3,7 @@ package com.nowiwr01p.data.di
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.nowiwr01p.data.article.ArticleRepositoryImpl
 import com.nowiwr01p.data.auth.repository.AuthRepositoryImpl
 import com.nowiwr01p.data.auth.repository.ValidateAuthDataRepositoryImpl
 import com.nowiwr01p.data.auth.validators.EmailValidatorImpl
@@ -18,6 +19,7 @@ import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.AppDispatchersImpl
+import com.nowiwr01p.domain.article.ArticleRepository
 import com.nowiwr01p.domain.auth.repository.AuthRepository
 import com.nowiwr01p.domain.auth.repository.ValidateAuthDataRepository
 import com.nowiwr01p.domain.auth.validators.EmailValidator
@@ -108,7 +110,7 @@ val moduleData = module {
     /**
      * CREATE MEETING
      */
-    factory< CreateMeetingValidator> {
+    factory<CreateMeetingValidator> {
         CreateMeetingValidatorImpl()
     }
 
@@ -117,5 +119,12 @@ val moduleData = module {
      */
     factory<NewsRepository> {
         NewsRepositoryImpl(get(), get())
+    }
+
+    /**
+     * ARTICLE
+     */
+    factory<ArticleRepository> {
+        ArticleRepositoryImpl(get(), get(), get())
     }
 }
