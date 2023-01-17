@@ -3,14 +3,18 @@ package com.nowiwr01p.news.ui.create_article
 import androidx.compose.runtime.mutableStateListOf
 import com.nowiwr01p.core.model.Image
 import com.nowiwr01p.core.model.OrderedList
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
+import com.nowiwr01p.news.ui.create_article.data.AddFieldType
 
 interface CreateArticleContract {
 
     sealed interface Event: ViewEvent {
         object NavigateBack: Event
+        data class OnBottomSheetTypeClick(val type: AddFieldType): Event
+        data class ShowBottomSheet(val params: BottomSheetParams): Event
     }
 
     data class State(
@@ -27,5 +31,6 @@ interface CreateArticleContract {
 
     interface Listener {
         fun onBackClick()
+        fun showBottomSheet()
     }
 }
