@@ -8,13 +8,13 @@ data class Article(
     val dateViewers: DateViewers = DateViewers(),
     val topImage: TopImage = TopImage(),
     val title: Title = Title(),
-    val description: List<Description> = listOf(),
-    val images: List<ImageList> = listOf(),
+    val descriptions: List<Description> = listOf(),
+    val imagesLists: List<ImageList> = listOf(),
     val orderedLists: List<OrderedList> = listOf()
 ) {
     fun buildContent() = mutableListOf(dateViewers, topImage, title).apply {
-        images.forEach { add(it) }
-        description.forEach { add(it) }
+        imagesLists.forEach { add(it) }
+        descriptions.forEach { add(it) }
         orderedLists.forEach { add(it) }
     }.sortedBy {
         it.order
@@ -34,7 +34,7 @@ data class Article(
                 priority = 3,
                 text = "В Днепре из-за ракетного удара погибли 40 человек, больше 70 пострадали. Зеленский призвал россиян перестать «трусливо молчать»"
             ),
-            description = listOf(
+            descriptions = listOf(
                 Description(
                     priority = 4,
                     text = "По последним официальным данным, 40 человек погибли из-за российского ракетного удара по Днепру, совершенного 14 января, в результате которого обрушились два подъезда девятиэтажного дома. Об этом днем 16 января сообщил телеканал «Суспiльне», ссылаясь на Днепропетровскую областную администрацию."
@@ -52,7 +52,7 @@ data class Article(
                     text = "24 февраля в 17:30.\nЦентральные площади городов.\nДо встречи!!"
                 )
             ),
-            images = listOf(
+            imagesLists = listOf(
                 ImageList(
                     priority = 7,
                     images = listOf(
