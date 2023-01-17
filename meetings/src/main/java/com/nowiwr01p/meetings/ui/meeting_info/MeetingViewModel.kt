@@ -48,7 +48,7 @@ class MeetingViewModel(
      */
     private fun setReaction(isPositiveButtonClicked: Boolean) = io {
         runCatching {
-            val args = Args(viewState.value.meeting.title, isPositiveButtonClicked)
+            val args = Args(viewState.value.meeting.id, isPositiveButtonClicked)
             setReactionUseCase.execute(args)
         }.onSuccess {
             setState { copy(meeting = it) }
