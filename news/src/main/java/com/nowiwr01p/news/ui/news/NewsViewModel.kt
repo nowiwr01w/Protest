@@ -26,13 +26,13 @@ class NewsViewModel(
 
     private fun init() = io {
         setState { copy(isLoading = true) }
-        runCatching {
+//        runCatching {
             getScreenCache()
             getNews()
-        }.onSuccess {
+//        }.onSuccess {
             saveScreenCache()
             setState { copy(isLoading = false) }
-        }
+//        }
     }
 
     /**
