@@ -1,6 +1,6 @@
 package com.nowiwr01p.data.news
 
-import android.util.Log
+import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
@@ -16,9 +16,6 @@ class NewsRepositoryImpl(
     override suspend fun getNews(): List<Article> = withContext(dispatchers.io) {
         references.getNewsReference().get().await()
             .children
-            .map {
-                Log.d("Zhopa", "value = ${it.getValue(true)}")
-                it.getValue(Article::class.java)!!
-            }
+            .map { snapshot -> snapshot.getValue<Article>()!! }
     }
 }

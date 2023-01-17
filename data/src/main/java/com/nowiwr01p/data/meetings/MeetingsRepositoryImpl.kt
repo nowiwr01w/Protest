@@ -34,10 +34,7 @@ class MeetingsRepositoryImpl(
         val userCity = userDataStoreRepository.getUser().city.name
         references.getMeetingsReference().get().await()
             .children
-            .map { snapshot ->
-                Log.d("Zhopa", "meeting = ${snapshot.value}")
-                snapshot.getValue<Meeting>()!!
-            }
+            .map { snapshot -> snapshot.getValue<Meeting>()!! }
             .filter { meeting -> userCity == meeting.cityName }
             .sortedByDescending { meeting -> meeting.date }
     }
