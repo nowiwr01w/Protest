@@ -26,6 +26,12 @@ data class Title(
 ): ArticleData
 
 @Serializable
+data class SubTitle(
+    override val order: Int = 0,
+    val text: String = ""
+): ArticleData
+
+@Serializable
 data class Description(
     override val order: Int = 0,
     val text: String = ""
