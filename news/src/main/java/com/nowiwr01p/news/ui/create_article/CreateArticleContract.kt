@@ -6,14 +6,16 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
-import com.nowiwr01p.news.ui.create_article.data.CreateArticleFieldType
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
+import com.nowiwr01p.news.ui.create_article.data.StaticFields
 
 interface CreateArticleContract {
 
     sealed interface Event: ViewEvent {
         object NavigateBack: Event
-        data class OnBottomSheetTypeClick(val type: CreateArticleFieldType): Event
+        data class OnBottomSheetTypeClick(val type: CreateArticleBottomSheetType): Event
         data class ShowBottomSheet(val params: BottomSheetParams): Event
+        data class OnStaticFieldChanged(val type: StaticFields, val value: String): Event
     }
 
     data class State(
@@ -34,5 +36,6 @@ interface CreateArticleContract {
     interface Listener {
         fun onBackClick()
         fun showBottomSheet()
+        fun onStaticFieldChanged(type: StaticFields, value: String)
     }
 }

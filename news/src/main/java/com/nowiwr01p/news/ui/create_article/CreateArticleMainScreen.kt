@@ -43,7 +43,8 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
-import com.nowiwr01p.news.ui.create_article.data.CreateArticleFieldType
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
+import com.nowiwr01p.news.ui.create_article.data.StaticFields
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -61,6 +62,9 @@ fun CreateArticleMainScreen(
         }
         override fun showBottomSheet() {
             viewModel.setEvent(Event.ShowBottomSheet(addFieldBottomSheetParams))
+        }
+        override fun onStaticFieldChanged(type: StaticFields, value: String) {
+            viewModel.setEvent(Event.OnStaticFieldChanged(type, value))
         }
     }
 
@@ -114,12 +118,12 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
     LazyColumn(modifier = contentModifier) {
         items(state.content) { item ->
             when (item) {
-                is TopImage -> TopImageItem(state).toItem()
-                is Title -> TitleItem(state).toItem()
-                is Description -> DescriptionItem(state).toItem()
-                is SubTitle -> SubTitleItem(state, item.order).toItem()
-                is ImageList -> ImageList(state, item)
-                is OrderedList -> OrderedList(state, item)
+                is TopImage -> TopImageItem(state, listener).toItem()
+                is Title -> TitleItem(state, listener).toItem()
+                is Description -> DescriptionItem(state, listener).toItem()
+                is SubTitle -> SubTitleItem(state, listener, item.order).toItem()
+                is ImageList -> ImageList(state, listener, item)
+                is OrderedList -> OrderedList(state, listener, item)
             }
         }
         item { Spacer(modifier = Modifier.height(120.dp)) }
@@ -228,11 +232,11 @@ private fun CustomTextField(item: CreateArticleDataType) = Row(
  * ADD FIELD BOTTOM SHEET
  */
 @Composable
-private fun AddFieldBottomSheet(onTypeClick: (CreateArticleFieldType) -> Unit): @Composable () -> Unit = {
+private fun AddFieldBottomSheet(onTypeClick: (CreateArticleBottomSheetType) -> Unit): @Composable () -> Unit = {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        CreateArticleFieldType.values().forEach { type ->
+        CreateArticleBottomSheetType.values().forEach { type ->
             AddFieldBottomSheetItem(type) { onTypeClick.invoke(type) }
         }
     }
@@ -240,7 +244,7 @@ private fun AddFieldBottomSheet(onTypeClick: (CreateArticleFieldType) -> Unit): 
 
 @Composable
 private fun AddFieldBottomSheetItem(
-    type: CreateArticleFieldType,
+    type: CreateArticleBottomSheetType,
     onTypeClick: () -> Unit
 ) {
     Row(
@@ -266,12 +270,23 @@ private fun AddFieldBottomSheetItem(
 @Composable
 private fun ImageList(
     state: State,
+    listener: Listener?,
     item: ImageList
 ) {
     ExpandableItems("Картинки") {
         item.images.forEachIndexed { index, _ ->
-            ImageLinkItem(state, item.order, index).toItem()
-            ImageDescriptionItem(state, item.order, index).toItem()
+            ImageLinkItem(
+                state = state,
+                listener = listener,
+                order = item.order,
+                imageIndex = index
+            ).toItem()
+            ImageDescriptionItem(
+                state = state,
+                listener = listener,
+                order = item.order,
+                imageIndex = index
+            ).toItem()
         }
     }
 }
@@ -282,12 +297,22 @@ private fun ImageList(
 @Composable
 private fun OrderedList(
     state: State,
+    listener: Listener?,
     item: OrderedList
 ) {
     ExpandableItems("Список") {
-        ItemOrderedListTitle(state, item.order).toItem()
+        ItemOrderedListTitle(
+            state = state,
+            listener = listener,
+            order = item.order
+        ).toItem()
         item.steps.forEachIndexed { index, _ ->
-            ItemOrderedListItem(state, index, item.order).toItem()
+            ItemOrderedListItem(
+                state = state,
+                listener = listener,
+                stepIndex = index,
+                order = item.order
+            ).toItem()
         }
     }
 }
