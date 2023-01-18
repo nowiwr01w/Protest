@@ -27,6 +27,8 @@ class CreateArticleViewModel(
             is Event.OnBottomSheetTypeClick -> addField(event.type)
             is Event.OnStaticFieldChanged -> changeStaticField(event.type, event.value)
             is Event.OnDynamicFieldChanged -> changeDynamicField(event.index, event.subIndex, event.type, event.value)
+            is Event.OnAddImageClick -> addImage(event.item, event.commonIndex, event.innerIndex)
+            is Event.OnAddStepItemClick -> addStepItem(event.item, event.commonIndex, event.innerIndex)
         }
     }
 
@@ -148,4 +150,36 @@ class CreateArticleViewModel(
                 }
             )
         }
+
+    /**
+     * ADD DYNAMIC IMAGE FIELD
+     */
+    private fun addImage(item: ImageList, commonIndex: Int, innerIndex: Int) = with(viewState.value) {
+        val updatedImages = item.images.toMutableList().apply {
+            add(Image())
+        }
+        val updatedCommon = content.toMutableList().apply {
+            this[commonIndex] = item.copy(images = updatedImages)
+        }
+        val updatedInner = images.toMutableList().apply {
+            this[innerIndex] = item.copy(images = updatedImages)
+        }
+        setState { copy(images = updatedInner, content = updatedCommon) }
+    }
+
+    /**
+     * ADD DYNAMIC ORDERED STEM ITEM FIELD
+     */
+    private fun addStepItem(item: OrderedList, commonIndex: Int, innerIndex: Int) = with(viewState.value) {
+        val updatedSteps = item.steps.toMutableList().apply {
+            add("")
+        }
+        val updatedCommon = content.toMutableList().apply {
+            this[commonIndex] = item.copy(steps = updatedSteps)
+        }
+        val updatedInner = orderedLists.toMutableList().apply {
+            this[innerIndex] = item.copy(steps = updatedSteps)
+        }
+        setState { copy(orderedLists = updatedInner, content = updatedCommon) }
+    }
 }

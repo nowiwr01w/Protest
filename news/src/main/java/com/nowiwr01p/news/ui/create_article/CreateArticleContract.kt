@@ -14,6 +14,8 @@ interface CreateArticleContract {
 
     sealed interface Event: ViewEvent {
         object NavigateBack: Event
+        data class OnAddImageClick(val item: ImageList, val commonIndex: Int, val innerIndex: Int): Event
+        data class OnAddStepItemClick(val item: OrderedList, val commonIndex: Int, val innerIndex: Int): Event
         data class OnBottomSheetTypeClick(val type: CreateArticleBottomSheetType): Event
         data class ShowBottomSheet(val params: BottomSheetParams): Event
         data class OnStaticFieldChanged(val type: StaticFields, val value: String): Event
@@ -40,5 +42,7 @@ interface CreateArticleContract {
         fun showBottomSheet()
         fun onStaticFieldChanged(type: StaticFields, value: String)
         fun onDynamicFieldChanged(index: Int, subIndex: Int, type: DynamicFields, value: String)
+        fun onAddImageClick(item: ImageList, commonIndex: Int, innerIndex: Int)
+        fun onAddStepItemClick(item: OrderedList, commonIndex: Int, innerIndex: Int)
     }
 }
