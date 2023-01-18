@@ -7,7 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -47,7 +47,6 @@ import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.data.StaticFields
 import org.koin.androidx.compose.getViewModel
-import timber.log.Timber
 
 @Composable
 fun CreateArticleMainScreen(
@@ -70,6 +69,12 @@ fun CreateArticleMainScreen(
         }
         override fun onDynamicFieldChanged(index: Int, subIndex: Int, type: DynamicFields, value: String) {
             viewModel.setEvent(Event.OnDynamicFieldChanged(index, subIndex, type, value))
+        }
+        override fun onAddImageClick(item: ImageList, commonIndex: Int, innerIndex: Int) {
+            viewModel.setEvent(Event.OnAddImageClick(item, commonIndex, innerIndex))
+        }
+        override fun onAddStepItemClick(item: OrderedList, commonIndex: Int, innerIndex: Int) {
+            viewModel.setEvent(Event.OnAddStepItemClick(item, commonIndex, innerIndex))
         }
     }
 
@@ -121,15 +126,15 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
             bottom.linkTo(parent.bottom)
         }
     LazyColumn(modifier = contentModifier) {
-        items(state.content) { item ->
+        itemsIndexed(state.content) { index, item ->
             when (item) {
                 is TopImage -> TopImageItem(state, listener).toItem()
                 is Title -> TitleItem(state, listener).toItem()
                 is Description -> DescriptionItem(state, listener).toItem()
                 is Text -> TextItem(state, listener, item.order).toItem()
                 is SubTitle -> SubTitleItem(state, listener, item.order).toItem()
-                is ImageList -> ImageList(state, listener, item)
-                is OrderedList -> OrderedList(state, listener, item)
+                is ImageList -> ImageList(index, state, listener, item)
+                is OrderedList -> OrderedList(index, state, listener, item)
                 else -> {}
             }
         }
@@ -276,11 +281,15 @@ private fun AddFieldBottomSheetItem(
  */
 @Composable
 private fun ImageList(
+    index: Int,
     state: State,
     listener: Listener?,
     item: ImageList
 ) {
-    ExpandableItems("Картинки") {
+    ExpandableItems(
+        title = "Картинки",
+        onItemClick = { listener?.onAddImageClick(item, index, item.order) }
+    ) {
         item.images.forEachIndexed { index, _ ->
             ImageLinkItem(
                 state = state,
@@ -303,11 +312,15 @@ private fun ImageList(
  */
 @Composable
 private fun OrderedList(
+    index: Int,
     state: State,
     listener: Listener?,
     item: OrderedList
 ) {
-    ExpandableItems("Список") {
+    ExpandableItems(
+        title = "Список",
+        onItemClick = { listener?.onAddStepItemClick(item, index, item.order) }
+    ) {
         ItemOrderedListTitle(
             state = state,
             listener = listener,
@@ -330,10 +343,11 @@ private fun OrderedList(
 @Composable
 private fun ExpandableItems(
     title: String,
+    onItemClick: () -> Unit,
     contentBuilder: @Composable () -> Unit
 ) {
     Column {
-        Header(title)
+        Header(title, onItemClick)
         Column(
             modifier = Modifier.animateContentSize()
         ) {
@@ -343,7 +357,7 @@ private fun ExpandableItems(
 }
 
 @Composable
-private fun Header(title: String) = ReversedRow(
+private fun Header(title: String, onItemClick: () -> Unit) = ReversedRow(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier.padding(top = 16.dp)
 ) {
@@ -360,7 +374,7 @@ private fun Header(title: String) = ReversedRow(
             )
     ) {
         ClickableIcon(icon = Icons.Default.AddCircleOutline) {
-            // TODO
+            onItemClick.invoke()
         }
     }
     Spacer(
