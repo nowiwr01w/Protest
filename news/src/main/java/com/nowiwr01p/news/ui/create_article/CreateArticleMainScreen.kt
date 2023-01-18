@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -36,8 +38,6 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.AddFieldType
-import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
-import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -96,18 +96,27 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
     )
 
     val contentModifier = Modifier
-        .fillMaxWidth()
+        .fillMaxSize()
         .padding(horizontal = 16.dp)
         .constrainAs(content) {
             height = Dimension.fillToConstraints
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             top.linkTo(toolbar.bottom)
+            bottom.linkTo(parent.bottom)
         }
     LazyColumn(modifier = contentModifier) {
-        item { CustomTextField(state, TopImage(state)) }
-        item { CustomTextField(state, Title(state)) }
-        item { CustomTextField(state, Description(state, 0)) }
+        items(state.getContent()) { item ->
+            when (item) {
+                is TopImage -> CustomTextField("", "Ссылка на картинку")
+                is Title -> CustomTextField("", "Заголовок")
+                is Description -> CustomTextField("", "Описание")
+                is SubTitle -> CustomTextField("", "Подзаголовок")
+                is ImageList -> CustomTextField("", "Картинка")
+                is OrderedList -> CustomTextField("", "Упорядоченный список")
+            }
+        }
+        item { Spacer(modifier = Modifier.height(120.dp)) }
     }
 
     val buttonModifier = Modifier
@@ -151,11 +160,17 @@ private fun Toolbar(
  * TEXT FIELD
  */
 @Composable
-private fun CustomTextField(state: State, item: CreateArticleDataType) = Row(
+private fun CustomTextField(
+    value: String,
+    hint: String,
+    showSubItemSlash: Boolean = false,
+    onValueChanged: (String) -> Unit = { },
+    trailingIconCallback: (() -> Unit)? = null
+) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    if (item.showSubItemSlash) {
+    if (showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "—",
@@ -168,11 +183,11 @@ private fun CustomTextField(state: State, item: CreateArticleDataType) = Row(
         Spacer(modifier = Modifier.width(24.dp))
     }
     TextField(
-        value = item.value,
-        onValueChange = { item.onValueChanged(it) },
+        value = value,
+        onValueChange = { onValueChanged(it) },
         label = {
             Text(
-                text = item.hint,
+                text = hint,
                 modifier = Modifier.padding(top = 3.dp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -194,12 +209,12 @@ private fun CustomTextField(state: State, item: CreateArticleDataType) = Row(
                 ),
                 shape = RoundedCornerShape(12.dp)
             ),
-        trailingIcon = if (item.trailingIconCallback == null) null else {
+        trailingIcon = if (trailingIconCallback == null) null else {
             {
                 ClickableIcon(
                     icon = Icons.Default.Close,
                     modifier = Modifier.padding(end = 12.dp),
-                    onClick = { item.trailingIconCallback!!.invoke() }
+                    onClick = { trailingIconCallback.invoke() }
                 )
             }
         }
