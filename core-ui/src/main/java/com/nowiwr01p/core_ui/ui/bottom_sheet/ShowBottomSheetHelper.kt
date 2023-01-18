@@ -4,6 +4,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ModalBottomSheetState
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
@@ -28,8 +29,11 @@ class ShowBottomSheetHelper {
         bottomSheetState.show()
     }
 
-    fun closeBottomSheet() = scope.launch {
+    fun closeBottomSheet(delay: Long = 0L) = scope.launch {
+        delay(delay)
         _content.send(null)
         bottomSheetState.hide()
     }
+
+    fun getBottomSheetState() = bottomSheetState
 }
