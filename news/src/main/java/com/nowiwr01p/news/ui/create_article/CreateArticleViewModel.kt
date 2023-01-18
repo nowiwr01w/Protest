@@ -54,6 +54,7 @@ class CreateArticleViewModel(
                 setState { copy(orderedLists = update(orderedLists, it)) }
             }
         }
+        showBottomSheetHelper.closeBottomSheet(100)
         setState { copy(content = update(content, item)) }
     }
 
