@@ -46,12 +46,12 @@ data class Image(
 @Serializable
 data class ImageList(
     override val order: Int = 0,
-    val images: List<Image> = listOf()
+    val images: List<Image> = listOf(Image())
 ): ArticleData
 
 @Serializable
 data class OrderedList(
     override val order: Int = 0,
     val title: String = "",
-    val steps: List<String> = listOf()
+    val steps: List<String> = listOf("")
 ): ArticleData

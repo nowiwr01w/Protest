@@ -6,13 +6,13 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
-import com.nowiwr01p.news.ui.create_article.data.AddFieldType
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleFieldType
 
 interface CreateArticleContract {
 
     sealed interface Event: ViewEvent {
         object NavigateBack: Event
-        data class OnBottomSheetTypeClick(val type: AddFieldType): Event
+        data class OnBottomSheetTypeClick(val type: CreateArticleFieldType): Event
         data class ShowBottomSheet(val params: BottomSheetParams): Event
     }
 
@@ -24,17 +24,8 @@ interface CreateArticleContract {
         val descriptions: List<Description> = mutableStateListOf(),
         val images: List<ImageList> = mutableStateListOf(),
         val orderedLists: List<OrderedList> = mutableStateListOf(),
-    ): ViewState {
-
-        fun getContent() = mutableStateListOf(image, title, description).apply {
-            subTitles.forEach { add(it) }
-            descriptions.forEach { add(it) }
-            images.forEach { add(it) }
-            orderedLists.forEach { add(it) }
-
-            sortBy { it.order }
-        }
-    }
+        val content: List<ArticleData> = mutableStateListOf(image, title, description)
+    ): ViewState
 
     sealed interface Effect: ViewSideEffect {
         object NavigateBack: Effect
