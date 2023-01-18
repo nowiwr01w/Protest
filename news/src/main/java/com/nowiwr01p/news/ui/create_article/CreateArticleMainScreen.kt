@@ -1,5 +1,6 @@
 package com.nowiwr01p.news.ui.create_article
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -13,6 +14,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,10 +29,12 @@ import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
+import com.nowiwr01p.core_ui.extensions.ReversedRow
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.theme.bodyRegular
 import com.nowiwr01p.core_ui.theme.graphicsSecondary
+import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -264,9 +268,7 @@ private fun ImageList(
     state: State,
     item: ImageList
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    ExpandableItems("Картинки") {
         item.images.forEachIndexed { index, _ ->
             ImageLinkItem(state, item.order, index).toItem()
             ImageDescriptionItem(state, item.order, index).toItem()
@@ -282,13 +284,76 @@ private fun OrderedList(
     state: State,
     item: OrderedList
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-    ) {
+    ExpandableItems("Список") {
         ItemOrderedListTitle(state, item.order).toItem()
         item.steps.forEachIndexed { index, _ ->
             ItemOrderedListItem(state, index, item.order).toItem()
         }
+    }
+}
+
+/**
+ * EXPANDABLE ITEMS
+ */
+@Composable
+private fun ExpandableItems(
+    title: String,
+    contentBuilder: @Composable () -> Unit
+) {
+    Column {
+        Header(title)
+        Column(
+            modifier = Modifier.animateContentSize()
+        ) {
+            contentBuilder()
+        }
+    }
+}
+
+@Composable
+private fun Header(title: String) = ReversedRow(
+    verticalAlignment = Alignment.CenterVertically,
+    modifier = Modifier.padding(top = 16.dp)
+) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(56.dp)
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+    ) {
+        ClickableIcon(icon = Icons.Default.AddCircleOutline) {
+            // TODO
+        }
+    }
+    Spacer(
+        modifier = Modifier.width(16.dp)
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .clip(RoundedCornerShape(12.dp))
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+    ) {
+        Text(
+            text = title,
+            color = Color(0x99000000),
+            style = MaterialTheme.typography.subHeadlineRegular,
+            modifier = Modifier.padding(start = 16.dp)
+        )
     }
 }
 
