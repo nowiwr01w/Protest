@@ -37,7 +37,9 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
-import com.nowiwr01p.news.ui.create_article.data.AddFieldType
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleFieldType
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -106,14 +108,14 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
             bottom.linkTo(parent.bottom)
         }
     LazyColumn(modifier = contentModifier) {
-        items(state.getContent()) { item ->
+        items(state.content) { item ->
             when (item) {
-                is TopImage -> CustomTextField("", "Ссылка на картинку")
-                is Title -> CustomTextField("", "Заголовок")
-                is Description -> CustomTextField("", "Описание")
-                is SubTitle -> CustomTextField("", "Подзаголовок")
-                is ImageList -> CustomTextField("", "Картинка")
-                is OrderedList -> CustomTextField("", "Упорядоченный список")
+                is TopImage -> TopImageItem(state).toItem()
+                is Title -> TitleItem(state).toItem()
+                is Description -> DescriptionItem(state).toItem()
+                is SubTitle -> SubTitleItem(state, item.order).toItem()
+                is ImageList -> ImageList(state, item)
+                is OrderedList -> OrderedList(state, item)
             }
         }
         item { Spacer(modifier = Modifier.height(120.dp)) }
@@ -134,6 +136,9 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
         modifier = buttonModifier
     )
 }
+
+@Composable
+fun CreateArticleDataType.toItem() = CustomTextField(this)
 
 /**
  * TOOLBAR
@@ -160,17 +165,11 @@ private fun Toolbar(
  * TEXT FIELD
  */
 @Composable
-private fun CustomTextField(
-    value: String,
-    hint: String,
-    showSubItemSlash: Boolean = false,
-    onValueChanged: (String) -> Unit = { },
-    trailingIconCallback: (() -> Unit)? = null
-) = Row(
+private fun CustomTextField(item: CreateArticleDataType) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    if (showSubItemSlash) {
+    if (item.showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
             text = "—",
@@ -183,11 +182,11 @@ private fun CustomTextField(
         Spacer(modifier = Modifier.width(24.dp))
     }
     TextField(
-        value = value,
-        onValueChange = { onValueChanged(it) },
+        value = item.value,
+        onValueChange = { item.onValueChanged(it) },
         label = {
             Text(
-                text = hint,
+                text = item.hint,
                 modifier = Modifier.padding(top = 3.dp),
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis
@@ -209,12 +208,12 @@ private fun CustomTextField(
                 ),
                 shape = RoundedCornerShape(12.dp)
             ),
-        trailingIcon = if (trailingIconCallback == null) null else {
+        trailingIcon = if (item.trailingIconCallback == null) null else {
             {
                 ClickableIcon(
                     icon = Icons.Default.Close,
                     modifier = Modifier.padding(end = 12.dp),
-                    onClick = { trailingIconCallback.invoke() }
+                    onClick = { item.trailingIconCallback!!.invoke() }
                 )
             }
         }
@@ -225,11 +224,11 @@ private fun CustomTextField(
  * ADD FIELD BOTTOM SHEET
  */
 @Composable
-private fun AddFieldBottomSheet(onTypeClick: (AddFieldType) -> Unit): @Composable () -> Unit = {
+private fun AddFieldBottomSheet(onTypeClick: (CreateArticleFieldType) -> Unit): @Composable () -> Unit = {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
-        AddFieldType.values().forEach { type ->
+        CreateArticleFieldType.values().forEach { type ->
             AddFieldBottomSheetItem(type) { onTypeClick.invoke(type) }
         }
     }
@@ -237,7 +236,7 @@ private fun AddFieldBottomSheet(onTypeClick: (AddFieldType) -> Unit): @Composabl
 
 @Composable
 private fun AddFieldBottomSheetItem(
-    type: AddFieldType,
+    type: CreateArticleFieldType,
     onTypeClick: () -> Unit
 ) {
     Row(
@@ -254,6 +253,42 @@ private fun AddFieldBottomSheetItem(
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.padding(start = 20.dp, top = 16.dp, bottom = 16.dp, end = 16.dp)
         )
+    }
+}
+
+/**
+ * IMAGE LIST
+ */
+@Composable
+private fun ImageList(
+    state: State,
+    item: ImageList
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        item.images.forEachIndexed { index, _ ->
+            ImageLinkItem(state, item.order, index).toItem()
+            ImageDescriptionItem(state, item.order, index).toItem()
+        }
+    }
+}
+
+/**
+ * ORDERED LIST
+ */
+@Composable
+private fun OrderedList(
+    state: State,
+    item: OrderedList
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        ItemOrderedListTitle(state, item.order).toItem()
+        item.steps.forEachIndexed { index, _ ->
+            ItemOrderedListItem(state, index, item.order).toItem()
+        }
     }
 }
 
