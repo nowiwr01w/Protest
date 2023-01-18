@@ -7,7 +7,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -17,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +49,7 @@ import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.data.StaticFields
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -78,17 +82,24 @@ fun CreateArticleMainScreen(
         }
     }
 
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.NavigateBack -> {
                 navigator.navigateUp()
+            }
+            is Effect.ScrollDown -> scope.launch {
+                listState.animateScrollToItem(viewModel.viewState.value.content.lastIndex)
             }
         }
     }
 
     CreateArticleMainScreenContent(
         state = viewModel.viewState.value,
-        listener = listener
+        listener = listener,
+        listState = listState
     )
 }
 
@@ -96,7 +107,11 @@ fun CreateArticleMainScreen(
  * SCREEN CONTENT
  */
 @Composable
-private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = ConstraintLayout(
+private fun CreateArticleMainScreenContent(
+    state: State,
+    listener: Listener?,
+    listState: LazyListState
+) = ConstraintLayout(
     modifier = Modifier
         .fillMaxSize()
         .background(Color.White)
@@ -125,7 +140,10 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
             top.linkTo(toolbar.bottom)
             bottom.linkTo(parent.bottom)
         }
-    LazyColumn(modifier = contentModifier) {
+    LazyColumn(
+        state = listState,
+        modifier = contentModifier
+    ) {
         itemsIndexed(state.content) { index, item ->
             when (item) {
                 is TopImage -> TopImageItem(state, listener).toItem()
@@ -411,6 +429,7 @@ private fun Header(title: String, onItemClick: () -> Unit) = ReversedRow(
 private fun Preview() = MeetingsTheme {
     CreateArticleMainScreenContent(
         state = State(),
-        listener = null
+        listener = null,
+        listState = rememberLazyListState()
     )
 }
