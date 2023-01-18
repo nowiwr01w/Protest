@@ -44,8 +44,10 @@ import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
+import com.nowiwr01p.news.ui.create_article.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.data.StaticFields
 import org.koin.androidx.compose.getViewModel
+import timber.log.Timber
 
 @Composable
 fun CreateArticleMainScreen(
@@ -65,6 +67,9 @@ fun CreateArticleMainScreen(
         }
         override fun onStaticFieldChanged(type: StaticFields, value: String) {
             viewModel.setEvent(Event.OnStaticFieldChanged(type, value))
+        }
+        override fun onDynamicFieldChanged(index: Int, subIndex: Int, type: DynamicFields, value: String) {
+            viewModel.setEvent(Event.OnDynamicFieldChanged(index, subIndex, type, value))
         }
     }
 
@@ -124,6 +129,7 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
                 is SubTitle -> SubTitleItem(state, listener, item.order).toItem()
                 is ImageList -> ImageList(state, listener, item)
                 is OrderedList -> OrderedList(state, listener, item)
+                else -> {}
             }
         }
         item { Spacer(modifier = Modifier.height(120.dp)) }

@@ -77,6 +77,7 @@ fun ArticleContent(state: State, listener: Listener?) = Column(
                 is Description -> Description(content)
                 is ImageList -> ImageListItem(content)
                 is OrderedList -> OrderedListItem(content)
+                else -> {}
             }
         }
         item{ Spacer(modifier = Modifier.height(32.dp)) }
