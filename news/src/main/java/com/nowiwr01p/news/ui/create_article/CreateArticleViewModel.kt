@@ -41,10 +41,7 @@ class CreateArticleViewModel(
                 setState { copy(orderedLists = update(orderedLists, it)) }
             }
         }
-        val updated = content.toMutableList().apply {
-            add(item)
-        }
-        setState { copy(content = updated) }
+        setState { copy(content = update(content, item)) }
     }
 
     private inline fun <reified T: ArticleData> update(list: List<T>, value: T) = list

@@ -2,7 +2,7 @@ package com.nowiwr01p.news.ui.create_article.data
 
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 
-sealed class CreateArticleDataType(
+open class CreateArticleDataType(
     open val value: String = "",
     open val hint: String = "",
     open val order: Int = 0,
@@ -55,8 +55,14 @@ sealed class CreateArticleDataType(
         override val order: Int,
         val imageIndex: Int,
         override val value: String = state.images[order].images[imageIndex].link,
-        override val hint: String = "Ссылка на картинку"
-    ): CreateArticleDataType(value, hint, order)
+        override val hint: String = "Ссылка на картинку",
+        override val showSubItemSlash: Boolean = true,
+    ): CreateArticleDataType(
+        value = value,
+        hint = hint,
+        order = order,
+        showSubItemSlash = showSubItemSlash
+    )
 
     data class ImageDescriptionItem(
         val state: State,
@@ -66,7 +72,13 @@ sealed class CreateArticleDataType(
         override val hint: String = "Подпись",
         override val showSubItemSlash: Boolean = true,
         override val trailingIconCallback: () -> Unit = { }
-    ): CreateArticleDataType(value, hint, order, showSubItemSlash, trailingIconCallback = trailingIconCallback)
+    ): CreateArticleDataType(
+        value = value,
+        hint = hint,
+        order = order,
+        showSubItemSlash = showSubItemSlash,
+        trailingIconCallback = trailingIconCallback
+    )
 
     /**
      * ORDERED LIST
@@ -75,8 +87,14 @@ sealed class CreateArticleDataType(
         val state: State,
         override val order: Int,
         override val value: String = state.orderedLists[order].title,
-        override val hint: String = "Заголовок листа"
-    ): CreateArticleDataType(value, hint, order)
+        override val hint: String = "Заголовок листа",
+        override val showSubItemSlash: Boolean = true,
+    ): CreateArticleDataType(
+        value = value,
+        hint = hint,
+        order = order,
+        showSubItemSlash = showSubItemSlash
+    )
 
     data class ItemOrderedListItem(
         val state: State,
@@ -85,6 +103,12 @@ sealed class CreateArticleDataType(
         override val value: String = state.orderedLists[order].steps[stepIndex],
         override val hint: String = "Элемент листа",
         override val showSubItemSlash: Boolean = true,
-        override val trailingIconCallback: () -> Unit = { }
-    ): CreateArticleDataType(value, hint, order, showSubItemSlash, trailingIconCallback = trailingIconCallback)
+        override val trailingIconCallback: (() -> Unit)? = null
+    ): CreateArticleDataType(
+        value = value,
+        hint = hint,
+        order = order,
+        showSubItemSlash = showSubItemSlash,
+        trailingIconCallback = if (stepIndex > 1) trailingIconCallback else null
+    )
 }
