@@ -1,8 +1,7 @@
 package com.nowiwr01p.news.ui.create_article
 
 import androidx.compose.runtime.mutableStateListOf
-import com.nowiwr01p.core.model.Image
-import com.nowiwr01p.core.model.OrderedList
+import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
@@ -18,12 +17,24 @@ interface CreateArticleContract {
     }
 
     data class State(
-        val image: String = "",
-        val title: String = "",
-        val description: List<String> = mutableStateListOf(""),
-        val images: List<Image> = mutableStateListOf(),
-        val orderedLists: List<OrderedList> = mutableStateListOf()
-    ): ViewState
+        val image: TopImage = TopImage(),
+        val title: Title = Title(),
+        val description: Description = Description(),
+        val subTitles: List<SubTitle> = mutableStateListOf(),
+        val descriptions: List<Description> = mutableStateListOf(),
+        val images: List<ImageList> = mutableStateListOf(),
+        val orderedLists: List<OrderedList> = mutableStateListOf(),
+    ): ViewState {
+
+        fun getContent() = mutableStateListOf(image, title, description).apply {
+            subTitles.forEach { add(it) }
+            descriptions.forEach { add(it) }
+            images.forEach { add(it) }
+            orderedLists.forEach { add(it) }
+
+            sortBy { it.order }
+        }
+    }
 
     sealed interface Effect: ViewSideEffect {
         object NavigateBack: Effect
