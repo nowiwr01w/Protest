@@ -6,6 +6,5 @@ import androidx.compose.ui.unit.dp
 
 data class BottomSheetParams(
     val topPadding: Dp = 0.dp,
-    val closeAfterClick: Boolean = false,
     val content: @Composable () -> Unit
 )
