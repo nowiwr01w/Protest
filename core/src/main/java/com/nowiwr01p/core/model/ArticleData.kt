@@ -38,6 +38,12 @@ data class Description(
 ): ArticleData
 
 @Serializable
+data class Text(
+    override val order: Int = 0,
+    val text: String = ""
+): ArticleData
+
+@Serializable
 data class Image(
     val link: String = "",
     val description: String = ""
