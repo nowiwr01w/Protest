@@ -65,6 +65,25 @@ open class CreateArticleDataType(
     )
 
     /**
+     * TEXT
+     */
+    data class TextItem(
+        val state: State,
+        val listener: Listener?,
+        override val order: Int,
+        override val type: DynamicFields = TEXT_FIELD,
+        override val value: String = state.texts[order].text,
+        override val hint: String = "Текст",
+        override val onValueChanged: (String) -> Unit = { listener?.onDynamicFieldChanged(order, -1, type, it) }
+    ): CreateArticleDataType(
+        type = type,
+        value = value,
+        hint = hint,
+        order = order,
+        onValueChanged = onValueChanged
+    )
+
+    /**
      * SUBTITLE
      */
     data class SubTitleItem(

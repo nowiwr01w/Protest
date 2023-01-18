@@ -25,7 +25,7 @@ interface CreateArticleContract {
         val title: Title = Title(),
         val description: Description = Description(),
         val subTitles: List<SubTitle> = mutableStateListOf(),
-        val descriptions: List<Description> = mutableStateListOf(),
+        val texts: List<Text> = mutableStateListOf(),
         val images: List<ImageList> = mutableStateListOf(),
         val orderedLists: List<OrderedList> = mutableStateListOf(),
         val content: List<ArticleData> = mutableStateListOf(image, title, description)

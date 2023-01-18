@@ -126,6 +126,7 @@ private fun CreateArticleMainScreenContent(state: State, listener: Listener?) = 
                 is TopImage -> TopImageItem(state, listener).toItem()
                 is Title -> TitleItem(state, listener).toItem()
                 is Description -> DescriptionItem(state, listener).toItem()
+                is Text -> TextItem(state, listener, item.order).toItem()
                 is SubTitle -> SubTitleItem(state, listener, item.order).toItem()
                 is ImageList -> ImageList(state, listener, item)
                 is OrderedList -> OrderedList(state, listener, item)

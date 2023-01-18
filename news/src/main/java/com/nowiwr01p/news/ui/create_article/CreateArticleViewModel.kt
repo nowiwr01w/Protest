@@ -42,8 +42,8 @@ class CreateArticleViewModel(
             SUBTITLE -> SubTitle(subTitles.size).also {
                 setState { copy(subTitles = update(subTitles, it)) }
             }
-            TEXT -> Description(descriptions.size).also {
-                setState { copy(descriptions = update(descriptions, it)) }
+            TEXT -> Text(texts.size).also {
+                setState { copy(texts = update(texts, it)) }
             }
             IMAGE -> ImageList(images.size).also {
                 setState { copy(images = update(images, it)) }
@@ -81,6 +81,7 @@ class CreateArticleViewModel(
         value: String
     ) = setState {
         when (type) {
+            TEXT_FIELD -> copy(texts = changeText(itemIndex, value))
             SUBTITLE_FIELD -> copy(subTitles = changeSubTitle(itemIndex, value))
             IMAGE_LINK -> copy(images = changeImage(itemIndex, subItemIndex, value, LINK))
             IMAGE_DETAILS -> copy(images = changeImage(itemIndex, subItemIndex, value, DETAILS))
@@ -88,6 +89,16 @@ class CreateArticleViewModel(
             ORDERED_LIST_STEP -> copy(orderedLists = changeOrderedListStep(itemIndex, subItemIndex, value))
         }
     }
+
+    /**
+     * CHANGE TEXT
+     */
+    private fun changeText(index: Int, value: String) = viewState.value
+        .texts
+        .toMutableList()
+        .apply {
+            this[index] = get(index).copy(text = value)
+        }
 
     /**
      * CHANGE SUBTITLE
