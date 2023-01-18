@@ -7,6 +7,7 @@ import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
+import com.nowiwr01p.news.ui.create_article.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.data.StaticFields
 
 interface CreateArticleContract {
@@ -16,6 +17,7 @@ interface CreateArticleContract {
         data class OnBottomSheetTypeClick(val type: CreateArticleBottomSheetType): Event
         data class ShowBottomSheet(val params: BottomSheetParams): Event
         data class OnStaticFieldChanged(val type: StaticFields, val value: String): Event
+        data class OnDynamicFieldChanged(val index: Int, val subIndex: Int, val type: DynamicFields, val value: String): Event
     }
 
     data class State(
@@ -37,5 +39,6 @@ interface CreateArticleContract {
         fun onBackClick()
         fun showBottomSheet()
         fun onStaticFieldChanged(type: StaticFields, value: String)
+        fun onDynamicFieldChanged(index: Int, subIndex: Int, type: DynamicFields, value: String)
     }
 }

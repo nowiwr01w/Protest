@@ -2,7 +2,7 @@ package com.nowiwr01p.core.model
 
 import kotlinx.serialization.Serializable
 
-interface ArticleData {
+sealed interface ArticleData {
     val order: Int
 }
 
