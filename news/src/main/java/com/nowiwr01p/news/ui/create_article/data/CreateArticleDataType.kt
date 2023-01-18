@@ -71,10 +71,17 @@ open class CreateArticleDataType(
         val state: State,
         val listener: Listener?,
         override val order: Int,
-        override val type: CreateArticleFieldType = SUBTITLE_FIELD,
+        override val type: DynamicFields = SUBTITLE_FIELD,
         override val value: String = state.subTitles[order].text,
-        override val hint: String = "Подзаголовок"
-    ): CreateArticleDataType(type, value, hint, order)
+        override val hint: String = "Подзаголовок",
+        override val onValueChanged: (String) -> Unit = { listener?.onDynamicFieldChanged(order, -1, type, it) }
+    ): CreateArticleDataType(
+        type = type,
+        value = value,
+        hint = hint,
+        order = order,
+        onValueChanged = onValueChanged
+    )
 
     /**
      * IMAGE LIST
@@ -82,29 +89,32 @@ open class CreateArticleDataType(
     data class ImageLinkItem(
         val state: State,
         val listener: Listener?,
-        override val type: CreateArticleFieldType = IMAGE_LINK,
+        override val type: DynamicFields = IMAGE_LINK,
         override val order: Int,
         val imageIndex: Int,
         override val value: String = state.images[order].images[imageIndex].link,
         override val hint: String = "Ссылка на картинку",
         override val showSubItemSlash: Boolean = true,
+        override val onValueChanged: (String) -> Unit = { listener?.onDynamicFieldChanged(order, imageIndex, type, it) }
     ): CreateArticleDataType(
         type = type,
         value = value,
         hint = hint,
         order = order,
-        showSubItemSlash = showSubItemSlash
+        showSubItemSlash = showSubItemSlash,
+        onValueChanged = onValueChanged
     )
 
     data class ImageDescriptionItem(
         val state: State,
         val listener: Listener?,
-        override val type: CreateArticleFieldType = IMAGE_DETAILS,
+        override val type: DynamicFields = IMAGE_DETAILS,
         override val order: Int,
         val imageIndex: Int,
         override val value: String = state.images[order].images[imageIndex].description,
         override val hint: String = "Подпись",
         override val showSubItemSlash: Boolean = true,
+        override val onValueChanged: (String) -> Unit = { listener?.onDynamicFieldChanged(order, imageIndex, type, it) },
         override val trailingIconCallback: () -> Unit = { }
     ): CreateArticleDataType(
         type = type,
@@ -112,6 +122,7 @@ open class CreateArticleDataType(
         hint = hint,
         order = order,
         showSubItemSlash = showSubItemSlash,
+        onValueChanged = onValueChanged,
         trailingIconCallback = trailingIconCallback
     )
 
@@ -121,28 +132,31 @@ open class CreateArticleDataType(
     data class ItemOrderedListTitle(
         val state: State,
         val listener: Listener?,
-        override val type: CreateArticleFieldType = ORDERED_LIST_TITLE,
+        override val type: DynamicFields = ORDERED_LIST_TITLE,
         override val order: Int,
         override val value: String = state.orderedLists[order].title,
         override val hint: String = "Заголовок листа",
         override val showSubItemSlash: Boolean = true,
+        override val onValueChanged: (String) -> Unit = { listener?.onDynamicFieldChanged(order, -1, type, it) }
     ): CreateArticleDataType(
         type = type,
         value = value,
         hint = hint,
         order = order,
-        showSubItemSlash = showSubItemSlash
+        showSubItemSlash = showSubItemSlash,
+        onValueChanged = onValueChanged
     )
 
     data class ItemOrderedListItem(
         val state: State,
         val listener: Listener?,
-        override val type: CreateArticleFieldType = ORDERED_LIST_STEP,
         val stepIndex: Int,
+        override val type: DynamicFields = ORDERED_LIST_STEP,
         override val order: Int,
         override val value: String = state.orderedLists[order].steps[stepIndex],
         override val hint: String = "Элемент листа",
         override val showSubItemSlash: Boolean = true,
+        override val onValueChanged: (String) -> Unit = { listener?.onDynamicFieldChanged(order, stepIndex, type, it) },
         override val trailingIconCallback: (() -> Unit)? = null
     ): CreateArticleDataType(
         type = type,
@@ -150,6 +164,7 @@ open class CreateArticleDataType(
         hint = hint,
         order = order,
         showSubItemSlash = showSubItemSlash,
+        onValueChanged = onValueChanged,
         trailingIconCallback = if (stepIndex > 1) trailingIconCallback else null
     )
 }
