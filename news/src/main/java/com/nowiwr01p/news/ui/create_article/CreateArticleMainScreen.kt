@@ -24,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -84,13 +85,15 @@ fun CreateArticleMainScreen(
 
     val scope = rememberCoroutineScope()
     val listState = rememberLazyListState()
+    val focusManager = LocalFocusManager.current
 
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.NavigateBack -> {
                 navigator.navigateUp()
             }
-            is Effect.ScrollDown -> scope.launch {
+            is Effect.OnItemAdded -> scope.launch {
+                focusManager.clearFocus()
                 listState.animateScrollToItem(viewModel.viewState.value.content.lastIndex)
             }
         }

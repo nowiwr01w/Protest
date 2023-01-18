@@ -35,7 +35,7 @@ interface CreateArticleContract {
 
     sealed interface Effect: ViewSideEffect {
         object NavigateBack: Effect
-        object ScrollDown: Effect
+        object OnItemAdded: Effect
     }
 
     interface Listener {

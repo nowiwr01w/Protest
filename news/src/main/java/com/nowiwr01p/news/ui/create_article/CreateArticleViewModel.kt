@@ -56,7 +56,7 @@ class CreateArticleViewModel(
         }
         showBottomSheetHelper.closeBottomSheet(100)
         setState { copy(content = update(content, item)) }
-        setEffect { Effect.ScrollDown }
+        setEffect { Effect.OnItemAdded }
     }
 
     private inline fun <reified T: ArticleData> update(list: List<T>, value: T) = list
