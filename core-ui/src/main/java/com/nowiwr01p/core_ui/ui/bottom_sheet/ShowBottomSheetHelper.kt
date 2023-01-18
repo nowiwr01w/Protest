@@ -34,6 +34,4 @@ class ShowBottomSheetHelper {
         _content.send(null)
         bottomSheetState.hide()
     }
-
-    fun getBottomSheetState() = bottomSheetState
 }
