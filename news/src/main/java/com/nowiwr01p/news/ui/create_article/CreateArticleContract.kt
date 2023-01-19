@@ -13,7 +13,10 @@ import com.nowiwr01p.news.ui.create_article.data.StaticFields
 interface CreateArticleContract {
 
     sealed interface Event: ViewEvent {
+
         object NavigateBack: Event
+
+        object NavigateToPreview: Event
 
         data class OnRemoveField(val commonIndex: Int): Event
 
@@ -55,15 +58,22 @@ interface CreateArticleContract {
         val title: Title = Title(),
         val description: Description = Description(),
         val content: List<ArticleData> = mutableStateListOf(image, title, description)
-    ): ViewState
+    ): ViewState{
+
+        fun isPreviewButtonVisible() = image.link.isNotEmpty()
+                && title.text.isNotEmpty()
+                && description.text.isNotEmpty()
+    }
 
     sealed interface Effect: ViewSideEffect {
         object NavigateBack: Effect
         object OnItemAdded: Effect
+        data class NavigateToPreview(val article: Article): Effect
     }
 
     interface Listener {
         fun onBackClick()
+        fun onPreviewClick()
         fun showBottomSheet()
         fun onRemoveField(commonIndex: Int)
         fun onStaticFieldChanged(type: StaticFields, value: String)
