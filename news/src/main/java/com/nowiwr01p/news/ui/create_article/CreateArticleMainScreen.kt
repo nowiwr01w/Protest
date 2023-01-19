@@ -75,19 +75,17 @@ fun CreateArticleMainScreen(
         override fun showBottomSheet() {
             viewModel.setEvent(Event.ShowBottomSheet(addFieldBottomSheetParams))
         }
+        override fun onRemoveField(commonIndex: Int) {
+            viewModel.setEvent(Event.OnRemoveField(commonIndex))
+        }
         override fun onStaticFieldChanged(type: StaticFields, value: String) {
             viewModel.setEvent(Event.OnStaticFieldChanged(type, value))
         }
         override fun onAddRemoveImageClick(item: ImageList, commonIndex: Int, addOperation: Boolean) {
             viewModel.setEvent(Event.OnAddRemoveImageClick(item, commonIndex, addOperation))
         }
-        override fun onAddRemoveStepItemClick(
-            item: OrderedList,
-            commonIndex: Int,
-            removeItem: Boolean,
-            removeIndex: Int
-        ) {
-            viewModel.setEvent(Event.OnAddRemoveStepItemClick(item, commonIndex, removeItem, removeIndex))
+        override fun onAddRemoveStepItemClick(item: OrderedList, commonIndex: Int, removeIndex: Int) {
+            viewModel.setEvent(Event.OnAddRemoveStepItemClick(item, commonIndex, removeIndex))
         }
         override fun onDynamicFieldChanged(
             contentItemIndex: Int,
@@ -330,7 +328,7 @@ private fun ImageList(
 ) {
     ExpandableItems(
         title = "Картинки",
-        onAddItemClick = { listener?.onAddRemoveImageClick(item, commonIndex, true) },
+        onAddSubItemClick = { listener?.onAddRemoveImageClick(item, commonIndex, true) },
         onRemoveItemClick = { listener?.onAddRemoveImageClick(item, commonIndex, false) }
     ) {
         item.images.forEachIndexed { index, _ ->
@@ -362,8 +360,8 @@ private fun OrderedList(
 ) {
     ExpandableItems(
         title = "Список",
-        onAddItemClick = { listener?.onAddRemoveStepItemClick(item, commonIndex) },
-        onRemoveItemClick = { listener?.onAddRemoveStepItemClick(item, commonIndex, true) }
+        onAddSubItemClick = { listener?.onAddRemoveStepItemClick(item, commonIndex) },
+        onRemoveItemClick = { listener?.onRemoveField(commonIndex)}
     ) {
         ItemOrderedListTitle(
             state = state,
@@ -377,7 +375,7 @@ private fun OrderedList(
                 commonIndex = commonIndex,
                 stepIndex = index,
                 trailingIconCallback = if (index == 0) null else {
-                    { listener?.onAddRemoveStepItemClick(item, commonIndex, false, index) }
+                    { listener?.onAddRemoveStepItemClick(item, commonIndex, index) }
                 }
             ).toItem()
         }
@@ -390,12 +388,12 @@ private fun OrderedList(
 @Composable
 private fun ExpandableItems(
     title: String,
-    onAddItemClick: () -> Unit,
+    onAddSubItemClick: () -> Unit,
     onRemoveItemClick: (() -> Unit)? = null,
     contentBuilder: @Composable () -> Unit
 ) {
     Column {
-        Header(title, onAddItemClick, onRemoveItemClick)
+        Header(title, onAddSubItemClick, onRemoveItemClick)
         Column(
             modifier = Modifier.animateContentSize()
         ) {

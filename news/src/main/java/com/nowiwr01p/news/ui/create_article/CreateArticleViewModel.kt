@@ -24,10 +24,11 @@ class CreateArticleViewModel(
             is Event.NavigateBack -> setEffect { Effect.NavigateBack }
             is Event.ShowBottomSheet -> showBottomSheet(event.params)
             is Event.OnBottomSheetTypeClick -> addField(event.type)
+            is Event.OnRemoveField -> removeField(event.commonIndex)
             is Event.OnStaticFieldChanged -> changeStaticField(event.type, event.value)
             is Event.OnDynamicFieldChanged -> changeDynamicField(event.contentItemIndex, event.insideItemIndex, event.type, event.value)
             is Event.OnAddRemoveImageClick -> addRemoveImage(event.item, event.commonIndex, event.addOperation)
-            is Event.OnAddRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.removeItem, event.removeSubItemIndex)
+            is Event.OnAddRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.removeSubItemIndex)
         }
     }
 
@@ -54,6 +55,16 @@ class CreateArticleViewModel(
         .toMutableList()
         .apply { add(value) }
 
+
+    /**
+     * REMOVE CUSTOM TEXT FIELD ON THE SCREEN
+     */
+    private fun removeField(commonIndex: Int) = with(viewState.value) {
+        val updated = content.toMutableList().apply {
+            removeAt(commonIndex)
+        }
+        setState { copy(content = updated) }
+    }
 
     /**
      * CHANGE TOP-3 ITEMS VALUES
@@ -147,7 +158,6 @@ class CreateArticleViewModel(
     private fun addRemoveStepItem(
         item: OrderedList,
         commonIndex: Int,
-        removeItem: Boolean,
         removeSubItemIndex: Int = -1
     ) {
         with(viewState.value) {
@@ -155,11 +165,7 @@ class CreateArticleViewModel(
                 if (removeSubItemIndex == -1) add("") else removeAt(removeSubItemIndex)
             }
             val updatedCommon = content.toMutableList().apply {
-                if (removeItem) {
-                    removeAt(commonIndex)
-                } else {
-                    this[commonIndex] = item.copy(steps = updatedSteps)
-                }
+                this[commonIndex] = item.copy(steps = updatedSteps)
             }
             setState { copy(content = updatedCommon) }
         }
