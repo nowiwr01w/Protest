@@ -44,7 +44,7 @@ class MeetingsRepositoryImpl(
      */
     override suspend fun createMeeting(meeting: Meeting): Unit = withContext(dispatchers.io) {
         references.getMeetingsReference()
-            .child(meeting.title)
+            .child(meeting.id)
             .setValue(meeting)
             .await()
     }
