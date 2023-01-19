@@ -19,6 +19,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.constraintlayout.compose.Dimension
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
@@ -27,6 +28,7 @@ import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core.model.Article.Companion.article
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.horizontal_pager.PagerIndicator
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
@@ -37,6 +39,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ArticleScreen(
+    isPreviewMode: Boolean,
     article: Article,
     navigator: Navigator,
     viewModel: ArticleViewModel = getViewModel()
@@ -55,33 +58,79 @@ fun ArticleScreen(
     }
 
     ArticleContent(
+        isPreviewMode = isPreviewMode,
         state = viewModel.viewState.value,
         listener = listener
     )
 }
 
 @Composable
-fun ArticleContent(state: State, listener: Listener?) = Column(
-    modifier = Modifier.fillMaxSize()
+fun ArticleContent(
+    isPreviewMode: Boolean,
+    state: State,
+    listener: Listener?
 ) {
-    Toolbar(listener)
-    LazyColumn(
+    ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val sortedContent = state.article.buildContent()
-        items(sortedContent) { content ->
-            when (content) {
-                is TopImage -> TopImage(content)
-                is DateViewers -> Date(state, content)
-                is Title -> TopTitle(content)
-                is Description -> Description(content)
-                is Text -> Text(content)
-                is SubTitle -> SubTitle(content)
-                is ImageList -> ImageListItem(content)
-                is OrderedList -> OrderedListItem(content)
+        val (toolbar, content, button) = createRefs()
+
+        val toolbarModifier = Modifier
+            .constrainAs(toolbar) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(parent.top)
             }
+        Toolbar(
+            modifier = toolbarModifier,
+            listener = listener
+        )
+
+        val contentModifier = Modifier
+            .fillMaxSize()
+            .constrainAs(content) {
+                height = Dimension.fillToConstraints
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                top.linkTo(toolbar.bottom)
+                bottom.linkTo(parent.bottom)
+            }
+        LazyColumn(
+            modifier = contentModifier
+        ) {
+            val sortedContent = state.article.buildContent()
+            items(sortedContent) { content ->
+                when (content) {
+                    is TopImage -> TopImage(content)
+                    is DateViewers -> Date(state, content)
+                    is Title -> TopTitle(content)
+                    is Description -> Description(content)
+                    is Text -> Text(content)
+                    is SubTitle -> SubTitle(content)
+                    is ImageList -> ImageListItem(content)
+                    is OrderedList -> OrderedListItem(content)
+                }
+            }
+            val bottomSpace = if (isPreviewMode) 120.dp else 32.dp
+            item { Spacer(modifier = Modifier.height(bottomSpace)) }
         }
-        item{ Spacer(modifier = Modifier.height(32.dp)) }
+
+        val publishButtonModifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
+            .clip(RoundedCornerShape(24.dp))
+            .constrainAs(button) {
+                start.linkTo(parent.start)
+                end.linkTo(parent.end)
+                bottom.linkTo(parent.bottom)
+            }
+        if (isPreviewMode) {
+            PublishButton(
+                state = state,
+                listener = listener,
+                modifier = publishButtonModifier
+            )
+        }
     }
 }
 
@@ -89,11 +138,17 @@ fun ArticleContent(state: State, listener: Listener?) = Column(
  * TOOLBAR
  */
 @Composable
-fun Toolbar(listener: Listener?) = ToolbarTop(
-    backIcon = {
-        ToolbarBackButton { listener?.onBackClick() }
-    }
-)
+fun Toolbar(
+    modifier: Modifier,
+    listener: Listener?
+) {
+    ToolbarTop(
+        modifier = modifier,
+        backIcon = {
+            ToolbarBackButton { listener?.onBackClick() }
+        }
+    )
+}
 
 /**
  * TOP IMAGE
@@ -301,12 +356,36 @@ private fun StepItem(text: String) = Row(
 }
 
 /**
+ * PUBLISH BUTTON
+ */
+@Composable
+private fun PublishButton(
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) {
+    StateButton(
+        text = "Опубликовать",
+//        state = state.createMeetingButtonState,
+//        onSendRequest = {
+//            listener?.createMeeting()
+//        },
+//        onSuccess = {
+//            listener?.onBack()
+//            listener?.onBack()
+//        },
+        modifier = modifier
+    )
+}
+
+/**
  * PREVIEW
  */
 @Preview(showBackground = true, heightDp = 1600)
 @Composable
 fun Preview() = MeetingsTheme {
     ArticleContent(
+        isPreviewMode = true,
         state = State(article = article),
         listener = null
     )

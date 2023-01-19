@@ -7,6 +7,7 @@ import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.navigators.NewsNavigator
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.news.NewsScreen
+import com.nowiwr01p.news.NewsScreen.ArticleScreen
 
 class NewsNavigatorImpl: NewsNavigator {
 
@@ -20,15 +21,16 @@ class NewsNavigatorImpl: NewsNavigator {
         NewsScreen.CreateArticleScreen.navigate(Unit, navController)
     }
 
-    override fun navigateToArticle(article: Article) {
-        NewsScreen.ArticleScreen.navigate(article, navController)
+    override fun navigateToArticle(article: Article, isPreviewMode: Boolean) {
+        val args = ArticleScreen.Args(article, isPreviewMode)
+        ArticleScreen.navigate(args, navController)
     }
 
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {
         builder.navigation(NewsScreen.NewsMainScreen.route, NewsScreen.NewsMainScreen.rootRoute) {
             NewsScreen.NewsMainScreen.createScreen(builder, navigator)
             NewsScreen.CreateArticleScreen.createScreen(this, navigator)
-            NewsScreen.ArticleScreen.createScreen(this, navigator)
+            ArticleScreen.createScreen(this, navigator)
         }
     }
 }
