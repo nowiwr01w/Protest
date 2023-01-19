@@ -26,7 +26,7 @@ class CreateArticleViewModel(
             is Event.OnBottomSheetTypeClick -> addField(event.type)
             is Event.OnStaticFieldChanged -> changeStaticField(event.type, event.value)
             is Event.OnDynamicFieldChanged -> changeDynamicField(event.contentItemIndex, event.insideItemIndex, event.type, event.value)
-            is Event.OnAddImageClick -> addImage(event.item, event.commonIndex)
+            is Event.OnAddRemoveImageClick -> addRemoveImage(event.item, event.commonIndex, event.addOperation)
             is Event.OnAddStepItemClick -> addRemoveStepItem(event.item, event.commonIndex)
             is Event.OnRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.removeIndex)
         }
@@ -127,9 +127,10 @@ class CreateArticleViewModel(
     /**
      * ADD DYNAMIC IMAGE FIELD
      */
-    private fun addImage(item: ImageList, commonIndex: Int) = with(viewState.value) {
+    private fun addRemoveImage(item: ImageList, commonIndex: Int, add: Boolean) = with(viewState.value) {
         val updatedImages = item.images.toMutableList().apply {
-            add(Image())
+            if (add) add(Image())
+            if (!add && isNotEmpty()) removeLast()
         }
         val updatedCommon = content.toMutableList().apply {
             this[commonIndex] = item.copy(images = updatedImages)
