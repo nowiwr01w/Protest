@@ -12,6 +12,7 @@ import com.nowiwr01p.news.ui.create_article.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.data.DynamicFields.*
 import com.nowiwr01p.news.ui.create_article.data.StaticFields
 import com.nowiwr01p.news.ui.create_article.data.StaticFields.*
+import java.util.*
 
 class CreateArticleViewModel(
     private val showBottomSheetHelper: ShowBottomSheetHelper
@@ -200,7 +201,7 @@ class CreateArticleViewModel(
         }
         with(orderedContent) {
             val article = Article(
-                id = "123",
+                id = UUID.randomUUID().toString(),
                 topImage = filterIsInstance<TopImage>().first(),
                 dateViewers = DateViewers(date = System.currentTimeMillis()),
                 title = filterIsInstance<Title>().first(),

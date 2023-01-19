@@ -2,11 +2,13 @@ package com.nowiwr01p.meetings.ui.create_meeting
 
 import com.nowiwr01p.core.datastore.cities.data.*
 import com.nowiwr01p.core_ui.mapper.ViewModelMapper
+import java.util.*
 
 class CreateMeetingMapper: ViewModelMapper<CreateMeetingVewModel>() {
 
     fun getMeeting() = with(viewModel.viewState.value) {
         Meeting(
+            id = UUID.randomUUID().toString(),
             cityName = user.city.name,
             creatorId = user.id,
             image = imageLink,
