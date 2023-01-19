@@ -6,12 +6,10 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -22,6 +20,7 @@ import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -32,13 +31,11 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
-import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
@@ -51,9 +48,9 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
+import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
-import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.data.StaticFields
 import kotlinx.coroutines.launch
@@ -98,6 +95,10 @@ fun CreateArticleMainScreen(
         ) {
             viewModel.setEvent(Event.OnDynamicFieldChanged(contentItemIndex, insideItemIndex, type, value))
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(Event.Init)
     }
 
     val scope = rememberCoroutineScope()
