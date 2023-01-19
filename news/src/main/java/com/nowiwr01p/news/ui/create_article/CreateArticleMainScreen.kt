@@ -78,18 +78,16 @@ fun CreateArticleMainScreen(
         override fun onStaticFieldChanged(type: StaticFields, value: String) {
             viewModel.setEvent(Event.OnStaticFieldChanged(type, value))
         }
-        override fun onAddRemoveImageClick(item: ImageList, commonIndex: Int, appOperation: Boolean) {
-            viewModel.setEvent(Event.OnAddRemoveImageClick(item, commonIndex, appOperation))
+        override fun onAddRemoveImageClick(item: ImageList, commonIndex: Int, addOperation: Boolean) {
+            viewModel.setEvent(Event.OnAddRemoveImageClick(item, commonIndex, addOperation))
         }
-        override fun onAddStepItemClick(item: OrderedList, commonIndex: Int) {
-            viewModel.setEvent(Event.OnAddStepItemClick(item, commonIndex))
-        }
-        override fun onRemoveStepItemClick(
+        override fun onAddRemoveStepItemClick(
             item: OrderedList,
             commonIndex: Int,
+            removeItem: Boolean,
             removeIndex: Int
         ) {
-            viewModel.setEvent(Event.OnRemoveStepItemClick(item, commonIndex, removeIndex))
+            viewModel.setEvent(Event.OnAddRemoveStepItemClick(item, commonIndex, removeItem, removeIndex))
         }
         override fun onDynamicFieldChanged(
             contentItemIndex: Int,
@@ -364,7 +362,8 @@ private fun OrderedList(
 ) {
     ExpandableItems(
         title = "Список",
-        onAddItemClick = { listener?.onAddStepItemClick(item, commonIndex) }
+        onAddItemClick = { listener?.onAddRemoveStepItemClick(item, commonIndex) },
+        onRemoveItemClick = { listener?.onAddRemoveStepItemClick(item, commonIndex, true) }
     ) {
         ItemOrderedListTitle(
             state = state,
@@ -377,8 +376,8 @@ private fun OrderedList(
                 listener = listener,
                 commonIndex = commonIndex,
                 stepIndex = index,
-                trailingIconCallback = if (index <= 1) null else {
-                    { listener?.onRemoveStepItemClick(item, commonIndex, index) }
+                trailingIconCallback = if (index == 0) null else {
+                    { listener?.onAddRemoveStepItemClick(item, commonIndex, false, index) }
                 }
             ).toItem()
         }
