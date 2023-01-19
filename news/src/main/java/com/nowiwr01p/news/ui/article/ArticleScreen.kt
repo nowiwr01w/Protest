@@ -75,9 +75,10 @@ fun ArticleContent(state: State, listener: Listener?) = Column(
                 is DateViewers -> Date(state, content)
                 is Title -> TopTitle(content)
                 is Description -> Description(content)
+                is Text -> Text(content)
+                is SubTitle -> SubTitle(content)
                 is ImageList -> ImageListItem(content)
                 is OrderedList -> OrderedListItem(content)
-                else -> {}
             }
         }
         item{ Spacer(modifier = Modifier.height(32.dp)) }
@@ -152,11 +153,35 @@ private fun TopTitle(title: Title) = Text(
 )
 
 /**
+ * SUBTITLE
+ */
+@Composable
+private fun SubTitle(subtitle: SubTitle) = Text(
+    text = subtitle.text,
+    style = MaterialTheme.typography.title3Bold,
+    color = MaterialTheme.colors.textPrimary,
+    modifier = Modifier.padding(top = 4.dp, start = 16.dp, end = 16.dp)
+)
+
+/**
  * DESCRIPTION
  */
 @Composable
 private fun Description(description: Description) = Text(
     text = description.text,
+    style = MaterialTheme.typography.body1,
+    color = MaterialTheme.colors.textPrimary,
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+)
+
+/**
+ * TEXT
+ */
+@Composable
+private fun Text(text: Text) = Text(
+    text = text.text,
     style = MaterialTheme.typography.body1,
     color = MaterialTheme.colors.textPrimary,
     modifier = Modifier
