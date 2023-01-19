@@ -4,6 +4,8 @@ import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
+import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType.*
@@ -15,6 +17,7 @@ import com.nowiwr01p.news.ui.create_article.data.StaticFields.*
 import java.util.*
 
 class CreateArticleViewModel(
+    private val getLocalUserUseCase: GetLocalUserUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -22,6 +25,7 @@ class CreateArticleViewModel(
 
     override fun handleEvents(event: Event) {
         when (event) {
+            is Event.Init -> init()
             is Event.NavigateBack -> setEffect { Effect.NavigateBack }
             is Event.ShowBottomSheet -> showBottomSheet(event.params)
             is Event.OnBottomSheetTypeClick -> addField(event.type)
@@ -32,6 +36,11 @@ class CreateArticleViewModel(
             is Event.OnAddRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.removeSubItemIndex)
             is Event.NavigateToPreview -> toPreview()
         }
+    }
+
+    private fun init() = io {
+        val userId = getLocalUserUseCase.execute().id
+        setState { copy(userId = userId) }
     }
 
     private fun showBottomSheet(params: BottomSheetParams) {
@@ -195,15 +204,19 @@ class CreateArticleViewModel(
      * BUILD ARTICLE & NAVIGATE TO PREVIEW
      */
 
-    private fun toPreview()  {
-        val orderedContent = viewState.value.content.toMutableList().mapIndexed { index, articleData ->
+    private fun toPreview() = with(viewState.value) {
+        val orderedContent = content.toMutableList().mapIndexed { index, articleData ->
             articleData.setItemOrder(index)
         }
+        val dateViewers = DateViewers(
+            date = System.currentTimeMillis(),
+            viewers = listOf(userId)
+        )
         with(orderedContent) {
             val article = Article(
                 id = UUID.randomUUID().toString(),
                 topImage = filterIsInstance<TopImage>().first(),
-                dateViewers = DateViewers(date = System.currentTimeMillis()),
+                dateViewers = dateViewers,
                 title = filterIsInstance<Title>().first(),
                 description = filterIsInstance<Description>().first(),
                 text = filterIsInstance<Text>(),

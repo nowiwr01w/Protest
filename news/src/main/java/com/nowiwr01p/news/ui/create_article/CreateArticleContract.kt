@@ -13,9 +13,8 @@ import com.nowiwr01p.news.ui.create_article.data.StaticFields
 interface CreateArticleContract {
 
     sealed interface Event: ViewEvent {
-
+        object Init: Event
         object NavigateBack: Event
-
         object NavigateToPreview: Event
 
         data class OnRemoveField(val commonIndex: Int): Event
@@ -54,6 +53,7 @@ interface CreateArticleContract {
     }
 
     data class State(
+        val userId: String = "",
         val image: TopImage = TopImage(),
         val title: Title = Title(),
         val description: Description = Description(),
