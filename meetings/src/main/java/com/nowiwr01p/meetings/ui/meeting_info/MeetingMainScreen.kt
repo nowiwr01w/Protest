@@ -86,10 +86,6 @@ fun MeetingMainScreen(
         viewModel.setEvent(Event.Init(meeting))
     }
 
-    EffectObserver(viewModel.effect) {
-
-    }
-
     MeetingMainScreenContent(
         isPreviewMode = isPreviewMode,
         state = viewModel.viewState.value,

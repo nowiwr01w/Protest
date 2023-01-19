@@ -1,14 +1,16 @@
 package com.nowiwr01p.news.ui.article
 
 import com.nowiwr01p.core.model.Article
-import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
+import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.article.SetArticleViewedUseCase
+import com.nowiwr01p.domain.create_article.CreateArticleUseCase
 import com.nowiwr01p.news.ui.article.ArticleContract.*
+import kotlinx.coroutines.delay
 
 class ArticleViewModel(
     private val setArticleViewedUseCase: SetArticleViewedUseCase,
-    private val openLinksHelper: OpenLinksHelper
+    private val createArticleUseCase: CreateArticleUseCase
 ) : BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -16,7 +18,7 @@ class ArticleViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init(event.article)
-            is Event.OpenLink -> openLink(event.link)
+            is Event.PublishArticle -> publish()
         }
     }
 
@@ -33,7 +35,16 @@ class ArticleViewModel(
         }
     }
 
-    private fun openLink(link: String) = io {
-        openLinksHelper.openLink(link)
+    private fun publish() = io {
+        setState { copy(publishButtonState = SEND_REQUEST) }
+        runCatching {
+            createArticleUseCase.execute(viewState.value.article)
+        }.onSuccess {
+            setState { copy(publishButtonState = SUCCESS) }
+        }.onFailure {
+            setState { copy(publishButtonState = ERROR) }
+            delay(3000)
+            setState { copy(publishButtonState = DEFAULT) }
+        }
     }
 }

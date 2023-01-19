@@ -48,8 +48,8 @@ fun ArticleScreen(
         override fun onBackClick() {
             navigator.navigateUp()
         }
-        override fun onLinkClick(link: String) {
-            viewModel.setEvent(Event.OpenLink(link))
+        override fun onPublishArticle() {
+            viewModel.setEvent(Event.PublishArticle)
         }
     }
 
@@ -73,7 +73,7 @@ fun ArticleContent(
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val (toolbar, content, button) = createRefs()
+        val (toolbar, content, publishButton) = createRefs()
 
         val toolbarModifier = Modifier
             .constrainAs(toolbar) {
@@ -119,7 +119,7 @@ fun ArticleContent(
             .fillMaxWidth()
             .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
             .clip(RoundedCornerShape(24.dp))
-            .constrainAs(button) {
+            .constrainAs(publishButton) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
@@ -366,14 +366,14 @@ private fun PublishButton(
 ) {
     StateButton(
         text = "Опубликовать",
-//        state = state.createMeetingButtonState,
-//        onSendRequest = {
-//            listener?.createMeeting()
-//        },
-//        onSuccess = {
-//            listener?.onBack()
-//            listener?.onBack()
-//        },
+        state = state.publishButtonState,
+        onSendRequest = {
+            listener?.onPublishArticle()
+        },
+        onSuccess = {
+            listener?.onBackClick()
+            listener?.onBackClick()
+        },
         modifier = modifier
     )
 }
