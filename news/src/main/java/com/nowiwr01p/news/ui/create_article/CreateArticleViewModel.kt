@@ -29,6 +29,7 @@ class CreateArticleViewModel(
             is Event.OnDynamicFieldChanged -> changeDynamicField(event.contentItemIndex, event.insideItemIndex, event.type, event.value)
             is Event.OnAddRemoveImageClick -> addRemoveImage(event.item, event.commonIndex, event.addOperation)
             is Event.OnAddRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.removeSubItemIndex)
+            is Event.NavigateToPreview -> toPreview()
         }
     }
 
@@ -169,5 +170,13 @@ class CreateArticleViewModel(
             }
             setState { copy(content = updatedCommon) }
         }
+    }
+
+    /**
+     * BUILD ARTICLE & NAVIGATE TO PREVIEW
+     */
+
+    private fun toPreview() {
+//        setEffect { Effect.NavigateToPreview }
     }
 }

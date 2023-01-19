@@ -2,16 +2,16 @@
 
 package com.nowiwr01p.news.ui.create_article
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.R
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
@@ -29,22 +29,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.extensions.ReversedRow
 import com.nowiwr01p.core_ui.navigators.main.Navigator
-import com.nowiwr01p.core_ui.theme.MeetingsTheme
-import com.nowiwr01p.core_ui.theme.bodyRegular
-import com.nowiwr01p.core_ui.theme.graphicsSecondary
-import com.nowiwr01p.core_ui.theme.subHeadlineRegular
+import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -71,6 +71,9 @@ fun CreateArticleMainScreen(
     val listener = object : Listener {
         override fun onBackClick() {
             viewModel.setEvent(Event.NavigateBack)
+        }
+        override fun onPreviewClick() {
+            viewModel.setEvent(Event.NavigateToPreview)
         }
         override fun showBottomSheet() {
             viewModel.setEvent(Event.ShowBottomSheet(addFieldBottomSheetParams))
@@ -105,6 +108,9 @@ fun CreateArticleMainScreen(
         when (it) {
             is Effect.NavigateBack -> {
                 navigator.navigateUp()
+            }
+            is Effect.NavigateToPreview -> {
+                // TODO
             }
             is Effect.OnItemAdded -> scope.launch {
                 focusManager.clearFocus()
@@ -178,16 +184,15 @@ private fun CreateArticleMainScreenContent(
 
     val buttonModifier = Modifier
         .fillMaxWidth()
-        .padding(top = 32.dp, bottom = 32.dp, start = 24.dp, end = 24.dp)
-        .clip(RoundedCornerShape(24.dp))
+        .padding(bottom = 32.dp)
         .constrainAs(button) {
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             bottom.linkTo(parent.bottom)
         }
-    StateButton(
-        text = "Добавить поле",
-        onSendRequest = { listener?.showBottomSheet() },
+    BottomButtons(
+        state = state,
+        listener = listener,
         modifier = buttonModifier
     )
 }
@@ -393,7 +398,11 @@ private fun ExpandableItems(
     contentBuilder: @Composable () -> Unit
 ) {
     Column {
-        Header(title, onAddSubItemClick, onRemoveItemClick)
+        Header(
+            title = title,
+            onAddSubItemClick = onAddSubItemClick,
+            onRemoveItemClick = onRemoveItemClick
+        )
         Column(
             modifier = Modifier.animateContentSize()
         ) {
@@ -405,7 +414,7 @@ private fun ExpandableItems(
 @Composable
 private fun Header(
     title: String,
-    onAddItemClick: () -> Unit,
+    onAddSubItemClick: () -> Unit,
     onRemoveItemClick: (() -> Unit)? = null
 ) {
     ReversedRow(
@@ -414,7 +423,7 @@ private fun Header(
     ) {
         ActionIcon(
             icon = Icons.Default.AddCircleOutline,
-            onItemClick = onAddItemClick
+            onItemClick = onAddSubItemClick
         )
         Spacer(
             modifier = Modifier.width(16.dp)
@@ -452,6 +461,9 @@ private fun Header(
     }
 }
 
+/**
+ * ADD/REMOVE FIELD ICON
+ */
 @Composable
 private fun ActionIcon(icon: ImageVector, onItemClick: () -> Unit) {
     val focusManager = LocalFocusManager.current
@@ -473,6 +485,41 @@ private fun ActionIcon(icon: ImageVector, onItemClick: () -> Unit) {
             keyboard?.hide()
             onItemClick.invoke()
         }
+    }
+}
+
+/**
+ * ADD FIELD & PREVIEW BUTTONS
+ */
+@Composable
+private fun BottomButtons(
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) {
+    val width = (LocalConfiguration.current.screenWidthDp.dp - 48.dp) / 2
+    Row(
+        modifier = modifier.padding(horizontal = 16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        AnimatedVisibility(visible = state.isPreviewButtonVisible()) {
+            StateButton(
+                text = "Превью",
+                onSendRequest = { listener?.onPreviewClick() },
+                modifier = Modifier
+                    .widthIn(min = width)
+                    .weight(1f)
+                    .clip(RoundedCornerShape(24.dp))
+            )
+        }
+        StateButton(
+            text = "Добавить поле",
+            onSendRequest = { listener?.showBottomSheet() },
+            modifier = Modifier
+                .widthIn(min = width)
+                .weight(1f)
+                .clip(RoundedCornerShape(24.dp))
+        )
     }
 }
 
