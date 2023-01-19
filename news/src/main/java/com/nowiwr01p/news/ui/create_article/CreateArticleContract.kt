@@ -17,20 +17,17 @@ interface CreateArticleContract {
 
         data class OnAddImageClick(
             val item: ImageList,
-            val commonIndex: Int,
-            val innerIndex: Int
+            val commonIndex: Int
         ): Event
 
         data class OnAddStepItemClick(
             val item: OrderedList,
-            val commonIndex: Int,
-            val innerIndex: Int
+            val commonIndex: Int
         ): Event
 
         data class OnRemoveStepItemClick(
             val item: OrderedList,
             val commonIndex: Int,
-            val innerIndex: Int,
             val removeIndex: Int
         ): Event
 
@@ -48,9 +45,7 @@ interface CreateArticleContract {
         ): Event
 
         data class OnDynamicFieldChanged(
-            val item: ArticleData,
-            val commonIndex: Int,
-            val insideListIndex: Int,
+            val contentItemIndex: Int,
             val insideItemIndex: Int,
             val type: DynamicFields,
             val value: String
@@ -61,10 +56,6 @@ interface CreateArticleContract {
         val image: TopImage = TopImage(),
         val title: Title = Title(),
         val description: Description = Description(),
-        val subTitles: List<SubTitle> = mutableStateListOf(),
-        val texts: List<Text> = mutableStateListOf(),
-        val images: List<ImageList> = mutableStateListOf(),
-        val orderedLists: List<OrderedList> = mutableStateListOf(),
         val content: List<ArticleData> = mutableStateListOf(image, title, description)
     ): ViewState
 
@@ -77,18 +68,15 @@ interface CreateArticleContract {
         fun onBackClick()
         fun showBottomSheet()
         fun onStaticFieldChanged(type: StaticFields, value: String)
-        fun onAddImageClick(item: ImageList, commonIndex: Int, innerIndex: Int)
-        fun onAddStepItemClick(item: OrderedList, commonIndex: Int, innerIndex: Int)
+        fun onAddImageClick(item: ImageList, commonIndex: Int)
+        fun onAddStepItemClick(item: OrderedList, commonIndex: Int)
         fun onRemoveStepItemClick(
             item: OrderedList,
             commonIndex: Int,
-            innerIndex: Int,
             removeIndex: Int
         )
         fun onDynamicFieldChanged(
-            item: ArticleData,
-            commonIndex: Int,
-            insideListIndex: Int,
+            contentItemIndex: Int,
             insideItemIndex: Int,
             type: DynamicFields,
             value: String
