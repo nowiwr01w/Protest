@@ -72,29 +72,26 @@ fun CreateArticleMainScreen(
         override fun onStaticFieldChanged(type: StaticFields, value: String) {
             viewModel.setEvent(Event.OnStaticFieldChanged(type, value))
         }
-        override fun onAddImageClick(item: ImageList, commonIndex: Int, innerIndex: Int) {
-            viewModel.setEvent(Event.OnAddImageClick(item, commonIndex, innerIndex))
+        override fun onAddImageClick(item: ImageList, commonIndex: Int) {
+            viewModel.setEvent(Event.OnAddImageClick(item, commonIndex))
         }
-        override fun onAddStepItemClick(item: OrderedList, commonIndex: Int, innerIndex: Int) {
-            viewModel.setEvent(Event.OnAddStepItemClick(item, commonIndex, innerIndex))
+        override fun onAddStepItemClick(item: OrderedList, commonIndex: Int) {
+            viewModel.setEvent(Event.OnAddStepItemClick(item, commonIndex))
         }
         override fun onRemoveStepItemClick(
             item: OrderedList,
             commonIndex: Int,
-            innerIndex: Int,
             removeIndex: Int
         ) {
-            viewModel.setEvent(Event.OnRemoveStepItemClick(item, commonIndex, innerIndex, removeIndex))
+            viewModel.setEvent(Event.OnRemoveStepItemClick(item, commonIndex, removeIndex))
         }
         override fun onDynamicFieldChanged(
-            item: ArticleData,
-            commonIndex: Int,
-            insideListIndex: Int,
+            contentItemIndex: Int,
             insideItemIndex: Int,
             type: DynamicFields,
             value: String
         ) {
-            viewModel.setEvent(Event.OnDynamicFieldChanged(item, commonIndex, insideListIndex, insideItemIndex, type, value))
+            viewModel.setEvent(Event.OnDynamicFieldChanged(contentItemIndex, insideItemIndex, type, value))
         }
     }
 
@@ -167,8 +164,8 @@ private fun CreateArticleMainScreenContent(
                 is TopImage -> TopImageItem(state, listener).toItem()
                 is Title -> TitleItem(state, listener).toItem()
                 is Description -> DescriptionItem(state, listener).toItem()
-                is Text -> TextItem(state = state, listener = listener, order = item.order, commonIndex = index).toItem()
-                is SubTitle -> SubTitleItem(state = state, listener = listener, order = item.order, commonIndex = index).toItem()
+                is Text -> TextItem(state,  listener,  index).toItem()
+                is SubTitle -> SubTitleItem(state,  listener,  index).toItem()
                 is ImageList -> ImageList(index, state, listener, item)
                 is OrderedList -> OrderedList(index, state, listener, item)
                 else -> {}
@@ -324,21 +321,19 @@ private fun ImageList(
 ) {
     ExpandableItems(
         title = "Картинки",
-        onItemClick = { listener?.onAddImageClick(item, commonIndex, item.order) }
+        onItemClick = { listener?.onAddImageClick(item, commonIndex) }
     ) {
         item.images.forEachIndexed { index, _ ->
             ImageLinkItem(
                 state = state,
                 listener = listener,
                 commonIndex = commonIndex,
-                order = item.order,
                 imageIndex = index
             ).toItem()
             ImageDescriptionItem(
                 state = state,
                 listener = listener,
                 commonIndex = commonIndex,
-                order = item.order,
                 imageIndex = index
             ).toItem()
         }
@@ -357,23 +352,21 @@ private fun OrderedList(
 ) {
     ExpandableItems(
         title = "Список",
-        onItemClick = { listener?.onAddStepItemClick(item, commonIndex, item.order) }
+        onItemClick = { listener?.onAddStepItemClick(item, commonIndex) }
     ) {
         ItemOrderedListTitle(
             state = state,
             listener = listener,
             commonIndex = commonIndex,
-            order = item.order
         ).toItem()
         item.steps.forEachIndexed { index, _ ->
             ItemOrderedListItem(
                 state = state,
                 listener = listener,
                 commonIndex = commonIndex,
-                order = item.order,
                 stepIndex = index,
                 trailingIconCallback = if (index <= 1) null else {
-                    { listener?.onRemoveStepItemClick(item, commonIndex, item.order, index) }
+                    { listener?.onRemoveStepItemClick(item, commonIndex, index) }
                 }
             ).toItem()
         }
