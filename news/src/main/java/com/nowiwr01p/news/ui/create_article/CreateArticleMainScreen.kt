@@ -18,12 +18,14 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AddCircleOutline
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -72,8 +74,8 @@ fun CreateArticleMainScreen(
         override fun onStaticFieldChanged(type: StaticFields, value: String) {
             viewModel.setEvent(Event.OnStaticFieldChanged(type, value))
         }
-        override fun onAddImageClick(item: ImageList, commonIndex: Int) {
-            viewModel.setEvent(Event.OnAddImageClick(item, commonIndex))
+        override fun onAddRemoveImageClick(item: ImageList, commonIndex: Int, appOperation: Boolean) {
+            viewModel.setEvent(Event.OnAddRemoveImageClick(item, commonIndex, appOperation))
         }
         override fun onAddStepItemClick(item: OrderedList, commonIndex: Int) {
             viewModel.setEvent(Event.OnAddStepItemClick(item, commonIndex))
@@ -321,7 +323,8 @@ private fun ImageList(
 ) {
     ExpandableItems(
         title = "Картинки",
-        onItemClick = { listener?.onAddImageClick(item, commonIndex) }
+        onAddItemClick = { listener?.onAddRemoveImageClick(item, commonIndex, true) },
+        onRemoveItemClick = { listener?.onAddRemoveImageClick(item, commonIndex, false) }
     ) {
         item.images.forEachIndexed { index, _ ->
             ImageLinkItem(
@@ -352,7 +355,7 @@ private fun OrderedList(
 ) {
     ExpandableItems(
         title = "Список",
-        onItemClick = { listener?.onAddStepItemClick(item, commonIndex) }
+        onAddItemClick = { listener?.onAddStepItemClick(item, commonIndex) }
     ) {
         ItemOrderedListTitle(
             state = state,
@@ -379,11 +382,12 @@ private fun OrderedList(
 @Composable
 private fun ExpandableItems(
     title: String,
-    onItemClick: () -> Unit,
+    onAddItemClick: () -> Unit,
+    onRemoveItemClick: (() -> Unit)? = null,
     contentBuilder: @Composable () -> Unit
 ) {
     Column {
-        Header(title, onItemClick)
+        Header(title, onAddItemClick, onRemoveItemClick)
         Column(
             modifier = Modifier.animateContentSize()
         ) {
@@ -393,49 +397,70 @@ private fun ExpandableItems(
 }
 
 @Composable
-private fun Header(title: String, onItemClick: () -> Unit) = ReversedRow(
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier.padding(top = 16.dp)
+private fun Header(
+    title: String,
+    onAddItemClick: () -> Unit,
+    onRemoveItemClick: (() -> Unit)? = null
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = Modifier
-            .size(56.dp)
-            .border(
-                border = BorderStroke(
-                    width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
-                ),
-                shape = RoundedCornerShape(12.dp)
-            )
+    ReversedRow(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 16.dp)
     ) {
-        ClickableIcon(icon = Icons.Default.AddCircleOutline) {
-            onItemClick.invoke()
+        ActionIcon(
+            icon = Icons.Default.AddCircleOutline,
+            onItemClick = onAddItemClick
+        )
+        Spacer(
+            modifier = Modifier.width(16.dp)
+        )
+        if (onRemoveItemClick != null) {
+            ActionIcon(
+                icon = Icons.Default.RemoveCircleOutline,
+                onItemClick = onRemoveItemClick
+            )
+            Spacer(
+                modifier = Modifier.width(16.dp)
+            )
+        }
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .border(
+                    border = BorderStroke(
+                        width = 1.25.dp,
+                        color = MaterialTheme.colors.graphicsSecondary
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                )
+        ) {
+            Text(
+                text = title,
+                color = Color(0x99000000),
+                style = MaterialTheme.typography.subHeadlineRegular,
+                modifier = Modifier.padding(start = 16.dp)
+            )
         }
     }
-    Spacer(
-        modifier = Modifier.width(16.dp)
-    )
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(56.dp)
-            .clip(RoundedCornerShape(12.dp))
-            .border(
-                border = BorderStroke(
-                    width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
-                ),
-                shape = RoundedCornerShape(12.dp)
-            )
-    ) {
-        Text(
-            text = title,
-            color = Color(0x99000000),
-            style = MaterialTheme.typography.subHeadlineRegular,
-            modifier = Modifier.padding(start = 16.dp)
+}
+
+@Composable
+private fun ActionIcon(icon: ImageVector, onItemClick: () -> Unit) = Box(
+    contentAlignment = Alignment.Center,
+    modifier = Modifier
+        .size(56.dp)
+        .border(
+            border = BorderStroke(
+                width = 1.25.dp,
+                color = MaterialTheme.colors.graphicsSecondary
+            ),
+            shape = RoundedCornerShape(12.dp)
         )
+) {
+    ClickableIcon(icon = icon) {
+        onItemClick.invoke()
     }
 }
 
