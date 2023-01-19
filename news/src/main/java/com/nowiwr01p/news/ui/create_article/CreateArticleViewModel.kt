@@ -26,9 +26,10 @@ class CreateArticleViewModel(
             is Event.ShowBottomSheet -> showBottomSheet(event.params)
             is Event.OnBottomSheetTypeClick -> addField(event.type)
             is Event.OnStaticFieldChanged -> changeStaticField(event.type, event.value)
-            is Event.OnDynamicFieldChanged -> changeDynamicField(event.index, event.subIndex, event.type, event.value)
+            is Event.OnDynamicFieldChanged -> changeDynamicField(event.commonIndex, event.insideListIndex, event.insideItemIndex, event.type, event.value)
             is Event.OnAddImageClick -> addImage(event.item, event.commonIndex, event.innerIndex)
-            is Event.OnAddStepItemClick -> addStepItem(event.item, event.commonIndex, event.innerIndex)
+            is Event.OnAddStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.innerIndex)
+            is Event.OnRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.innerIndex, event.removeIndex)
         }
     }
 
@@ -79,18 +80,47 @@ class CreateArticleViewModel(
      * CHANGE DYNAMIC FIELDS
      */
     private fun changeDynamicField(
-        itemIndex: Int,
-        subItemIndex: Int,
+        commonIndex: Int,
+        insideListIndex: Int,
+        insideItemIndex: Int,
         type: DynamicFields,
         value: String
-    ) = setState {
-        when (type) {
-            TEXT_FIELD -> copy(texts = changeText(itemIndex, value))
-            SUBTITLE_FIELD -> copy(subTitles = changeSubTitle(itemIndex, value))
-            IMAGE_LINK -> copy(images = changeImage(itemIndex, subItemIndex, value, LINK))
-            IMAGE_DETAILS -> copy(images = changeImage(itemIndex, subItemIndex, value, DETAILS))
-            ORDERED_LIST_TITLE -> copy(orderedLists = changeOrderedListTitle(itemIndex, value))
-            ORDERED_LIST_STEP -> copy(orderedLists = changeOrderedListStep(itemIndex, subItemIndex, value))
+    ) = with(viewState.value) {
+        when (val updatedContentItem = content[commonIndex]) {
+            is Text -> {
+                val updatedContent = content.toMutableList().apply {
+                    this[commonIndex] = updatedContentItem.copy(text = value)
+                }
+                setState { copy(texts = changeText(insideListIndex, value), content = updatedContent) }
+            }
+            is SubTitle -> {
+                val updatedContent = content.toMutableList().apply {
+                    this[commonIndex] = updatedContentItem.copy(text = value)
+                }
+                setState { copy(subTitles = changeSubTitle(insideListIndex, value), content = updatedContent) }
+            }
+            is ImageList -> {
+                val imageType = if (type == IMAGE_LINK) LINK else DETAILS
+                val updatedImages = changeImage(insideListIndex, insideItemIndex, value, imageType)
+                val updatedContent = content.toMutableList().apply {
+                    this[commonIndex] = updatedImages[insideListIndex]
+                }
+                setState { copy(images = updatedImages, content = updatedContent) }
+            }
+            is OrderedList -> if (type == ORDERED_LIST_TITLE) {
+                val updatedOrderedLists = changeOrderedListTitle(insideListIndex, value)
+                val updatedContent = content.toMutableList().apply {
+                    this[commonIndex] = updatedOrderedLists[insideListIndex]
+                }
+                setState { copy(orderedLists = updatedOrderedLists, content = updatedContent) }
+            } else {
+                val updatedOrderedLists = changeOrderedListStep(insideListIndex, insideItemIndex, value)
+                val updatedContent = content.toMutableList().apply {
+                    this[commonIndex] = updatedOrderedLists[insideListIndex]
+                }
+                setState { copy(orderedLists = updatedOrderedLists, content = updatedContent) }
+            }
+            else -> throw IllegalStateException("Неверный тип элемента: ${updatedContentItem::class.java}")
         }
     }
 
@@ -170,18 +200,25 @@ class CreateArticleViewModel(
     }
 
     /**
-     * ADD DYNAMIC ORDERED STEM ITEM FIELD
+     * ADD DYNAMIC ORDERED STEP ITEM FIELD
      */
-    private fun addStepItem(item: OrderedList, commonIndex: Int, innerIndex: Int) = with(viewState.value) {
-        val updatedSteps = item.steps.toMutableList().apply {
-            add("")
+    private fun addRemoveStepItem(
+        item: OrderedList,
+        commonIndex: Int,
+        innerIndex: Int,
+        removeIndex: Int = -1
+    ) {
+        with(viewState.value) {
+            val updatedSteps = item.steps.toMutableList().apply {
+                if (removeIndex == -1) add("") else removeAt(removeIndex)
+            }
+            val updatedCommon = content.toMutableList().apply {
+                this[commonIndex] = item.copy(steps = updatedSteps)
+            }
+            val updatedInner = orderedLists.toMutableList().apply {
+                this[innerIndex] = item.copy(steps = updatedSteps)
+            }
+            setState { copy(orderedLists = updatedInner, content = updatedCommon) }
         }
-        val updatedCommon = content.toMutableList().apply {
-            this[commonIndex] = item.copy(steps = updatedSteps)
-        }
-        val updatedInner = orderedLists.toMutableList().apply {
-            this[innerIndex] = item.copy(steps = updatedSteps)
-        }
-        setState { copy(orderedLists = updatedInner, content = updatedCommon) }
     }
 }
