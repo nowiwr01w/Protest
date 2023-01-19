@@ -58,7 +58,7 @@ interface CreateArticleContract {
         val title: Title = Title(),
         val description: Description = Description(),
         val content: List<ArticleData> = mutableStateListOf(image, title, description)
-    ): ViewState{
+    ): ViewState {
 
         fun isPreviewButtonVisible() = image.link.isNotEmpty()
                 && title.text.isNotEmpty()

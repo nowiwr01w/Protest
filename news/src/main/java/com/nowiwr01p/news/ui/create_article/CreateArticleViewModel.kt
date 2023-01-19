@@ -72,9 +72,27 @@ class CreateArticleViewModel(
      */
     private fun changeStaticField(type: StaticFields, value: String) = setState {
         when (type) {
-            TOP_IMAGE_FIELD -> copy(image = TopImage(link = value))
-            TITLE_FIELD -> copy(title = Title(text = value))
-            DESCRIPTION_FIELD -> copy(description = Description(text = value))
+            TOP_IMAGE_FIELD -> {
+                val item = image.copy(link = value)
+                val updatedContent =  content.toMutableList().apply {
+                    this[0] = item
+                }
+                copy(image = item, content = updatedContent)
+            }
+            TITLE_FIELD -> {
+                val item = title.copy(text = value)
+                val updatedContent =  content.toMutableList().apply {
+                    this[1] = item
+                }
+                copy(title = item, content = updatedContent)
+            }
+            DESCRIPTION_FIELD -> {
+                val item = description.copy(text = value)
+                val updatedContent =  content.toMutableList().apply {
+                    this[2] = item
+                }
+                copy(description= item, content = updatedContent)
+            }
         }
     }
 
@@ -176,7 +194,23 @@ class CreateArticleViewModel(
      * BUILD ARTICLE & NAVIGATE TO PREVIEW
      */
 
-    private fun toPreview() {
-//        setEffect { Effect.NavigateToPreview }
+    private fun toPreview()  {
+        val orderedContent = viewState.value.content.toMutableList().mapIndexed { index, articleData ->
+            articleData.setItemOrder(index)
+        }
+        with(orderedContent) {
+            val article = Article(
+                id = "123",
+                topImage = filterIsInstance<TopImage>().first(),
+                dateViewers = DateViewers(date = System.currentTimeMillis()),
+                title = filterIsInstance<Title>().first(),
+                description = filterIsInstance<Description>().first(),
+                text = filterIsInstance<Text>(),
+                subtitles = filterIsInstance<SubTitle>(),
+                imagesLists = filterIsInstance<ImageList>(),
+                orderedLists = filterIsInstance<OrderedList>(),
+            )
+            setEffect { Effect.NavigateToPreview(article) }
+        }
     }
 }

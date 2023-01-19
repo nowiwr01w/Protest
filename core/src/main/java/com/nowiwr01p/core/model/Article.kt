@@ -5,17 +5,22 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Article(
     val id: String = "",
-    val dateViewers: DateViewers = DateViewers(),
     val topImage: TopImage = TopImage(),
+    val dateViewers: DateViewers = DateViewers(),
     val title: Title = Title(),
-    val descriptions: List<Description> = listOf(),
+    val description: Description = Description(),
+    val text: List<Text> = listOf(),
+    val subtitles: List<SubTitle> = listOf(),
     val imagesLists: List<ImageList> = listOf(),
     val orderedLists: List<OrderedList> = listOf()
 ) {
-    fun buildContent() = mutableListOf(dateViewers, topImage, title).apply {
+    fun buildContent() = mutableListOf(topImage, dateViewers, title, description).apply {
         imagesLists.forEach { add(it) }
-        descriptions.forEach { add(it) }
+        text.forEach { add(it) }
+        subtitles.forEach { add(it) }
         orderedLists.forEach { add(it) }
+    }.sortedBy {
+        it.order
     }
 
     companion object {
@@ -30,17 +35,17 @@ data class Article(
             title = Title(
                 text = "В Днепре из-за ракетного удара погибли 40 человек, больше 70 пострадали. Зеленский призвал россиян перестать «трусливо молчать»"
             ),
-            descriptions = listOf(
-                Description(
+            text = listOf(
+                Text(
                     text = "По последним официальным данным, 40 человек погибли из-за российского ракетного удара по Днепру, совершенного 14 января, в результате которого обрушились два подъезда девятиэтажного дома. Об этом днем 16 января сообщил телеканал «Суспiльне», ссылаясь на Днепропетровскую областную администрацию."
                 ),
-                Description(
+                Text(
                     text = "Утром 16 января в МВД Украины сообщили, что погибли 36 человек (в том числе двое детей), еще 75 человек пострадали (из них 15 детей). Спасли 39 человек, в том числе шестерых детей. Неизвестна судьба еще около 30 человек."
                 ),
-                Description(
+                Text(
                     text = "В доме разрушены 72 квартиры, еще 230 получили повреждения, сообщил глава Днепропетровского облсовета Николай Лукашук. По его словам, к утру 16 января с места происшествия вывезли более 7,4 тысячи тонн разрушенных конструкций. Спасатели продолжают искать людей уже почти двое суток. К поисково-спасательной операции привлекли свыше 500 человек и 140 единиц техники."
                 ),
-                Description(
+                Text(
                     text = "24 февраля в 17:30.\nЦентральные площади городов.\nДо встречи!!"
                 )
             ),
