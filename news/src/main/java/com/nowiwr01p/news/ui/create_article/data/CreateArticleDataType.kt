@@ -137,19 +137,17 @@ open class CreateArticleDataType(
         val imageIndex: Int,
         override val type: DynamicFields = IMAGE_DETAILS,
         override val value: String = (state.content[commonIndex] as ImageList).images[imageIndex].description,
-        override val hint: String = "Подпись",
+        override val hint: String = "Подпись (необязательно)",
         override val showSubItemSlash: Boolean = true,
         override val onValueChanged: (String) -> Unit = {
             listener?.onDynamicFieldChanged(commonIndex, imageIndex, type, it)
-                                                        },
-        override val trailingIconCallback: () -> Unit = { }
+        }
     ): CreateArticleDataType(
         type = type,
         value = value,
         hint = hint,
         showSubItemSlash = showSubItemSlash,
-        onValueChanged = onValueChanged,
-        trailingIconCallback = trailingIconCallback
+        onValueChanged = onValueChanged
     )
 
     /**
@@ -183,10 +181,10 @@ open class CreateArticleDataType(
         override val value: String = (state.content[commonIndex] as OrderedList).steps[stepIndex],
         override val hint: String = "Элемент листа",
         override val showSubItemSlash: Boolean = true,
+        override val trailingIconCallback: (() -> Unit)? = null,
         override val onValueChanged: (String) -> Unit = {
             listener?.onDynamicFieldChanged(commonIndex, stepIndex, type, it)
         },
-        override val trailingIconCallback: (() -> Unit)? = null
     ): CreateArticleDataType(
         type = type,
         value = value,
