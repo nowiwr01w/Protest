@@ -1,5 +1,6 @@
 plugins {
     id("libs.ui")
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.7.21"
 }
 
 android {
