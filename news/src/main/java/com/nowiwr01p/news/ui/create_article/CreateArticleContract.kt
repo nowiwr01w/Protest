@@ -15,6 +15,8 @@ interface CreateArticleContract {
     sealed interface Event: ViewEvent {
         object NavigateBack: Event
 
+        data class OnRemoveField(val commonIndex: Int): Event
+
         data class OnAddRemoveImageClick(
             val item: ImageList,
             val commonIndex: Int,
@@ -24,7 +26,6 @@ interface CreateArticleContract {
         data class OnAddRemoveStepItemClick(
             val item: OrderedList,
             val commonIndex: Int,
-            val removeItem: Boolean,
             val removeSubItemIndex: Int
         ): Event
 
@@ -64,14 +65,10 @@ interface CreateArticleContract {
     interface Listener {
         fun onBackClick()
         fun showBottomSheet()
+        fun onRemoveField(commonIndex: Int)
         fun onStaticFieldChanged(type: StaticFields, value: String)
         fun onAddRemoveImageClick(item: ImageList, commonIndex: Int, addOperation: Boolean)
-        fun onAddRemoveStepItemClick(
-            item: OrderedList,
-            commonIndex: Int,
-            removeItem: Boolean = false,
-            removeIndex: Int = -1
-        )
+        fun onAddRemoveStepItemClick(item: OrderedList, commonIndex: Int, removeIndex: Int = -1)
         fun onDynamicFieldChanged(
             contentItemIndex: Int,
             insideItemIndex: Int,

@@ -77,6 +77,7 @@ open class CreateArticleDataType(
         override val type: DynamicFields = TEXT_FIELD,
         override val value: String = (state.content[commonIndex] as Text).text,
         override val hint: String = "Текст",
+        override val trailingIconCallback: () -> Unit = { listener?.onRemoveField(commonIndex) },
         override val onValueChanged: (String) -> Unit = {
             listener?.onDynamicFieldChanged(commonIndex,-1, type, it)
         }
@@ -84,7 +85,8 @@ open class CreateArticleDataType(
         type = type,
         value = value,
         hint = hint,
-        onValueChanged = onValueChanged
+        onValueChanged = onValueChanged,
+        trailingIconCallback = trailingIconCallback
     )
 
     /**
@@ -97,6 +99,7 @@ open class CreateArticleDataType(
         override val type: DynamicFields = SUBTITLE_FIELD,
         override val value: String = (state.content[commonIndex] as SubTitle).text,
         override val hint: String = "Подзаголовок",
+        override val trailingIconCallback: () -> Unit = { listener?.onRemoveField(commonIndex) },
         override val onValueChanged: (String) -> Unit = {
             listener?.onDynamicFieldChanged(commonIndex, -1, type, it)
         }
@@ -104,7 +107,8 @@ open class CreateArticleDataType(
         type = type,
         value = value,
         hint = hint,
-        onValueChanged = onValueChanged
+        onValueChanged = onValueChanged,
+        trailingIconCallback = trailingIconCallback
     )
 
     /**
