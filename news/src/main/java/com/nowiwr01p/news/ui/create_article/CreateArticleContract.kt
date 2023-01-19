@@ -21,15 +21,11 @@ interface CreateArticleContract {
             val addOperation: Boolean
         ): Event
 
-        data class OnAddStepItemClick(
-            val item: OrderedList,
-            val commonIndex: Int
-        ): Event
-
-        data class OnRemoveStepItemClick(
+        data class OnAddRemoveStepItemClick(
             val item: OrderedList,
             val commonIndex: Int,
-            val removeIndex: Int
+            val removeItem: Boolean,
+            val removeSubItemIndex: Int
         ): Event
 
         data class OnBottomSheetTypeClick(
@@ -70,11 +66,11 @@ interface CreateArticleContract {
         fun showBottomSheet()
         fun onStaticFieldChanged(type: StaticFields, value: String)
         fun onAddRemoveImageClick(item: ImageList, commonIndex: Int, addOperation: Boolean)
-        fun onAddStepItemClick(item: OrderedList, commonIndex: Int)
-        fun onRemoveStepItemClick(
+        fun onAddRemoveStepItemClick(
             item: OrderedList,
             commonIndex: Int,
-            removeIndex: Int
+            removeItem: Boolean = false,
+            removeIndex: Int = -1
         )
         fun onDynamicFieldChanged(
             contentItemIndex: Int,
