@@ -9,10 +9,12 @@ import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.Keys.ARG_ARTICLE
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.news.NewsScreen.ArticleScreen.Args
 import com.nowiwr01p.news.navigation.NewsScreenType
 import com.nowiwr01p.news.ui.article.ArticleScreen
 import com.nowiwr01p.news.ui.create_article.CreateArticleMainScreen
 import com.nowiwr01p.news.ui.news.NewsMainScreen
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -54,10 +56,16 @@ sealed class NewsScreen<T>(
     /**
      * ARTICLE
      */
-    object ArticleScreen: NewsScreen<Article>(
+    object ArticleScreen: NewsScreen<Args>(
         NewsScreenType.ArticleScreen.route, rootRoute, false
     ) {
-        override fun navigate(args: Article, navController: NavController) {
+        @Serializable
+        data class Args(
+            val article: Article,
+            val isPreviewMode: Boolean
+        )
+
+        override fun navigate(args: Args, navController: NavController) {
             navController.navigate(
                 route.replace("{$ARG_ARTICLE}", Json.encodeToString(args))
             )
@@ -71,8 +79,12 @@ sealed class NewsScreen<T>(
                 )
             ) {
                 val articleJson = it.arguments?.getString(ARG_ARTICLE).orEmpty()
-                val article = Json.decodeFromString<Article>(articleJson)
-                ArticleScreen(article, navigator)
+                val args = Json.decodeFromString<Args>(articleJson)
+                ArticleScreen(
+                    isPreviewMode = args.isPreviewMode,
+                    article = args.article,
+                    navigator = navigator
+                )
             }
         }
 
