@@ -7,6 +7,7 @@ import com.nowiwr01p.domain.article.SetArticleViewedUseCase
 import com.nowiwr01p.domain.create_article.CreateArticleUseCase
 import com.nowiwr01p.news.ui.article.ArticleContract.*
 import kotlinx.coroutines.delay
+import timber.log.Timber
 
 class ArticleViewModel(
     private val setArticleViewedUseCase: SetArticleViewedUseCase,
