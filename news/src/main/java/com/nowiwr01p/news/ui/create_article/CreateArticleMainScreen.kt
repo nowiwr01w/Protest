@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.nowiwr01p.news.ui.create_article
 
 import androidx.compose.animation.animateContentSize
@@ -22,11 +24,13 @@ import androidx.compose.material.icons.filled.RemoveCircleOutline
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -224,10 +228,15 @@ private fun CustomTextField(item: CreateArticleDataType) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    if (item.showSubItemSlash) {
+    val showNumber = item is ImageLinkItem
+    if (item.showSubItemSlash || showNumber) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
-            text = "—",
+            text = if (!showNumber) {
+                "—"
+            } else {
+                "${(item as ImageLinkItem).imageIndex + 1} "
+            },
             color = Color.Black,
             style = MaterialTheme.typography.body1,
             modifier = Modifier
@@ -447,20 +456,26 @@ private fun Header(
 }
 
 @Composable
-private fun ActionIcon(icon: ImageVector, onItemClick: () -> Unit) = Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier
-        .size(56.dp)
-        .border(
-            border = BorderStroke(
-                width = 1.25.dp,
-                color = MaterialTheme.colors.graphicsSecondary
-            ),
-            shape = RoundedCornerShape(12.dp)
-        )
-) {
-    ClickableIcon(icon = icon) {
-        onItemClick.invoke()
+private fun ActionIcon(icon: ImageVector, onItemClick: () -> Unit) {
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .size(56.dp)
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+    ) {
+        ClickableIcon(icon = icon) {
+            focusManager.clearFocus()
+            keyboard?.hide()
+            onItemClick.invoke()
+        }
     }
 }
 
