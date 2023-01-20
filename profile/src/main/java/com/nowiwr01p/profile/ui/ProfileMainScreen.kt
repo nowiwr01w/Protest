@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
@@ -87,7 +89,7 @@ private fun TopContainer() = ConstraintLayout(
             top.linkTo(parent.top)
         }
     ClickableIcon(
-        icon = Icons.Default.ModeEditOutline,
+        icon = R.drawable.ic_edit,
         onClick = {},
         modifier = editModifier
     )
@@ -99,7 +101,7 @@ private fun TopContainer() = ConstraintLayout(
             top.linkTo(parent.top)
         }
     ClickableIcon(
-        icon = Icons.Default.ChatBubbleOutline,
+        icon = R.drawable.ic_chat,
         onClick = {},
         modifier = chatModifier
     )
@@ -128,7 +130,7 @@ private fun TopContainer() = ConstraintLayout(
             top.linkTo(name.bottom)
         }
     Text(
-        text = "Cоздатель новостей",
+        text = "Организатор, создатель новостей",
         style = MaterialTheme.typography.body2,
         color = MaterialTheme.colors.textColorSecondary,
         modifier = roleModifier
@@ -148,8 +150,8 @@ private fun AccessContainer() = Column(
         .background(Color.White)
 ) {
     Category("Получить доступ")
-    InfoItem("Стать организатором")
-    InfoItem("Стать создателем новостей")
+    InfoItem("Стать организатором", R.drawable.ic_brain)
+    InfoItem("Стать создателем новостей", R.drawable.ic_lamp)
 }
 
 /**
@@ -165,8 +167,8 @@ private fun PoliticsContainer() = Column(
         .background(Color.White)
 ) {
     Category("Условия пользования")
-    InfoItem("Политика приватности")
-    InfoItem("Политика обработки данных")
+    InfoItem("Политика приватности", R.drawable.ic_security)
+    InfoItem("Политика обработки данных", R.drawable.ic_data_management)
 }
 
 /**
@@ -182,8 +184,8 @@ private fun AboutProjectContainer() = Column(
         .background(Color.White)
 ) {
     Category("О проекте")
-    InfoItem("Сообщить о баге")
-    InfoItem("Присоединиться к разработке")
+    InfoItem("Сообщить о баге", R.drawable.ic_bug)
+    InfoItem("Присоединиться к разработке", R.drawable.ic_development)
 }
 
 /**
@@ -206,6 +208,7 @@ private fun Category(name: String) = Text(
 @Composable
 private fun InfoItem(
     name: String,
+    icon: Int,
     action: () -> Unit = {}
 ) {
     Row(
@@ -213,9 +216,11 @@ private fun InfoItem(
         modifier = Modifier.clickable { action.invoke() }
     ) {
         Icon(
-            painter = rememberVectorPainter(image = Icons.Default.AddCircleOutline),
+            painter = painterResource(icon),
             contentDescription = "Info item icon",
-            modifier = Modifier.padding(start = 16.dp, top = 12.dp, bottom = 12.dp)
+            modifier = Modifier
+                .padding(start = 16.dp, top = 12.dp, bottom = 12.dp)
+                .size(22.dp)
         )
         Text(
             text = name,
