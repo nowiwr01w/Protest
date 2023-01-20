@@ -1,7 +1,6 @@
 package com.nowiwr01p.profile
 
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.nowiwr01p.core_ui.base_screen.Screen
@@ -21,7 +20,7 @@ sealed class ProfileScreen<T>(
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
-                ProfileMainScreen()
+                ProfileMainScreen(navigator)
             }
         }
     }
