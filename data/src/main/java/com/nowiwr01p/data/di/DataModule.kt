@@ -13,7 +13,8 @@ import com.nowiwr01p.data.firebase.FirebaseReferencesRepositoryImpl
 import com.nowiwr01p.data.cities.CitiesRepositoryImpl
 import com.nowiwr01p.data.cities.CitiesStateLocalRepositoryImpl
 import com.nowiwr01p.data.cities.CitiesStateRemoteRepositoryImpl
-import com.nowiwr01p.data.create_article.CreateArticleRepositoryImpl
+import com.nowiwr01p.data.create_article.repository.CreateArticleRepositoryImpl
+import com.nowiwr01p.data.create_article.validator.CreateArticleValidatorImpl
 import com.nowiwr01p.data.meetings.MeetingsRepositoryImpl
 import com.nowiwr01p.data.news.NewsRepositoryImpl
 import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
@@ -30,7 +31,8 @@ import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.cities.repository.CityStateLocalRepository
 import com.nowiwr01p.domain.cities.repository.CitiesRepository
 import com.nowiwr01p.domain.cities.repository.CityStateRemoteRepository
-import com.nowiwr01p.domain.create_article.CreateArticleRepository
+import com.nowiwr01p.domain.create_article.repository.CreateArticleRepository
+import com.nowiwr01p.domain.create_article.validators.CreateArticleValidator
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.news.repository.NewsRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -133,6 +135,9 @@ val moduleData = module {
     /**
      * CREATE ARTICLE
      */
+    factory<CreateArticleValidator> {
+        CreateArticleValidatorImpl()
+    }
     factory<CreateArticleRepository> {
         CreateArticleRepositoryImpl(get(), get())
     }
