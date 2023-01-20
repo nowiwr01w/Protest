@@ -77,6 +77,14 @@ val Typography.title3Bold
         lineHeight = 22.sp
     )
 
+val Typography.title4Bold
+    get() = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Bold,
+        fontSize = 15.sp,
+        lineHeight = 20.sp
+    )
+
 val Typography.headline
     get() = TextStyle(
         fontFamily = FontFamily.Default,
