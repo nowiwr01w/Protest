@@ -51,8 +51,8 @@ import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
-import com.nowiwr01p.news.ui.create_article.data.DynamicFields
-import com.nowiwr01p.news.ui.create_article.data.StaticFields
+import com.nowiwr01p.domain.create_article.validators.data.DynamicFields
+import com.nowiwr01p.domain.create_article.validators.data.StaticFields
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
@@ -170,14 +170,13 @@ private fun CreateArticleMainScreenContent(
     ) {
         itemsIndexed(state.content) { index, item ->
             when (item) {
-                is TopImage -> TopImageItem(state, listener).toItem()
-                is Title -> TitleItem(state, listener).toItem()
-                is Description -> DescriptionItem(state, listener).toItem()
-                is Text -> TextItem(state,  listener,  index).toItem()
-                is SubTitle -> SubTitleItem(state,  listener,  index).toItem()
+                is TopImage -> TopImageItem(state, listener).toItem(index, state)
+                is Title -> TitleItem(state, listener).toItem(index, state)
+                is Description -> DescriptionItem(state, listener).toItem(index, state)
+                is Text -> TextItem(state,  listener,  index).toItem(index, state)
+                is SubTitle -> SubTitleItem(state,  listener,  index).toItem(index, state)
                 is ImageList -> ImageList(index, state, listener, item)
                 is OrderedList -> OrderedList(index, state, listener, item)
-                else -> {}
             }
         }
         item { Spacer(modifier = Modifier.height(120.dp)) }
@@ -199,7 +198,11 @@ private fun CreateArticleMainScreenContent(
 }
 
 @Composable
-fun CreateArticleDataType.toItem() = CustomTextField(this)
+fun CreateArticleDataType.toItem(contentIndex: Int, state: State) = CustomTextField(
+    contentIndex = contentIndex,
+    state = state,
+    item = this
+)
 
 /**
  * TOOLBAR
@@ -226,64 +229,76 @@ private fun Toolbar(
  * TEXT FIELD
  */
 @Composable
-private fun CustomTextField(item: CreateArticleDataType) = Row(
-    modifier = Modifier.fillMaxWidth(),
-    verticalAlignment = Alignment.CenterVertically
+private fun CustomTextField(
+    contentIndex: Int,
+    state: State,
+    item: CreateArticleDataType
 ) {
-    val showNumber = item is ImageLinkItem
-    if (item.showSubItemSlash || showNumber) {
-        Spacer(modifier = Modifier.width(8.dp))
-        Text(
-            text = if (!showNumber) {
-                "—"
-            } else {
-                "${(item as ImageLinkItem).imageIndex + 1} "
-            },
-            color = Color.Black,
-            style = MaterialTheme.typography.body1,
-            modifier = Modifier
-                .fillMaxHeight()
-                .padding(top = 16.dp)
-        )
-        Spacer(modifier = Modifier.width(24.dp))
-    }
-    TextField(
-        value = item.value,
-        onValueChange = { item.onValueChanged(it) },
-        label = {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        val showNumber = item is ImageLinkItem
+        if (item.showSubItemSlash || showNumber) {
+            Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = item.hint,
-                modifier = Modifier.padding(top = 3.dp),
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
+                text = if (!showNumber) {
+                    "—"
+                } else {
+                    "${(item as ImageLinkItem).imageIndex + 1} "
+                },
+                color = Color.Black,
+                style = MaterialTheme.typography.body1,
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(top = 16.dp)
             )
-        },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            unfocusedBorderColor = Color.Transparent,
-            disabledBorderColor = Color.Transparent,
-            errorBorderColor = Color.Transparent,
-            focusedBorderColor = Color.Transparent
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 16.dp)
-            .border(
-                border = BorderStroke(
-                    width = 1.25.dp,
-                    color = MaterialTheme.colors.graphicsSecondary
-                ),
-                shape = RoundedCornerShape(12.dp)
-            ),
-        trailingIcon = if (item.trailingIconCallback == null) null else {
-            {
-                ClickableIcon(
-                    icon = Icons.Default.Close,
-                    modifier = Modifier.padding(end = 12.dp),
-                    onClick = { item.trailingIconCallback!!.invoke() }
-                )
-            }
+            Spacer(modifier = Modifier.width(24.dp))
         }
-    )
+        val error = state.errors.find { it.type == item.type }
+        val wrongInput = error != null && contentIndex == error.contentIndex
+        TextField(
+            value = item.value,
+            onValueChange = { item.onValueChanged(it) },
+            label = {
+                Text(
+                    text = item.hint,
+                    modifier = Modifier.padding(top = 3.dp),
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            },
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                unfocusedBorderColor = Color.Transparent,
+                disabledBorderColor = Color.Transparent,
+                errorBorderColor = Color.Transparent,
+                focusedBorderColor = Color.Transparent
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+                .border(
+                    border = BorderStroke(
+                        width = 1.25.dp,
+                        color = if (wrongInput) {
+                            MaterialTheme.colors.graphicsRed
+                        } else {
+                            MaterialTheme.colors.graphicsSecondary
+                        }
+                    ),
+                    shape = RoundedCornerShape(12.dp)
+                ),
+            trailingIcon = if (item.trailingIconCallback == null) null else {
+                {
+                    ClickableIcon(
+                        icon = Icons.Default.Close,
+                        modifier = Modifier.padding(end = 12.dp),
+                        onClick = { item.trailingIconCallback!!.invoke() }
+                    )
+                }
+            }
+        )
+    }
 }
 
 /**
@@ -343,13 +358,13 @@ private fun ImageList(
                 listener = listener,
                 commonIndex = commonIndex,
                 imageIndex = index
-            ).toItem()
+            ).toItem(commonIndex, state)
             ImageDescriptionItem(
                 state = state,
                 listener = listener,
                 commonIndex = commonIndex,
                 imageIndex = index
-            ).toItem()
+            ).toItem(commonIndex, state)
         }
     }
 }
@@ -373,7 +388,7 @@ private fun OrderedList(
             state = state,
             listener = listener,
             commonIndex = commonIndex,
-        ).toItem()
+        ).toItem(commonIndex, state)
         item.steps.forEachIndexed { index, _ ->
             ItemOrderedListItem(
                 state = state,
@@ -383,7 +398,7 @@ private fun OrderedList(
                 trailingIconCallback = if (index == 0) null else {
                     { listener?.onAddRemoveStepItemClick(item, commonIndex, index) }
                 }
-            ).toItem()
+            ).toItem(commonIndex, state)
         }
     }
 }

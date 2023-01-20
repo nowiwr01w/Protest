@@ -1,4 +1,4 @@
-package com.nowiwr01p.news.ui.create_article.data
+package com.nowiwr01p.domain.create_article.validators.data
 
 interface CreateArticleFieldType
 
@@ -15,8 +15,4 @@ enum class DynamicFields: CreateArticleFieldType {
     IMAGE_DETAILS,
     ORDERED_LIST_TITLE,
     ORDERED_LIST_STEP
-}
-
-enum class DynamicFieldItem: CreateArticleFieldType {
-    DYNAMIC
 }

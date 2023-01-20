@@ -4,10 +4,9 @@ import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.article.SetArticleViewedUseCase
-import com.nowiwr01p.domain.create_article.CreateArticleUseCase
+import com.nowiwr01p.domain.create_article.usecase.CreateArticleUseCase
 import com.nowiwr01p.news.ui.article.ArticleContract.*
 import kotlinx.coroutines.delay
-import timber.log.Timber
 
 class ArticleViewModel(
     private val setArticleViewedUseCase: SetArticleViewedUseCase,

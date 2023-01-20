@@ -1,8 +1,8 @@
-package com.nowiwr01p.data.create_article
+package com.nowiwr01p.data.create_article.repository
 
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.create_article.CreateArticleRepository
+import com.nowiwr01p.domain.create_article.repository.CreateArticleRepository
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
