@@ -4,20 +4,22 @@ import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
+import com.nowiwr01p.domain.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType.SUBTITLE
-import com.nowiwr01p.news.ui.create_article.data.DynamicFields
-import com.nowiwr01p.news.ui.create_article.data.DynamicFields.*
-import com.nowiwr01p.news.ui.create_article.data.StaticFields
-import com.nowiwr01p.news.ui.create_article.data.StaticFields.*
+import com.nowiwr01p.domain.create_article.validators.data.DynamicFields
+import com.nowiwr01p.domain.create_article.validators.data.DynamicFields.*
+import com.nowiwr01p.domain.create_article.validators.data.StaticFields
+import com.nowiwr01p.domain.create_article.validators.data.StaticFields.*
 import java.util.*
 
 class CreateArticleViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val validateArticleDataUseCase: ValidateArticleDataUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -34,7 +36,7 @@ class CreateArticleViewModel(
             is Event.OnDynamicFieldChanged -> changeDynamicField(event.contentItemIndex, event.insideItemIndex, event.type, event.value)
             is Event.OnAddRemoveImageClick -> addRemoveImage(event.item, event.commonIndex, event.addOperation)
             is Event.OnAddRemoveStepItemClick -> addRemoveStepItem(event.item, event.commonIndex, event.removeSubItemIndex)
-            is Event.NavigateToPreview -> toPreview()
+            is Event.NavigateToPreview -> validate()
         }
     }
 
@@ -203,8 +205,7 @@ class CreateArticleViewModel(
     /**
      * BUILD ARTICLE & NAVIGATE TO PREVIEW
      */
-
-    private fun toPreview() = with(viewState.value) {
+    private fun validate() = with(viewState.value) {
         val orderedContent = content.toMutableList().mapIndexed { index, articleData ->
             articleData.setItemOrder(index)
         }
@@ -224,7 +225,18 @@ class CreateArticleViewModel(
                 imagesLists = filterIsInstance<ImageList>(),
                 orderedLists = filterIsInstance<OrderedList>(),
             )
-            setEffect { Effect.NavigateToPreview(article) }
+            io {
+                runCatching {
+                    validateArticleDataUseCase.execute(article)
+                }.onSuccess {
+                    if (it.isEmpty()) {
+                        setState { copy(errors = listOf()) }
+                        setEffect { Effect.NavigateToPreview(article) }
+                    } else {
+                        setState { copy(errors = it) }
+                    }
+                }
+            }
         }
     }
 }

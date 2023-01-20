@@ -1,4 +1,4 @@
-package com.nowiwr01p.domain.create_article
+package com.nowiwr01p.domain.create_article.repository
 
 import com.nowiwr01p.core.model.Article
 

@@ -8,7 +8,8 @@ import com.nowiwr01p.domain.meetings.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.cities.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.cities.usecase.local.SetCityUseCase
-import com.nowiwr01p.domain.create_article.CreateArticleUseCase
+import com.nowiwr01p.domain.create_article.usecase.CreateArticleUseCase
+import com.nowiwr01p.domain.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
 import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
@@ -94,4 +95,5 @@ val moduleDomain = module {
      * CREATE ARTICLE
      */
     factory { CreateArticleUseCase(get()) }
+    factory { ValidateArticleDataUseCase(get()) }
 }
