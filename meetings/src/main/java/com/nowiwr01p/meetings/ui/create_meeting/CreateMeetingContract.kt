@@ -56,7 +56,7 @@ interface CreateMeetingContract {
         val goals: List<String> = mutableStateListOf(),
         val slogans: List<String> = mutableStateListOf(),
         val strategy: List<String> = mutableStateListOf(),
-        val validationErrors: List<CreateMeetingError?> = listOf()
+        val validationErrors: List<CreateMeetingError> = listOf()
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {

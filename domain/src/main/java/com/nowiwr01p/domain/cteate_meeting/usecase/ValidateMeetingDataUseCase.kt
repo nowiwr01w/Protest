@@ -7,7 +7,7 @@ import com.nowiwr01p.domain.cteate_meeting.validators.CreateMeetingValidator
 
 class ValidateMeetingDataUseCase(
     private val validator: CreateMeetingValidator
-): UseCase<Meeting, List<CreateMeetingError?>> {
+): UseCase<Meeting, List<CreateMeetingError>> {
 
     override suspend fun execute(input: Meeting): List<CreateMeetingError> {
         return validator.validate(input)
