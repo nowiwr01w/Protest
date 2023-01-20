@@ -30,7 +30,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
-import com.nowiwr01p.core.extenstion.getPeopleGoCountShort
+import com.nowiwr01p.core.extenstion.getPeopleGoCountAll
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core.model.CreateMeetingMapType.DRAW_PATH
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
@@ -378,7 +378,7 @@ private fun MeetingItem(
             bottom.linkTo(date.bottom)
         }
     Text(
-        text = meeting.getPeopleGoCountShort(),
+        text = meeting.getPeopleGoCountAll(),
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = countModifier

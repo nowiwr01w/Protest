@@ -229,7 +229,7 @@ private fun CustomTextField(state: State, item: CustomTextFieldData) = Row(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    val wrongInput = state.validationErrors.find { item.type == it?.type } != null
+    val wrongInput = state.validationErrors.find { item.type == it.type } != null
     if (item.showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
@@ -559,7 +559,7 @@ private fun FakeTextField(
     modifier = Modifier.fillMaxWidth(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    val wrongInput = state.validationErrors.find { type == it?.type } != null
+    val wrongInput = state.validationErrors.find { type == it.type } != null
     if (showSubItemSlash) {
         Spacer(modifier = Modifier.width(8.dp))
         Text(
