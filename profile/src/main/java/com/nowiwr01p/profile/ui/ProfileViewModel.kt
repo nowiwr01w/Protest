@@ -1,5 +1,6 @@
 package com.nowiwr01p.profile.ui
 
+import android.net.Uri
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
@@ -16,22 +17,23 @@ class ProfileViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
-            is Event.OnEditClick -> setEditMode()
             is Event.OnSaveClick -> save()
-            is Event.OnCancelClick -> cancel()
             is Event.OnChatClick -> toChat()
+            is Event.OnEditClick -> setEditMode(true)
+            is Event.OnCancelClick -> setEditMode(false)
+            is Event.SetStorageAvailable -> setStorageAvailable()
             is Event.OnUserNameChanged -> handleInput(event.name)
+            is Event.RequestPermission -> requestPermission()
+            is Event.SetAvatarPreview -> setAvatarPreview(event.uri)
         }
     }
 
-    private fun handleInput(name: String) {
-        if (name.length <= 24) setState { copy(editNameValue = name) }
+    private fun setAvatarPreview(uri: Uri) {
+        setState { copy(previewEditAvatar = uri.toString()) }
     }
 
     private fun init() = io {
-        runCatching {
-            getUser()
-        }
+        getUser()
     }
 
     private suspend fun getUser() {
@@ -39,8 +41,8 @@ class ProfileViewModel(
         setState { copy(user = user) }
     }
 
-    private fun setEditMode() {
-        setState { copy(editMode = true) }
+    private fun handleInput(name: String) {
+        if (name.length <= 24) setState { copy(previewEditName = name) }
     }
 
     private fun save() = io {
@@ -48,21 +50,29 @@ class ProfileViewModel(
             updateUserName()
         }.onSuccess {
             getUser()
-            setState { copy(editMode = false) }
+            setState { copy(editMode = false, previewEditName = "") }
         }
     }
 
     private suspend fun updateUserName() {
-        val updatedName = viewState.value.editNameValue.trim()
+        val updatedName = viewState.value.previewEditName.trim()
         updateUserNameUseCase.execute(updatedName)
     }
 
-    private fun cancel() {
-        setState { copy(editMode = false) }
+    private fun setEditMode(enabled: Boolean) {
+        setState { copy(editMode = enabled) }
+    }
+
+    private fun requestPermission() {
+        setState { copy(shouldRequestPermission = true) }
+    }
+
+    private fun setStorageAvailable() {
+        setState { copy(isStorageAvailable = true, shouldRequestPermission = false) }
+        setEffect { Effect.ChoosePhoto }
     }
 
     private fun toChat() {
 
     }
-
 }
