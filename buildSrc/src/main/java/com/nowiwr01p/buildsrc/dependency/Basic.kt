@@ -1,5 +1,6 @@
 package com.nowiwr01p.buildsrc.dependency
 
+import com.nowiwr01p.buildsrc.dependency.Basic.Version.COIL_COMPOSE_VERSION
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.COMPOSE
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.COMPOSE_ACTIVITY
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.CONSTRAINT
@@ -27,6 +28,7 @@ object Basic {
     const val CONSTRAINT_LAYOUT = "androidx.constraintlayout:constraintlayout-compose:$CONSTRAINT"
 
     const val COIL = "com.github.skydoves:landscapist-coil:$COIL_VERSION"
+    const val COIL_COMPOSE = "io.coil-kt:coil-compose:$COIL_COMPOSE_VERSION"
 
     const val TIMBER_LIB = "com.jakewharton.timber:timber:$TIMBER"
 
@@ -44,6 +46,7 @@ object Basic {
         const val LIFECYCLE = "2.5.1"
         const val COMPOSE_ACTIVITY = "1.7.0-alpha02"
         const val COIL_VERSION = "2.1.0"
+        const val COIL_COMPOSE_VERSION = "2.1.0"
         const val JODA = "2.12.2"
         const val CUSTOM_TABS_VERSION = "1.4.0"
         const val DATE_TIME_VERSION = "0.9.0"

@@ -1,10 +1,12 @@
 package com.nowiwr01p.profile.ui
 
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
+import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
 import androidx.compose.animation.animateContentSize
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
@@ -13,23 +15,32 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
+import androidx.core.net.toUri
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
+import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
+import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
@@ -38,6 +49,8 @@ fun ProfileMainScreen(
     navigator: Navigator,
     viewModel: ProfileViewModel = getViewModel()
 ) {
+    val state = viewModel.viewState.value
+
     val listener = object : Listener {
         override fun onEditClick() {
             viewModel.setEvent(Event.OnEditClick)
@@ -54,12 +67,37 @@ fun ProfileMainScreen(
         override fun onUserNameChanged(name: String) {
             viewModel.setEvent(Event.OnUserNameChanged(name))
         }
+        override fun setAvatarPreview(uri: Uri) {
+            viewModel.setEvent(Event.SetAvatarPreview(uri))   
+        }
+        override fun setStorageAvailable() {
+            viewModel.setEvent(Event.SetStorageAvailable)
+        }
+        override fun requestPermission() {
+            viewModel.setEvent(Event.RequestPermission)
+        }
     }
 
-    ProfileMainScreenContent(
-        state = viewModel.viewState.value,
-        listener =  listener
-    )
+    val launcher = rememberLauncherForActivityResult(RequestPermission()) { granted ->
+        if (granted) listener.setStorageAvailable()
+    }
+    SideEffect {
+        if (state.shouldRequestPermission) launcher.launch(READ_EXTERNAL_STORAGE)
+    }
+
+    val gallery = rememberLauncherForActivityResult(GetContent()) { pickedPhotoUri ->
+        if (pickedPhotoUri != null) listener.setAvatarPreview(pickedPhotoUri)
+    }
+
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.ChoosePhoto -> {
+                gallery.launch("image/*")
+            }
+        }
+    }
+
+    ProfileMainScreenContent(state, listener)
 }
 
 @Composable
@@ -97,7 +135,7 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
             top.linkTo(parent.top)
         }
     if (state.editMode) {
-        AvatarStub(avatarModifier)
+        AvatarStub(state, listener, avatarModifier)
     } else {
         Avatar(state, avatarModifier)
     }
@@ -217,20 +255,47 @@ private fun Avatar(state: State, modifier: Modifier) = Box(
 }
 
 @Composable
-private fun AvatarStub(modifier: Modifier) = Box(
-    modifier = modifier
-        .pressedAnimation()
-        .size(132.dp)
-        .clip(CircleShape)
-        .background(MaterialTheme.colors.backgroundSecondary),
-    contentAlignment = Alignment.Center
+private fun AvatarStub(
+    state: State,
+    listener: Listener?, 
+    modifier: Modifier
 ) {
-    Icon(
-        painter = painterResource(R.drawable.ic_plus),
-        contentDescription = "Avatar stub",
-        tint = MaterialTheme.colors.textColorSecondary,
-        modifier = Modifier.size(42.dp)
-    )
+    val callback = {
+        if (state.isStorageAvailable) {
+            listener?.setStorageAvailable()
+        } else {
+            listener?.requestPermission()
+        }
+    }
+    Box(
+        modifier = modifier
+            .pressedAnimation { callback.invoke() }
+            .size(132.dp)
+            .clip(CircleShape)
+            .background(MaterialTheme.colors.backgroundSecondary),
+        contentAlignment = Alignment.Center
+    ) {
+        when {
+            state.previewEditAvatar.isEmpty() -> CoilImage(
+                modifier = Modifier.size(42.dp),
+                imageModel = { R.drawable.ic_plus },
+                imageOptions = ImageOptions(
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.textColorSecondary)
+                )
+            )
+            else -> Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest
+                        .Builder(LocalContext.current)
+                        .data(data = state.previewEditAvatar.toUri())
+                        .build()
+                ),
+                contentDescription = "Preview avatar",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.size(132.dp)
+            )
+        }
+    }
 }
 /**
  * INCREASE ACCESS CONTAINER
@@ -382,7 +447,7 @@ private fun EditNameTextField(
     modifier: Modifier
 ) {
     TextField(
-        value = state.editNameValue,
+        value = state.previewEditName,
         onValueChange = {
             listener?.onUserNameChanged(it)
         },
@@ -397,7 +462,7 @@ private fun EditNameTextField(
         ),
         trailingIcon = {
             Text(
-                text = "${state.editNameValue.length}/24",
+                text = "${state.previewEditName.length}/24",
                 modifier = Modifier.padding(end = 8.dp),
                 color = MaterialTheme.colors.textColorSecondary,
                 style = MaterialTheme.typography.subHeadlineRegular
