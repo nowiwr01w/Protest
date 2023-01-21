@@ -13,10 +13,12 @@ interface ProfileContract {
         object OnSaveClick: Event
         object OnCancelClick: Event
         object OnChatClick: Event
+        data class OnUserNameChanged(val name: String): Event
     }
 
     data class State(
         val user: User = User(),
+        val editNameValue: String = "",
         val editMode: Boolean = false
     ): ViewState
 
@@ -29,5 +31,6 @@ interface ProfileContract {
         fun onSaveClick()
         fun onCancelClick()
         fun onChatClick()
+        fun onUserNameChanged(name: String)
     }
 }
