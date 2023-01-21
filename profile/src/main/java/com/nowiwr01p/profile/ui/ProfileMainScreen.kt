@@ -69,6 +69,7 @@ private fun ProfileMainScreenContent(state: State, listener: Listener?) = LazyCo
     item { AccessContainer(state) }
     item { AboutProjectContainer() }
     item { PoliticsContainer() }
+    item { ExitContainer() }
     item { AppVersion() }
 }
 
@@ -268,6 +269,23 @@ private fun PoliticsContainer() = Column(
     Category("Условия пользования")
     InfoItem("Политика приватности", R.drawable.ic_security)
     InfoItem("Политика обработки данных", R.drawable.ic_data_management)
+}
+
+/**
+ * EXIT CONTAINER
+ */
+@Composable
+private fun ExitContainer() = Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding(top = 8.dp)
+        .clip(RoundedCornerShape(16.dp))
+        .background(Color.White)
+) {
+    Category("Выход")
+    InfoItem("Выйти из аккаунта", R.drawable.ic_logout)
+    InfoItem("Удалить аккаунт", R.drawable.ic_delete_account)
 }
 
 /**
