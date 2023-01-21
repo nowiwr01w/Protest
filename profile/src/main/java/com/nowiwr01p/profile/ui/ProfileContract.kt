@@ -15,9 +15,11 @@ interface ProfileContract {
         object OnCancelClick: Event
         object OnChatClick: Event
         object RequestPermission: Event
+        object RedirectToSettings: Event
         object SetStorageAvailable: Event
         data class SetAvatarPreview(val uri: Uri): Event
         data class OnUserNameChanged(val name: String): Event
+        data class ShowPermissionAlert(val show: Boolean): Event
     }
 
     data class State(
@@ -25,12 +27,14 @@ interface ProfileContract {
         val previewEditName: String = "",
         val previewEditAvatar: String = "",
         val editMode: Boolean = false,
+        val showPermissionAlert: Boolean = false,
         val shouldRequestPermission: Boolean = false,
         val isStorageAvailable: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
         object ChoosePhoto: Effect
+        object RedirectToSettings: Effect
     }
 
     interface Listener {
@@ -40,6 +44,8 @@ interface ProfileContract {
         fun onChatClick()
         fun onUserNameChanged(name: String)
         fun requestPermission()
+        fun showPermissionAlert(show: Boolean)
+        fun redirectToSettings()
         fun setStorageAvailable()
         fun setAvatarPreview(uri: Uri)
     }

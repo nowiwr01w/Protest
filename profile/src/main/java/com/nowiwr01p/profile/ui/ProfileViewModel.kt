@@ -24,12 +24,10 @@ class ProfileViewModel(
             is Event.SetStorageAvailable -> setStorageAvailable()
             is Event.OnUserNameChanged -> handleInput(event.name)
             is Event.RequestPermission -> requestPermission()
+            is Event.ShowPermissionAlert -> showPermissionAlert(event.show)
+            is Event.RedirectToSettings -> redirectToSettings()
             is Event.SetAvatarPreview -> setAvatarPreview(event.uri)
         }
-    }
-
-    private fun setAvatarPreview(uri: Uri) {
-        setState { copy(previewEditAvatar = uri.toString()) }
     }
 
     private fun init() = io {
@@ -63,8 +61,21 @@ class ProfileViewModel(
         setState { copy(editMode = enabled) }
     }
 
+    private fun setAvatarPreview(uri: Uri) {
+        setState { copy(previewEditAvatar = uri.toString()) }
+    }
+
     private fun requestPermission() {
         setState { copy(shouldRequestPermission = true) }
+    }
+
+    private fun showPermissionAlert(show: Boolean) {
+        setState { copy(showPermissionAlert = show, shouldRequestPermission = show) }
+    }
+
+    private fun redirectToSettings() {
+        setEffect { Effect.RedirectToSettings }
+        showPermissionAlert(false)
     }
 
     private fun setStorageAvailable() {
