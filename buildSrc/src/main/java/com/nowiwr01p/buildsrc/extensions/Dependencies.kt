@@ -84,6 +84,7 @@ fun DependencyHandler.accompanistDependencies() {
 
 fun DependencyHandler.dateTimeDependencies() {
     implementation(Basic.JODA_TIME)
+    implementation(Basic.ALERT_DIALOG)
     implementation(Basic.DATE_TIME_DIALOGS)
 }
 

@@ -1,7 +1,9 @@
 package com.nowiwr01p.profile.ui
 
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.content.Intent
 import android.net.Uri
+import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
@@ -37,6 +39,7 @@ import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.alert_dialog.CustomAlertDialog
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
@@ -44,12 +47,14 @@ import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
+
 @Composable
 fun ProfileMainScreen(
     navigator: Navigator,
     viewModel: ProfileViewModel = getViewModel()
 ) {
     val state = viewModel.viewState.value
+    val context = LocalContext.current
 
     val listener = object : Listener {
         override fun onEditClick() {
@@ -76,10 +81,19 @@ fun ProfileMainScreen(
         override fun requestPermission() {
             viewModel.setEvent(Event.RequestPermission)
         }
+        override fun showPermissionAlert(show: Boolean) {
+            viewModel.setEvent(Event.ShowPermissionAlert(show))
+        }
+        override fun redirectToSettings() {
+            viewModel.setEvent(Event.RedirectToSettings)
+        }
     }
 
     val launcher = rememberLauncherForActivityResult(RequestPermission()) { granted ->
-        if (granted) listener.setStorageAvailable()
+        when {
+            granted -> listener.setStorageAvailable()
+            state.shouldRequestPermission -> listener.showPermissionAlert(true)
+        }
     }
     SideEffect {
         if (state.shouldRequestPermission) launcher.launch(READ_EXTERNAL_STORAGE)
@@ -94,10 +108,23 @@ fun ProfileMainScreen(
             is Effect.ChoosePhoto -> {
                 gallery.launch("image/*")
             }
+            is Effect.RedirectToSettings -> {
+                val settingsIntent = Intent(
+                    ACTION_APPLICATION_DETAILS_SETTINGS,
+                    Uri.parse("package:" + context.packageName)
+                )
+                context.startActivity(settingsIntent)
+            }
         }
     }
 
-    ProfileMainScreenContent(state, listener)
+    if (state.showPermissionAlert) {
+        PermissionAlert(listener)
+    }
+    ProfileMainScreenContent(
+        state = state,
+        listener = listener
+    )
 }
 
 @Composable
@@ -494,6 +521,19 @@ private fun AppVersion() = Text(
     modifier = Modifier
         .fillMaxWidth()
         .padding(vertical = 16.dp)
+)
+
+/**
+ * ALERT DIALOG
+ */
+@Composable
+private fun PermissionAlert(listener: Listener) = CustomAlertDialog(
+    title = "Необходимо разрешение",
+    description = "В прошлый раз вы не дали доступ к фотографиям. Теперь нужно дать разрешение " +
+            "в настройках приложения.\n" +
+            "Перейти в настройки?",
+    negativeCallback = { listener.showPermissionAlert(false) },
+    positiveCallback = { listener.redirectToSettings() }
 )
 
 /**

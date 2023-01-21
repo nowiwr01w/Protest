@@ -6,7 +6,7 @@ import com.nowiwr01p.buildsrc.dependency.Basic.Version.COMPOSE_ACTIVITY
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.CONSTRAINT
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.COIL_VERSION
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.CUSTOM_TABS_VERSION
-import com.nowiwr01p.buildsrc.dependency.Basic.Version.DATE_TIME_VERSION
+import com.nowiwr01p.buildsrc.dependency.Basic.Version.MATERIAL_DIALOG
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.JODA
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.KOTLIN_KTX
 import com.nowiwr01p.buildsrc.dependency.Basic.Version.LIFECYCLE
@@ -36,7 +36,8 @@ object Basic {
 
     const val CUSTOM_TABS = "androidx.browser:browser:$CUSTOM_TABS_VERSION"
 
-    const val DATE_TIME_DIALOGS = "io.github.vanpra.compose-material-dialogs:datetime:$DATE_TIME_VERSION"
+    const val ALERT_DIALOG = "io.github.vanpra.compose-material-dialogs:core:$MATERIAL_DIALOG"
+    const val DATE_TIME_DIALOGS = "io.github.vanpra.compose-material-dialogs:datetime:$MATERIAL_DIALOG"
 
     object Version {
         const val COMPOSE = "1.4.0-alpha02"
@@ -49,6 +50,6 @@ object Basic {
         const val COIL_COMPOSE_VERSION = "2.1.0"
         const val JODA = "2.12.2"
         const val CUSTOM_TABS_VERSION = "1.4.0"
-        const val DATE_TIME_VERSION = "0.9.0"
+        const val MATERIAL_DIALOG = "0.9.0"
     }
 }

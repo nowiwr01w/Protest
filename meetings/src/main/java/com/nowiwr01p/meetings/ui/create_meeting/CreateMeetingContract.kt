@@ -5,8 +5,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core.model.User
-import com.nowiwr01p.core_ui.extensions.DatePickerListener
-import com.nowiwr01p.core_ui.extensions.TimePickerListener
+import com.nowiwr01p.core_ui.ui.date_time_picker.DatePickerListener
+import com.nowiwr01p.core_ui.ui.date_time_picker.TimePickerListener
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect

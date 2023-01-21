@@ -1,4 +1,4 @@
-package com.nowiwr01p.core_ui.extensions
+package com.nowiwr01p.core_ui.ui.date_time_picker
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
