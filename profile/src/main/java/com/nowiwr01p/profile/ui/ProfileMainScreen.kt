@@ -1,5 +1,7 @@
 package com.nowiwr01p.profile.ui
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -7,11 +9,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +27,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
+import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
 import com.skydoves.landscapist.coil.CoilImage
@@ -38,19 +39,33 @@ fun ProfileMainScreen(
     viewModel: ProfileViewModel = getViewModel()
 ) {
     val listener = object : Listener {
-
+        override fun onEditClick() {
+            viewModel.setEvent(Event.OnEditClick)
+        }
+        override fun onSaveClick() {
+            viewModel.setEvent(Event.OnSaveClick)
+        }
+        override fun onCancelClick() {
+            viewModel.setEvent(Event.OnCancelClick)
+        }
+        override fun onChatClick() {
+            viewModel.setEvent(Event.OnChatClick)
+        }
     }
 
-    ProfileMainScreenContent(viewModel.viewState.value)
+    ProfileMainScreenContent(
+        state = viewModel.viewState.value,
+        listener =  listener
+    )
 }
 
 @Composable
-private fun ProfileMainScreenContent(state: State) = LazyColumn(
+private fun ProfileMainScreenContent(state: State, listener: Listener?) = LazyColumn(
     modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colors.backgroundSecondary)
 ) {
-    item { TopContainer(state) }
+    item { TopContainer(state, listener) }
     item { AccessContainer(state) }
     item { AboutProjectContainer() }
     item { PoliticsContainer() }
@@ -61,12 +76,13 @@ private fun ProfileMainScreenContent(state: State) = LazyColumn(
  * ROUNDED CONTAINER
  */
 @Composable
-private fun TopContainer(state: State) = ConstraintLayout(
+private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
         .background(Color.White)
         .padding(top = 16.dp)
+        .animateContentSize()
 ) {
     val (avatar, name, role, edit, chat, space) = createRefs()
 
@@ -76,33 +92,38 @@ private fun TopContainer(state: State) = ConstraintLayout(
             end.linkTo(parent.end)
             top.linkTo(parent.top)
         }
-    Avatar(
-        state = state,
-        modifier = avatarModifier
-    )
+    if (state.editMode) {
+        AvatarStub(avatarModifier)
+    } else {
+        Avatar(state, avatarModifier)
+    }
 
     val editModifier = Modifier
-        .padding(end = 16.dp)
+        .padding(end = 10.dp)
         .constrainAs(edit) {
             end.linkTo(parent.end)
             top.linkTo(parent.top)
         }
     ClickableIcon(
-        icon = R.drawable.ic_edit,
-        onClick = {},
-        modifier = editModifier
+        modifier = editModifier,
+        icon = if (state.editMode) R.drawable.ic_save else R.drawable.ic_edit,
+        onClick = {
+            if (state.editMode) listener?.onSaveClick() else listener?.onEditClick()
+        },
     )
 
     val chatModifier = Modifier
-        .padding(start = 16.dp)
+        .padding(start = 10.dp)
         .constrainAs(chat) {
             start.linkTo(parent.start)
             top.linkTo(parent.top)
         }
     ClickableIcon(
-        icon = R.drawable.ic_chat,
-        onClick = {},
-        modifier = chatModifier
+        modifier = chatModifier,
+        icon = if (state.editMode) R.drawable.ic_cancel else R.drawable.ic_chat,
+        onClick = {
+            if (state.editMode) listener?.onCancelClick() else listener?.onChatClick()
+        },
     )
 
     val nameModifier = Modifier
@@ -112,14 +133,22 @@ private fun TopContainer(state: State) = ConstraintLayout(
             end.linkTo(avatar.end)
             top.linkTo(avatar.bottom)
         }
-    Text(
-        text = state.user.name.ifEmpty { "Andrey Larionov" },
-        style = MaterialTheme.typography.title1Bold,
-        color = MaterialTheme.colors.textPrimary,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        modifier = nameModifier
-    )
+    if (state.editMode) {
+        EditNameTextField(
+            state = state,
+            listener = listener,
+            modifier = nameModifier
+        )
+    } else {
+        Text(
+            text = state.user.name.ifEmpty { "Andrey Larionov" },
+            style = MaterialTheme.typography.title1Bold,
+            color = MaterialTheme.colors.textPrimary,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = nameModifier
+        )
+    }
 
     val roleModifier = Modifier
         .constrainAs(role) {
@@ -127,16 +156,19 @@ private fun TopContainer(state: State) = ConstraintLayout(
             end.linkTo(name.end)
             top.linkTo(name.bottom)
         }
-    if (state.user.organizer || state.user.writer) {
+    if (!state.editMode) {
         val userRole = when {
             state.user.organizer && state.user.writer -> "Организатор, создатель новостей"
             state.user.organizer -> "Организатор"
-            else -> "Создатель новостей"
+            state.user.writer -> "Создатель новостей"
+            else -> "Для отображения роли получите доступ"
         }
         Text(
             text = userRole,
             style = MaterialTheme.typography.body2,
             color = MaterialTheme.colors.textColorSecondary,
+            maxLines = 2,
+            textAlign = TextAlign.Center,
             modifier = roleModifier
         )
     }
@@ -152,6 +184,9 @@ private fun TopContainer(state: State) = ConstraintLayout(
     Spacer(modifier = spaceModifier)
 }
 
+/**
+ * AVATAR
+ */
 @Composable
 private fun Avatar(state: State, modifier: Modifier) = Box(
     modifier = modifier
@@ -177,6 +212,22 @@ private fun Avatar(state: State, modifier: Modifier) = Box(
     }
 }
 
+@Composable
+private fun AvatarStub(modifier: Modifier) = Box(
+    modifier = modifier
+        .pressedAnimation()
+        .size(132.dp)
+        .clip(CircleShape)
+        .background(MaterialTheme.colors.backgroundSecondary),
+    contentAlignment = Alignment.Center
+) {
+    Icon(
+        painter = painterResource(R.drawable.ic_plus),
+        contentDescription = "Avatar stub",
+        tint = MaterialTheme.colors.textColorSecondary,
+        modifier = Modifier.size(42.dp)
+    )
+}
 /**
  * INCREASE ACCESS CONTAINER
  */
@@ -301,6 +352,51 @@ private fun InfoItem(
 }
 
 /**
+ * EDIT NAME TEXT FIELD
+ */
+@Composable
+private fun EditNameTextField(
+    state: State,
+    listener: Listener?,
+    modifier: Modifier
+) {
+    TextField(
+        value = state.user.name,
+        onValueChange = {
+
+        },
+        placeholder = {
+            Text(text = "Введите имя")
+        },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = Color.Transparent,
+            disabledBorderColor = Color.Transparent,
+            errorBorderColor = Color.Transparent,
+            focusedBorderColor = Color.Transparent
+        ),
+        trailingIcon = {
+            Text(
+                text = "0/24",
+                modifier = Modifier.padding(end = 8.dp),
+                color = MaterialTheme.colors.textColorSecondary,
+                style = MaterialTheme.typography.subHeadlineRegular
+            )
+        },
+        modifier = modifier
+            .fillMaxWidth()
+            .height(56.dp)
+            .padding(top = 4.dp, start = 16.dp, end = 16.dp)
+            .border(
+                border = BorderStroke(
+                    width = 1.25.dp,
+                    color = MaterialTheme.colors.graphicsSecondary
+                ),
+                shape = RoundedCornerShape(12.dp)
+            )
+    )
+}
+
+/**
  * APP VERSION
  */
 @Composable
@@ -321,6 +417,7 @@ private fun AppVersion() = Text(
 @Composable
 private fun Preview() = MeetingsTheme {
     ProfileMainScreenContent(
-        state = State()
+        state = State(),
+        listener = null
     )
 }

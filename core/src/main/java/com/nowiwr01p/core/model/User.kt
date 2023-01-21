@@ -1,7 +1,6 @@
 package com.nowiwr01p.core.model
 
 import com.nowiwr01p.core.datastore.cities.data.City
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
