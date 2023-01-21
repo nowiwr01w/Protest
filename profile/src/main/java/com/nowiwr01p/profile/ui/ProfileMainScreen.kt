@@ -51,6 +51,9 @@ fun ProfileMainScreen(
         override fun onChatClick() {
             viewModel.setEvent(Event.OnChatClick)
         }
+        override fun onUserNameChanged(name: String) {
+            viewModel.setEvent(Event.OnUserNameChanged(name))
+        }
     }
 
     ProfileMainScreenContent(
@@ -379,9 +382,9 @@ private fun EditNameTextField(
     modifier: Modifier
 ) {
     TextField(
-        value = state.user.name,
+        value = state.editNameValue,
         onValueChange = {
-
+            listener?.onUserNameChanged(it)
         },
         placeholder = {
             Text(text = "Введите имя")
@@ -394,7 +397,7 @@ private fun EditNameTextField(
         ),
         trailingIcon = {
             Text(
-                text = "0/24",
+                text = "${state.editNameValue.length}/24",
                 modifier = Modifier.padding(end = 8.dp),
                 color = MaterialTheme.colors.textColorSecondary,
                 style = MaterialTheme.typography.subHeadlineRegular
