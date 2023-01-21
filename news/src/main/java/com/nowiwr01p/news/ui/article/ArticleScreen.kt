@@ -213,7 +213,7 @@ private fun TopTitle(title: Title) = Text(
 @Composable
 private fun SubTitle(subtitle: SubTitle) = Text(
     text = subtitle.text,
-    style = MaterialTheme.typography.title3Bold,
+    style = MaterialTheme.typography.title2Bold,
     color = MaterialTheme.colors.textPrimary,
     modifier = Modifier.padding(top = 4.dp, start = 16.dp, end = 16.dp)
 )
@@ -325,7 +325,7 @@ private fun OrderedListItem(orderedList: OrderedList) = Column(
 ) {
     Text(
         text = orderedList.title,
-        style = MaterialTheme.typography.headline,
+        style = MaterialTheme.typography.title3Bold,
         color = MaterialTheme.colors.textPrimary,
         modifier = Modifier
             .fillMaxWidth()
