@@ -1,6 +1,5 @@
 package com.nowiwr01p.profile.ui
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -52,7 +51,7 @@ private fun ProfileMainScreenContent(state: State) = LazyColumn(
         .background(MaterialTheme.colors.backgroundSecondary)
 ) {
     item { TopContainer(state) }
-    item { AccessContainer() }
+    item { AccessContainer(state) }
     item { AboutProjectContainer() }
     item { PoliticsContainer() }
     item { AppVersion() }
@@ -69,7 +68,7 @@ private fun TopContainer(state: State) = ConstraintLayout(
         .background(Color.White)
         .padding(top = 16.dp)
 ) {
-    val (avatar, name, role, edit, chat) = createRefs()
+    val (avatar, name, role, edit, chat, space) = createRefs()
 
     val avatarModifier = Modifier
         .constrainAs(avatar) {
@@ -107,7 +106,7 @@ private fun TopContainer(state: State) = ConstraintLayout(
     )
 
     val nameModifier = Modifier
-        .padding(top = 8.dp, start = 24.dp, end = 24.dp)
+        .padding(top = 8.dp, bottom = 4.dp, start = 24.dp, end = 24.dp)
         .constrainAs(name) {
             start.linkTo(avatar.start)
             end.linkTo(avatar.end)
@@ -123,18 +122,34 @@ private fun TopContainer(state: State) = ConstraintLayout(
     )
 
     val roleModifier = Modifier
-        .padding(top = 4.dp, bottom = 12.dp)
         .constrainAs(role) {
             start.linkTo(name.start)
             end.linkTo(name.end)
             top.linkTo(name.bottom)
         }
-    Text(
-        text = "Организатор, создатель новостей",
-        style = MaterialTheme.typography.body2,
-        color = MaterialTheme.colors.textColorSecondary,
-        modifier = roleModifier
-    )
+    if (state.user.organizer || state.user.writer) {
+        val userRole = when {
+            state.user.organizer && state.user.writer -> "Организатор, создатель новостей"
+            state.user.organizer -> "Организатор"
+            else -> "Создатель новостей"
+        }
+        Text(
+            text = userRole,
+            style = MaterialTheme.typography.body2,
+            color = MaterialTheme.colors.textColorSecondary,
+            modifier = roleModifier
+        )
+    }
+
+    val barrier = createBottomBarrier(name, role)
+    val spaceModifier = Modifier
+        .height(12.dp)
+        .constrainAs(space) {
+            start.linkTo(parent.start)
+            end.linkTo(parent.end)
+            top.linkTo(barrier)
+        }
+    Spacer(modifier = spaceModifier)
 }
 
 @Composable
@@ -166,7 +181,7 @@ private fun Avatar(state: State, modifier: Modifier) = Box(
  * INCREASE ACCESS CONTAINER
  */
 @Composable
-private fun AccessContainer() = Column(
+private fun AccessContainer(state: State) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier
         .fillMaxWidth()
@@ -175,8 +190,16 @@ private fun AccessContainer() = Column(
         .background(Color.White)
 ) {
     Category("Получить доступ")
-    InfoItem("Стать организатором", R.drawable.ic_brain)
-    InfoItem("Стать создателем новостей", R.drawable.ic_lamp)
+    InfoItem(
+        name = "Стать организатором",
+        startIcon = R.drawable.ic_brain,
+        endIcon = if (state.user.organizer) R.drawable.ic_done else null
+    )
+    InfoItem(
+        name = "Стать создателем новостей",
+        startIcon = R.drawable.ic_lamp,
+        endIcon = if (state.user.writer) R.drawable.ic_done else null
+    )
 }
 
 /**
@@ -235,7 +258,8 @@ private fun Category(name: String) = Text(
 @Composable
 private fun InfoItem(
     name: String,
-    icon: Int,
+    startIcon: Int,
+    endIcon: Int? = null,
     action: () -> Unit = {}
 ) {
     Row(
@@ -243,7 +267,7 @@ private fun InfoItem(
         modifier = Modifier.clickable { action.invoke() }
     ) {
         Icon(
-            painter = painterResource(icon),
+            painter = painterResource(startIcon),
             contentDescription = "Info item icon",
             modifier = Modifier
                 .padding(start = 16.dp, top = 12.dp, bottom = 12.dp)
@@ -264,9 +288,14 @@ private fun InfoItem(
             modifier = Modifier.weight(1f)
         )
         Icon(
-            painter = rememberVectorPainter(image = Icons.Default.KeyboardArrowRight),
             contentDescription = "Info item icon",
-            modifier = Modifier.padding(horizontal = 16.dp)
+            modifier = Modifier.padding(horizontal = 16.dp),
+            tint = if (endIcon == null) Color.Black else MaterialTheme.colors.graphicsGreen,
+            painter = if (endIcon == null) {
+                rememberVectorPainter(image = Icons.Default.KeyboardArrowRight)
+            } else {
+                painterResource(id = endIcon)
+            }
         )
     }
 }
