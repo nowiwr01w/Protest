@@ -9,10 +9,15 @@ interface ProfileContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        object OnEditClick: Event
+        object OnSaveClick: Event
+        object OnCancelClick: Event
+        object OnChatClick: Event
     }
 
     data class State(
-        val user: User = User()
+        val user: User = User(),
+        val editMode: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
@@ -20,6 +25,9 @@ interface ProfileContract {
     }
 
     interface Listener {
-
+        fun onEditClick()
+        fun onSaveClick()
+        fun onCancelClick()
+        fun onChatClick()
     }
 }
