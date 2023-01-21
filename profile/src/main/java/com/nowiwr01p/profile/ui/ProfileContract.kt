@@ -1,5 +1,6 @@
 package com.nowiwr01p.profile.ui
 
+import android.net.Uri
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
@@ -13,17 +14,23 @@ interface ProfileContract {
         object OnSaveClick: Event
         object OnCancelClick: Event
         object OnChatClick: Event
+        object RequestPermission: Event
+        object SetStorageAvailable: Event
+        data class SetAvatarPreview(val uri: Uri): Event
         data class OnUserNameChanged(val name: String): Event
     }
 
     data class State(
         val user: User = User(),
-        val editNameValue: String = "",
-        val editMode: Boolean = false
+        val previewEditName: String = "",
+        val previewEditAvatar: String = "",
+        val editMode: Boolean = false,
+        val shouldRequestPermission: Boolean = false,
+        val isStorageAvailable: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
-
+        object ChoosePhoto: Effect
     }
 
     interface Listener {
@@ -32,5 +39,8 @@ interface ProfileContract {
         fun onCancelClick()
         fun onChatClick()
         fun onUserNameChanged(name: String)
+        fun requestPermission()
+        fun setStorageAvailable()
+        fun setAvatarPreview(uri: Uri)
     }
 }
