@@ -12,5 +12,6 @@ data class User(
     val name: String = "",
     val avatar: String = "",
     val verified: Boolean = false,
-    val organizer: Boolean = true
+    val writer: Boolean = true,
+    val organizer: Boolean = true,
 )
