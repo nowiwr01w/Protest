@@ -15,5 +15,5 @@ val moduleProfile = module {
     /**
      * PROFILE
      */
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
 }

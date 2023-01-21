@@ -17,6 +17,7 @@ import com.nowiwr01p.domain.meetingsScreenScopeId
 import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
+import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
 import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
@@ -30,6 +31,7 @@ val moduleDomain = module {
      * USER
      */
     factory { GetRemoteUserUseCase(get()) }
+    factory { UpdateUserNameUseCase(get(), get()) }
 
     /**
      * AUTH
