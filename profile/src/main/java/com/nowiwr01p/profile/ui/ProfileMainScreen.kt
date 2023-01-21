@@ -1,8 +1,11 @@
 package com.nowiwr01p.profile.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -43,17 +46,16 @@ fun ProfileMainScreen(
 }
 
 @Composable
-private fun ProfileMainScreenContent(state: State) = Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
+private fun ProfileMainScreenContent(state: State) = LazyColumn(
     modifier = Modifier
         .fillMaxSize()
         .background(MaterialTheme.colors.backgroundSecondary)
 ) {
-    TopContainer()
-    AccessContainer()
-    AboutProjectContainer()
-    PoliticsContainer()
-    AppVersion()
+    item { TopContainer() }
+    item { AccessContainer() }
+    item { AboutProjectContainer() }
+    item { PoliticsContainer() }
+    item { AppVersion() }
 }
 
 /**
@@ -70,17 +72,12 @@ private fun TopContainer() = ConstraintLayout(
     val (avatar, name, role, edit, chat) = createRefs()
 
     val avatarModifier = Modifier
-        .size(132.dp)
-        .clip(CircleShape)
         .constrainAs(avatar) {
             start.linkTo(parent.start)
             end.linkTo(parent.end)
             top.linkTo(parent.top)
         }
-    CoilImage(
-        imageModel = { "https://avatars.githubusercontent.com/u/39140585?v=4" },
-        modifier = avatarModifier
-    )
+    Avatar(modifier = avatarModifier)
 
     val editModifier = Modifier
         .padding(end = 16.dp)
@@ -137,6 +134,30 @@ private fun TopContainer() = ConstraintLayout(
     )
 }
 
+@Composable
+private fun Avatar(modifier: Modifier) = Box(
+    modifier = modifier
+        .size(132.dp)
+        .clip(CircleShape)
+        .border(2.dp, Color(0xFFFC4C4C), CircleShape),
+    contentAlignment = Alignment.Center
+) {
+    Box(
+        modifier = Modifier
+            .size(128.dp)
+            .clip(CircleShape)
+            .border(2.dp, Color.White, CircleShape),
+        contentAlignment = Alignment.Center
+    ) {
+        CoilImage(
+            imageModel = { "https://avatars.githubusercontent.com/u/39140585?v=4" },
+            modifier = Modifier
+                .fillMaxSize()
+                .clip(CircleShape)
+        )
+    }
+}
+
 /**
  * INCREASE ACCESS CONTAINER
  */
@@ -185,7 +206,9 @@ private fun AboutProjectContainer() = Column(
 ) {
     Category("О проекте")
     InfoItem("Сообщить о баге", R.drawable.ic_bug)
+    InfoItem("Предложить свою идею", R.drawable.ic_suggest_idea)
     InfoItem("Присоединиться к разработке", R.drawable.ic_development)
+    InfoItem("Поддержать проект", R.drawable.ic_money)
 }
 
 /**
@@ -255,7 +278,7 @@ private fun AppVersion() = Text(
     textAlign = TextAlign.Center,
     modifier = Modifier
         .fillMaxWidth()
-        .padding(top = 16.dp)
+        .padding(vertical = 16.dp)
 )
 
 /**
