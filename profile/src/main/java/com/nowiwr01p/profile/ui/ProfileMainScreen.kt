@@ -51,7 +51,7 @@ private fun ProfileMainScreenContent(state: State) = LazyColumn(
         .fillMaxSize()
         .background(MaterialTheme.colors.backgroundSecondary)
 ) {
-    item { TopContainer() }
+    item { TopContainer(state) }
     item { AccessContainer() }
     item { AboutProjectContainer() }
     item { PoliticsContainer() }
@@ -62,7 +62,7 @@ private fun ProfileMainScreenContent(state: State) = LazyColumn(
  * ROUNDED CONTAINER
  */
 @Composable
-private fun TopContainer() = ConstraintLayout(
+private fun TopContainer(state: State) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clip(RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp))
@@ -77,7 +77,10 @@ private fun TopContainer() = ConstraintLayout(
             end.linkTo(parent.end)
             top.linkTo(parent.top)
         }
-    Avatar(modifier = avatarModifier)
+    Avatar(
+        state = state,
+        modifier = avatarModifier
+    )
 
     val editModifier = Modifier
         .padding(end = 16.dp)
@@ -111,7 +114,7 @@ private fun TopContainer() = ConstraintLayout(
             top.linkTo(avatar.bottom)
         }
     Text(
-        text = "Andrey Larionov",
+        text = state.user.name.ifEmpty { "Andrey Larionov" },
         style = MaterialTheme.typography.title1Bold,
         color = MaterialTheme.colors.textPrimary,
         maxLines = 1,
@@ -135,7 +138,7 @@ private fun TopContainer() = ConstraintLayout(
 }
 
 @Composable
-private fun Avatar(modifier: Modifier) = Box(
+private fun Avatar(state: State, modifier: Modifier) = Box(
     modifier = modifier
         .size(132.dp)
         .clip(CircleShape)
@@ -149,8 +152,9 @@ private fun Avatar(modifier: Modifier) = Box(
             .border(2.dp, Color.White, CircleShape),
         contentAlignment = Alignment.Center
     ) {
+        val url = state.user.avatar.ifEmpty { "https://avatars.githubusercontent.com/u/39140585?v=4" }
         CoilImage(
-            imageModel = { "https://avatars.githubusercontent.com/u/39140585?v=4" },
+            imageModel = { url },
             modifier = Modifier
                 .fillMaxSize()
                 .clip(CircleShape)

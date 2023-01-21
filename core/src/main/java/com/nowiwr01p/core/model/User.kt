@@ -6,14 +6,11 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class User(
-    @SerialName("id")
     val id: String = "",
-    @SerialName("email")
     val email: String = "",
-    @SerialName("city")
     val city: City = City(),
-    @SerialName("verified")
+    val name: String = "",
+    val avatar: String = "",
     val verified: Boolean = false,
-    @SerialName("organizer")
     val organizer: Boolean = true
 )
