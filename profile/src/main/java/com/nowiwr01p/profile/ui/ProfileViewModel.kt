@@ -1,15 +1,19 @@
 package com.nowiwr01p.profile.ui
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
+import com.nowiwr01p.domain.profile.UploadUserAvatarUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.profile.ui.ProfileContract.*
+import timber.log.Timber
 
 class ProfileViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
-    private val updateUserNameUseCase: UpdateUserNameUseCase
+    private val updateUserNameUseCase: UpdateUserNameUseCase,
+    private val uploadUserAvatarUseCase: UploadUserAvatarUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -17,8 +21,8 @@ class ProfileViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
-            is Event.OnSaveClick -> save()
             is Event.OnChatClick -> toChat()
+            is Event.OnSaveClick -> updateUserData()
             is Event.OnEditClick -> setEditMode(true)
             is Event.OnCancelClick -> setEditMode(false)
             is Event.SetStorageAvailable -> setStorageAvailable()
@@ -27,6 +31,7 @@ class ProfileViewModel(
             is Event.ShowPermissionAlert -> showPermissionAlert(event.show)
             is Event.RedirectToSettings -> redirectToSettings()
             is Event.SetAvatarPreview -> setAvatarPreview(event.uri)
+            is Event.RequestPermissionAlert -> requestPermissionAlert()
         }
     }
 
@@ -43,18 +48,26 @@ class ProfileViewModel(
         if (name.length <= 24) setState { copy(previewEditName = name) }
     }
 
-    private fun save() = io {
+    private fun updateUserData() = io {
         runCatching {
             updateUserName()
+            updateUserAvatar()
         }.onSuccess {
-            getUser()
-            setState { copy(editMode = false, previewEditName = "") }
+            setState { copy(editMode = false, previewEditName = "", previewEditAvatar = "") }
         }
     }
 
-    private suspend fun updateUserName() {
-        val updatedName = viewState.value.previewEditName.trim()
-        updateUserNameUseCase.execute(updatedName)
+    private suspend fun updateUserName() = with(viewState.value) {
+        if (previewEditName.isNotBlank()) {
+            updateUserNameUseCase.execute(previewEditName)
+        }
+    }
+
+    private suspend fun updateUserAvatar() = with(viewState.value) {
+        if (previewEditAvatar.isNotBlank()) {
+            val updatedUser = uploadUserAvatarUseCase.execute(previewEditAvatar.toUri())
+            setState { copy(user = updatedUser) }
+        }
     }
 
     private fun setEditMode(enabled: Boolean) {
@@ -67,6 +80,10 @@ class ProfileViewModel(
 
     private fun requestPermission() {
         setState { copy(shouldRequestPermission = true) }
+    }
+
+    private fun requestPermissionAlert() {
+        setState { copy(shouldRequestAlert = true, shouldRequestPermission = true) }
     }
 
     private fun showPermissionAlert(show: Boolean) {

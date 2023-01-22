@@ -3,6 +3,7 @@ package com.nowiwr01p.data.di
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import com.nowiwr01p.data.article.ArticleRepositoryImpl
 import com.nowiwr01p.data.auth.repository.AuthRepositoryImpl
 import com.nowiwr01p.data.auth.repository.ValidateAuthDataRepositoryImpl
@@ -17,6 +18,7 @@ import com.nowiwr01p.data.create_article.repository.CreateArticleRepositoryImpl
 import com.nowiwr01p.data.create_article.validator.CreateArticleValidatorImpl
 import com.nowiwr01p.data.meetings.MeetingsRepositoryImpl
 import com.nowiwr01p.data.news.NewsRepositoryImpl
+import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.domain.AppDispatchers
@@ -35,6 +37,7 @@ import com.nowiwr01p.domain.create_article.repository.CreateArticleRepository
 import com.nowiwr01p.domain.create_article.validators.CreateArticleValidator
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.news.repository.NewsRepository
+import com.nowiwr01p.domain.profile.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationRemoteRepository
 import org.koin.dsl.module
@@ -64,8 +67,11 @@ val moduleData = module {
     factory {
         Firebase.database
     }
+    factory {
+        Firebase.storage
+    }
     single<FirebaseReferencesRepository> {
-        FirebaseReferencesRepositoryImpl(get())
+        FirebaseReferencesRepositoryImpl(get(), get())
     }
 
     /**
@@ -140,5 +146,12 @@ val moduleData = module {
     }
     factory<CreateArticleRepository> {
         CreateArticleRepositoryImpl(get(), get())
+    }
+
+    /**
+     * PROFILE
+     */
+    factory<ProfileRepository> {
+        ProfileRepositoryImpl(get(), get(), get())
     }
 }

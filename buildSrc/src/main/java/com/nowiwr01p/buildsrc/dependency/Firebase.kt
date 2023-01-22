@@ -7,6 +7,7 @@ object Firebase {
 
     const val AUTH = "com.google.firebase:firebase-auth-ktx:$AUTH_VERSION"
     const val DATABASE = "com.google.firebase:firebase-database-ktx:$DATABASE_VERSION"
+    const val STORAGE = "com.google.firebase:firebase-storage-ktx:$DATABASE_VERSION"
 
     private object Version {
         const val AUTH_VERSION = "21.1.0"
