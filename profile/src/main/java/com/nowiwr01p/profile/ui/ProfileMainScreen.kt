@@ -17,6 +17,7 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -50,6 +51,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun ProfileMainScreen(
+    editMode: Boolean,
     navigator: Navigator,
     viewModel: ProfileViewModel = getViewModel()
 ) {
@@ -90,6 +92,10 @@ fun ProfileMainScreen(
         override fun requestPermissionAlert() {
             viewModel.setEvent(Event.RequestPermissionAlert)
         }
+    }
+
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(Event.Init(editMode))
     }
 
     val launcher = rememberLauncherForActivityResult(RequestPermission()) { granted ->
@@ -454,15 +460,18 @@ private fun InfoItem(
         Spacer(
             modifier = Modifier.weight(1f)
         )
+        val size = if (endIcon == null) 24.dp else 20.dp
         Icon(
-            contentDescription = "Info item icon",
-            modifier = Modifier.padding(horizontal = 16.dp),
-            tint = if (endIcon == null) Color.Black else MaterialTheme.colors.graphicsGreen,
             painter = if (endIcon == null) {
                 rememberVectorPainter(image = Icons.Default.KeyboardArrowRight)
             } else {
                 painterResource(id = endIcon)
-            }
+            },
+            contentDescription = "Info item icon",
+            tint = if (endIcon == null) Color.Black else MaterialTheme.colors.graphicsGreen,
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .size(size)
         )
     }
 }
