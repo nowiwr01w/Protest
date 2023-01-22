@@ -30,9 +30,8 @@ class ProfileRepositoryImpl(
     }
 
     private suspend fun clearPreviousImages(userId: String) {
-        referencesRepository.getImagesStorageReference().child(userId).listAll()
-            .result
+        referencesRepository.getImagesStorageReference().child(userId).listAll().await()
             .items
-            .forEach { ref -> ref.delete().await() }
+            .forEach { it.delete().await() }
     }
 }
