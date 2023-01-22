@@ -9,7 +9,7 @@ import com.nowiwr01p.core_ui.view_model.ViewState
 interface ProfileContract {
 
     sealed interface Event: ViewEvent {
-        object Init: Event
+        data class Init(val editMode: Boolean): Event
         object OnEditClick: Event
         object OnSaveClick: Event
         object OnCancelClick: Event

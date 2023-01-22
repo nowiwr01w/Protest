@@ -20,7 +20,7 @@ class ProfileViewModel(
 
     override fun handleEvents(event: Event) {
         when (event) {
-            is Event.Init -> init()
+            is Event.Init -> init(event.editMode)
             is Event.OnChatClick -> toChat()
             is Event.OnSaveClick -> updateUserData()
             is Event.OnEditClick -> setEditMode(true)
@@ -35,13 +35,9 @@ class ProfileViewModel(
         }
     }
 
-    private fun init() = io {
-        getUser()
-    }
-
-    private suspend fun getUser() {
+    private fun init(editMode: Boolean) = io {
         val user = getLocalUserUseCase.execute()
-        setState { copy(user = user) }
+        setState { copy(user = user, editMode = editMode) }
     }
 
     private fun handleInput(name: String) {

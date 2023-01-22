@@ -21,7 +21,7 @@ interface Navigator {
 
     fun navigateToMeetings()
     fun navigateToNews()
-    fun navigateToProfile()
+    fun navigateToProfile(editMode: Boolean = false)
 
     fun navigateToRoute(route: String)
     fun setNavController(navHostController: NavHostController)
