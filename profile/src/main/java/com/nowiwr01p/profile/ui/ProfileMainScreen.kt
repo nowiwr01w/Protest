@@ -92,6 +92,12 @@ fun ProfileMainScreen(
         override fun requestPermissionAlert() {
             viewModel.setEvent(Event.RequestPermissionAlert)
         }
+        override fun logout() {
+            viewModel.setEvent(Event.Logout)
+        }
+        override fun deleteAccount() {
+            viewModel.setEvent(Event.DeleteAccount)
+        }
     }
 
     LaunchedEffect(Unit) {
@@ -124,6 +130,9 @@ fun ProfileMainScreen(
                 )
                 context.startActivity(settingsIntent)
             }
+            is Effect.NavigateToAuth -> {
+                navigator.authNavigator.toAuth()
+            }
         }
     }
 
@@ -146,7 +155,7 @@ private fun ProfileMainScreenContent(state: State, listener: Listener?) = LazyCo
     item { AccessContainer(state) }
     item { AboutProjectContainer() }
     item { PoliticsContainer() }
-    item { ExitContainer() }
+    item { ExitContainer(listener) }
     item { AppVersion() }
 }
 
@@ -379,7 +388,7 @@ private fun PoliticsContainer() = Column(
  * EXIT CONTAINER
  */
 @Composable
-private fun ExitContainer() = Column(
+private fun ExitContainer(listener: Listener?) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier
         .fillMaxWidth()
@@ -388,8 +397,12 @@ private fun ExitContainer() = Column(
         .background(Color.White)
 ) {
     Category("Выход")
-    InfoItem("Выйти из аккаунта", R.drawable.ic_logout)
-    InfoItem("Удалить аккаунт", R.drawable.ic_delete_account)
+    InfoItem("Выйти из аккаунта", R.drawable.ic_logout) {
+        listener?.logout()
+    }
+    InfoItem("Удалить аккаунт", R.drawable.ic_delete_account) {
+        listener?.deleteAccount()
+    }
 }
 
 /**
