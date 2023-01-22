@@ -16,7 +16,9 @@ import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
 import com.nowiwr01p.domain.meetingsScreenScopeId
 import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
-import com.nowiwr01p.domain.profile.UploadUserAvatarUseCase
+import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
+import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
+import com.nowiwr01p.domain.profile.usecase.UploadUserAvatarUseCase
 import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
@@ -103,5 +105,7 @@ val moduleDomain = module {
     /**
      * PROFILE
      */
+    factory { LogOutUseCase(get()) }
+    factory { DeleteAccountUseCase(get()) }
     factory { UploadUserAvatarUseCase(get()) }
 }
