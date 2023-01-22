@@ -9,6 +9,7 @@ import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
 import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.domain.auth.data.user.UserData
@@ -30,6 +31,7 @@ class AuthViewModel(
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
     private val showSnackBarHelper: ShowSnackBarHelper,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
+    private val openLinksHelper: OpenLinksHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -45,6 +47,7 @@ class AuthViewModel(
             is Event.NavigateToVerification -> setEffect { Effect.NavigateToVerification }
             is Event.NavigateToChooseCountry -> setEffect { Effect.NavigateToChooseCountry }
             is Event.ShowBottomSheet -> showBottomSheetHelper.showBottomSheet(event.params)
+            is Event.OpenLink -> openLink(event.link)
         }
     }
 
@@ -147,5 +150,9 @@ class AuthViewModel(
         setState { copy(authButtonState = ERROR) }
         delay(3000)
         setState { copy(authButtonState = DEFAULT) }
+    }
+
+    private fun openLink(link: String) = io {
+        openLinksHelper.openLink(link)
     }
 }
