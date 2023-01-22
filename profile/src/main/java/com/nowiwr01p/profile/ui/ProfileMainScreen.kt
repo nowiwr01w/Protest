@@ -11,6 +11,7 @@ import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -44,6 +45,8 @@ import com.nowiwr01p.core_ui.ui.alert_dialog.CustomAlertDialog
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
+import com.nowiwr01p.profile.ui.data.ProfileItem
+import com.nowiwr01p.profile.ui.data.getProfileItems
 import com.skydoves.landscapist.ImageOptions
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
@@ -146,17 +149,22 @@ fun ProfileMainScreen(
 }
 
 @Composable
-private fun ProfileMainScreenContent(state: State, listener: Listener?) = LazyColumn(
-    modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colors.backgroundSecondary)
+private fun ProfileMainScreenContent(
+    state: State,
+    listener: Listener?
 ) {
-    item { TopContainer(state, listener) }
-    item { AccessContainer(state) }
-    item { AboutProjectContainer() }
-    item { PoliticsContainer() }
-    item { ExitContainer(listener) }
-    item { AppVersion() }
+    val items = getProfileItems(state, listener)
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colors.backgroundSecondary)
+    ) {
+        item { TopContainer(state, listener) }
+        items(items) {
+            ItemsContainer(it)
+        }
+        item { AppVersion() }
+    }
 }
 
 /**
@@ -342,36 +350,12 @@ private fun AvatarStub(
         }
     }
 }
-/**
- * INCREASE ACCESS CONTAINER
- */
-@Composable
-private fun AccessContainer(state: State) = Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp)
-        .clip(RoundedCornerShape(16.dp))
-        .background(Color.White)
-) {
-    Category("Получить доступ")
-    InfoItem(
-        name = "Стать организатором",
-        startIcon = R.drawable.ic_brain,
-        endIcon = if (state.user.organizer) R.drawable.ic_done else null
-    )
-    InfoItem(
-        name = "Стать создателем новостей",
-        startIcon = R.drawable.ic_lamp,
-        endIcon = if (state.user.writer) R.drawable.ic_done else null
-    )
-}
 
 /**
- * POLITICS CONTAINER
+ * ITEMS CONTAINER
  */
 @Composable
-private fun PoliticsContainer() = Column(
+private fun ItemsContainer(container: Pair<String, List<ProfileItem>>) = Column(
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = Modifier
         .fillMaxWidth()
@@ -379,49 +363,16 @@ private fun PoliticsContainer() = Column(
         .clip(RoundedCornerShape(16.dp))
         .background(Color.White)
 ) {
-    Category("Условия пользования")
-    InfoItem("Политика приватности", R.drawable.ic_security)
-    InfoItem("Политика обработки данных", R.drawable.ic_data_management)
-}
+    Category(container.first)
 
-/**
- * EXIT CONTAINER
- */
-@Composable
-private fun ExitContainer(listener: Listener?) = Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp)
-        .clip(RoundedCornerShape(16.dp))
-        .background(Color.White)
-) {
-    Category("Выход")
-    InfoItem("Выйти из аккаунта", R.drawable.ic_logout) {
-        listener?.logout()
+    container.second.forEach { item ->
+        InfoItem(
+            name = item.name,
+            startIcon = item.startIcon,
+            endIcon = item.endIcon,
+            action = item.onClick,
+        )
     }
-    InfoItem("Удалить аккаунт", R.drawable.ic_delete_account) {
-        listener?.deleteAccount()
-    }
-}
-
-/**
- * ABOUT PROJECT
- */
-@Composable
-private fun AboutProjectContainer() = Column(
-    horizontalAlignment = Alignment.CenterHorizontally,
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp)
-        .clip(RoundedCornerShape(16.dp))
-        .background(Color.White)
-) {
-    Category("О проекте")
-    InfoItem("Сообщить о баге", R.drawable.ic_bug)
-    InfoItem("Предложить свою идею", R.drawable.ic_suggest_idea)
-    InfoItem("Присоединиться к разработке", R.drawable.ic_development)
-    InfoItem("Поддержать проект", R.drawable.ic_money)
 }
 
 /**
