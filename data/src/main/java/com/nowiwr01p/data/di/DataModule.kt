@@ -37,7 +37,7 @@ import com.nowiwr01p.domain.create_article.repository.CreateArticleRepository
 import com.nowiwr01p.domain.create_article.validators.CreateArticleValidator
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.news.repository.NewsRepository
-import com.nowiwr01p.domain.profile.ProfileRepository
+import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.verification.repository.VerificationRemoteRepository
 import org.koin.dsl.module
@@ -152,6 +152,6 @@ val moduleData = module {
      * PROFILE
      */
     factory<ProfileRepository> {
-        ProfileRepositoryImpl(get(), get(), get())
+        ProfileRepositoryImpl(get(), get(), get(), get())
     }
 }

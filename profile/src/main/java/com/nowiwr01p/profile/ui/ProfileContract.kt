@@ -18,6 +18,8 @@ interface ProfileContract {
         object RequestPermissionAlert: Event
         object RedirectToSettings: Event
         object SetStorageAvailable: Event
+        object Logout: Event
+        object DeleteAccount: Event
         data class SetAvatarPreview(val uri: Uri): Event
         data class OnUserNameChanged(val name: String): Event
         data class ShowPermissionAlert(val show: Boolean): Event
@@ -37,6 +39,7 @@ interface ProfileContract {
     sealed interface Effect: ViewSideEffect {
         object ChoosePhoto: Effect
         object RedirectToSettings: Effect
+        object NavigateToAuth: Effect
     }
 
     interface Listener {
@@ -51,5 +54,7 @@ interface ProfileContract {
         fun redirectToSettings()
         fun setStorageAvailable()
         fun setAvatarPreview(uri: Uri)
+        fun logout()
+        fun deleteAccount()
     }
 }

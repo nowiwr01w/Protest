@@ -5,15 +5,18 @@ import androidx.core.net.toUri
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
-import com.nowiwr01p.domain.profile.UploadUserAvatarUseCase
+import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
+import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
+import com.nowiwr01p.domain.profile.usecase.UploadUserAvatarUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.profile.ui.ProfileContract.*
-import timber.log.Timber
 
 class ProfileViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val updateUserNameUseCase: UpdateUserNameUseCase,
-    private val uploadUserAvatarUseCase: UploadUserAvatarUseCase
+    private val uploadUserAvatarUseCase: UploadUserAvatarUseCase,
+    private val logOutUseCase: LogOutUseCase,
+    private val deleteAccountUseCase: DeleteAccountUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -32,6 +35,8 @@ class ProfileViewModel(
             is Event.RedirectToSettings -> redirectToSettings()
             is Event.SetAvatarPreview -> setAvatarPreview(event.uri)
             is Event.RequestPermissionAlert -> requestPermissionAlert()
+            is Event.Logout -> logout()
+            is Event.DeleteAccount -> deleteAccount()
         }
     }
 
@@ -94,6 +99,22 @@ class ProfileViewModel(
     private fun setStorageAvailable() {
         setState { copy(isStorageAvailable = true, shouldRequestPermission = false) }
         setEffect { Effect.ChoosePhoto }
+    }
+
+    private fun logout() = io {
+        runCatching {
+            logOutUseCase.execute()
+        }.onSuccess {
+            setEffect { Effect.NavigateToAuth }
+        }
+    }
+
+    private fun deleteAccount() = io {
+        runCatching {
+            deleteAccountUseCase.execute()
+        }.onSuccess {
+            setEffect { Effect.NavigateToAuth }
+        }
     }
 
     private fun toChat() {
