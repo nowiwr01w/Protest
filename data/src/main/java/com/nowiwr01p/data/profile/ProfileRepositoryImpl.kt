@@ -6,6 +6,7 @@ import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.profile.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class ProfileRepositoryImpl(
     private val remoteRepository: UserRemoteRepository,
@@ -13,9 +14,11 @@ class ProfileRepositoryImpl(
     private val dispatchers: AppDispatchers
 ): ProfileRepository {
 
-    override suspend fun uploadImage(uri: Uri) = with(dispatchers.io) {
+    override suspend fun uploadImage(uri: Uri) = withContext(dispatchers.io) {
         val user = remoteRepository.getUser()
-        val fileName = "${user.id}/${System.currentTimeMillis()}/${uri.lastPathSegment}"
+        clearPreviousImages(user.id)
+
+        val fileName = "${user.id}/${uri.lastPathSegment}"
         val uploadReference = referencesRepository.getImagesStorageReference().child(fileName)
 
         uploadReference.putFile(uri).await()
@@ -24,5 +27,12 @@ class ProfileRepositoryImpl(
 
         val updatedUser = user.copy(avatar = link)
         remoteRepository.updateUser(updatedUser)
+    }
+
+    private suspend fun clearPreviousImages(userId: String) {
+        referencesRepository.getImagesStorageReference().child(userId).listAll()
+            .result
+            .items
+            .forEach { ref -> ref.delete().await() }
     }
 }
