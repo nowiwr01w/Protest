@@ -32,6 +32,7 @@ interface MeetingsContract {
     interface Listener {
         fun toMap(meeting: Meeting)
         fun toMeeting(meeting: Meeting)
+        fun toProfile(editMode: Boolean)
         fun toCreateMeeting()
         fun showBecomeOrganizerBottomSheet()
         fun onCategoryClick(category: Category)

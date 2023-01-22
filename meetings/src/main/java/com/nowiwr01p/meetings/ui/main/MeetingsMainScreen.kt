@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
@@ -65,6 +66,9 @@ fun MeetingsMainScreen(
         override fun onCategoryClick(category: Category) {
             viewModel.setEvent(Event.SelectCategory(category))
         }
+        override fun toProfile(editMode: Boolean) {
+            navigator.navigateToProfile(editMode)
+        }
         override fun showBecomeOrganizerBottomSheet() {
             // TODO
         }
@@ -114,17 +118,24 @@ private fun Toolbar(
     modifier = Modifier
         .fillMaxWidth()
         .height(56.dp)
+        .padding(start = 16.dp)
 ) {
-    Image(
-        painter = painterResource(R.drawable.zero_two),
-        contentDescription = "Icon user",
+    CoilImage(
+        imageModel = {
+            state.user.avatar.ifEmpty { R.drawable.hao }
+        },
         modifier = Modifier
-            .padding(start = 16.dp)
             .size(32.dp)
             .clip(CircleShape)
+            .clickable(
+                indication = null,
+                interactionSource = MutableInteractionSource()
+            ) {
+                listener?.toProfile(false)
+            }
     )
     Text(
-        text = state.user.email,
+        text = state.user.name.ifEmpty { "Profile" },
         color = MaterialTheme.colors.textPrimary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = Modifier.padding(start = 16.dp)
@@ -134,7 +145,7 @@ private fun Toolbar(
             .padding(start = 8.dp)
             .clip(CircleShape)
             .clickable {
-
+                listener?.toProfile(true)
             }
     ) {
         Icon(

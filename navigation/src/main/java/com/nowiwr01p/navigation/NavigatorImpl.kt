@@ -55,8 +55,8 @@ class NavigatorImpl(
         NewsScreen.NewsMainScreen.navigate(Unit, navController)
     }
 
-    override fun navigateToProfile() {
-        ProfileScreen.ProfileMainScreen.navigate(Unit, navController)
+    override fun navigateToProfile(editMode: Boolean) {
+        ProfileScreen.ProfileMainScreen.navigate(editMode, navController)
     }
 
     override fun navigateToRoute(route: String) {
