@@ -15,6 +15,7 @@ interface ProfileContract {
         object OnCancelClick: Event
         object OnChatClick: Event
         object RequestPermission: Event
+        object RequestPermissionAlert: Event
         object RedirectToSettings: Event
         object SetStorageAvailable: Event
         data class SetAvatarPreview(val uri: Uri): Event
@@ -28,6 +29,7 @@ interface ProfileContract {
         val previewEditAvatar: String = "",
         val editMode: Boolean = false,
         val showPermissionAlert: Boolean = false,
+        val shouldRequestAlert: Boolean = false,
         val shouldRequestPermission: Boolean = false,
         val isStorageAvailable: Boolean = false
     ): ViewState
@@ -44,6 +46,7 @@ interface ProfileContract {
         fun onChatClick()
         fun onUserNameChanged(name: String)
         fun requestPermission()
+        fun requestPermissionAlert()
         fun showPermissionAlert(show: Boolean)
         fun redirectToSettings()
         fun setStorageAvailable()

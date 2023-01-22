@@ -87,12 +87,15 @@ fun ProfileMainScreen(
         override fun redirectToSettings() {
             viewModel.setEvent(Event.RedirectToSettings)
         }
+        override fun requestPermissionAlert() {
+            viewModel.setEvent(Event.RequestPermissionAlert)
+        }
     }
 
     val launcher = rememberLauncherForActivityResult(RequestPermission()) { granted ->
         when {
             granted -> listener.setStorageAvailable()
-            state.shouldRequestPermission -> listener.showPermissionAlert(true)
+            state.shouldRequestPermission && state.shouldRequestAlert -> listener.showPermissionAlert(true)
         }
     }
     SideEffect {
@@ -288,10 +291,10 @@ private fun AvatarStub(
     modifier: Modifier
 ) {
     val callback = {
-        if (state.isStorageAvailable) {
-            listener?.setStorageAvailable()
-        } else {
-            listener?.requestPermission()
+        when {
+            state.isStorageAvailable -> listener?.setStorageAvailable()
+            !state.shouldRequestPermission && !state.shouldRequestAlert -> listener?.requestPermission()
+            else -> listener?.requestPermissionAlert()
         }
     }
     Box(

@@ -2,9 +2,12 @@ package com.nowiwr01p.data.firebase
 
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 
 class FirebaseReferencesRepositoryImpl(
+    private val storage: FirebaseStorage,
     private val database: FirebaseDatabase
 ): FirebaseReferencesRepository {
 
@@ -32,11 +35,16 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(NEWS_REFERENCE).child(id)
     }
 
+    override suspend fun getImagesStorageReference(): StorageReference {
+        return storage.getReference(IMAGES_STORAGE)
+    }
+
     private companion object {
         const val USER_REFERENCE = "users"
         const val NEWS_REFERENCE = "news"
         const val CATEGORIES_REFERENCE = "categories"
         const val MEETINGS_REFERENCE = "meetings"
         const val MEETINGS_PREVIEW_REFERENCE = "meetings_preview"
+        const val IMAGES_STORAGE = "images"
     }
 }

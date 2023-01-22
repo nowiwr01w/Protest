@@ -4,6 +4,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.nowiwr01p.core_ui.theme.*
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.message
@@ -14,6 +15,7 @@ import com.vanpra.composematerialdialogs.title
 fun CustomAlertDialog(
     title: String,
     description: String,
+    cancellable: Boolean = false,
     positiveText: String = "Да",
     negativeText: String = "Нет",
     positiveCallback: () -> Unit = {},
@@ -23,6 +25,10 @@ fun CustomAlertDialog(
     MaterialDialog(
         dialogState = dialogState,
         shape = RoundedCornerShape(16.dp),
+        properties = DialogProperties(
+            dismissOnBackPress = cancellable,
+            dismissOnClickOutside = cancellable
+        ),
         buttons = {
             positiveButton(
                 text = positiveText,
