@@ -1,6 +1,7 @@
 package com.nowiwr01p.domain.firebase
 
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.storage.StorageReference
 
 interface FirebaseReferencesRepository {
     suspend fun getUserReference(id: String): DatabaseReference
@@ -9,4 +10,5 @@ interface FirebaseReferencesRepository {
     suspend fun getMeetingsReference(): DatabaseReference
     suspend fun getMeetingsPreviewReference(): DatabaseReference
     suspend fun getArticleReference(id: String): DatabaseReference
+    suspend fun getImagesStorageReference(): StorageReference
 }

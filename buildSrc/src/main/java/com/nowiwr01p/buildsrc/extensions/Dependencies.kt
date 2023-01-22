@@ -22,6 +22,7 @@ fun DependencyHandler.dataStoreDependencies() {
 fun DependencyHandler.firebaseDependencies() {
     implementation(Firebase.AUTH)
     implementation(Firebase.DATABASE)
+    implementation(Firebase.STORAGE)
 }
 
 fun DependencyHandler.koinDependencies() {
