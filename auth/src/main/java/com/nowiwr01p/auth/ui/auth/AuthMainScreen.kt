@@ -7,6 +7,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -23,10 +24,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -36,7 +39,9 @@ import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_UP
 import com.nowiwr01p.core_ui.EffectObserver
+import com.nowiwr01p.core_ui.extensions.appendLink
 import com.nowiwr01p.core_ui.extensions.keyboardState
+import com.nowiwr01p.core_ui.extensions.onTextClick
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
@@ -73,6 +78,9 @@ fun AuthMainScreen(
         }
         override fun onValueChanged(type: AuthTextFieldType, value: String) {
             viewModel.setEvent(Event.OnValueChanged(type, value))
+        }
+        override fun openLink(link: String) {
+            viewModel.setEvent(Event.OpenLink(link))
         }
     }
 
@@ -165,6 +173,8 @@ private fun AuthContent(
     TextFields(state, listener)
     AuthButton(state, listener)
     ToggleText(state, listener)
+    Spacer(modifier = Modifier.weight(1f))
+    TermsText(listener)
 }
 
 /**
@@ -353,6 +363,37 @@ private fun ToggleText(
             modifier = Modifier.padding(vertical = 4.dp, horizontal = 8.dp)
         )
     }
+}
+
+/**
+ * POLITICS TEXT
+ */
+@Composable
+private fun TermsText(listener: Listener?) {
+    val privacyText = "политику конфиденциальности"
+    val conditionsText = "пользовательское соглашение"
+    val text = buildAnnotatedString {
+        append("Продолжая, вы принимаете ")
+        appendLink(conditionsText)
+        append(" и ")
+        appendLink(privacyText)
+    }
+    ClickableText(
+        text = text,
+        style = MaterialTheme.typography.caption2Regular.copy(
+            color = MaterialTheme.colors.textColorSecondary,
+            textAlign = TextAlign.Center
+        ),
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
+        onClick = { offset ->
+            text.onTextClick(privacyText, offset) {
+                listener?.openLink("https://google.com/") // TODO
+            }
+            text.onTextClick(conditionsText, offset) {
+                listener?.openLink("https://youtube.com/") // TODO
+            }
+        }
+    )
 }
 
 /***

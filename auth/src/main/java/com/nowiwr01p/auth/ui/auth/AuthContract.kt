@@ -1,10 +1,11 @@
 package com.nowiwr01p.auth.ui.auth
 
 import com.nowiwr01p.auth.ui.auth.data.AuthType
-import com.nowiwr01p.auth.ui.auth.data.AuthType.*
+import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.ButtonState
-import com.nowiwr01p.core_ui.ui.button.ButtonState.*
+import com.nowiwr01p.core_ui.ui.button.ButtonState.DEFAULT
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
@@ -21,6 +22,7 @@ interface AuthContract {
         object NavigateToChooseCountry: Event
         object NavigateToMeetings: Event
         object TogglePasswordVisibility: Event
+        data class OpenLink(val link: String): Event
         data class ShowBottomSheet(val params: BottomSheetParams): Event
         data class OnValueChanged(val type: AuthTextFieldType, val value: String): Event
     }
@@ -46,7 +48,7 @@ interface AuthContract {
         object ShowAuthSecurityWarning: Effect
     }
 
-    interface Listener {
+    interface Listener: OpenLinkListener {
         fun authClick()
         fun toNextScreen()
         fun toggleAccountMode()
