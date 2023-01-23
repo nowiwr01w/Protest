@@ -66,6 +66,9 @@ fun MeetingsMainScreen(
         override fun toProfile(editMode: Boolean) {
             navigator.navigateToProfile(editMode)
         }
+        override fun onStoryClick(story: Story) {
+            viewModel.setEvent(Event.SelectStory(story))
+        }
         override fun showBecomeOrganizerBottomSheet() {
             // TODO
         }
@@ -95,8 +98,8 @@ private fun MeetingsMainScreenContent(
         LazyColumn(
             modifier = Modifier.background(MaterialTheme.colors.background)
         ) {
-            item { Stories(state) }
-            item { MeetingsTitle(state) }
+            item { Stories(state, listener) }
+            item { MeetingsTitle() }
             item { Categories(state, listener) }
             Meetings(state, listener)
         }
@@ -167,23 +170,29 @@ private fun Toolbar(
  * STORIES LIST
  */
 @Composable
-private fun Stories(state: State) = LazyRow(
+private fun Stories(state: State, listener: Listener?) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp)
 ) {
     itemsIndexed(state.stories) { index, item ->
-        Story(index, item)
+        Story(index, item) {
+            listener?.onStoryClick(item)
+        }
     }
     item { Spacer(modifier = Modifier.width(6.dp)) }
 }
 
 @Composable
-private fun Story(index: Int, story: Story) = Column(
+private fun Story(
+    index: Int,
+    story: Story,
+    onItemClick: () -> Unit
+) = Column(
     modifier = Modifier
         .padding(start = if (index == 0) 12.dp else 6.dp, end = 6.dp)
         .width(72.dp)
-        .pressedAnimation()
+        .pressedAnimation { onItemClick() }
 ) {
     Box(
         modifier = Modifier
@@ -224,7 +233,7 @@ private fun Story(index: Int, story: Story) = Column(
  * MEETINGS TITLE
  */
 @Composable
-private fun MeetingsTitle(state: State) = Text(
+private fun MeetingsTitle() = Text(
     text = "Ближайшие митинги",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.title2Bold,
