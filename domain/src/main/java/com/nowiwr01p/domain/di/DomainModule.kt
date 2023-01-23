@@ -13,6 +13,7 @@ import com.nowiwr01p.domain.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
 import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
+import com.nowiwr01p.domain.meetings.usecase.GetStoriesUseCase
 import com.nowiwr01p.domain.meetingsScreenScopeId
 import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
@@ -68,6 +69,7 @@ val moduleDomain = module {
     /**
      * MEETINGS
      */
+    factory { GetStoriesUseCase(get()) }
     factory { GetMeetingsUseCase(get()) }
     factory { SetReactionUseCase(get()) }
 
