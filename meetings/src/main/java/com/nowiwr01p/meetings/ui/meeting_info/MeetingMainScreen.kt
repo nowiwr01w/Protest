@@ -230,9 +230,7 @@ private fun TopImage(meeting: Meeting) = CoilImage(
     imageModel = { meeting.image },
     modifier = Modifier
         .fillMaxWidth()
-        .height(200.dp)
-        .padding(top = 8.dp, start = 8.dp, end = 8.dp)
-        .clip(RoundedCornerShape(16.dp))
+        .height(250.dp)
 )
 
 /**

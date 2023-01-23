@@ -120,7 +120,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable { listener?.onArticleClick(article) }
-        .padding(vertical = 4.dp)
+        .padding(vertical = 4.dp, horizontal = 16.dp)
         .background(MaterialTheme.colors.background)
 ) {
     val (image, title, date, viewsCount) = createRefs()
@@ -128,7 +128,6 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     val imageModifier = Modifier
         .fillMaxWidth()
         .height(200.dp)
-        .padding(horizontal = 6.dp)
         .clip(RoundedCornerShape(16.dp))
         .constrainAs(image) {
             start.linkTo(parent.start)
@@ -141,7 +140,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     )
 
     val titleModifier = Modifier
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+        .padding(top = 8.dp)
         .constrainAs(title) {
             width = Dimension.fillToConstraints
             start.linkTo(image.start)
@@ -157,7 +156,7 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     )
 
     val dateModifier = Modifier
-        .padding(top = 4.dp, start = 16.dp)
+        .padding(top = 4.dp)
         .constrainAs(date) {
             start.linkTo(title.start)
             top.linkTo(title.bottom)
@@ -165,12 +164,11 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     Text(
         text = article.dateViewers.date.formatToDateTime(),
         color = MaterialTheme.colors.textColorSecondary,
-        style = MaterialTheme.typography.footnoteRegular,
+        style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier
     )
 
     val viewsCountModifier = Modifier
-        .padding(end = 16.dp)
         .constrainAs(viewsCount) {
             end.linkTo(title.end)
             top.linkTo(date.top)
@@ -184,12 +182,12 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
             painter = painterResource(R.drawable.ic_eye),
             contentDescription = "Views count icon",
             tint = MaterialTheme.colors.textColorSecondary,
-            modifier = Modifier.size(17.dp)
+            modifier = Modifier.size(18.dp)
         )
         Text(
             text = article.dateViewers.viewers.size.toString(),
-            style = MaterialTheme.typography.footnoteRegular,
             color = MaterialTheme.colors.textColorSecondary,
+            style = MaterialTheme.typography.subHeadlineRegular,
             modifier = Modifier.padding(start = 8.dp)
         )
     }
