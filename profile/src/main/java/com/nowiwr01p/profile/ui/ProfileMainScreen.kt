@@ -254,9 +254,9 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
         }
     if (!state.editMode) {
         val userRole = when {
-            state.user.organizer && state.user.writer -> "Организатор, создатель новостей"
+            state.user.organizer && state.user.writer -> "Организатор, редактор новостей"
             state.user.organizer -> "Организатор"
-            state.user.writer -> "Создатель новостей"
+            state.user.writer -> "Редактор новостей"
             else -> "Для отображения роли получите доступ"
         }
         Text(
