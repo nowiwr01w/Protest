@@ -1,15 +1,20 @@
 package com.nowiwr01p.meetings.ui.main
 
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
+import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
+import com.nowiwr01p.domain.meetings.data.Story
 import com.nowiwr01p.domain.meetings.usecase.*
 import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCacheData
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
+import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
 
 class MeetingsViewModel(
     private val statusBarColor: Color,
@@ -20,6 +25,7 @@ class MeetingsViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val getMeetingsScreenCacheUseCase: GetMeetingsScreenCacheUseCase,
     private val saveMeetingsScreenCacheUseCase: SaveMeetingsScreenCacheUseCase,
+    private val showBottomSheetHelper: ShowBottomSheetHelper,
     private val mapper: MeetingsMapper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -34,8 +40,8 @@ class MeetingsViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init()
+            is Event.SelectStory -> selectStory(event.story)
             is Event.SelectCategory -> selectCategory(event.category)
-            is Event.ShowBottomSheet -> { } // TODO
         }
     }
 
@@ -113,6 +119,17 @@ class MeetingsViewModel(
             categories = categories
         )
         saveMeetingsScreenCacheUseCase.execute(data)
+    }
+
+    /**
+     * SELECT STORY
+     */
+    private fun selectStory(story: Story) {
+        val params = BottomSheetParams(
+            content = StoryBottomSheet(story),
+            topPadding = 56.dp
+        )
+        showBottomSheetHelper.showBottomSheet(params)
     }
 
     /**

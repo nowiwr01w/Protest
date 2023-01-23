@@ -40,6 +40,7 @@ val moduleMeetings = module {
             get(),
             scope.get(),
             scope.get(),
+            get(),
             get()
         )
     }
