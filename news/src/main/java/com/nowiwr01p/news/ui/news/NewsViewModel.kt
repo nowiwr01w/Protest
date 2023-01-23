@@ -2,6 +2,7 @@ package com.nowiwr01p.news.ui.news
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.news.usecase.GetNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.news.usecase.SaveNewsScreenCacheUseCase
@@ -11,8 +12,9 @@ import com.nowiwr01p.news.ui.news.NewsContract.*
 class NewsViewModel(
     private val getNews: GetNewsUseCase,
     private val getNewsScreenCache: GetNewsScreenCacheUseCase,
-    private val saveNewsScreenCache: SaveNewsScreenCacheUseCase
-) : BaseViewModel<Event, State, Effect>() {
+    private val saveNewsScreenCache: SaveNewsScreenCacheUseCase,
+    private val getLocalUserUseCase: GetLocalUserUseCase
+): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
 
@@ -28,11 +30,19 @@ class NewsViewModel(
         setState { copy(isLoading = true) }
         runCatching {
             getScreenCache()
+            getUserData()
             getNews()
         }.onSuccess {
             saveScreenCache()
             setState { copy(isLoading = false) }
         }
+    }
+
+    /**
+     * USER
+     */
+    private suspend fun getUserData() = getLocalUserUseCase.execute().let {  user ->
+        setState { copy(user = user) }
     }
 
     /**
