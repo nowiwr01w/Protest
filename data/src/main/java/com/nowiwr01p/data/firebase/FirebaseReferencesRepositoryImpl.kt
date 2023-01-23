@@ -19,6 +19,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(NEWS_REFERENCE)
     }
 
+    override suspend fun getStoriesReference(): DatabaseReference {
+        return database.getReference(STORIES_REFERENCE)
+    }
+
     override suspend fun getCategoriesReference(): DatabaseReference {
         return database.getReference(CATEGORIES_REFERENCE)
     }
@@ -42,6 +46,7 @@ class FirebaseReferencesRepositoryImpl(
     private companion object {
         const val USER_REFERENCE = "users"
         const val NEWS_REFERENCE = "news"
+        const val STORIES_REFERENCE = "stories"
         const val CATEGORIES_REFERENCE = "categories"
         const val MEETINGS_REFERENCE = "meetings"
         const val MEETINGS_PREVIEW_REFERENCE = "meetings_preview"
