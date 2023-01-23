@@ -1,9 +1,9 @@
 package com.nowiwr01p.news.di
 
 import com.nowiwr01p.core_ui.navigators.NewsNavigator
-import com.nowiwr01p.domain.news.usecase.GetNewsScreenCacheUseCase
-import com.nowiwr01p.domain.news.usecase.SaveNewsScreenCacheUseCase
-import com.nowiwr01p.domain.news.usecase.data.NewsScreenCache
+import com.nowiwr01p.domain.news.main.usecase.GetNewsScreenCacheUseCase
+import com.nowiwr01p.domain.news.main.usecase.SaveNewsScreenCacheUseCase
+import com.nowiwr01p.domain.news.main.usecase.data.NewsScreenCache
 import com.nowiwr01p.news.navigation.NewsNavigatorImpl
 import com.nowiwr01p.news.ui.news.NewsViewModel
 import com.nowiwr01p.news.ui.article.ArticleViewModel

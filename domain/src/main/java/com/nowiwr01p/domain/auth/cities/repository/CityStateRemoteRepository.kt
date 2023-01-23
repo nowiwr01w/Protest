@@ -1,0 +1,3 @@
+package com.nowiwr01p.domain.auth.cities.repository
+
+interface CityStateRemoteRepository: CityStateLocalRepository

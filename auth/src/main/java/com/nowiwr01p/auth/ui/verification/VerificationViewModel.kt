@@ -5,10 +5,10 @@ import com.nowiwr01p.auth.ui.verification.VerificationContract.*
 import com.nowiwr01p.auth.ui.verification.data.Mode.*
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.verification.usecase.GetRemoteVerificationUseCase
-import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
+import com.nowiwr01p.domain.auth.verification.usecase.GetRemoteVerificationUseCase
+import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.verification.usecase.SetVerificationCompletedUseCase
+import com.nowiwr01p.domain.auth.verification.usecase.SetVerificationCompletedUseCase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 

@@ -9,8 +9,8 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
-import com.nowiwr01p.domain.auth.data.error.AuthError
-import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
+import com.nowiwr01p.domain.auth.main.data.error.AuthError
+import com.nowiwr01p.domain.auth.main.data.error.AuthTextFieldType
 
 interface AuthContract {
 

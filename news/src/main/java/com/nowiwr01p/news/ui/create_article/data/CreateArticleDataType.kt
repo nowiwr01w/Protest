@@ -4,12 +4,12 @@ import com.nowiwr01p.core.model.ImageList
 import com.nowiwr01p.core.model.OrderedList
 import com.nowiwr01p.core.model.SubTitle
 import com.nowiwr01p.core.model.Text
-import com.nowiwr01p.domain.create_article.validators.data.CreateArticleFieldType
-import com.nowiwr01p.domain.create_article.validators.data.DynamicFields
+import com.nowiwr01p.domain.news.create_article.validators.data.CreateArticleFieldType
+import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
-import com.nowiwr01p.domain.create_article.validators.data.DynamicFields.*
-import com.nowiwr01p.domain.create_article.validators.data.StaticFields
-import com.nowiwr01p.domain.create_article.validators.data.StaticFields.*
+import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields.*
+import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields
+import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields.*
 
 open class CreateArticleDataType(
     open val type: CreateArticleFieldType,

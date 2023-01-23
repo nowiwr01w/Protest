@@ -2,7 +2,7 @@ package com.nowiwr01p.meetings.ui.main
 
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.mapper.ViewModelMapper
-import com.nowiwr01p.domain.meetings.data.Story
+import com.nowiwr01p.domain.meetings.main.data.Story
 
 class MeetingsMapper: ViewModelMapper<MeetingsViewModel>() {
 

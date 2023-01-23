@@ -8,16 +8,16 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.cteate_meeting.usecase.GetCachedCategoriesUseCase
-import com.nowiwr01p.domain.cteate_meeting.usecase.ValidateMeetingDataUseCase
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
+import com.nowiwr01p.domain.meetings.create_meeting.usecase.GetCachedCategoriesUseCase
+import com.nowiwr01p.domain.meetings.create_meeting.usecase.ValidateMeetingDataUseCase
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.map.GetLocalUserUseCase
+import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingFieldItemType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType.*
 
 class CreateMeetingVewModel(
     private val statusBarColor: Color,

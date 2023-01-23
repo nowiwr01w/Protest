@@ -46,8 +46,8 @@ import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.button.StateButton
-import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
-import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
+import com.nowiwr01p.domain.auth.main.data.error.AuthTextFieldType
+import com.nowiwr01p.domain.auth.main.data.error.AuthTextFieldType.*
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 

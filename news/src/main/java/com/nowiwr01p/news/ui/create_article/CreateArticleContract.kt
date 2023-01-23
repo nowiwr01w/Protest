@@ -6,10 +6,10 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
-import com.nowiwr01p.domain.create_article.validators.data.CreateArticleError
+import com.nowiwr01p.domain.news.create_article.validators.data.CreateArticleError
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
-import com.nowiwr01p.domain.create_article.validators.data.DynamicFields
-import com.nowiwr01p.domain.create_article.validators.data.StaticFields
+import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields
+import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields
 
 interface CreateArticleContract {
 
