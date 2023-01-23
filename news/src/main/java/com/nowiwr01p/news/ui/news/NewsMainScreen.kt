@@ -22,8 +22,6 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.Article
-import com.nowiwr01p.core.model.ArticleData
-import com.nowiwr01p.core.model.ArticleData.*
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -39,6 +37,8 @@ fun NewsMainScreen(
     navigator: Navigator,
     viewModel: NewsViewModel = getViewModel()
 ) {
+    val state = viewModel.viewState.value
+
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
@@ -66,23 +66,26 @@ fun NewsMainScreen(
         }
     }
 
-    NewsContent(viewModel.viewState.value, listener)
-}
-
-@Composable
-fun NewsContent(state: State, listener: Listener?) = LazyColumn(
-    modifier = Modifier.fillMaxSize()
-) {
-    item { Toolbar(state, listener) }
     if (state.isLoading) {
-        item { CenterScreenProgressBar() }
+        NewsStub()
     } else {
-        NewsList(state, listener)
+        NewsContent(state, listener)
     }
 }
 
 @Composable
-fun Toolbar(state: State, listener: Listener?) = Row(
+private fun NewsContent(state: State, listener: Listener?) = LazyColumn(
+    modifier = Modifier.fillMaxSize()
+) {
+    item { Toolbar(state, listener) }
+    NewsList(state, listener)
+}
+
+/**
+ * TOOLBAR
+ */
+@Composable
+private fun Toolbar(state: State, listener: Listener?) = Row(
     verticalAlignment = Alignment.CenterVertically,
     modifier = Modifier
         .fillMaxWidth()
@@ -107,7 +110,10 @@ fun Toolbar(state: State, listener: Listener?) = Row(
     }
 }
 
-fun LazyListScope.NewsList(state: State, listener: Listener?) {
+/**
+ * NEWS
+ */
+private fun LazyListScope.NewsList(state: State, listener: Listener?) {
     item { Spacer(modifier = Modifier.height(12.dp)) }
     items(state.newsList) { article ->
         ArticleView(article, listener)
@@ -115,8 +121,11 @@ fun LazyListScope.NewsList(state: State, listener: Listener?) {
     }
 }
 
+/**
+ * ARTICLE ITEM
+ */
 @Composable
-fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
+private fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable { listener?.onArticleClick(article) }
@@ -193,9 +202,28 @@ fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
     }
 }
 
+/**
+ * LOADING STUB
+ */
+@Composable
+private fun NewsStub() = Column(
+    modifier = Modifier.fillMaxSize()
+) {
+    Text(
+        text = "Новости",
+        style = MaterialTheme.typography.largeTitle,
+        color = MaterialTheme.colors.textPrimary,
+        modifier = Modifier.padding(top = 20.dp, start = 16.dp)
+    )
+    CenterScreenProgressBar()
+}
+
+/**
+ * PREVIEW
+ */
 @Preview(showBackground = true)
 @Composable
-fun Preview() = MeetingsTheme {
+private fun Preview() = MeetingsTheme {
     NewsContent(
         state = State(
             isLoading = false,
