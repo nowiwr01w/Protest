@@ -14,6 +14,7 @@ import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 class MeetingsViewModel(
     private val statusBarColor: Color,
     private val statusBarColorHelper: StatusBarColorHelper,
+    private val getStoriesUseCase: GetStoriesUseCase,
     private val getMeetingsUseCase: GetMeetingsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getLocalUserUseCase: GetLocalUserUseCase,
@@ -44,6 +45,7 @@ class MeetingsViewModel(
             setStatusBarColor()
             getScreenCache()
             getUserData()
+            getStories()
             getMeetings()
             getCategories()
         }.onSuccess {
@@ -74,6 +76,13 @@ class MeetingsViewModel(
     }
 
     /**
+     * STORIES
+     */
+    private suspend fun getStories() = getStoriesUseCase.execute().let { stories ->
+        setState { copy(stories = stories) }
+    }
+
+    /**
      * CATEGORIES
      */
     private suspend fun getCategories() {
@@ -88,6 +97,7 @@ class MeetingsViewModel(
         setState {
             copy(
                 user = cache.data.user,
+                stories = cache.data.stories,
                 meetings = cache.data.meetings,
                 categories = cache.data.categories,
                 showProgress = false
@@ -98,6 +108,7 @@ class MeetingsViewModel(
     private suspend fun saveScreenCache() = with(viewState.value) {
         val data = MeetingsScreenCacheData(
             user = user,
+            stories = stories,
             meetings = meetings,
             categories = categories
         )

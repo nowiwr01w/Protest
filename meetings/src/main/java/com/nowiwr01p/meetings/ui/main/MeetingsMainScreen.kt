@@ -1,15 +1,11 @@
 package com.nowiwr01p.meetings.ui.main
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListScope
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
@@ -42,6 +38,7 @@ import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
+import com.nowiwr01p.domain.meetings.data.Story
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
@@ -170,24 +167,19 @@ private fun Toolbar(
  * STORIES LIST
  */
 @Composable
-private fun Stories(
-    state: State
-) = LazyRow(
+private fun Stories(state: State) = LazyRow(
     modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp)
 ) {
-    items(6) { index ->
-        Story(state, index)
+    itemsIndexed(state.stories) { index, item ->
+        Story(index, item)
     }
     item { Spacer(modifier = Modifier.width(6.dp)) }
 }
 
 @Composable
-private fun Story(
-    state: State,
-    index: Int
-) = Column(
+private fun Story(index: Int, story: Story) = Column(
     modifier = Modifier
         .padding(start = if (index == 0) 12.dp else 6.dp, end = 6.dp)
         .width(72.dp)
@@ -207,9 +199,8 @@ private fun Story(
                 .border(2.dp, Color.White, CircleShape),
             contentAlignment = Alignment.Center
         ) {
-            Image(
-                painter = painterResource(R.drawable.hao),
-                contentDescription = "Story item icon",
+            CoilImage(
+                imageModel = { story.previewIcon },
                 modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
@@ -217,7 +208,7 @@ private fun Story(
         }
     }
     Text(
-        text = "Важная штука",
+        text = story.previewTitle,
         maxLines = 2,
         overflow = TextOverflow.Ellipsis,
         color = MaterialTheme.colors.textPrimary,

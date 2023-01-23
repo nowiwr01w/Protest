@@ -8,6 +8,7 @@ import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.domain.meetings.data.Story
 
 interface MeetingsContract {
 
@@ -21,6 +22,7 @@ interface MeetingsContract {
         val showProgress: Boolean = false,
         val user: User = User(),
         val meetings: List<Meeting> = listOf(),
+        val stories: List<Story> = mutableStateListOf(),
         val categories: List<Category> = mutableStateListOf(),
         val selectedCategory: Category = Category()
     ): ViewState

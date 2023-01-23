@@ -1,11 +1,11 @@
 package com.nowiwr01p.data.meetings
 
-import android.util.Log
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.domain.meetings.data.Story
 import com.nowiwr01p.domain.meetings.repository.MeetingsRepository
 import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
 import kotlinx.coroutines.tasks.await
@@ -16,6 +16,16 @@ class MeetingsRepositoryImpl(
     private val userDataStoreRepository: UserDataStoreRepository,
     private val dispatchers: AppDispatchers
 ): MeetingsRepository {
+
+    /**
+     * STORIES
+     */
+    override suspend fun getStories() = withContext(dispatchers.io) {
+        references.getStoriesReference().get().await()
+            .children
+            .map { snapshot -> snapshot.getValue<Story>()!! }
+            .sortedBy { story -> story.priority }
+    }
 
     /**
      * CATEGORIES
