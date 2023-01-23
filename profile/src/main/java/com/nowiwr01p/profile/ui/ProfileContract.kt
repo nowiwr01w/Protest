@@ -2,6 +2,7 @@ package com.nowiwr01p.profile.ui
 
 import android.net.Uri
 import com.nowiwr01p.core.model.User
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkListener
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
@@ -13,13 +14,13 @@ interface ProfileContract {
         object OnEditClick: Event
         object OnSaveClick: Event
         object OnCancelClick: Event
-        object OnChatClick: Event
         object RequestPermission: Event
         object RequestPermissionAlert: Event
         object RedirectToSettings: Event
         object SetStorageAvailable: Event
         object Logout: Event
         object DeleteAccount: Event
+        data class OpenLink(val link: String): Event
         data class SetAvatarPreview(val uri: Uri): Event
         data class OnUserNameChanged(val name: String): Event
         data class ShowPermissionAlert(val show: Boolean): Event
@@ -42,11 +43,10 @@ interface ProfileContract {
         object NavigateToAuth: Effect
     }
 
-    interface Listener {
+    interface Listener: OpenLinkListener {
         fun onEditClick()
         fun onSaveClick()
         fun onCancelClick()
-        fun onChatClick()
         fun onUserNameChanged(name: String)
         fun requestPermission()
         fun requestPermissionAlert()
