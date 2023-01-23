@@ -158,9 +158,7 @@ fun TopImage(image: TopImage) = CoilImage(
     imageModel = { image.link },
     modifier = Modifier
         .fillMaxWidth()
-        .height(200.dp)
-        .padding(top = 8.dp, start = 6.dp, end = 6.dp)
-        .clip(RoundedCornerShape(16.dp))
+        .height(250.dp)
 )
 
 /**
@@ -175,8 +173,8 @@ private fun Date(state: State, date: DateViewers) = Row(
 ) {
     Text(
         text = date.date.formatToDateTime(),
-        style = MaterialTheme.typography.footnoteRegular,
-        color = MaterialTheme.colors.textColorSecondary
+        color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.subHeadlineRegular,
     )
     Spacer(
         modifier = Modifier.weight(1f)
@@ -185,13 +183,13 @@ private fun Date(state: State, date: DateViewers) = Row(
         painter = painterResource(R.drawable.ic_eye),
         contentDescription = "Views count icon",
         tint = MaterialTheme.colors.textColorSecondary,
-        modifier = Modifier.size(17.dp)
+        modifier = Modifier.size(18.dp)
     )
     val viewsCount = if (state.viewsCount == 0) date.viewers.size else state.viewsCount
     Text(
         text = viewsCount.toString(),
-        style = MaterialTheme.typography.footnoteRegular,
         color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.subHeadlineRegular,
         modifier = Modifier.padding(start = 8.dp)
     )
 }
@@ -299,9 +297,7 @@ private fun ImageItem(image: Image) = Column(
         imageModel = { image.link },
         modifier = Modifier
             .fillMaxWidth()
-            .height(200.dp)
-            .padding(start = 6.dp, end = 6.dp)
-            .clip(RoundedCornerShape(16.dp))
+            .height(250.dp)
     )
     Text(
         text = image.description,
