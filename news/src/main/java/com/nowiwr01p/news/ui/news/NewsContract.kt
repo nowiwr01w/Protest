@@ -1,6 +1,7 @@
 package com.nowiwr01p.news.ui.news
 
 import com.nowiwr01p.core.model.Article
+import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
@@ -14,6 +15,7 @@ interface NewsContract {
     }
 
     data class State(
+        val user: User = User(),
         val isLoading: Boolean = true,
         val newsList: List<Article> = listOf()
     ) : ViewState
