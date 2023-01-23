@@ -31,7 +31,8 @@ val moduleNews = module {
         NewsViewModel(
             get(),
             scope.get(),
-            scope.get()
+            scope.get(),
+            get()
         )
     }
 

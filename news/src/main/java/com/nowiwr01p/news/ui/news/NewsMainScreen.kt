@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
@@ -69,12 +70,12 @@ fun NewsMainScreen(
 }
 
 @Composable
-fun NewsContent(state: State, listener: Listener?) = Column(
+fun NewsContent(state: State, listener: Listener?) = LazyColumn(
     modifier = Modifier.fillMaxSize()
 ) {
-    Toolbar(state, listener)
+    item { Toolbar(state, listener) }
     if (state.isLoading) {
-        CenterScreenProgressBar()
+        item { CenterScreenProgressBar() }
     } else {
         NewsList(state, listener)
     }
@@ -94,22 +95,20 @@ fun Toolbar(state: State, listener: Listener?) = Row(
         color = MaterialTheme.colors.textPrimary,
         modifier = Modifier.padding(start = 16.dp)
     )
-    Spacer(
-        modifier = Modifier.weight(1f)
-    )
-    ClickableIcon(
-        icon = R.drawable.ic_add,
-        modifier = Modifier.padding(end = 16.dp),
-        onClick = { listener?.toCreateArticle() }
-    )
+    if (state.user.writer) {
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+        ClickableIcon(
+            icon = R.drawable.ic_add,
+            modifier = Modifier.padding(end = 16.dp),
+            onClick = { listener?.toCreateArticle() }
+        )
+    }
 }
 
-@Composable
-fun NewsList(state: State, listener: Listener?) = LazyColumn(
-    modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 12.dp)
-) {
+fun LazyListScope.NewsList(state: State, listener: Listener?) {
+    item { Spacer(modifier = Modifier.height(12.dp)) }
     items(state.newsList) { article ->
         ArticleView(article, listener)
         Spacer(modifier = Modifier.height(8.dp))
