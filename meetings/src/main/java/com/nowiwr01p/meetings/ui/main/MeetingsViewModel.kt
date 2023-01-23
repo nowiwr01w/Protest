@@ -15,6 +15,7 @@ import com.nowiwr01p.domain.meetings.usecase.*
 import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCacheData
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
+import timber.log.Timber
 
 class MeetingsViewModel(
     private val statusBarColor: Color,
@@ -25,6 +26,7 @@ class MeetingsViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val getMeetingsScreenCacheUseCase: GetMeetingsScreenCacheUseCase,
     private val saveMeetingsScreenCacheUseCase: SaveMeetingsScreenCacheUseCase,
+    private val setStoryViewedUseCase: SetStoryViewedUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
     private val mapper: MeetingsMapper
 ): BaseViewModel<Event, State, Effect>() {
@@ -57,6 +59,8 @@ class MeetingsViewModel(
         }.onSuccess {
             saveScreenCache()
             setState { copy(showProgress = false) }
+        }.onFailure {
+            Timber.tag("Zhopa").d("error = ${it.message}")
         }
     }
 
@@ -125,6 +129,8 @@ class MeetingsViewModel(
      * SELECT STORY
      */
     private fun selectStory(story: Story) {
+        setStoryViewed(story.id)
+
         val params = BottomSheetParams(
             content = StoryBottomSheet(story),
             topPadding = 56.dp
@@ -144,5 +150,17 @@ class MeetingsViewModel(
             )
         }
         saveScreenCache()
+    }
+
+    /**
+     * SET STORY VIEWED
+     */
+    private fun setStoryViewed(id: String) = io {
+        runCatching {
+            setStoryViewedUseCase.execute(id)
+        }.onSuccess {
+            val updatedStories = mapper.updateStories(id, it)
+            setState { copy(stories = updatedStories) }
+        }
     }
 }
