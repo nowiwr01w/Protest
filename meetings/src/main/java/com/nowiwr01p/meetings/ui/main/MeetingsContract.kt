@@ -1,6 +1,5 @@
 package com.nowiwr01p.meetings.ui.main
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.User
@@ -14,8 +13,8 @@ interface MeetingsContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        data class SelectStory(val story: Story): Event
         data class SelectCategory(val category: Category): Event
-        data class ShowBottomSheet(val content: @Composable () -> Unit): Event
     }
 
     data class State(
@@ -24,6 +23,7 @@ interface MeetingsContract {
         val meetings: List<Meeting> = listOf(),
         val stories: List<Story> = mutableStateListOf(),
         val categories: List<Category> = mutableStateListOf(),
+        val selectedStory: Story = Story(),
         val selectedCategory: Category = Category()
     ): ViewState
 
@@ -37,6 +37,7 @@ interface MeetingsContract {
         fun toProfile(editMode: Boolean)
         fun toCreateMeeting()
         fun showBecomeOrganizerBottomSheet()
+        fun onStoryClick(story: Story)
         fun onCategoryClick(category: Category)
     }
 }
