@@ -104,7 +104,7 @@ private fun Toolbar(state: State, listener: Listener?) = Row(
         )
         ClickableIcon(
             icon = R.drawable.ic_add,
-            modifier = Modifier.padding(end = 16.dp),
+            modifier = Modifier.padding(end = 10.dp),
             onClick = { listener?.toCreateArticle() }
         )
     }
