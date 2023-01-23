@@ -25,9 +25,8 @@ class MeetingsRepositoryImpl(
         references.getStoriesReference().get().await()
             .children
             .map { snapshot -> snapshot.getValue<Story>()!! }
-            .map { story -> story.copy(viewed = userId in story.viewers) }
             .sortedWith(
-                compareBy( { story -> story.viewed }, { story -> story.priority } )
+                compareBy( { story -> userId in story.viewers }, { story -> story.priority } )
             )
     }
 
@@ -45,7 +44,7 @@ class MeetingsRepositoryImpl(
 
     private fun Story.updateStory(userId: String): Story {
         val updatedViewers = viewers.toMutableList().apply { add(userId) }
-        return copy(viewed = true, viewers = updatedViewers)
+        return copy(viewers = updatedViewers)
     }
 
     /**

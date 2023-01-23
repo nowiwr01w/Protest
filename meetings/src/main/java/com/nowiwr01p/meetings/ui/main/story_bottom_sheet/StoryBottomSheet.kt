@@ -3,13 +3,11 @@ package com.nowiwr01p.meetings.ui.main.story_bottom_sheet
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core_ui.theme.*
@@ -24,7 +22,10 @@ internal fun StoryBottomSheet(story: Story): @Composable () -> Unit = {
         modifier = Modifier.fillMaxSize()
     ) {
         item { Spacer(modifier = Modifier.height(8.dp)) }
-        items(story.getContent()) { item ->
+        val content = with(story) {
+            (titles + descriptions + images + orderedLists).sortedBy { it.order }
+        }
+        items(content) { item ->
             when (item) {
                 is Image -> Image(item)
                 is Title -> Title(item.text)
