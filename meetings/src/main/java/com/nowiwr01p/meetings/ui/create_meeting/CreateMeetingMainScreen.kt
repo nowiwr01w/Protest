@@ -46,11 +46,11 @@ import com.nowiwr01p.core_ui.ui.date_time_picker.TimePicker
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.DynamicDetailsItem.*
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingFieldItemType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType.*
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DynamicDetailsItem.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData

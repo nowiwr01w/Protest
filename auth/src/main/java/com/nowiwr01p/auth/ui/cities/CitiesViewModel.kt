@@ -4,8 +4,8 @@ import com.nowiwr01p.auth.ui.cities.CitiesContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.core.datastore.cities.data.City
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.cities.usecase.GetCitiesUseCase
-import com.nowiwr01p.domain.cities.usecase.local.SetCityUseCase
+import com.nowiwr01p.domain.auth.cities.usecase.GetCitiesUseCase
+import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
 
 class CitiesViewModel(
     private val getCities: GetCitiesUseCase,

@@ -2,11 +2,11 @@ package com.nowiwr01p.news.ui.news
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.map.GetLocalUserUseCase
-import com.nowiwr01p.domain.news.usecase.GetNewsScreenCacheUseCase
-import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
-import com.nowiwr01p.domain.news.usecase.SaveNewsScreenCacheUseCase
-import com.nowiwr01p.domain.news.usecase.data.NewsScreenCacheData
+import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
+import com.nowiwr01p.domain.news.main.usecase.GetNewsScreenCacheUseCase
+import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
+import com.nowiwr01p.domain.news.main.usecase.SaveNewsScreenCacheUseCase
+import com.nowiwr01p.domain.news.main.usecase.data.NewsScreenCacheData
 import com.nowiwr01p.news.ui.news.NewsContract.*
 
 class NewsViewModel(

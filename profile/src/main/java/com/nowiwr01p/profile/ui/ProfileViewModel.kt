@@ -5,17 +5,17 @@ import androidx.core.net.toUri
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.map.GetLocalUserUseCase
+import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
-import com.nowiwr01p.domain.profile.usecase.UploadUserAvatarUseCase
+import com.nowiwr01p.domain.user.usecase.UpdateUserAvatarUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.profile.ui.ProfileContract.*
 
 class ProfileViewModel(
     private val getLocalUserUseCase: GetLocalUserUseCase,
     private val updateUserNameUseCase: UpdateUserNameUseCase,
-    private val uploadUserAvatarUseCase: UploadUserAvatarUseCase,
+    private val updateUserAvatarUseCase: UpdateUserAvatarUseCase,
     private val logOutUseCase: LogOutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
     private val openLinksHelper: OpenLinksHelper
@@ -67,7 +67,7 @@ class ProfileViewModel(
 
     private suspend fun updateUserAvatar() = with(viewState.value) {
         if (previewEditAvatar.isNotBlank()) {
-            val updatedUser = uploadUserAvatarUseCase.execute(previewEditAvatar.toUri())
+            val updatedUser = updateUserAvatarUseCase.execute(previewEditAvatar.toUri())
             setState { copy(user = updatedUser) }
         }
     }

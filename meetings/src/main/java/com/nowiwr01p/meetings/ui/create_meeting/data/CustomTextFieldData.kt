@@ -1,9 +1,9 @@
 package com.nowiwr01p.meetings.ui.create_meeting.data
 
 import androidx.compose.ui.text.input.KeyboardType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CustomTextFieldType.*
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CustomTextFieldType.*
 
 /**
  * LISTENER REQUIRED HERE BECAUSE WE HAVE DYNAMIC ITEMS - ExpandableItems

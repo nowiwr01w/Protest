@@ -11,9 +11,9 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingError
-import com.nowiwr01p.domain.cteate_meeting.validators.data.CreateMeetingFieldItemType
-import com.nowiwr01p.domain.cteate_meeting.validators.data.DetailsFieldType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingFieldItemType
+import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType
 
 interface CreateMeetingContract {
 

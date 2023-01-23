@@ -14,7 +14,7 @@ import com.nowiwr01p.meetings.navigation.MeetingsScreenType
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMainScreen
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
 import com.nowiwr01p.meetings.ui.create_meeting.map.CurrentMeetingMapScreen
-import com.nowiwr01p.meetings.ui.meeting_info.MeetingMainScreen
+import com.nowiwr01p.meetings.ui.meeting.MeetingMainScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString

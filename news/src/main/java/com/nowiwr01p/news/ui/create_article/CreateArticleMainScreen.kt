@@ -51,8 +51,8 @@ import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleDataType.*
-import com.nowiwr01p.domain.create_article.validators.data.DynamicFields
-import com.nowiwr01p.domain.create_article.validators.data.StaticFields
+import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields
+import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 
