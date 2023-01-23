@@ -2,6 +2,7 @@ package com.nowiwr01p.profile.ui
 
 import android.net.Uri
 import androidx.core.net.toUri
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.map.GetLocalUserUseCase
@@ -16,7 +17,8 @@ class ProfileViewModel(
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val uploadUserAvatarUseCase: UploadUserAvatarUseCase,
     private val logOutUseCase: LogOutUseCase,
-    private val deleteAccountUseCase: DeleteAccountUseCase
+    private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val openLinksHelper: OpenLinksHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -24,7 +26,6 @@ class ProfileViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init(event.editMode)
-            is Event.OnChatClick -> toChat()
             is Event.OnSaveClick -> updateUserData()
             is Event.OnEditClick -> setEditMode(true)
             is Event.OnCancelClick -> setEditMode(false)
@@ -37,6 +38,7 @@ class ProfileViewModel(
             is Event.RequestPermissionAlert -> requestPermissionAlert()
             is Event.Logout -> logout()
             is Event.DeleteAccount -> deleteAccount()
+            is Event.OpenLink -> openLink(event.link)
         }
     }
 
@@ -45,10 +47,9 @@ class ProfileViewModel(
         setState { copy(user = user, editMode = editMode) }
     }
 
-    private fun handleInput(name: String) {
-        if (name.length <= 24) setState { copy(previewEditName = name) }
-    }
-
+    /**
+     * CHANGE USER DATA
+     */
     private fun updateUserData() = io {
         runCatching {
             updateUserName()
@@ -71,6 +72,9 @@ class ProfileViewModel(
         }
     }
 
+    /**
+     * EDIT MODE
+     */
     private fun setEditMode(enabled: Boolean) {
         setState { copy(editMode = enabled) }
     }
@@ -79,6 +83,13 @@ class ProfileViewModel(
         setState { copy(previewEditAvatar = uri.toString()) }
     }
 
+    private fun handleInput(name: String) {
+        if (name.length <= 24) setState { copy(previewEditName = name) }
+    }
+
+    /**
+     * PREMISSIONS
+     */
     private fun requestPermission() {
         setState { copy(shouldRequestPermission = true) }
     }
@@ -101,6 +112,9 @@ class ProfileViewModel(
         setEffect { Effect.ChoosePhoto }
     }
 
+    /**
+     * EXIT
+     */
     private fun logout() = io {
         runCatching {
             logOutUseCase.execute()
@@ -117,7 +131,10 @@ class ProfileViewModel(
         }
     }
 
-    private fun toChat() {
-
+    /**
+     * OPEN LINKS
+     */
+    private fun openLink(link: String) = io {
+        openLinksHelper.openLink(link)
     }
 }
