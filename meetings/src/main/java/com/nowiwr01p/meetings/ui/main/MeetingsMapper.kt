@@ -2,6 +2,7 @@ package com.nowiwr01p.meetings.ui.main
 
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.mapper.ViewModelMapper
+import com.nowiwr01p.domain.meetings.data.Story
 
 class MeetingsMapper: ViewModelMapper<MeetingsViewModel>() {
 
@@ -21,5 +22,9 @@ class MeetingsMapper: ViewModelMapper<MeetingsViewModel>() {
         val selectedName = updateSelectedCategory(category).name
         val found = meeting.categories.find { category -> category.name == selectedName } != null
         found || selectedName.isEmpty()
+    }
+
+    fun updateStories(id: String, updatedStory: Story) = viewModel.viewState.value.stories.map {
+        if (it.id == id) updatedStory else it
     }
 }

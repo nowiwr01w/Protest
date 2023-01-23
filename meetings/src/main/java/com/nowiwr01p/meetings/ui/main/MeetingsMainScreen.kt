@@ -194,11 +194,16 @@ private fun Story(
         .width(72.dp)
         .pressedAnimation { onItemClick() }
 ) {
+    val borderColor = if (story.viewed) {
+        MaterialTheme.colors.graphicsSecondary.copy(alpha = 0.33f)
+    } else {
+        Color(0xFFFC4C4C)
+    }
     Box(
         modifier = Modifier
             .size(72.dp)
             .clip(CircleShape)
-            .border(2.dp, Color(0xFFFC4C4C), CircleShape),
+            .border(2.dp, borderColor, CircleShape),
         contentAlignment = Alignment.Center
     ) {
         Box(
