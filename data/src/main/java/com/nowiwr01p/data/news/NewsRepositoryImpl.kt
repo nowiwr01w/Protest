@@ -17,5 +17,6 @@ class NewsRepositoryImpl(
         references.getNewsReference().get().await()
             .children
             .map { snapshot -> snapshot.getValue<Article>()!! }
+            .sortedByDescending { article -> article.dateViewers.date }
     }
 }
