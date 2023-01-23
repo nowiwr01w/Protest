@@ -43,6 +43,7 @@ import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.alert_dialog.CustomAlertDialog
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
+import com.nowiwr01p.profile.BuildConfig.*
 import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
 import com.nowiwr01p.profile.ui.data.ProfileItem
@@ -71,9 +72,6 @@ fun ProfileMainScreen(
         override fun onCancelClick() {
             viewModel.setEvent(Event.OnCancelClick)
         }
-        override fun onChatClick() {
-            viewModel.setEvent(Event.OnChatClick)
-        }
         override fun onUserNameChanged(name: String) {
             viewModel.setEvent(Event.OnUserNameChanged(name))
         }
@@ -100,6 +98,9 @@ fun ProfileMainScreen(
         }
         override fun deleteAccount() {
             viewModel.setEvent(Event.DeleteAccount)
+        }
+        override fun openLink(link: String) {
+            viewModel.setEvent(Event.OpenLink(link))
         }
     }
 
@@ -217,7 +218,7 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
         modifier = chatModifier,
         icon = if (state.editMode) R.drawable.ic_cancel else R.drawable.ic_chat,
         onClick = {
-            if (state.editMode) listener?.onCancelClick() else listener?.onChatClick()
+            if (state.editMode) listener?.onCancelClick() else listener?.openLink(TELEGRAM_LINK)
         },
     )
 

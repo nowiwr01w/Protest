@@ -1,6 +1,8 @@
 package com.nowiwr01p.profile.ui.data
 
 import androidx.annotation.DrawableRes
+import com.nowiwr01p.profile.BuildConfig
+import com.nowiwr01p.profile.BuildConfig.*
 import com.nowiwr01p.profile.R
 import com.nowiwr01p.profile.ui.ProfileContract.*
 import com.nowiwr01p.profile.ui.data.ProfileItem.*
@@ -20,7 +22,7 @@ sealed class ProfileItem(
         override val name: String = "Стать организатором",
         override val startIcon: Int = R.drawable.ic_brain,
         override val endIcon: Int? = if (state.user.organizer) R.drawable.ic_done else null,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(ORGANIZER_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     data class NewsWriterItem(
@@ -29,7 +31,7 @@ sealed class ProfileItem(
         override val name: String = "Стать создателем новостей",
         override val startIcon: Int = R.drawable.ic_lamp,
         override val endIcon: Int? = if (state.user.organizer) R.drawable.ic_done else null,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(WRITER_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     /**
@@ -39,28 +41,28 @@ sealed class ProfileItem(
         val listener: Listener?,
         override val name: String = "Сообщить о баге",
         override val startIcon: Int = R.drawable.ic_bug,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(BUG_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     data class SuggestIdeaItem(
         val listener: Listener?,
         override val name: String = "Предложить свою идею",
         override val startIcon: Int = R.drawable.ic_suggest_idea,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(SUGGEST_IDEA_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     data class DevelopmentItem(
         val listener: Listener?,
         override val name: String = "Присоединиться к разработке",
         override val startIcon: Int = R.drawable.ic_development,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(DEVELOPMENT_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     data class SupportProjectItem(
         val listener: Listener?,
         override val name: String = "Поддержать проект",
         override val startIcon: Int = R.drawable.ic_money,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(SUPPORT_PROJECT_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     /**
@@ -70,14 +72,14 @@ sealed class ProfileItem(
         val listener: Listener?,
         override val name: String = "Политика приватности",
         override val startIcon: Int = R.drawable.ic_security,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(PRIVACY_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     data class TermsItem(
         val listener: Listener?,
         override val name: String = "Политика обработки данных",
         override val startIcon: Int = R.drawable.ic_data_management,
-        override val onClick: () -> Unit = {},
+        override val onClick: () -> Unit = { listener?.openLink(TERMS_LINK) },
     ): ProfileItem(name, startIcon, onClick)
 
     /**
