@@ -12,13 +12,14 @@ data class Story(
     val priority: Int = 0,
     val previewIcon: String = "",
     val previewTitle: String = "",
-    val title: List<Title> = listOf(),
-    val description: List<Description> = listOf(),
-    val orderedList: List<OrderedList> = listOf(),
+    val titles: List<Title> = listOf(),
+    val images: List<Image> = listOf(),
+    val descriptions: List<Description> = listOf(),
+    val orderedLists: List<OrderedList> = listOf(),
     val viewed: Boolean = false,
     val viewers: List<String> = listOf()
 ) {
-    fun getContent() = (title + description + orderedList).sortedBy { it.order }
+    fun getContent() = (titles + descriptions + images + orderedLists).sortedBy { it.order }
 }
 
 @Serializable
@@ -31,6 +32,13 @@ data class Title(
 data class Description(
     override val order: Int = 0,
     val text: String = ""
+): OrderedItem
+
+@Serializable
+data class Image(
+    override val order: Int = 0,
+    val link: String = "",
+    val description: String = ""
 ): OrderedItem
 
 @Serializable
