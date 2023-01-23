@@ -59,8 +59,6 @@ class MeetingsViewModel(
         }.onSuccess {
             saveScreenCache()
             setState { copy(showProgress = false) }
-        }.onFailure {
-            Timber.tag("Zhopa").d("error = ${it.message}")
         }
     }
 
