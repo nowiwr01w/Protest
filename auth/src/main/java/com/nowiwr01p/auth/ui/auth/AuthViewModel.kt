@@ -5,19 +5,20 @@ import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.*
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType
-import com.nowiwr01p.domain.auth.data.error.AuthTextFieldType.*
+import com.nowiwr01p.domain.auth.main.data.error.AuthTextFieldType
+import com.nowiwr01p.domain.auth.main.data.error.AuthTextFieldType.*
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
-import com.nowiwr01p.domain.auth.data.user.UserData
-import com.nowiwr01p.domain.auth.data.user.UserDataSignIn
-import com.nowiwr01p.domain.auth.data.user.UserDataSignUp
+import com.nowiwr01p.domain.auth.main.data.user.UserData
+import com.nowiwr01p.domain.auth.main.data.user.UserDataSignIn
+import com.nowiwr01p.domain.auth.main.data.user.UserDataSignUp
+import com.nowiwr01p.domain.auth.main.usecase.*
 import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.verification.usecase.SendEmailVerificationUseCase
+import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
 import kotlinx.coroutines.delay
 
 class AuthViewModel(

@@ -9,13 +9,12 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.map.GetLocalUserUseCase
-import com.nowiwr01p.domain.meetings.data.Story
-import com.nowiwr01p.domain.meetings.usecase.*
-import com.nowiwr01p.domain.meetings.usecase.data.MeetingsScreenCacheData
+import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
+import com.nowiwr01p.domain.meetings.main.data.Story
+import com.nowiwr01p.domain.meetings.main.usecase.*
+import com.nowiwr01p.domain.meetings.main.usecase.data.MeetingsScreenCacheData
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
-import timber.log.Timber
 
 class MeetingsViewModel(
     private val statusBarColor: Color,

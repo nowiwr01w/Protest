@@ -3,8 +3,8 @@ package com.nowiwr01p.news.ui.article
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.article.SetArticleViewedUseCase
-import com.nowiwr01p.domain.create_article.usecase.CreateArticleUseCase
+import com.nowiwr01p.domain.news.article.SetArticleViewedUseCase
+import com.nowiwr01p.domain.news.create_article.usecase.CreateArticleUseCase
 import com.nowiwr01p.news.ui.article.ArticleContract.*
 import kotlinx.coroutines.delay
 

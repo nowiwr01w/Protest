@@ -3,15 +3,15 @@ package com.nowiwr01p.data.di
 import com.google.gson.Gson
 import com.nowiwr01p.core.BuildConfig
 import com.nowiwr01p.core.datastore.*
-import com.nowiwr01p.data.auth.repository.AuthSecurityDataStoreRepositoryImpl
-import com.nowiwr01p.data.cities.CitiesStateLocalRepositoryImpl
-import com.nowiwr01p.data.user.UserDataStoreRepositoryImpl
-import com.nowiwr01p.data.verification.VerificationDataStoreRepositoryImpl
-import com.nowiwr01p.domain.auth.repository.AuthSecurityDataStoreRepository
-import com.nowiwr01p.domain.cities.api.CitiesApi
-import com.nowiwr01p.domain.cities.repository.CityStateLocalRepository
-import com.nowiwr01p.domain.user.repository.UserDataStoreRepository
-import com.nowiwr01p.domain.verification.repository.VerificationLocalRepository
+import com.nowiwr01p.data.auth.main.repository.AuthSecurityDataStoreRepositoryImpl
+import com.nowiwr01p.data.auth.cities.CitiesStateLocalRepositoryImpl
+import com.nowiwr01p.data.user.UserLocalRepositoryImpl
+import com.nowiwr01p.data.auth.verification.VerificationLocalRepositoryImpl
+import com.nowiwr01p.domain.auth.main.repository.AuthSecurityDataStoreRepository
+import com.nowiwr01p.domain.auth.cities.api.CitiesApi
+import com.nowiwr01p.domain.auth.cities.repository.CityStateLocalRepository
+import com.nowiwr01p.domain.user.repository.UserLocalRepository
+import com.nowiwr01p.domain.auth.verification.repository.VerificationLocalRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -54,14 +54,14 @@ val moduleCore = module {
     single<VerificationLocalRepository> {
         val fileName = get<String>(named(DataStoreType.VERIFICATION))
         val dataStore = VerificationDataStore(fileName)
-        VerificationDataStoreRepositoryImpl(
+        VerificationLocalRepositoryImpl(
             dataStore.create(androidContext())
         )
     }
-    single<UserDataStoreRepository> {
+    single<UserLocalRepository> {
         val fileName = get<String>(named(DataStoreType.USER))
         val dataStore = UserDataStore(fileName)
-        UserDataStoreRepositoryImpl(
+        UserLocalRepositoryImpl(
             dataStore.create(androidContext()),
             get()
         )

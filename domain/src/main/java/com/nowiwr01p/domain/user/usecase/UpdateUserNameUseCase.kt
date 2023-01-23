@@ -3,7 +3,6 @@ package com.nowiwr01p.domain.user.usecase
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 
 class UpdateUserNameUseCase(

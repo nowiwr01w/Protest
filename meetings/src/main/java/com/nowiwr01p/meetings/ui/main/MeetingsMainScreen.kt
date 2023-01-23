@@ -38,7 +38,7 @@ import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.CenterScreenProgressBar
-import com.nowiwr01p.domain.meetings.data.Story
+import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage

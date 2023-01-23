@@ -4,9 +4,9 @@ import com.nowiwr01p.auth.AuthScreen.*
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.cities.usecase.local.GetLocalCityUseCase
+import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
-import com.nowiwr01p.domain.verification.usecase.GetLocalVerificationUseCase
+import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 

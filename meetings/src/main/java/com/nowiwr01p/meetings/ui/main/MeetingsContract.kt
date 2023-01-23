@@ -7,7 +7,7 @@ import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.domain.meetings.data.Story
+import com.nowiwr01p.domain.meetings.main.data.Story
 
 interface MeetingsContract {
 
