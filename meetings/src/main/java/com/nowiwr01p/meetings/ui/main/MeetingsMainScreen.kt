@@ -161,7 +161,7 @@ private fun Toolbar(
     )
     ClickableIcon(
         icon = R.drawable.ic_add,
-        modifier = Modifier.padding(end = 16.dp),
+        modifier = Modifier.padding(end = 10.dp),
         onClick = { listener?.toCreateMeeting() }
     )
 }
