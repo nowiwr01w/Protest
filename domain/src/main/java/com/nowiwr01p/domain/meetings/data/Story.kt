@@ -16,11 +16,8 @@ data class Story(
     val images: List<Image> = listOf(),
     val descriptions: List<Description> = listOf(),
     val orderedLists: List<OrderedList> = listOf(),
-    val viewed: Boolean = false,
     val viewers: List<String> = listOf()
-) {
-    fun getContent() = (titles + descriptions + images + orderedLists).sortedBy { it.order }
-}
+)
 
 @Serializable
 data class Title(

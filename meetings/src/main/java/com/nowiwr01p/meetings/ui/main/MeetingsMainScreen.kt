@@ -176,7 +176,7 @@ private fun Stories(state: State, listener: Listener?) = LazyRow(
         .padding(top = 8.dp)
 ) {
     itemsIndexed(state.stories) { index, item ->
-        Story(index, item) {
+        Story(index, item, state.user.id) {
             listener?.onStoryClick(item)
         }
     }
@@ -187,6 +187,7 @@ private fun Stories(state: State, listener: Listener?) = LazyRow(
 private fun Story(
     index: Int,
     story: Story,
+    userId: String,
     onItemClick: () -> Unit
 ) = Column(
     modifier = Modifier
@@ -194,7 +195,7 @@ private fun Story(
         .width(72.dp)
         .pressedAnimation { onItemClick() }
 ) {
-    val borderColor = if (story.viewed) {
+    val borderColor = if (userId in story.viewers) {
         MaterialTheme.colors.graphicsSecondary.copy(alpha = 0.25f)
     } else {
         Color(0xFFFC4C4C)
