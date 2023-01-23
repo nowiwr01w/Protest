@@ -195,7 +195,7 @@ private fun Story(
         .pressedAnimation { onItemClick() }
 ) {
     val borderColor = if (story.viewed) {
-        MaterialTheme.colors.graphicsSecondary.copy(alpha = 0.33f)
+        MaterialTheme.colors.graphicsSecondary.copy(alpha = 0.25f)
     } else {
         Color(0xFFFC4C4C)
     }
