@@ -14,6 +14,7 @@ import com.nowiwr01p.domain.map.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetMeetingsUseCase
 import com.nowiwr01p.domain.meeting_info.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.usecase.GetStoriesUseCase
+import com.nowiwr01p.domain.meetings.usecase.SetStoryViewedUseCase
 import com.nowiwr01p.domain.meetingsScreenScopeId
 import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.domain.news.usecase.GetNewsUseCase
@@ -72,6 +73,7 @@ val moduleDomain = module {
     factory { GetStoriesUseCase(get()) }
     factory { GetMeetingsUseCase(get()) }
     factory { SetReactionUseCase(get()) }
+    factory { SetStoryViewedUseCase(get()) }
 
     factory {
         val scope = getKoin().getOrCreateScope(meetingsScreenScopeId, named(meetingsScreenScopeName))

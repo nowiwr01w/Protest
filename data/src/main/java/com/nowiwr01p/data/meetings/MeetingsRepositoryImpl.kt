@@ -21,10 +21,31 @@ class MeetingsRepositoryImpl(
      * STORIES
      */
     override suspend fun getStories() = withContext(dispatchers.io) {
+        val userId = userDataStoreRepository.getUser().id
         references.getStoriesReference().get().await()
             .children
             .map { snapshot -> snapshot.getValue<Story>()!! }
-            .sortedBy { story -> story.priority }
+            .map { story -> story.copy(viewed = userId in story.viewers) }
+            .sortedWith(
+                compareBy( { story -> story.viewed }, { story -> story.priority } )
+            )
+    }
+
+    /**
+     * SET STORY VIEWED
+     */
+    override suspend fun setStoryViewed(storyId: String) = withContext(dispatchers.io) {
+        val userId = userDataStoreRepository.getUser().id
+        val updatedStory = references.getStoriesReference().child(storyId).get().await()
+            .getValue<Story>()!!
+            .updateStory(userId)
+        references.getStoriesReference().child(storyId).setValue(updatedStory).await()
+        updatedStory
+    }
+
+    private fun Story.updateStory(userId: String): Story {
+        val updatedViewers = viewers.toMutableList().apply { add(userId) }
+        return copy(viewed = true, viewers = updatedViewers)
     }
 
     /**
