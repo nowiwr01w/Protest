@@ -39,6 +39,8 @@ class ProfileViewModel(
             is Event.Logout -> logout()
             is Event.DeleteAccount -> deleteAccount()
             is Event.OpenLink -> openLink(event.link)
+            is Event.ShowLogoutAlert -> showLogoutAlert(event.show)
+            is Event.ShowDeleteAccountAlert -> showDeleteAccountAlert(event.show)
         }
     }
 
@@ -129,6 +131,14 @@ class ProfileViewModel(
         }.onSuccess {
             setEffect { Effect.NavigateToAuth }
         }
+    }
+
+    private fun showLogoutAlert(show: Boolean) {
+        setState { copy(showLogoutAlert = show) }
+    }
+
+    private fun showDeleteAccountAlert(show: Boolean) {
+        setState { copy(showDeleteAccountAlert = show) }
     }
 
     /**
