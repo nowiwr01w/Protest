@@ -11,7 +11,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.nowiwr01p.core_ui.theme.*
-import com.nowiwr01p.domain.meetings.data.*
 import com.nowiwr01p.domain.meetings.main.data.*
 import com.skydoves.landscapist.coil.CoilImage
 
