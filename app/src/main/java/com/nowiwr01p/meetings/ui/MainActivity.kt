@@ -32,6 +32,7 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
+import com.nowiwr01p.core_ui.ui.recaptcha.RecaptchaHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ErrorSnackBar
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
@@ -40,6 +41,7 @@ import org.koin.android.ext.android.inject
 class MainActivity : ComponentActivity() {
 
     private val navigator by inject<Navigator>()
+    private val recaptchaHelper by inject<RecaptchaHelper>()
     private val showSnackBarHelper by inject<ShowSnackBarHelper>()
     private val statusBarColorHelper by inject<StatusBarColorHelper>()
     private val showBottomSheetHelper by inject<ShowBottomSheetHelper>()
@@ -57,6 +59,7 @@ class MainActivity : ComponentActivity() {
                 skipHalfExpanded = true
             )
 
+            recaptchaHelper.init(scope)
             statusBarColorHelper.init(scope)
             showSnackBarHelper.init(scope, scaffoldState)
             showBottomSheetHelper.init(scope, bottomSheetState)

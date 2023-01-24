@@ -12,7 +12,9 @@ fun DependencyHandler.animationDependencies() {
 }
 
 fun DependencyHandler.biometricDependencies() {
-    implementation(Biometric.BIOMETRIC_LIB)
+    implementation(Biometric.CAPTCHA)
+    implementation(Biometric.CAPTCHA_ENTERPRISE)
+    implementation(Biometric.BIOMETRIC)
 }
 
 fun DependencyHandler.dataStoreDependencies() {

@@ -1,6 +1,7 @@
 package com.nowiwr01p.auth.ui.auth
 
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.viewModelScope
 import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.*
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
@@ -10,13 +11,13 @@ import com.nowiwr01p.domain.auth.main.data.error.AuthTextFieldType.*
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
+import com.nowiwr01p.core_ui.ui.recaptcha.RecaptchaHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.domain.auth.main.data.user.UserData
 import com.nowiwr01p.domain.auth.main.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.main.data.user.UserDataSignUp
 import com.nowiwr01p.domain.auth.main.usecase.*
-import com.nowiwr01p.domain.auth.usecase.*
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
 import kotlinx.coroutines.delay
@@ -32,7 +33,8 @@ class AuthViewModel(
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
     private val showSnackBarHelper: ShowSnackBarHelper,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
-    private val openLinksHelper: OpenLinksHelper
+    private val openLinksHelper: OpenLinksHelper,
+    private val recaptchaHelper: RecaptchaHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -96,7 +98,7 @@ class AuthViewModel(
         getUserData().let { userData ->
             val error = authDataValidator.execute(userData)
             if (error == null) {
-                auth(userData)
+                recaptchaHelper.showCaptcha(viewModelScope) { auth(userData) }
             } else {
                 showSnackBarHelper.showSnackBar(error.message)
             }
