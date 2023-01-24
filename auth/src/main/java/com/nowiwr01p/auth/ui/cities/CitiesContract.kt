@@ -23,8 +23,7 @@ interface CitiesContract {
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
-        data class ShowNextScreen(val city: City): Effect
-        data class ConfirmClick(val city: City): Effect
+        object ShowNextScreen: Effect
     }
 
     interface Listener {

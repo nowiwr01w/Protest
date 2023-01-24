@@ -23,8 +23,8 @@ class AuthNavigatorImpl: AuthNavigator {
         VerificationMainScreen.navigate(Unit, navController)
     }
 
-    override fun toChooseCity() {
-        CitiesMainScreen.navigate(Unit, navController)
+    override fun toChooseCity(fromProfile: Boolean) {
+        CitiesMainScreen.navigate(fromProfile, navController)
     }
 
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {
