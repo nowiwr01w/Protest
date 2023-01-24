@@ -24,6 +24,8 @@ interface ProfileContract {
         data class SetAvatarPreview(val uri: Uri): Event
         data class OnUserNameChanged(val name: String): Event
         data class ShowPermissionAlert(val show: Boolean): Event
+        data class ShowLogoutAlert(val show: Boolean): Event
+        data class ShowDeleteAccountAlert(val show: Boolean): Event
     }
 
     data class State(
@@ -34,7 +36,9 @@ interface ProfileContract {
         val showPermissionAlert: Boolean = false,
         val shouldRequestAlert: Boolean = false,
         val shouldRequestPermission: Boolean = false,
-        val isStorageAvailable: Boolean = false
+        val isStorageAvailable: Boolean = false,
+        val showLogoutAlert: Boolean = false,
+        val showDeleteAccountAlert: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
@@ -57,5 +61,7 @@ interface ProfileContract {
         fun toChangeCity()
         fun logout()
         fun deleteAccount()
+        fun showLogoutAlert(show: Boolean)
+        fun showDeleteAccountAlert(show: Boolean)
     }
 }

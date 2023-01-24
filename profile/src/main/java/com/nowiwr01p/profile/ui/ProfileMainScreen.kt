@@ -94,14 +94,25 @@ fun ProfileMainScreen(
             viewModel.setEvent(Event.RequestPermissionAlert)
         }
         override fun logout() {
+            showLogoutAlert(false)
             viewModel.setEvent(Event.Logout)
         }
         override fun toChangeCity() {
             navigator.authNavigator.toChooseCity(true)
         }
         override fun deleteAccount() {
+            showDeleteAccountAlert(false)
             viewModel.setEvent(Event.DeleteAccount)
         }
+
+        override fun showLogoutAlert(show: Boolean) {
+            viewModel.setEvent(Event.ShowLogoutAlert(show))
+        }
+
+        override fun showDeleteAccountAlert(show: Boolean) {
+            viewModel.setEvent(Event.ShowDeleteAccountAlert(show))
+        }
+
         override fun openLink(link: String) {
             viewModel.setEvent(Event.OpenLink(link))
         }
@@ -145,6 +156,12 @@ fun ProfileMainScreen(
 
     if (state.showPermissionAlert) {
         PermissionAlert(listener)
+    }
+    if (state.showLogoutAlert) {
+        LogoutConfirmAlert(listener)
+    }
+    if (state.showDeleteAccountAlert) {
+        DeleteAccountConfirmAlert(listener)
     }
     ProfileMainScreenContent(
         state = state,
@@ -514,6 +531,28 @@ private fun PermissionAlert(listener: Listener) = CustomAlertDialog(
             "Перейти в настройки?",
     negativeCallback = { listener.showPermissionAlert(false) },
     positiveCallback = { listener.redirectToSettings() }
+)
+
+/**
+ * LOGOUT CONFIRMATION ALERT
+ */
+@Composable
+private fun LogoutConfirmAlert(listener: Listener) = CustomAlertDialog(
+    title = "Выйти",
+    description = "Возвращайтесь скорее. России нужны люди, готовые бороться.",
+    negativeCallback = { listener.showLogoutAlert(false) },
+    positiveCallback = { listener.logout() }
+)
+
+/**
+ * DELETE ACCOUNT CONFIRMATION ALERT
+ */
+@Composable
+private fun DeleteAccountConfirmAlert(listener: Listener) = CustomAlertDialog(
+    title = "Удалить аккаунт",
+    description = "Уверены, что не хотите участвовать в создании прекрасной России будущего?",
+    negativeCallback = { listener.showDeleteAccountAlert(false) },
+    positiveCallback = { listener.deleteAccount() }
 )
 
 /**
