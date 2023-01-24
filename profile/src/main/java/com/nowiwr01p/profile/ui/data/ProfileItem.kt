@@ -106,14 +106,14 @@ sealed class ProfileItem(
         val listener: Listener?,
         override val name: String = "Выйти из аккаунта",
         override val startIcon: Int = R.drawable.ic_logout,
-        override val onClick: () -> Unit = { listener?.logout() }
+        override val onClick: () -> Unit = { listener?.showLogoutAlert(true) }
     ): ProfileItem(name, startIcon, onClick)
 
     data class DeleteAccountItem(
         val listener: Listener?,
         override val name: String = "Удалить аккаунт",
         override val startIcon: Int = R.drawable.ic_delete_account,
-        override val onClick: () -> Unit = { listener?.deleteAccount() }
+        override val onClick: () -> Unit = { listener?.showDeleteAccountAlert(true) }
     ): ProfileItem(name, startIcon, onClick)
 }
 
