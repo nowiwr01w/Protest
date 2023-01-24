@@ -13,11 +13,11 @@ class CitiesViewModel(
     private val mapper: CitiesMapper
 ): BaseViewModel<Event, State, Effect>() {
 
+    private var allCities = listOf<City>()
+
     init {
         mapper.viewModel = this
     }
-
-    private var allCities = listOf<City>()
 
     override fun setInitialState() = State()
 
@@ -64,9 +64,7 @@ class CitiesViewModel(
     }
 
     private fun onConfirmClicked() {
-        viewState.value.selectedCity?.let {
-            setEffect { Effect.ShowNextScreen(it) }
-            setState { copy(selectedCity = null) }
-        }
+        setEffect { Effect.ShowNextScreen }
+        setState { copy(selectedCity = null) }
     }
 }

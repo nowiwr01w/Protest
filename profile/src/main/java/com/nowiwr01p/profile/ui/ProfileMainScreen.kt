@@ -96,6 +96,9 @@ fun ProfileMainScreen(
         override fun logout() {
             viewModel.setEvent(Event.Logout)
         }
+        override fun toChangeCity() {
+            navigator.authNavigator.toChooseCity(true)
+        }
         override fun deleteAccount() {
             viewModel.setEvent(Event.DeleteAccount)
         }

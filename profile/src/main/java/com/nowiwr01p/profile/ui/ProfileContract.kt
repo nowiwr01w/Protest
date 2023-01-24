@@ -54,6 +54,7 @@ interface ProfileContract {
         fun redirectToSettings()
         fun setStorageAvailable()
         fun setAvatarPreview(uri: Uri)
+        fun toChangeCity()
         fun logout()
         fun deleteAccount()
     }
