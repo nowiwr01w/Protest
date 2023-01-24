@@ -37,6 +37,7 @@ import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun CitiesMainScreen(
+    fromProfile: Boolean,
     navigator: Navigator,
     viewModel: CitiesViewModel = getViewModel()
 ) {
@@ -61,18 +62,18 @@ fun CitiesMainScreen(
 
     EffectObserver(viewModel.effect) {
         when (it) {
-            is Effect.ConfirmClick -> {
-                // TODO()
-            }
             is Effect.ShowNextScreen -> {
-                when (it.city) {
-                    else -> navigator.navigateToMeetings()
+                if (fromProfile) {
+                    navigator.navigateUp()
+                } else {
+                    navigator.navigateToMeetings()
                 }
             }
         }
     }
 
     CitiesMainScreenContent(
+        fromProfile = fromProfile,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -83,6 +84,7 @@ fun CitiesMainScreen(
  */
 @Composable
 fun CitiesMainScreenContent(
+    fromProfile: Boolean,
     state: State,
     listener: Listener?
 ) = ConstraintLayout(
@@ -97,6 +99,7 @@ fun CitiesMainScreenContent(
             end.linkTo(parent.end)
         }
     Toolbar(
+        fromProfile = fromProfile,
         listener = listener,
         modifier = toolbarModifier,
     )
@@ -142,22 +145,27 @@ fun CitiesMainScreenContent(
  */
 @Composable
 private fun Toolbar(
+    fromProfile: Boolean,
     listener: Listener?,
     modifier: Modifier,
-) = ToolbarTop(
-    showElevation = true,
-    blackColors = true,
-    modifier = modifier.background(MaterialTheme.colors.mainBackgroundColor),
-    title = {
-        ToolbarTitle(
-            textColor = Color.White,
-            title = "Выберите город"
-        )
-    },
-    backIcon = {
-        ToolbarBackButton(blackColors = true) { listener?.onBackClick() }
-    }
-)
+) {
+    ToolbarTop(
+        showElevation = true,
+        blackColors = !fromProfile,
+        modifier = modifier.background(MaterialTheme.colors.mainBackgroundColor),
+        title = {
+            ToolbarTitle(
+                textColor = if (fromProfile) Color.Black else Color.White,
+                title = "Выберите город"
+            )
+        },
+        backIcon = {
+            ToolbarBackButton(blackColors = !fromProfile) {
+                listener?.onBackClick()
+            }
+        }
+    )
+}
 
 /**
  * LOCATIONS
@@ -275,6 +283,7 @@ private fun Search(
 @Composable
 private fun PreviewCitiesLoaded() = MeetingsTheme {
     CitiesMainScreenContent(
+        fromProfile = false,
         state = State(
             loaded = true,
             cities = listOf(
@@ -290,6 +299,7 @@ private fun PreviewCitiesLoaded() = MeetingsTheme {
 @Composable
 private fun PreviewCitySelected() = MeetingsTheme {
     CitiesMainScreenContent(
+        fromProfile = false,
         state = State(
             loaded = true,
             selectedCity = City(true, "Test city"),
@@ -306,6 +316,7 @@ private fun PreviewCitySelected() = MeetingsTheme {
 @Composable
 private fun PreviewCitiesLoading() = MeetingsTheme {
     CitiesMainScreenContent(
+        fromProfile = false,
         state = State(),
         listener = null
     )

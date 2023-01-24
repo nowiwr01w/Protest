@@ -6,5 +6,5 @@ enum class AuthScreenType(val route: String) {
     SplashScreen("splash_screen"),
     AuthMainScreen("auth_main_screen"),
     VerificationMainScreen("verification_main_screen"),
-    CitiesMainScreen("cities_main_screen?chosen_country={${Keys.ARG_TO_CITIES}}")
+    CitiesMainScreen("cities_main_screen?fromProfile={${Keys.ARG_TO_CITIES}}")
 }

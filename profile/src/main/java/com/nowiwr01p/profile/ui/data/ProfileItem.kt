@@ -35,6 +35,23 @@ sealed class ProfileItem(
     ): ProfileItem(name, startIcon, onClick)
 
     /**
+     * APP
+     */
+    data class CityItem(
+        val listener: Listener?,
+        override val name: String = "Сменить город",
+        override val startIcon: Int = R.drawable.ic_location,
+        override val onClick: () -> Unit = { listener?.toChangeCity() },
+    ): ProfileItem(name, startIcon, onClick)
+
+    data class NotificationItem(
+        val listener: Listener?,
+        override val name: String = "Уведомления",
+        override val startIcon: Int = R.drawable.ic_bell,
+        override val onClick: () -> Unit = { listener?.openLink(WRITER_LINK) },
+    ): ProfileItem(name, startIcon, onClick)
+
+    /**
      * ABOUT PROJECT
      */
     data class BugItem(
@@ -107,6 +124,10 @@ internal fun getProfileItems(state: State, listener: Listener?) = listOf(
     "Получить доступ" to listOf(
         OrganizerItem(state, listener),
         NewsWriterItem(state, listener)
+    ),
+    "Приложение" to listOf(
+        CityItem(listener),
+        NotificationItem(listener)
     ),
     "О проекте" to listOf(
         BugItem(listener),
