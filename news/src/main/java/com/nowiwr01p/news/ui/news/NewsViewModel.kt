@@ -51,8 +51,10 @@ class NewsViewModel(
     /**
      * NEWS
      */
-    private suspend fun getNews() = getNews.execute().let { news ->
-        setState { copy(newsList = news) }
+    private suspend fun getNews() = launch {
+        getNews.execute().collect { news ->
+            setState { copy(newsList = news) }
+        }
     }
 
     /**
