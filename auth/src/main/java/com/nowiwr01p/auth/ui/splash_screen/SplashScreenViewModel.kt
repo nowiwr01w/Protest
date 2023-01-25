@@ -7,6 +7,7 @@ import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
+import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsUseCase
 import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.async
@@ -15,6 +16,7 @@ import kotlinx.coroutines.awaitAll
 class SplashScreenViewModel(
     private val subscribeUserUseCase: SubscribeUserUseCase,
     private val subscribeStoriesUseCase: SubscribeStoriesUseCase,
+    private val subscribeNewsUseCase: SubscribeNewsUseCase,
     private val subscribeCategoriesUseCase: SubscribeCategoriesUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
@@ -34,13 +36,13 @@ class SplashScreenViewModel(
     }
 
     private suspend fun checkLocalData() = listOf(
-        async { subscribeIfAuthorized() },
+        async { subscribeUserIfAuthorized() },
         async { isCitySet() },
         async { isVerificationCompleted() },
-        async { onDataSubscribe() }
+        async { onContentSubscribe() }
     ).awaitAll()
 
-    private suspend fun subscribeIfAuthorized() = runCatching {
+    private suspend fun subscribeUserIfAuthorized() = runCatching {
         subscribeUserUseCase.execute()
     }.onSuccess {
         setState { copy(isAuthorized = true) }
@@ -58,10 +60,11 @@ class SplashScreenViewModel(
         setState { copy(isVerificationCompleted = completed) }
     }
 
-    private suspend fun onDataSubscribe() {
-        subscribeStoriesUseCase.execute()
-        subscribeCategoriesUseCase.execute()
-    }
+    private suspend fun onContentSubscribe() = listOf(
+        async { subscribeStoriesUseCase.execute() },
+        async { subscribeCategoriesUseCase.execute() },
+        async { subscribeNewsUseCase.execute() }
+    ).awaitAll()
 
     private fun getStartScreenRoute() = with(viewState.value) {
         val startScreen = when {

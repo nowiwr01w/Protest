@@ -20,6 +20,7 @@ import com.nowiwr01p.domain.news.article.SetArticleViewedUseCase
 import com.nowiwr01p.domain.news.create_article.usecase.CreateArticleUseCase
 import com.nowiwr01p.domain.news.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
+import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsUseCase
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
 import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
@@ -92,6 +93,7 @@ val moduleDomain = module {
      * NEWS
      */
     factory { GetNewsUseCase(get()) }
+    factory { SubscribeNewsUseCase(get()) }
 
     /**
      * ARTICLE

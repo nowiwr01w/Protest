@@ -17,7 +17,7 @@ import com.nowiwr01p.data.auth.cities.CitiesStateRemoteRepositoryImpl
 import com.nowiwr01p.data.news.create_article.repository.CreateArticleRepositoryImpl
 import com.nowiwr01p.data.news.create_article.validator.CreateArticleValidatorImpl
 import com.nowiwr01p.data.meetings.main.MeetingsRepositoryImpl
-import com.nowiwr01p.data.news.main.NewsRepositoryImpl
+import com.nowiwr01p.data.news.main.NewsClientImpl
 import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationRemoteRepositoryImpl
@@ -39,7 +39,7 @@ import com.nowiwr01p.domain.auth.cities.repository.CityStateRemoteRepository
 import com.nowiwr01p.domain.news.create_article.repository.CreateArticleRepository
 import com.nowiwr01p.domain.news.create_article.validators.CreateArticleValidator
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
-import com.nowiwr01p.domain.news.main.repository.NewsRepository
+import com.nowiwr01p.domain.news.main.repository.NewsClient
 import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.auth.verification.repository.VerificationRemoteRepository
@@ -150,8 +150,8 @@ val moduleData = module {
     /**
      * NEWS
      */
-    factory<NewsRepository> {
-        NewsRepositoryImpl(get(), get())
+    single<NewsClient> {
+        NewsClientImpl(get(), get())
     }
 
     /**
