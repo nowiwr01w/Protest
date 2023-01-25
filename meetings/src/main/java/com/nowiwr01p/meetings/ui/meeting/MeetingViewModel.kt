@@ -6,14 +6,14 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase.Args
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import kotlinx.coroutines.delay
 
 class MeetingViewModel(
-    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val getLocalUserUseCase: GetUserUseCase,
     private val setReactionUseCase: SetReactionUseCase,
     private val createMeetingUseCase: CreateMeetingUseCase,
     private val openLinksHelper: OpenLinksHelper
@@ -39,7 +39,7 @@ class MeetingViewModel(
      * LOCAL USER DATA
      */
     private suspend fun getUserData() {
-        val user = getLocalUserUseCase.execute()
+        val user = getLocalUserUseCase.execute().value
         setState { copy(user = user) }
     }
 

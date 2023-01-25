@@ -6,12 +6,12 @@ import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 
 class UpdateUserNameUseCase(
-    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val getUserUseCase: GetUserUseCase,
     private val userRemoteRepository: UserRemoteRepository
 ): UseCase<String, User> {
 
     override suspend fun execute(input: String): User {
-        val updated = getLocalUserUseCase.execute().copy(name = input)
+        val updated = getUserUseCase.execute().value.copy(name = input)
         return userRemoteRepository.updateUser(updated)
     }
 }
