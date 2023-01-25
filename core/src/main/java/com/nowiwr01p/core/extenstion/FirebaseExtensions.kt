@@ -13,8 +13,6 @@ fun AuthResult.toUser() = User(
     verified = user?.isEmailVerified ?: false
 )
 
-fun DataSnapshot.getAccount() = getValue(User::class.java)!!
-
 inline fun <reified T> createEventListener(crossinline callback: (user: T) -> Unit) = object : ValueEventListener {
     override fun onCancelled(p0: DatabaseError) {}
 
