@@ -18,10 +18,16 @@ class MeetingsMapper: ViewModelMapper<MeetingsViewModel>() {
         }
     }
 
-    fun updateMeetings(category: Category) = viewModel.allMeetings.filter { meeting ->
-        val selectedName = updateSelectedCategory(category).name
-        val found = meeting.categories.find { category -> category.name == selectedName } != null
-        found || selectedName.isEmpty()
+    fun updateMeetings(category: Category) = with(viewModel.viewState.value) {
+        viewModel.allMeetings
+            .filter { meeting ->
+                meeting.cityName == user.city.name
+            }
+            .filter { meeting ->
+            val selectedName = updateSelectedCategory(category).name
+            val found = meeting.categories.find { category -> category.name == selectedName } != null
+            found || selectedName.isEmpty()
+        }
     }
 
     fun updateStories(id: String, updatedStory: Story) = viewModel.viewState.value.stories.map {
