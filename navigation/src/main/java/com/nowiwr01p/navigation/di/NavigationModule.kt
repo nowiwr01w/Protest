@@ -19,7 +19,7 @@ val moduleNavigation = module {
         NavigatorImpl(get(), get(), get(), get())
     }
 
-    viewModel { SplashScreenViewModel(get(), get(), get()) }
+    viewModel { SplashScreenViewModel(get(), get(), get(), get()) }
 }
 
 val uiModules = listOf(

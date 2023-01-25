@@ -95,7 +95,7 @@ class MeetingsViewModel(
      * CATEGORIES
      */
     private suspend fun getCategories() {
-        val categories = getCategoriesUseCase.execute()
+        val categories = getCategoriesUseCase.execute().value
         setState { copy(categories = categories) }
     }
 

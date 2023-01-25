@@ -1,17 +1,15 @@
 package com.nowiwr01p.domain.meetings.main.usecase
 
-import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.domain.meetings.create_meeting.usecase.GetCachedCategoriesUseCase
-import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
+import com.nowiwr01p.domain.UseCase
+import com.nowiwr01p.domain.categories.client.CategoriesClient
+import kotlinx.coroutines.flow.StateFlow
 
 class GetCategoriesUseCase(
-    private val repository: MeetingsRepository,
-    private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase
-): UseCase<Unit, List<Category>> {
+    private val client: CategoriesClient
+): UseCase<Unit, StateFlow<List<Category>>> {
 
-    override suspend fun execute(input: Unit) = getCachedCategoriesUseCase.execute().let {
-        it.ifEmpty { repository.getCategories() }
+    override suspend fun execute(input: Unit): StateFlow<List<Category>> {
+        return client.getCategories()
     }
 }

@@ -4,16 +4,15 @@ import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
-import com.nowiwr01p.domain.user.repository.UserLocalRepository
+import com.nowiwr01p.domain.user.client.UserClient
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class MeetingsRepositoryImpl(
     private val references: FirebaseReferencesRepository,
-    private val userLocalRepository: UserLocalRepository,
+    private val userClient: UserClient,
     private val dispatchers: AppDispatchers
 ): MeetingsRepository {
 
@@ -21,7 +20,7 @@ class MeetingsRepositoryImpl(
      * STORIES
      */
     override suspend fun getStories() = withContext(dispatchers.io) {
-        val userId = userLocalRepository.getUser().id
+        val userId = userClient.getUserFlow().value.id
         references.getStoriesReference().get().await()
             .children
             .map { snapshot -> snapshot.getValue<Story>()!! }
@@ -34,7 +33,7 @@ class MeetingsRepositoryImpl(
      * SET STORY VIEWED
      */
     override suspend fun setStoryViewed(storyId: String) = withContext(dispatchers.io) {
-        val userId = userLocalRepository.getUser().id
+        val userId = userClient.getUserFlow().value.id
         val updatedStory = references.getStoriesReference().child(storyId).get().await()
             .getValue<Story>()!!
             .updateStory(userId)
@@ -48,20 +47,10 @@ class MeetingsRepositoryImpl(
     }
 
     /**
-     * CATEGORIES
-     */
-    override suspend fun getCategories() = withContext(dispatchers.io) {
-        references.getCategoriesReference().get().await()
-            .children
-            .map { snapshot -> snapshot.getValue<Category>()!! }
-            .sortedBy { category -> category.priority }
-    }
-
-    /**
      * MEETINGS
      */
     override suspend fun getMeetings() = withContext(dispatchers.io) {
-        val userCity = userLocalRepository.getUser().city.name
+        val userCity = userClient.getUserFlow().value.city.name
         references.getMeetingsReference().get().await()
             .children
             .map { snapshot -> snapshot.getValue<Meeting>()!! }
@@ -91,7 +80,7 @@ class MeetingsRepositoryImpl(
     }
 
     private suspend fun Meeting.updateMeeting(positive: Boolean): Meeting {
-        val userId = userLocalRepository.getUser().id
+        val userId = userClient.getUserFlow().value.id
 
         val positiveContains = reaction.peopleGoCount.contains(userId)
         val maybeContains = reaction.peopleMaybeGoCount.contains(userId)

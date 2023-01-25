@@ -81,7 +81,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
     override suspend fun validateDate(date: Long) = when {
         date == 0L -> DateError.DateNotSelectedError()
         date < System.currentTimeMillis() -> DateError.DateBeforeError()
-        date - System.currentTimeMillis() > 4 * 60 * 60 * 1000 -> DateError.EarlyDateError()
+        date - System.currentTimeMillis() < 4 * 60 * 60 * 1000 -> DateError.EarlyDateError()
         else -> null
     }.also {
         addError(it)
