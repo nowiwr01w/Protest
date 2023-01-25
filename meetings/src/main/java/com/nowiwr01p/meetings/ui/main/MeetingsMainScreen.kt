@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalFoundationApi::class)
+
 package com.nowiwr01p.meetings.ui.main
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -183,8 +186,16 @@ private fun Stories(state: State, listener: Listener?) = LazyRow(
             { story -> story.priority }
         )
     )
-    itemsIndexed(sorted) { index, item ->
-        Story(index, item, state.user.id) {
+    itemsIndexed(
+        items = sorted,
+        key = { _, story -> story.id }
+    ) { index, item ->
+        Story(
+            index = index,
+            story = item,
+            userId = state.user.id,
+            modifier = Modifier.animateItemPlacement()
+        ) {
             listener?.onStoryClick(item)
         }
     }
@@ -196,9 +207,10 @@ private fun Story(
     index: Int,
     story: Story,
     userId: String,
+    modifier: Modifier,
     onItemClick: () -> Unit
 ) = Column(
-    modifier = Modifier
+    modifier = modifier
         .padding(start = if (index == 0) 12.dp else 6.dp, end = 6.dp)
         .width(72.dp)
         .pressedAnimation { onItemClick() }
