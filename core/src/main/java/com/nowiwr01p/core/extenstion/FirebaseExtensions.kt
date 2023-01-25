@@ -15,15 +15,15 @@ fun AuthResult.toUser() = User(
 
 fun DataSnapshot.getAccount() = getValue(User::class.java)!!
 
-fun createUserEventListener(callback: (user: User) -> Unit) = object : ValueEventListener {
+inline fun <reified T> createEventListener(crossinline callback: (user: T) -> Unit) = object : ValueEventListener {
     override fun onCancelled(p0: DatabaseError) {}
 
     override fun onDataChange(snapshot: DataSnapshot) {
-        snapshot.getValue<User>().let { user ->
+        snapshot.getValue<T>().let { user ->
             if (user != null) {
                 callback.invoke(user)
             } else {
-                throw IllegalStateException("createUserEventListener(), user == null")
+                throw IllegalStateException("createUserEventListener(), value == null")
             }
         }
     }
