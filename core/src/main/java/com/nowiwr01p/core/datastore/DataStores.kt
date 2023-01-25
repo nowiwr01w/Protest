@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.datastore.dataStore
 import com.nowiwr01p.core.datastore.auth.AuthSecurityWarningSerializer
 import com.nowiwr01p.core.datastore.cities.CitiesPreferencesSerializer
-import com.nowiwr01p.core.datastore.user.UserPreferenceSerializer
 import com.nowiwr01p.core.datastore.verification.VerificationPreferenceSerializer
 
 enum class DataStoreType {
     AUTH_SECURITY,
     CITIES,
     VERIFICATION,
-    USER
 }
 
 class AuthSecurityWarningDataStore(fileName: String) {
@@ -42,14 +40,4 @@ class VerificationDataStore(fileName: String) {
     )
 
     fun create(context: Context) = context.verificationDataStore
-}
-
-class UserDataStore(fileName: String) {
-
-    private val Context.userDataStore by dataStore(
-        fileName = fileName,
-        serializer = UserPreferenceSerializer
-    )
-
-    fun create(context: Context) = context.userDataStore
 }

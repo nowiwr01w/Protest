@@ -10,7 +10,6 @@ val properties = gradleLocalProperties(rootDir)
 val authName: String = properties.getProperty("AUTH_WARNING_STORE_NAME")
 val locationName: String = properties.getProperty("LOCATION_STORE_NAME")
 val verificationName: String = properties.getProperty("VERIFICATION_STORE_NAME")
-val userName: String = properties.getProperty("USER_STORE_NAME")
 
 android {
     namespace = "com.nowiwr01p.core"
@@ -20,13 +19,11 @@ android {
             buildConfigField("String", "AUTH_SECURITY_DATA_STORE", authName)
             buildConfigField("String","LOCATION_DATA_STORE", locationName)
             buildConfigField("String","VERIFICATION_DATA_STORE", verificationName)
-            buildConfigField("String","USER_DATA_STORE", userName)
         }
         release {
             buildConfigField("String", "AUTH_SECURITY_DATA_STORE", authName)
             buildConfigField("String","LOCATION_DATA_STORE", locationName)
             buildConfigField("String","VERIFICATION_DATA_STORE", verificationName)
-            buildConfigField("String","USER_DATA_STORE", userName)
         }
     }
 }

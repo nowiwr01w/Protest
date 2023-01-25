@@ -4,13 +4,13 @@ import com.google.firebase.database.GenericTypeIndicator
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.news.article.ArticleRepository
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.user.repository.UserLocalRepository
+import com.nowiwr01p.domain.user.client.UserClient
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ArticleRepositoryImpl(
     private val referencesRepository: FirebaseReferencesRepository,
-    private val userLocalRepository: UserLocalRepository,
+    private val userClient: UserClient,
     private val dispatchers: AppDispatchers
 ): ArticleRepository {
 
@@ -18,7 +18,7 @@ class ArticleRepositoryImpl(
      * ARTICLE VIEWS
      */
     override suspend fun setArticleViewed(articleId: String) = withContext(dispatchers.io) {
-        val userId = userLocalRepository.getUser().id
+        val userId = userClient.getUserFlow().value.id
         val currentViewers = getArticleViews(articleId)
         val updatedViewers = currentViewers.toMutableList().apply {
             add(userId)
