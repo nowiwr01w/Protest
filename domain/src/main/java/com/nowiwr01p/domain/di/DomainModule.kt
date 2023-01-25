@@ -34,8 +34,8 @@ val moduleDomain = module {
      */
     factory { GetUserUseCase(get()) }
     factory { SubscribeUserUseCase(get()) }
-    factory { GetRemoteUserUseCase(get()) }
     factory { UpdateUserNameUseCase(get(), get()) }
+    factory { UpdateUserAvatarUseCase(get(), get(), get()) }
 
     /**
      * AUTH
@@ -105,5 +105,4 @@ val moduleDomain = module {
      */
     factory { LogOutUseCase(get()) }
     factory { DeleteAccountUseCase(get()) }
-    factory { UpdateUserAvatarUseCase(get()) }
 }
