@@ -11,7 +11,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class SplashScreenViewModel(
-    private val getRemoteUserUseCase: SubscribeUserUseCase,
+    private val subscribeUserUseCase: SubscribeUserUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
@@ -36,7 +36,7 @@ class SplashScreenViewModel(
     ).awaitAll()
 
     private suspend fun isAuthorized() = runCatching {
-        getRemoteUserUseCase.execute()
+        subscribeUserUseCase.execute()
     }.onSuccess {
         setState { copy(isAuthorized = true) }
     }.onFailure {
