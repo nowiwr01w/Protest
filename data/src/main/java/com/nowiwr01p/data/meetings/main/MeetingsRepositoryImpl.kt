@@ -4,7 +4,6 @@ import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
 import com.nowiwr01p.domain.user.client.UserClient
 import kotlinx.coroutines.tasks.await
@@ -15,36 +14,6 @@ class MeetingsRepositoryImpl(
     private val userClient: UserClient,
     private val dispatchers: AppDispatchers
 ): MeetingsRepository {
-
-    /**
-     * STORIES
-     */
-    override suspend fun getStories() = withContext(dispatchers.io) {
-        val userId = userClient.getUserFlow().value.id
-        references.getStoriesReference().get().await()
-            .children
-            .map { snapshot -> snapshot.getValue<Story>()!! }
-            .sortedWith(
-                compareBy( { story -> userId in story.viewers }, { story -> story.priority } )
-            )
-    }
-
-    /**
-     * SET STORY VIEWED
-     */
-    override suspend fun setStoryViewed(storyId: String) = withContext(dispatchers.io) {
-        val userId = userClient.getUserFlow().value.id
-        val updatedStory = references.getStoriesReference().child(storyId).get().await()
-            .getValue<Story>()!!
-            .updateStory(userId)
-        references.getStoriesReference().child(storyId).setValue(updatedStory).await()
-        updatedStory
-    }
-
-    private fun Story.updateStory(userId: String): Story {
-        val updatedViewers = viewers.toMutableList().apply { add(userId) }
-        return copy(viewers = updatedViewers)
-    }
 
     /**
      * MEETINGS

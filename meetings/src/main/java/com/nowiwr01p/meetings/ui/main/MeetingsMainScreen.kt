@@ -177,7 +177,13 @@ private fun Stories(state: State, listener: Listener?) = LazyRow(
         .fillMaxWidth()
         .padding(top = 8.dp)
 ) {
-    itemsIndexed(state.stories) { index, item ->
+    val sorted = state.stories.sortedWith(
+        compareBy(
+            { story -> state.user.id in story.viewers },
+            { story -> story.priority }
+        )
+    )
+    itemsIndexed(sorted) { index, item ->
         Story(index, item, state.user.id) {
             listener?.onStoryClick(item)
         }

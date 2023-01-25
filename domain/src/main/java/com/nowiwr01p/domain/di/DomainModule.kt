@@ -10,9 +10,10 @@ import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCa
 import com.nowiwr01p.domain.auth.verification.usecase.SetVerificationCompletedUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.ValidateMeetingDataUseCase
-import com.nowiwr01p.domain.meetings.main.usecase.GetCategoriesUseCase
+import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
+import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
 import com.nowiwr01p.domain.meetings.main.usecase.GetMeetingsUseCase
-import com.nowiwr01p.domain.meetings.main.usecase.GetStoriesUseCase
+import com.nowiwr01p.domain.stories.usecase.GetStoriesUseCase
 import com.nowiwr01p.domain.meetings.main.usecase.SetStoryViewedUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase
 import com.nowiwr01p.domain.news.article.SetArticleViewedUseCase
@@ -21,6 +22,7 @@ import com.nowiwr01p.domain.news.create_article.usecase.ValidateArticleDataUseCa
 import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
+import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserAvatarUseCase
@@ -64,12 +66,21 @@ val moduleDomain = module {
     /**
      * MEETINGS
      */
-    factory { GetStoriesUseCase(get()) }
     factory { GetMeetingsUseCase(get()) }
     factory { SetReactionUseCase(get()) }
-    factory { SetStoryViewedUseCase(get()) }
 
+    /**
+     * CATEGORIES
+     */
     factory { GetCategoriesUseCase(get()) }
+    factory { SubscribeCategoriesUseCase(get()) }
+
+    /**
+     * STORIES
+     */
+    factory { GetStoriesUseCase(get()) }
+    factory { SubscribeStoriesUseCase(get()) }
+    factory { SetStoryViewedUseCase(get()) }
 
     /**
      * CREATE MEETING

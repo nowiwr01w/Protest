@@ -1,4 +1,4 @@
-package com.nowiwr01p.domain.meetings.main.usecase
+package com.nowiwr01p.domain.categories.usecase
 
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.UseCase
