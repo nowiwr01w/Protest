@@ -8,10 +8,12 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
+import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.usecase.*
 import com.nowiwr01p.domain.meetings.main.usecase.data.MeetingsScreenCacheData
+import com.nowiwr01p.domain.stories.usecase.GetStoriesUseCase
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
@@ -87,8 +89,10 @@ class MeetingsViewModel(
     /**
      * STORIES
      */
-    private suspend fun getStories() = getStoriesUseCase.execute().let { stories ->
-        setState { copy(stories = stories) }
+    private suspend fun getStories() = launch {
+        getStoriesUseCase.execute().collect { stories ->
+            setState { copy(stories = stories) }
+        }
     }
 
     /**

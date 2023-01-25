@@ -7,5 +7,4 @@ interface UserRemoteRepository {
     suspend fun getUser(): User
     suspend fun getFirebaseUser(): FirebaseUser
     suspend fun updateUser(user: User): User
-    suspend fun isUserAuthorized(): Boolean
 }

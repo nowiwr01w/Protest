@@ -2,13 +2,13 @@ package com.nowiwr01p.domain.meetings.main.usecase
 
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.meetings.main.data.Story
-import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
+import com.nowiwr01p.domain.stories.client.StoriesClient
 
 class SetStoryViewedUseCase(
-    private val repository: MeetingsRepository
+    private val client: StoriesClient
 ): UseCase<String, Story> {
 
     override suspend fun execute(input: String): Story {
-        return repository.setStoryViewed(input)
+        return client.setStoryViewed(input)
     }
 }

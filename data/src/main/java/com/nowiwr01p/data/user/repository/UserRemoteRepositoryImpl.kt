@@ -2,9 +2,9 @@ package com.nowiwr01p.data.user.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.core.model.User
-import com.nowiwr01p.core.extenstion.getAccount
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.auth.cities.repository.CityStateLocalRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -24,14 +24,10 @@ class UserRemoteRepositoryImpl(
         return auth.currentUser ?: throw IllegalStateException("User expected")
     }
 
-    override suspend fun isUserAuthorized(): Boolean {
-        return auth.currentUser != null
-    }
-
     override suspend fun getUser() = withContext(dispatchers.io) {
         val firebaseUser = getFirebaseUser()
         val userSnapshot = references.getUserReference(firebaseUser.uid).get().await()
-        userSnapshot.getAccount().also { it.setLocalData() }
+        userSnapshot.getValue<User>()!!.also { it.setLocalData() }
     }
 
     override suspend fun updateUser(user: User) = withContext(dispatchers.io) {

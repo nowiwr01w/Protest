@@ -7,12 +7,14 @@ import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
+import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class SplashScreenViewModel(
     private val subscribeUserUseCase: SubscribeUserUseCase,
+    private val subscribeStoriesUseCase: SubscribeStoriesUseCase,
     private val subscribeCategoriesUseCase: SubscribeCategoriesUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
@@ -57,6 +59,7 @@ class SplashScreenViewModel(
     }
 
     private suspend fun onDataSubscribe() {
+        subscribeStoriesUseCase.execute()
         subscribeCategoriesUseCase.execute()
     }
 
