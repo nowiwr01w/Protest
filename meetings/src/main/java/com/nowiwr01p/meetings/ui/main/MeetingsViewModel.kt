@@ -80,10 +80,12 @@ class MeetingsViewModel(
     /**
      * MEETINGS
      */
-    private suspend fun getMeetings() = with(viewState.value) {
-        getMeetingsUseCase.execute().also { allMeetings = it }
-        val filtered = mapper.updateMeetings(selectedCategory)
-        setState { copy(meetings = filtered) }
+    private suspend fun getMeetings() = launch {
+        getMeetingsUseCase.execute().collect { meetings ->
+            allMeetings = meetings
+            val filtered = mapper.updateMeetings(viewState.value.selectedCategory)
+            setState { copy(meetings = filtered) }
+        }
     }
 
     /**

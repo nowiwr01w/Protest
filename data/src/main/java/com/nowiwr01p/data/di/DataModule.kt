@@ -16,7 +16,7 @@ import com.nowiwr01p.data.auth.cities.CitiesStateLocalRepositoryImpl
 import com.nowiwr01p.data.auth.cities.CitiesStateRemoteRepositoryImpl
 import com.nowiwr01p.data.news.create_article.repository.CreateArticleRepositoryImpl
 import com.nowiwr01p.data.news.create_article.validator.CreateArticleValidatorImpl
-import com.nowiwr01p.data.meetings.main.MeetingsRepositoryImpl
+import com.nowiwr01p.data.meetings.main.MeetingsClientImpl
 import com.nowiwr01p.data.news.main.NewsClientImpl
 import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
@@ -38,7 +38,7 @@ import com.nowiwr01p.domain.auth.cities.repository.CitiesRepository
 import com.nowiwr01p.domain.auth.cities.repository.CityStateRemoteRepository
 import com.nowiwr01p.domain.news.create_article.repository.CreateArticleRepository
 import com.nowiwr01p.domain.news.create_article.validators.CreateArticleValidator
-import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
+import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
 import com.nowiwr01p.domain.news.main.repository.NewsClient
 import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -122,8 +122,8 @@ val moduleData = module {
     /**
      * MEETINGS
      */
-    factory<MeetingsRepository> {
-        MeetingsRepositoryImpl(get(), get(), get())
+    single<MeetingsClient> {
+        MeetingsClientImpl(get(), get(), get())
     }
 
     /**
