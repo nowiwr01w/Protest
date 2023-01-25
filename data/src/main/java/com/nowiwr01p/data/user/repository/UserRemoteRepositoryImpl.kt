@@ -1,4 +1,4 @@
-package com.nowiwr01p.data.user
+package com.nowiwr01p.data.user.repository
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

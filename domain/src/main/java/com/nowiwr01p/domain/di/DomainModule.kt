@@ -10,7 +10,6 @@ import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.news.create_article.usecase.CreateArticleUseCase
 import com.nowiwr01p.domain.news.create_article.usecase.ValidateArticleDataUseCase
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.main.usecase.GetMeetingsUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.main.usecase.GetStoriesUseCase
@@ -20,13 +19,11 @@ import com.nowiwr01p.domain.meetingsScreenScopeName
 import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
-import com.nowiwr01p.domain.user.usecase.UpdateUserAvatarUseCase
-import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
-import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.SetVerificationCompletedUseCase
+import com.nowiwr01p.domain.user.usecase.*
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
@@ -35,6 +32,8 @@ val moduleDomain = module {
     /**
      * USER
      */
+    factory { GetUserFlowUseCase(get()) }
+    factory { SubscribeUserUseCase(get()) }
     factory { GetRemoteUserUseCase(get()) }
     factory { UpdateUserNameUseCase(get(), get()) }
 

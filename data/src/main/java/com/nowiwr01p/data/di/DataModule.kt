@@ -19,8 +19,9 @@ import com.nowiwr01p.data.news.create_article.validator.CreateArticleValidatorIm
 import com.nowiwr01p.data.meetings.main.MeetingsRepositoryImpl
 import com.nowiwr01p.data.news.main.NewsRepositoryImpl
 import com.nowiwr01p.data.profile.ProfileRepositoryImpl
-import com.nowiwr01p.data.user.UserRemoteRepositoryImpl
+import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationRemoteRepositoryImpl
+import com.nowiwr01p.data.user.client.UserClientImpl
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.AppDispatchersImpl
 import com.nowiwr01p.domain.news.article.ArticleRepository
@@ -40,6 +41,7 @@ import com.nowiwr01p.domain.news.main.repository.NewsRepository
 import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.auth.verification.repository.VerificationRemoteRepository
+import com.nowiwr01p.domain.user.client.UserClient
 import org.koin.dsl.module
 
 val moduleData = module {
@@ -56,6 +58,9 @@ val moduleData = module {
      */
     factory<UserRemoteRepository> {
         UserRemoteRepositoryImpl(get(), get(), get(), get(), get(), get())
+    }
+    single<UserClient> {
+        UserClientImpl(get(), get(), get())
     }
 
     /**
