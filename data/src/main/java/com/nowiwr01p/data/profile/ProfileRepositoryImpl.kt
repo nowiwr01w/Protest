@@ -45,10 +45,7 @@ class ProfileRepositoryImpl(
 
         uploadReference.putFile(uri).await()
 
-        val link = uploadReference.downloadUrl.await().toString()
-
-        val updatedUser = user.copy(avatar = link)
-        remoteRepository.updateUser(updatedUser)
+        uploadReference.downloadUrl.await().toString()
     }
 
     private suspend fun clearPreviousImages(userId: String) {
