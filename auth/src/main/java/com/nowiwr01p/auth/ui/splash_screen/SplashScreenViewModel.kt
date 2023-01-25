@@ -5,13 +5,13 @@ import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
-import com.nowiwr01p.domain.user.usecase.GetRemoteUserUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
+import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class SplashScreenViewModel(
-    private val getRemoteUserUseCase: GetRemoteUserUseCase,
+    private val getRemoteUserUseCase: SubscribeUserUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {

@@ -2,6 +2,9 @@ package com.nowiwr01p.core.extenstion
 
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.model.User
 
 fun AuthResult.toUser() = User(
@@ -11,3 +14,17 @@ fun AuthResult.toUser() = User(
 )
 
 fun DataSnapshot.getAccount() = getValue(User::class.java)!!
+
+fun createUserEventListener(callback: (user: User) -> Unit) = object : ValueEventListener {
+    override fun onCancelled(p0: DatabaseError) {}
+
+    override fun onDataChange(snapshot: DataSnapshot) {
+        snapshot.getValue<User>().let { user ->
+            if (user != null) {
+                callback.invoke(user)
+            } else {
+                throw IllegalStateException("createUserEventListener(), user == null")
+            }
+        }
+    }
+}

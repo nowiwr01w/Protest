@@ -156,14 +156,16 @@ private fun Toolbar(
                 .size(16.dp)
         )
     }
-    Spacer(
-        modifier = Modifier.weight(1f)
-    )
-    ClickableIcon(
-        icon = R.drawable.ic_add,
-        modifier = Modifier.padding(end = 10.dp),
-        onClick = { listener?.toCreateMeeting() }
-    )
+    if (state.user.organizer) {
+        Spacer(
+            modifier = Modifier.weight(1f)
+        )
+        ClickableIcon(
+            icon = R.drawable.ic_add,
+            modifier = Modifier.padding(end = 10.dp),
+            onClick = { listener?.toCreateMeeting() }
+        )
+    }
 }
 
 /**
