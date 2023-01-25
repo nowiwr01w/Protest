@@ -2,29 +2,38 @@ package com.nowiwr01p.data.meetings.main
 
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
+import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
 import com.nowiwr01p.domain.user.client.UserClient
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class MeetingsRepositoryImpl(
+class MeetingsClientImpl(
     private val references: FirebaseReferencesRepository,
     private val userClient: UserClient,
     private val dispatchers: AppDispatchers
-): MeetingsRepository {
+): MeetingsClient {
+
+    private val meetingsFlow: MutableStateFlow<List<Meeting>> = MutableStateFlow(listOf())
 
     /**
      * MEETINGS
      */
-    override suspend fun getMeetings() = withContext(dispatchers.io) {
-        val userCity = userClient.getUserFlow().value.city.name
-        references.getMeetingsReference().get().await()
-            .children
-            .map { snapshot -> snapshot.getValue<Meeting>()!! }
-            .filter { meeting -> userCity == meeting.cityName }
-            .sortedByDescending { meeting -> meeting.date }
+    override suspend fun getMeetings() = meetingsFlow
+
+    override suspend fun subscribeMeetings(): Unit = withContext(dispatchers.io) {
+        val listener = createEventListener<Map<String, Meeting>> { map ->
+            val updated = map.values.sortedByDescending { meeting -> meeting.date }
+            CoroutineScope(dispatchers.io).launch {
+                meetingsFlow.emit(updated)
+            }
+        }
+        references.getMeetingsReference().addValueEventListener(listener)
     }
 
     /**
