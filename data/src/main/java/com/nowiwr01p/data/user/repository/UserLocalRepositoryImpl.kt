@@ -1,4 +1,4 @@
-package com.nowiwr01p.data.user
+package com.nowiwr01p.data.user.repository
 
 import androidx.datastore.core.DataStore
 import com.nowiwr01p.core.datastore.user.UserPreference

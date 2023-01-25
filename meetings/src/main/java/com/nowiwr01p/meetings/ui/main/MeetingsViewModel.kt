@@ -9,12 +9,13 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.usecase.*
 import com.nowiwr01p.domain.meetings.main.usecase.data.MeetingsScreenCacheData
+import com.nowiwr01p.domain.user.usecase.GetUserFlowUseCase
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
+import kotlinx.coroutines.launch
 
 class MeetingsViewModel(
     private val statusBarColor: Color,
@@ -22,7 +23,7 @@ class MeetingsViewModel(
     private val getStoriesUseCase: GetStoriesUseCase,
     private val getMeetingsUseCase: GetMeetingsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val getUserUseCase: GetUserFlowUseCase,
     private val getMeetingsScreenCacheUseCase: GetMeetingsScreenCacheUseCase,
     private val saveMeetingsScreenCacheUseCase: SaveMeetingsScreenCacheUseCase,
     private val setStoryViewedUseCase: SetStoryViewedUseCase,
@@ -66,11 +67,12 @@ class MeetingsViewModel(
     }
 
     /**
-     * LOCAL USER DATA
+     * USER DATA
      */
-    private suspend fun getUserData() {
-        val user = getLocalUserUseCase.execute()
-        setState { copy(user = user) }
+    private suspend fun getUserData() = launch {
+        getUserUseCase.execute().collect { user ->
+            setState { copy(user = user) }
+        }
     }
 
     /**

@@ -18,17 +18,19 @@ import com.nowiwr01p.domain.auth.main.data.user.UserDataSignUp
 import com.nowiwr01p.domain.auth.main.usecase.*
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
+import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.delay
 
 class AuthViewModel(
     private val statusBarColor: Color,
-    private val statusBarColorHelper: StatusBarColorHelper,
     private val authDataValidator: ValidateAuthDataUseCase,
     private val authSecurityWarning: GetAuthSecurityWarningUseCase,
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
+    private val subscribeUserUseCase: SubscribeUserUseCase,
+    private val statusBarColorHelper: StatusBarColorHelper,
     private val showSnackBarHelper: ShowSnackBarHelper,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
     private val openLinksHelper: OpenLinksHelper
@@ -118,6 +120,7 @@ class AuthViewModel(
                 is UserDataSignUp -> signUpUseCase.execute(userData)
             }
         }.onSuccess {
+            subscribeUserUseCase.execute()
             checkVerification(it)
         }.onFailure {
             onAuthFailed()

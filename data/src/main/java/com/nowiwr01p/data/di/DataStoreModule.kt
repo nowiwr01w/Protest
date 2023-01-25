@@ -5,7 +5,7 @@ import com.nowiwr01p.core.BuildConfig
 import com.nowiwr01p.core.datastore.*
 import com.nowiwr01p.data.auth.main.repository.AuthSecurityDataStoreRepositoryImpl
 import com.nowiwr01p.data.auth.cities.CitiesStateLocalRepositoryImpl
-import com.nowiwr01p.data.user.UserLocalRepositoryImpl
+import com.nowiwr01p.data.user.repository.UserLocalRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationLocalRepositoryImpl
 import com.nowiwr01p.domain.auth.main.repository.AuthSecurityDataStoreRepository
 import com.nowiwr01p.domain.auth.cities.api.CitiesApi
