@@ -5,7 +5,7 @@ import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.user.client.UserClient
 import kotlinx.coroutines.flow.StateFlow
 
-class GetUserFlowUseCase(
+class GetUserUseCase(
     private val client: UserClient
 ): UseCase<Unit, StateFlow<User>> {
 

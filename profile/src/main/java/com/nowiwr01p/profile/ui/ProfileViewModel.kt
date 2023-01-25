@@ -7,14 +7,14 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
-import com.nowiwr01p.domain.user.usecase.GetUserFlowUseCase
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserAvatarUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import com.nowiwr01p.profile.ui.ProfileContract.*
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val getUserUseCase: GetUserFlowUseCase,
+    private val getUserUseCase: GetUserUseCase,
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val updateUserAvatarUseCase: UpdateUserAvatarUseCase,
     private val logOutUseCase: LogOutUseCase,

@@ -12,17 +12,18 @@ import com.nowiwr01p.domain.meetings.create_meeting.usecase.GetCachedCategoriesU
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.ValidateMeetingDataUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CustomTextFieldType.*
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType.*
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
+import kotlinx.coroutines.launch
 
 class CreateMeetingVewModel(
     private val statusBarColor: Color,
     private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase,
-    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val getUserUseCase: GetUserUseCase,
     private val validateMeetingDataUseCase: ValidateMeetingDataUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
     private val showSnackBarHelper: ShowSnackBarHelper,
@@ -73,8 +74,7 @@ class CreateMeetingVewModel(
     /**
      * USER
      */
-    private suspend fun getUserData() {
-        val user = getLocalUserUseCase.execute()
+    private suspend fun getUserData() = getUserUseCase.execute().value.let { user ->
         setState { copy(user = user) }
     }
 

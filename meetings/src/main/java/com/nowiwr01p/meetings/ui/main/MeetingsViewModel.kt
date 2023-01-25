@@ -12,7 +12,7 @@ import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.usecase.*
 import com.nowiwr01p.domain.meetings.main.usecase.data.MeetingsScreenCacheData
-import com.nowiwr01p.domain.user.usecase.GetUserFlowUseCase
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
 import kotlinx.coroutines.launch
@@ -23,7 +23,7 @@ class MeetingsViewModel(
     private val getStoriesUseCase: GetStoriesUseCase,
     private val getMeetingsUseCase: GetMeetingsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
-    private val getUserUseCase: GetUserFlowUseCase,
+    private val getUserUseCase: GetUserUseCase,
     private val getMeetingsScreenCacheUseCase: GetMeetingsScreenCacheUseCase,
     private val saveMeetingsScreenCacheUseCase: SaveMeetingsScreenCacheUseCase,
     private val setStoryViewedUseCase: SetStoryViewedUseCase,
