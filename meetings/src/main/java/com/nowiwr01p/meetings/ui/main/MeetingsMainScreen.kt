@@ -17,6 +17,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -45,6 +46,8 @@ import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.skydoves.landscapist.coil.CoilImage
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -175,31 +178,43 @@ private fun Toolbar(
  * STORIES LIST
  */
 @Composable
-private fun Stories(state: State, listener: Listener?) = LazyRow(
-    modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = 8.dp)
-) {
-    val sorted = state.stories.sortedWith(
-        compareBy(
-            { story -> state.user.id in story.viewers },
-            { story -> story.priority }
-        )
-    )
-    itemsIndexed(
-        items = sorted,
-        key = { _, story -> story.id }
-    ) { index, item ->
-        Story(
-            index = index,
-            story = item,
-            userId = state.user.id,
-            modifier = Modifier.animateItemPlacement()
-        ) {
-            listener?.onStoryClick(item)
+private fun Stories(state: State, listener: Listener?) {
+    val scope = rememberCoroutineScope()
+    val listState = rememberLazyListState()
+    val scrollToFirst = {
+        scope.launch {
+            delay(500)
+            listState.scrollToItem(0)
         }
     }
-    item { Spacer(modifier = Modifier.width(6.dp)) }
+    LazyRow(
+        state = listState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 8.dp)
+    ) {
+        val sorted = state.stories.sortedWith(
+            compareBy(
+                { story -> state.user.id in story.viewers },
+                { story -> story.priority }
+            )
+        )
+        itemsIndexed(
+            items = sorted,
+            key = { _, story -> story.id }
+        ) { index, item ->
+            Story(
+                index = index,
+                story = item,
+                userId = state.user.id,
+                modifier = Modifier.animateItemPlacement()
+            ) {
+                listener?.onStoryClick(item)
+                scrollToFirst.invoke()
+            }
+        }
+        item { Spacer(modifier = Modifier.width(6.dp)) }
+    }
 }
 
 @Composable

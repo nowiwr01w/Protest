@@ -5,6 +5,7 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.ktx.getValue
+import com.nowiwr01p.core.BuildConfig
 import com.nowiwr01p.core.model.User
 
 fun AuthResult.toUser() = User(
@@ -21,7 +22,9 @@ inline fun <reified T> createEventListener(crossinline callback: (user: T) -> Un
             if (user != null) {
                 callback.invoke(user)
             } else {
-                throw IllegalStateException("createUserEventListener(), value == null")
+                if (BuildConfig.DEBUG) {
+                    throw IllegalStateException("createUserEventListener(), value == null")
+                }
             }
         }
     }
