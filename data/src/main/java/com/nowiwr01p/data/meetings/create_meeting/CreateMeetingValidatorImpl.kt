@@ -58,7 +58,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateTitle(title: String) = when {
         title.isEmpty() -> TitleError.EmptyTitleError()
-        title.length > 48 -> TitleError.LongTitleError()
+        title.length > 72 -> TitleError.LongTitleError()
         else -> null
     }.also {
         addError(it)
@@ -69,7 +69,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateDescription(description: String) = when {
         description.isEmpty() -> DescriptionError.EmptyDescriptionError()
-        description.length > 300 -> DescriptionError.LongDescriptionError()
+        description.length > 450 -> DescriptionError.LongDescriptionError()
         else -> null
     }.also {
         addError(it)
@@ -102,7 +102,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateLocationTitle(location: String) = when {
         location.isEmpty() -> LocationTitleError.EmptyLocationTitleError()
-        location.length > 18 -> LocationTitleError.LongLocationTitleError()
+        location.length > 24 -> LocationTitleError.LongLocationTitleError()
         else -> null
     }.also {
         addError(it)
@@ -113,7 +113,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateLocationDetails(details: String) = when {
         details.isEmpty() -> LocationDetailsError.EmptyLocationDetailsError()
-        details.length > 48 -> LocationDetailsError.LongLocationDetailsError()
+        details.length > 72 -> LocationDetailsError.LongLocationDetailsError()
         else -> null
     }.also {
         addError(it)
