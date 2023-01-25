@@ -3,11 +3,11 @@ package com.nowiwr01p.meetings.ui.create_meeting.map
 import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.*
 
 class CreateMeetingMapViewModel(
-    private val getLocalUserUseCase: GetLocalUserUseCase
+    private val getUserUseCase: GetUserUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -32,7 +32,7 @@ class CreateMeetingMapViewModel(
      * GET LOCAL USER DATA
      */
     private suspend fun getUserData() {
-        val city = getLocalUserUseCase.execute().city
+        val city = getUserUseCase.execute().value.city
         val coordinates = LatLng(city.latitude, city.longitude)
         setState { copy(cityCoordinates = coordinates) }
     }

@@ -6,7 +6,6 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.news.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType.*
@@ -15,10 +14,11 @@ import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields
 import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields.*
 import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields
 import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields.*
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import java.util.*
 
 class CreateArticleViewModel(
-    private val getLocalUserUseCase: GetLocalUserUseCase,
+    private val getLocalUserUseCase: GetUserUseCase,
     private val validateArticleDataUseCase: ValidateArticleDataUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper
 ): BaseViewModel<Event, State, Effect>() {
@@ -41,7 +41,7 @@ class CreateArticleViewModel(
     }
 
     private fun init() = io {
-        val userId = getLocalUserUseCase.execute().id
+        val userId = getLocalUserUseCase.execute().value.id
         setState { copy(userId = userId) }
     }
 

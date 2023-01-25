@@ -32,7 +32,7 @@ val moduleDomain = module {
     /**
      * USER
      */
-    factory { GetUserFlowUseCase(get()) }
+    factory { GetUserUseCase(get()) }
     factory { SubscribeUserUseCase(get()) }
     factory { GetRemoteUserUseCase(get()) }
     factory { UpdateUserNameUseCase(get(), get()) }
@@ -60,11 +60,6 @@ val moduleDomain = module {
     factory { GetCitiesUseCase(get()) }
     factory { SetCityUseCase(get(), get()) }
     factory { GetLocalCityUseCase(get()) }
-
-    /**
-     * MAP
-     */
-    factory { GetLocalUserUseCase(get()) }
 
     /**
      * MEETINGS

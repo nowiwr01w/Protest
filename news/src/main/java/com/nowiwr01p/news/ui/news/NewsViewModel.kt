@@ -2,18 +2,19 @@ package com.nowiwr01p.news.ui.news
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.user.usecase.GetLocalUserUseCase
 import com.nowiwr01p.domain.news.main.usecase.GetNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
 import com.nowiwr01p.domain.news.main.usecase.SaveNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.main.usecase.data.NewsScreenCacheData
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.news.ui.news.NewsContract.*
+import kotlinx.coroutines.launch
 
 class NewsViewModel(
     private val getNews: GetNewsUseCase,
     private val getNewsScreenCache: GetNewsScreenCacheUseCase,
     private val saveNewsScreenCache: SaveNewsScreenCacheUseCase,
-    private val getLocalUserUseCase: GetLocalUserUseCase
+    private val getLocalUserUseCase: GetUserUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -41,8 +42,10 @@ class NewsViewModel(
     /**
      * USER
      */
-    private suspend fun getUserData() = getLocalUserUseCase.execute().let {  user ->
-        setState { copy(user = user) }
+    private suspend fun getUserData() = launch {
+        getLocalUserUseCase.execute().collect {  user ->
+            setState { copy(user = user) }
+        }
     }
 
     /**
