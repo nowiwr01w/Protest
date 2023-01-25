@@ -42,7 +42,7 @@ class CreateArticleValidatorImpl: CreateArticleValidator {
     override fun validateTitle(title: String) {
         when {
             title.isEmpty() ->TitleError.EmptyTitleError()
-            title.length > 48 -> TitleError.LongTitleError()
+            title.length > 72 -> TitleError.LongTitleError()
             else -> null
         }.also {
             addError(it)
@@ -55,7 +55,7 @@ class CreateArticleValidatorImpl: CreateArticleValidator {
     override fun validateDescription(description: String) {
         when {
             description.isEmpty() -> DescriptionError.EmptyDescriptionError()
-            description.length > 300 -> DescriptionError.LongDescriptionError()
+            description.length > 450 -> DescriptionError.LongDescriptionError()
             else -> null
         }.also {
             addError(it)
@@ -68,7 +68,7 @@ class CreateArticleValidatorImpl: CreateArticleValidator {
     override fun validateSubTitle(subTitle: SubTitle) {
         when {
             subTitle.text.isEmpty() -> SubTitleError.EmptySubTitleError(contentIndex = subTitle.order)
-            subTitle.text.length > 48 -> SubTitleError.LongSubTitleError(contentIndex = subTitle.order)
+            subTitle.text.length > 72 -> SubTitleError.LongSubTitleError(contentIndex = subTitle.order)
             else -> null
         }.also {
             addError(it)
@@ -81,7 +81,7 @@ class CreateArticleValidatorImpl: CreateArticleValidator {
     override fun validateText(text: Text) {
         when {
             text.text.isEmpty() -> TextError.EmptyTextError(contentIndex = text.order)
-            text.text.length > 48 -> TextError.LongTextError(contentIndex = text.order)
+            text.text.length > 450 -> TextError.LongTextError(contentIndex = text.order)
             else -> null
         }.also {
             addError(it)

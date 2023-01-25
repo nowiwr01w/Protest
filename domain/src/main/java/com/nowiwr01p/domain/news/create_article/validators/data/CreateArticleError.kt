@@ -39,7 +39,7 @@ sealed class CreateArticleError(
         ): TitleError(errorText)
 
         data class LongTitleError(
-            override val errorText: String = "Максимум 48 символов"
+            override val errorText: String = "Максимум 72 символов"
         ): TitleError(errorText)
     }
 
@@ -57,7 +57,7 @@ sealed class CreateArticleError(
         ): DescriptionError(errorText)
 
         data class LongDescriptionError(
-            override val errorText: String = "Максимум 300 символов"
+            override val errorText: String = "Максимум 450 символов"
         ): DescriptionError(errorText)
     }
 
@@ -76,7 +76,7 @@ sealed class CreateArticleError(
         ): SubTitleError(errorText = errorText, contentIndex = contentIndex)
 
         data class LongSubTitleError(
-            override val errorText: String = "Максимум 48 символов",
+            override val errorText: String = "Максимум 72 символов",
             override val contentIndex: Int
         ): SubTitleError(errorText = errorText, contentIndex = contentIndex)
     }
@@ -96,7 +96,7 @@ sealed class CreateArticleError(
         ): TextError(errorText = errorText, contentIndex = contentIndex)
 
         data class LongTextError(
-            override val errorText: String = "Максимум 300 символов",
+            override val errorText: String = "Максимум 450 символов",
             override val contentIndex: Int
         ): TextError(errorText = errorText, contentIndex = contentIndex)
     }

@@ -49,7 +49,7 @@ sealed class CreateMeetingError(
         ): TitleError(errorText)
 
         data class LongTitleError(
-            override val errorText: String = "Максимум 48 символов"
+            override val errorText: String = "Максимум 72 символов"
         ): TitleError(errorText)
     }
 
@@ -67,7 +67,7 @@ sealed class CreateMeetingError(
         ): DescriptionError(errorText)
 
         data class LongDescriptionError(
-            override val errorText: String = "Максимум 300 символов"
+            override val errorText: String = "Максимум 450 символов"
         ): TitleError(errorText)
     }
 
@@ -116,7 +116,7 @@ sealed class CreateMeetingError(
         ): LocationTitleError(errorText)
 
         data class LongLocationTitleError(
-            override val errorText: String = "Максимум 18 символов"
+            override val errorText: String = "Максимум 24 символов"
         ): LocationTitleError(errorText)
     }
 
@@ -134,7 +134,7 @@ sealed class CreateMeetingError(
         ): LocationDetailsError(errorText)
 
         data class LongLocationDetailsError(
-            override val errorText: String = "Максимум 48 символов"
+            override val errorText: String = "Максимум 72 символов"
         ): LocationDetailsError(errorText)
     }
 
