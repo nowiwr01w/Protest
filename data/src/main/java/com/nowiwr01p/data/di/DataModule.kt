@@ -3,7 +3,10 @@ package com.nowiwr01p.data.di
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 import com.google.firebase.storage.ktx.storage
+import com.nowiwr01p.core.BuildConfig
 import com.nowiwr01p.data.news.article.ArticleRepositoryImpl
 import com.nowiwr01p.data.auth.main.repository.AuthRepositoryImpl
 import com.nowiwr01p.data.auth.main.repository.ValidateAuthDataRepositoryImpl
@@ -22,6 +25,7 @@ import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.data.categories.CategoriesClientImpl
+import com.nowiwr01p.data.config.RemoteConfigImpl
 import com.nowiwr01p.data.stories.StoriesClientImpl
 import com.nowiwr01p.data.user.client.UserClientImpl
 import com.nowiwr01p.domain.AppDispatchers
@@ -44,6 +48,7 @@ import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.auth.verification.repository.VerificationRemoteRepository
 import com.nowiwr01p.domain.categories.client.CategoriesClient
+import com.nowiwr01p.domain.config.RemoteConfig
 import com.nowiwr01p.domain.stories.client.StoriesClient
 import com.nowiwr01p.domain.user.client.UserClient
 import org.koin.dsl.module
@@ -78,6 +83,17 @@ val moduleData = module {
     }
     factory {
         Firebase.storage
+    }
+    single {
+        Firebase.remoteConfig.apply {
+            val interval = if (BuildConfig.DEBUG) 30 else 900
+            setConfigSettingsAsync(
+                remoteConfigSettings { minimumFetchIntervalInSeconds = interval.toLong() }
+            )
+        }
+    }
+    single<RemoteConfig> {
+        RemoteConfigImpl(get(), get())
     }
     single<FirebaseReferencesRepository> {
         FirebaseReferencesRepositoryImpl(get(), get())

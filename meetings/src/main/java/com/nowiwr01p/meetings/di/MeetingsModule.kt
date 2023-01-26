@@ -26,7 +26,6 @@ val moduleMeetings = module {
     /**
      * MAIN SCREEN
      */
-
     viewModel {
         val scope = getKoin().getOrCreateScope(meetingsScreenScopeId, named(meetingsScreenScopeName))
 
