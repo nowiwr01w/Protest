@@ -9,7 +9,7 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
-import com.nowiwr01p.domain.config.RemoteConfig
+import com.nowiwr01p.domain.config.UserRemoteConfig
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.usecase.*
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class MeetingsViewModel(
     private val statusBarColor: Color,
-    private val config: RemoteConfig,
+    private val config: UserRemoteConfig,
     private val getStoriesUseCase: GetStoriesUseCase,
     private val getMeetingsUseCase: GetMeetingsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,

@@ -25,7 +25,9 @@ import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.data.categories.CategoriesClientImpl
-import com.nowiwr01p.data.config.RemoteConfigImpl
+import com.nowiwr01p.data.config.CreateArticleRemoteConfigImpl
+import com.nowiwr01p.data.config.CreateMeetingRemoteConfigImpl
+import com.nowiwr01p.data.config.UserRemoteConfigImpl
 import com.nowiwr01p.data.stories.StoriesClientImpl
 import com.nowiwr01p.data.user.client.UserClientImpl
 import com.nowiwr01p.domain.AppDispatchers
@@ -48,7 +50,9 @@ import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.auth.verification.repository.VerificationRemoteRepository
 import com.nowiwr01p.domain.categories.client.CategoriesClient
-import com.nowiwr01p.domain.config.RemoteConfig
+import com.nowiwr01p.domain.config.CreateArticleRemoteConfig
+import com.nowiwr01p.domain.config.CreateMeetingRemoteConfig
+import com.nowiwr01p.domain.config.UserRemoteConfig
 import com.nowiwr01p.domain.stories.client.StoriesClient
 import com.nowiwr01p.domain.user.client.UserClient
 import org.koin.dsl.module
@@ -92,8 +96,14 @@ val moduleData = module {
             )
         }
     }
-    single<RemoteConfig> {
-        RemoteConfigImpl(get(), get())
+    single<UserRemoteConfig> {
+        UserRemoteConfigImpl()
+    }
+    single<CreateArticleRemoteConfig> {
+        CreateArticleRemoteConfigImpl()
+    }
+    single<CreateMeetingRemoteConfig> {
+        CreateMeetingRemoteConfigImpl()
     }
     single<FirebaseReferencesRepository> {
         FirebaseReferencesRepositoryImpl(get(), get())
