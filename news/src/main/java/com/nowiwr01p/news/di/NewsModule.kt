@@ -28,7 +28,9 @@ val moduleNews = module {
 
     viewModel {
         val scope = getKoin().getOrCreateScope(newsScreenScopeId, named(newsScreenScopeName))
+
         NewsViewModel(
+            get(),
             get(),
             scope.get(),
             scope.get(),
