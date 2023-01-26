@@ -162,7 +162,7 @@ private fun Toolbar(
                 .size(16.dp)
         )
     }
-    if (state.user.organizer) {
+    if (state.user.organizer || state.everybodyCanCreateMeetings) {
         Spacer(
             modifier = Modifier.weight(1f)
         )
