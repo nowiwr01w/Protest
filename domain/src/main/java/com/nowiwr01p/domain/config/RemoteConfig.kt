@@ -1,12 +1,31 @@
 package com.nowiwr01p.domain.config
 
-import kotlinx.coroutines.flow.StateFlow
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.nowiwr01p.domain.AppDispatchers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
 
-interface RemoteConfig {
-    fun getTextLength(): StateFlow<Int>
-    fun getTitleLength(): StateFlow<Int>
-    fun getOrderedListItemLength(): StateFlow<Int>
-    fun getOrderedListTitleLength(): StateFlow<Int>
-    fun isWriteNewsEverybodyActivated(): StateFlow<Boolean>
-    fun isCreateMeetingEverybodyActivated(): StateFlow<Boolean>
+abstract class RemoteConfig: KoinComponent {
+
+    protected val config = get<FirebaseRemoteConfig>()
+    protected val dispatchers = get<AppDispatchers>()
+
+    protected abstract fun initValues()
+
+    init {
+        CoroutineScope(dispatchers.io).launch {
+            initConfig()
+        }
+    }
+
+    private suspend fun initConfig() {
+        config.fetchAndActivate().await().let { activated ->
+            if (activated) {
+                initValues()
+            }
+        }
+    }
 }
