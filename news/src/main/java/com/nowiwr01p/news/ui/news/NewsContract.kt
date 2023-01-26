@@ -17,7 +17,8 @@ interface NewsContract {
     data class State(
         val user: User = User(),
         val isLoading: Boolean = true,
-        val newsList: List<Article> = listOf()
+        val newsList: List<Article> = listOf(),
+        val everybodyCanWriteNews: Boolean = false
     ) : ViewState
 
     sealed interface Effect : ViewSideEffect {
