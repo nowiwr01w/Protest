@@ -21,6 +21,7 @@ fun DependencyHandler.dataStoreDependencies() {
 
 fun DependencyHandler.firebaseDependencies() {
     implementation(Firebase.AUTH)
+    implementation(Firebase.CONFIG)
     implementation(Firebase.DATABASE)
     implementation(Firebase.STORAGE)
 }
