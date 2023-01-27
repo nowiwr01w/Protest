@@ -166,14 +166,31 @@ private fun ScrollableContent(
         item { Description(meeting) }
         item { LocationTitle() }
         item { LocationInfoContainer(state) }
+
         if (state.loaded) {
             item { MapPreview(state) }
         }
         item { MapPlaceComment(meeting) }
-        item { TakeWithYouTitle() }
-        item { TakeWithYouDetails(meeting) }
-        item { Posters(meeting, listener) }
-        item { DropdownItems(meeting) }
+
+        val posters = state.meeting.takeWithYouInfo.posters.isNotEmpty()
+        val motivation = state.meeting.takeWithYouInfo.postersMotivation.isNotEmpty()
+
+        if (posters || motivation) {
+            item { TakeWithYouTitle() }
+        }
+        if (motivation) {
+            item { TakeWithYouDetails(meeting) }
+        }
+        if (posters) {
+            item { Posters(meeting, listener) }
+        }
+
+        with(state.meeting.details) {
+            if (goals.isNotEmpty() || slogans.isNotEmpty() || strategy.isNotEmpty()) {
+                item { DropdownItems(meeting) }
+            }
+        }
+
         if (isPreviewMode) {
             item { Spacer(modifier = Modifier.height(120.dp)) }
         } else {
@@ -246,7 +263,7 @@ private fun Categories(meeting: Meeting) = FlowRow(
         .fillMaxWidth()
         .padding(top = 16.dp, start = 16.dp)
 ) {
-    meeting.categories.forEach {
+    meeting.categories.sortedBy { it.priority }.forEach {
         Category(it)
     }
 }
@@ -472,19 +489,25 @@ private fun DropdownItems(meeting: Meeting) = Column(
             backgroundColor = MaterialTheme.colors.backgroundSpecial
         )
 ) {
-    DropdownItem(
-        title = "Чего хотим добиться",
-        steps = meeting.details.goals
-    )
-    DropdownItem(
-        title = "Лозунги",
-        steps = meeting.details.slogans
-    )
-    DropdownItem(
-        title = "Стратегия",
-        steps = meeting.details.strategy,
-        lastItem = true
-    )
+    if (meeting.details.goals.isNotEmpty()) {
+        DropdownItem(
+            title = "Чего хотим добиться",
+            steps = meeting.details.goals
+        )
+    }
+    if (meeting.details.slogans.isNotEmpty()) {
+        DropdownItem(
+            title = "Лозунги",
+            steps = meeting.details.slogans
+        )
+    }
+    if (meeting.details.strategy.isNotEmpty()) {
+        DropdownItem(
+            title = "Стратегия",
+            steps = meeting.details.strategy,
+            lastItem = true
+        )
+    }
 }
 
 @Composable

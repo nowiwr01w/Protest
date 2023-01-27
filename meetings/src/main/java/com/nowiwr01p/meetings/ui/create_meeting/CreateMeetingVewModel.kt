@@ -8,7 +8,7 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.meetings.create_meeting.usecase.GetCachedCategoriesUseCase
+import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.ValidateMeetingDataUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.execute
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 
 class CreateMeetingVewModel(
     private val statusBarColor: Color,
-    private val getCachedCategoriesUseCase: GetCachedCategoriesUseCase,
+    private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val validateMeetingDataUseCase: ValidateMeetingDataUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
@@ -66,8 +66,8 @@ class CreateMeetingVewModel(
     /**
      * CATEGORIES
      */
-    private suspend fun getCategories() {
-        val categories = getCachedCategoriesUseCase.execute()
+    private suspend fun getCategories() = launch {
+        val categories = getCategoriesUseCase.execute().value
         setState { copy(categories = categories) }
     }
 

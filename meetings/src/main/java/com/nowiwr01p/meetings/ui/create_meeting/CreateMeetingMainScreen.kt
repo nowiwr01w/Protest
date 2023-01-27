@@ -637,7 +637,7 @@ private fun ExpandableItems(
                     val customTextFieldItem = CustomTextFieldData(
                         type = DYNAMIC,
                         value = item,
-                        hint = "$index",
+                        hint = "${index + 1}",
                         showSubItemSlash = true,
                         onValueChanged = { listener?.onEditDetailsItem(type, index, it) },
                         trailingIconCallback = {
