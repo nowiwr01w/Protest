@@ -3,13 +3,21 @@ package com.nowiwr01p.data.meetings.create_meeting
 import com.nowiwr01p.core.datastore.cities.data.Coordinate
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.domain.config.CreateMeetingRemoteConfig
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError.*
 import com.nowiwr01p.domain.meetings.create_meeting.validators.CreateMeetingValidator
 
-class CreateMeetingValidatorImpl: CreateMeetingValidator {
+class CreateMeetingValidatorImpl(config: CreateMeetingRemoteConfig): CreateMeetingValidator {
 
     private val errors = mutableListOf<CreateMeetingError?>()
+
+    private val textLength = config.getTextLength()
+    private val titleLength = config.getTitleLength()
+    private val hoursDifference = config.getHoursDifference()
+    private val locationPlaceLength = config.getLocationPlaceLength()
+    private val locationDetailsLength = config.getLocationDetailsLength()
+    private val pathDotsCount = config.getPathDotsCount()
 
     override suspend fun validate(meeting: Meeting) = with(meeting) {
         validateImageLink(image)
@@ -58,7 +66,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateTitle(title: String) = when {
         title.isEmpty() -> TitleError.EmptyTitleError()
-        title.length > 72 -> TitleError.LongTitleError()
+        title.length > titleLength.value -> TitleError.LongTitleError(titleLength.value)
         else -> null
     }.also {
         addError(it)
@@ -69,7 +77,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateDescription(description: String) = when {
         description.isEmpty() -> DescriptionError.EmptyDescriptionError()
-        description.length > 450 -> DescriptionError.LongDescriptionError()
+        description.length > textLength.value -> DescriptionError.LongDescriptionError(textLength.value)
         else -> null
     }.also {
         addError(it)
@@ -81,7 +89,9 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
     override suspend fun validateDate(date: Long) = when {
         date == 0L -> DateError.DateNotSelectedError()
         date < System.currentTimeMillis() -> DateError.DateBeforeError()
-        date - System.currentTimeMillis() < 4 * 60 * 60 * 1000 -> DateError.EarlyDateError()
+        date - System.currentTimeMillis() < hoursDifference.value * 60 * 60 * 1000 -> {
+            DateError.EarlyDateError(hoursDifference.value)
+        }
         else -> null
     }.also {
         addError(it)
@@ -102,7 +112,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateLocationTitle(location: String) = when {
         location.isEmpty() -> LocationTitleError.EmptyLocationTitleError()
-        location.length > 24 -> LocationTitleError.LongLocationTitleError()
+        location.length > locationPlaceLength.value -> LocationTitleError.LongLocationTitleError(locationPlaceLength.value)
         else -> null
     }.also {
         addError(it)
@@ -113,7 +123,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      */
     override suspend fun validateLocationDetails(details: String) = when {
         details.isEmpty() -> LocationDetailsError.EmptyLocationDetailsError()
-        details.length > 72 -> LocationDetailsError.LongLocationDetailsError()
+        details.length > locationDetailsLength.value -> LocationDetailsError.LongLocationDetailsError(locationDetailsLength.value)
         else -> null
     }.also {
         addError(it)
@@ -123,7 +133,7 @@ class CreateMeetingValidatorImpl: CreateMeetingValidator {
      * LOCATION PATH
      */
     override suspend fun validateLocationPath(path: List<Coordinate>) = when {
-        path.size < 4 -> PathError()
+        path.size < pathDotsCount.value -> PathError(pathDotsCount.value)
         else -> null
     }.also {
         addError(it)

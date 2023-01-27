@@ -4,7 +4,6 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.nowiwr01p.domain.AppDispatchers
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 
@@ -21,9 +20,9 @@ abstract class RemoteConfig: KoinComponent {
         }
     }
 
-    private suspend fun initConfig() {
-        config.fetchAndActivate().await().let { activated ->
-            if (activated) {
+    private fun initConfig() {
+        config.fetchAndActivate().addOnCompleteListener { task ->
+            if (task.isSuccessful) {
                 initValues()
             }
         }
