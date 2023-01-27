@@ -53,7 +53,7 @@ import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.meetings.R
+import com.nowiwr01p.meeting.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
 import com.skydoves.landscapist.coil.CoilImage

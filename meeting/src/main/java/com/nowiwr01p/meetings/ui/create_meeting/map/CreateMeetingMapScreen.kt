@@ -37,7 +37,7 @@ import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
-import com.nowiwr01p.meetings.R
+import com.nowiwr01p.meeting.R
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapContract.State
 import org.koin.androidx.compose.getViewModel
