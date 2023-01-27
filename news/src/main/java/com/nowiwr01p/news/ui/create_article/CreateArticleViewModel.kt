@@ -1,8 +1,11 @@
 package com.nowiwr01p.news.ui.create_article
 
+import androidx.compose.ui.graphics.Color
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.news.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.execute
@@ -18,9 +21,11 @@ import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import java.util.*
 
 class CreateArticleViewModel(
+    private val statusBarColor: Color,
     private val getLocalUserUseCase: GetUserUseCase,
     private val validateArticleDataUseCase: ValidateArticleDataUseCase,
-    private val showBottomSheetHelper: ShowBottomSheetHelper
+    private val showBottomSheetHelper: ShowBottomSheetHelper,
+    private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -228,12 +233,17 @@ class CreateArticleViewModel(
             io {
                 runCatching {
                     validateArticleDataUseCase.execute(article)
-                }.onSuccess {
-                    if (it.isEmpty()) {
+                }.onSuccess { errors ->
+                    if (errors.isEmpty()) {
                         setState { copy(errors = listOf()) }
                         setEffect { Effect.NavigateToPreview(article) }
                     } else {
-                        setState { copy(errors = it) }
+                        val params = SnackBarParams(
+                            fromStatusBarColor = statusBarColor,
+                            text = errors.sortedBy { it.contentIndex }.first().errorText
+                        )
+                        showSnackBarHelper.showErrorSnackBar(params)
+                        setState { copy(errors = errors) }
                     }
                 }
             }
