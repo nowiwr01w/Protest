@@ -90,7 +90,7 @@ val moduleData = module {
     }
     single {
         Firebase.remoteConfig.apply {
-            val interval = if (BuildConfig.DEBUG) 30 else 900
+            val interval = if (BuildConfig.DEBUG) 0 else 900
             setConfigSettingsAsync(
                 remoteConfigSettings { minimumFetchIntervalInSeconds = interval.toLong() }
             )
@@ -170,7 +170,7 @@ val moduleData = module {
      * CREATE MEETING
      */
     factory<CreateMeetingValidator> {
-        CreateMeetingValidatorImpl()
+        CreateMeetingValidatorImpl(get())
     }
 
     /**
@@ -191,7 +191,7 @@ val moduleData = module {
      * CREATE ARTICLE
      */
     factory<CreateArticleValidator> {
-        CreateArticleValidatorImpl()
+        CreateArticleValidatorImpl(get())
     }
     factory<CreateArticleRepository> {
         CreateArticleRepositoryImpl(get(), get())

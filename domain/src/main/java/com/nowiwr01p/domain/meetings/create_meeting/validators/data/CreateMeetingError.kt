@@ -49,7 +49,8 @@ sealed class CreateMeetingError(
         ): TitleError(errorText)
 
         data class LongTitleError(
-            override val errorText: String = "Максимум 72 символов"
+            val titleLength: Int,
+            override val errorText: String = "Максимум $titleLength символов"
         ): TitleError(errorText)
     }
 
@@ -67,7 +68,8 @@ sealed class CreateMeetingError(
         ): DescriptionError(errorText)
 
         data class LongDescriptionError(
-            override val errorText: String = "Максимум 450 символов"
+            val textLength: Int,
+            override val errorText: String = "Максимум $textLength символов"
         ): TitleError(errorText)
     }
 
@@ -89,7 +91,8 @@ sealed class CreateMeetingError(
         ): DateError(errorText)
 
         data class EarlyDateError(
-            override val errorText: String = "Разница с текущей датой должна быть не менее 4 часов"
+            val hoursDifference: Int,
+            override val errorText: String = "Разница с текущей датой должна быть не менее $hoursDifference часов"
         ): DateError(errorText)
     }
 
@@ -116,7 +119,8 @@ sealed class CreateMeetingError(
         ): LocationTitleError(errorText)
 
         data class LongLocationTitleError(
-            override val errorText: String = "Максимум 24 символов"
+            val locationPlaceLength: Int,
+            override val errorText: String = "Максимум $locationPlaceLength символов"
         ): LocationTitleError(errorText)
     }
 
@@ -134,7 +138,8 @@ sealed class CreateMeetingError(
         ): LocationDetailsError(errorText)
 
         data class LongLocationDetailsError(
-            override val errorText: String = "Максимум 72 символов"
+            val locationDetailsLength: Int,
+            override val errorText: String = "Максимум $locationDetailsLength символов"
         ): LocationDetailsError(errorText)
     }
 
@@ -142,7 +147,8 @@ sealed class CreateMeetingError(
      * LOCATION PATH
      */
     data class PathError(
-        override val errorText: String = "Путь должен содержать не менее 4 точек",
+        val pathDotsCount: Int,
+        override val errorText: String = "Путь должен содержать не менее $pathDotsCount точек",
         override val priority: Int = 9,
         override val type: CreateMeetingFieldItemType = PATH,
     ): CreateMeetingError(errorText, type, priority)
