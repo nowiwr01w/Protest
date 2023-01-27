@@ -12,8 +12,6 @@ class CreateArticleRemoteConfigImpl: RemoteConfig(), CreateArticleRemoteConfig {
     override fun initValues() {
         initTextLength()
         initTitleLength()
-        initOrderedListItemLength()
-        initOrderedListTitleLength()
     }
 
     /**
@@ -36,30 +34,8 @@ class CreateArticleRemoteConfigImpl: RemoteConfig(), CreateArticleRemoteConfig {
         config[TITLE_LENGTH].asLong().toInt()
     }
 
-    /**
-     * ORDERED LIST ITEM LENGTH
-     */
-    private val _orderedListItemLengthStateFlow = MutableStateFlow(72)
-    override fun getOrderedListItemLength() = _orderedListItemLengthStateFlow.asStateFlow()
-
-    private fun initOrderedListItemLength() = _orderedListItemLengthStateFlow.update {
-        config[ORDERED_LIST_ITEM_LENGTH].asLong().toInt()
-    }
-
-    /**
-     * ORDERED LIST TITLE LENGTH
-     */
-    private val _orderedListTitleLengthStateFlow = MutableStateFlow(72)
-    override fun getOrderedListTitleLength() = _orderedListTitleLengthStateFlow.asStateFlow()
-
-    private fun initOrderedListTitleLength() = _orderedListTitleLengthStateFlow.update {
-        config[ORDERED_LIST_TITLE_LENGTH].asLong().toInt()
-    }
-
     private companion object {
         const val TEXT_LENGTH = "article_text_length"
         const val TITLE_LENGTH = "article_title_length"
-        const val ORDERED_LIST_ITEM_LENGTH = "article_ordered_item_length"
-        const val ORDERED_LIST_TITLE_LENGTH = "article_ordered_title_length"
     }
 }

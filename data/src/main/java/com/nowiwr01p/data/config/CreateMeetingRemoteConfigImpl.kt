@@ -12,7 +12,6 @@ class CreateMeetingRemoteConfigImpl: RemoteConfig(), CreateMeetingRemoteConfig {
     override fun initValues() {
         initTextLength()
         initTitleLength()
-        initSloganLength()
         initPathDotsCount()
         initHoursDifference()
         initLocationPlaceLength()
@@ -37,16 +36,6 @@ class CreateMeetingRemoteConfigImpl: RemoteConfig(), CreateMeetingRemoteConfig {
 
     private fun initTitleLength() = _titleLengthStateFlow.update {
         config[TITLE_LENGTH].asLong().toInt()
-    }
-
-    /**
-     * SLOGANS LENGTH
-     */
-    private val _sloganLengthStateFlow = MutableStateFlow(72)
-    override fun getSloganLength() = _sloganLengthStateFlow.asStateFlow()
-
-    private fun initSloganLength() = _sloganLengthStateFlow.update {
-        config[SLOGAN_LENGTH].asLong().toInt()
     }
 
     /**
@@ -92,7 +81,6 @@ class CreateMeetingRemoteConfigImpl: RemoteConfig(), CreateMeetingRemoteConfig {
     private companion object {
         const val TEXT_LENGTH = "meeting_text_length"
         const val TITLE_LENGTH = "meeting_title_length"
-        const val SLOGAN_LENGTH = "meeting_slogan_length"
         const val PATH_DOTS_COUNT = "meeting_path_items_count"
         const val HOURS_DIFFERENCE = "meeting_hours_difference"
         const val LOCATION_PLACE_LENGTH = "meeting_location_place_length"
