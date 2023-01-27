@@ -10,7 +10,7 @@ dependencies {
     implementation(project(mapOf("path" to ":core-ui")))
     implementation(project(mapOf("path" to ":core")))
     implementation(project(mapOf("path" to ":auth")))
-    implementation(project(mapOf("path" to ":meetings")))
+    implementation(project(mapOf("path" to ":meeting")))
     implementation(project(mapOf("path" to ":news")))
     implementation(project(mapOf("path" to ":profile")))
     implementation(project(mapOf("path" to ":data")))
