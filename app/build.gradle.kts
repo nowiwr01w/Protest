@@ -8,6 +8,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("/Users/nowiwr01/Desktop/meetings.jks")
+            keyAlias = "2000PutinHuylo2022"
+            keyPassword = "UnexpectedProtestsApp2022"
+            storePassword = "UnexpectedProtestsApp2022"
+        }
+    }
     namespace = BuildConfig.APP_ID
     compileSdk = BuildConfig.COMPILE_SDK
 
@@ -22,6 +30,7 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+        signingConfig = signingConfigs.getByName("release")
     }
 
     buildTypes {
@@ -61,6 +70,7 @@ dependencies {
     animationDependencies()
     biometricDependencies()
     koinDependencies()
+    firebaseDependencies()
     navigationDependencies()
     networkDependencies()
     commonUiDependencies()

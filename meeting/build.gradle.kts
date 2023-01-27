@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.nowiwr01p.meetings"
+    namespace = "com.nowiwr01p.meeting"
 }
 
 dependencies {
