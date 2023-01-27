@@ -1,15 +1,14 @@
-package com.nowiwr01p.meetings
+package com.nowiwr01p.meetings.push
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.PendingIntent.*
 import android.content.Intent
 import android.media.RingtoneManager
-import android.os.Build.*
 import androidx.core.app.NotificationCompat
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.nowiwr01p.meetings.R
 import com.nowiwr01p.meetings.ui.MainActivity
 import timber.log.Timber
 import java.util.*
@@ -35,11 +34,8 @@ class FirebasePush: FirebaseMessagingService() {
     private fun showNotification(title: String, text: String) {
         val manager = applicationContext.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
-        if (VERSION.SDK_INT >= VERSION_CODES.O) {
-            val channel = NotificationChannel(packageName, packageName, IMPORTANCE_DEFAULT).apply {
-                description = packageName
-            }
-            manager.createNotificationChannel(channel)
+        Channel.getChannels().forEach { channel ->
+            createChannel(channel, manager)
         }
 
         val intent = Intent(this, MainActivity::class.java).apply {
@@ -62,5 +58,12 @@ class FirebasePush: FirebaseMessagingService() {
             .setContentIntent(pendingIntent)
 
         manager.notify(UUID.randomUUID().hashCode(), notificationBuilder.build())
+    }
+
+    private fun createChannel(channelInfo: Channel, manager: NotificationManager) = with(channelInfo) {
+        val channel = NotificationChannel(id, name, priority).apply {
+            description = details
+        }
+        manager.createNotificationChannel(channel)
     }
 }
