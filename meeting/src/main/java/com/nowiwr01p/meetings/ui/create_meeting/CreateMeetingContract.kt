@@ -75,6 +75,7 @@ interface CreateMeetingContract {
         fun navigateToMapDrawPath()
         fun navigateChooseStartLocation()
         fun onEditCustomTextField(type: CreateMeetingFieldItemType, value: String)
+        fun navigateToChooseCity()
         fun navigateToPreview()
     }
 }

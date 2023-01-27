@@ -5,6 +5,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.nowiwr01p.auth.AuthScreen.CitiesMainScreen.Params
 import com.nowiwr01p.auth.navigation.AuthScreenType
 import com.nowiwr01p.auth.ui.auth.AuthMainScreen
 import com.nowiwr01p.auth.ui.cities.CitiesMainScreen
@@ -13,6 +14,10 @@ import com.nowiwr01p.auth.ui.verification.VerificationMainScreen
 import com.nowiwr01p.core_ui.Keys.ARG_TO_CITIES
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 sealed class AuthScreen<T>(
     override val route: String,
@@ -53,21 +58,30 @@ sealed class AuthScreen<T>(
         }
     }
 
-    object CitiesMainScreen: AuthScreen<Boolean>(AuthScreenType.CitiesMainScreen.route, rootRoute) {
-        override fun navigate(args: Boolean, navController: NavController) {
+    object CitiesMainScreen: AuthScreen<Params>(AuthScreenType.CitiesMainScreen.route, rootRoute) {
+
+        @Serializable
+        data class Params(val fromProfile: Boolean, val fromCreateMeeting: Boolean)
+
+        override fun navigate(args: Params, navController: NavController) {
             navController.navigate(
-                route = route.replace("{$ARG_TO_CITIES}", args.toString())
+                route = route.replace("{$ARG_TO_CITIES}", Json.encodeToString(args))
             )
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(
                 route = route,
                 arguments = listOf(
-                    navArgument(ARG_TO_CITIES) { type = NavType.BoolType }
+                    navArgument(ARG_TO_CITIES) { type = NavType.StringType }
                 )
             ) {
-                val fromProfile = it.arguments?.getBoolean(ARG_TO_CITIES) ?: false
-                CitiesMainScreen(fromProfile, navigator)
+                val paramsJson = it.arguments?.getString(ARG_TO_CITIES).orEmpty()
+                val params = Json.decodeFromString<Params>(paramsJson)
+                CitiesMainScreen(
+                    fromProfile = params.fromProfile,
+                    fromCreateMeeting = params.fromCreateMeeting,
+                    navigator = navigator
+                )
             }
         }
     }

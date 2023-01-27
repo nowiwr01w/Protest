@@ -56,6 +56,7 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.meetings.ui.main.Category
+import okhttp3.internal.userAgent
 import org.koin.androidx.compose.getViewModel
 import org.koin.core.parameter.parametersOf
 
@@ -107,6 +108,9 @@ fun CreateMeetingMainScreen(
         }
         override fun onTimeSelected(time: Long) {
             viewModel.setEvent(Event.SelectTime(time))
+        }
+        override fun navigateToChooseCity() {
+            navigator.authNavigator.toChooseCity(true)
         }
     }
 
@@ -202,6 +206,7 @@ private fun FieldsContainer(
         .padding(horizontal = 16.dp)
         .animateContentSize()
 ) {
+    item { CityItem(state, listener) }
     item { TopImageItem(state, listener).toUiItem(state) }
     item { Categories(state, listener) }
     item { TitleItem(state, listener).toUiItem(state)}
@@ -287,6 +292,23 @@ private fun CustomTextField(state: State, item: CustomTextFieldData) = Row(
                 )
             }
         }
+    )
+}
+
+/**
+ * CITY
+ */
+@Composable
+private fun CityItem(state: State, listener: Listener?) = FakeTextField(
+    state = state,
+    type = CITY,
+    onClick = { listener?.navigateToChooseCity() },
+    onClickEnabled = state.user.organizerEverywhere
+) {
+    val additionalHint = if (state.user.organizerEverywhere) "" else "- ${state.user.city.name}"
+    FakeTitle(
+        hint = "Город проведения $additionalHint".trim(),
+        text = ""
     )
 }
 
@@ -556,6 +578,7 @@ private fun FakeTextField(
     type: CreateMeetingFieldItemType,
     showSubItemSlash: Boolean = false,
     onClick: () -> Unit,
+    onClickEnabled: Boolean = true,
     content: @Composable () -> Unit
 ) = Row(
     modifier = Modifier.fillMaxWidth(),
@@ -592,7 +615,7 @@ private fun FakeTextField(
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
-            .clickable { onClick() }
+            .clickable(enabled = onClickEnabled) { onClick() }
     ) {
         content()
     }

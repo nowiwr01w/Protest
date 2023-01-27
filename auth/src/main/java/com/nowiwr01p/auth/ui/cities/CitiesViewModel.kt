@@ -23,7 +23,7 @@ class CitiesViewModel(
 
     override fun handleEvents(event: Event) {
         when (event) {
-            is Event.Init -> init()
+            is Event.Init -> init(event.fromCreateMeeting)
             is Event.CityClick -> selectCity(event.city)
             is Event.ClearSelectedCity -> setState { copy(selectedCity = null) }
             is Event.ConfirmClick -> onConfirmClicked()
@@ -31,12 +31,15 @@ class CitiesViewModel(
         }
     }
 
-    private fun init() {
+    private fun init(fromCreateMeeting: Boolean) {
+        setState { copy(fromCreateMeeting = fromCreateMeeting) }
         getCities()
     }
 
-    private fun selectCity(city: City) {
-        saveCity(city)
+    private fun selectCity(city: City) = with(viewState.value) {
+        if (!fromCreateMeeting) {
+            saveCity(city)
+        }
         val updated = mapper.selectCity(city)
         setCities(updated)
         setState { copy(selectedCity = city) }

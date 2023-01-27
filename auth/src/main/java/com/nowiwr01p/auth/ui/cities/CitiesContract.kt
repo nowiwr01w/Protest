@@ -8,7 +8,7 @@ import com.nowiwr01p.core_ui.view_model.ViewState
 interface CitiesContract {
 
     sealed interface Event: ViewEvent {
-        object Init: Event
+        data class Init(val fromCreateMeeting: Boolean): Event
         data class CityClick(val city: City): Event
         data class OnSearchStateChanged(val value: String): Event
         object ConfirmClick: Event
@@ -19,7 +19,8 @@ interface CitiesContract {
         val loaded: Boolean = false,
         val searchValue: String = "",
         val selectedCity: City? = null,
-        val cities: List<City> = listOf()
+        val cities: List<City> = listOf(),
+        val fromCreateMeeting: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {

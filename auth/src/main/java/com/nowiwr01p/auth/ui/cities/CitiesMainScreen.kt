@@ -38,6 +38,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun CitiesMainScreen(
     fromProfile: Boolean,
+    fromCreateMeeting: Boolean,
     navigator: Navigator,
     viewModel: CitiesViewModel = getViewModel()
 ) {
@@ -57,13 +58,17 @@ fun CitiesMainScreen(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(Event.Init)
+        viewModel.setEvent(Event.Init(fromCreateMeeting))
     }
 
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.ShowNextScreen -> {
-                if (fromProfile) {
+                if (fromProfile || fromCreateMeeting) {
+                    if (fromCreateMeeting) {
+                        navigator.setScreenResult(arg, it.path)
+                        navigator.navigateUp()
+                    }
                     navigator.navigateUp()
                 } else {
                     navigator.navigateToMeetings()
