@@ -55,11 +55,12 @@ import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields
 import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CreateArticleMainScreen(
     navigator: Navigator,
-    viewModel: CreateArticleViewModel = getViewModel()
+    viewModel: CreateArticleViewModel = getViewModel { parametersOf(Color.White) }
 ) {
     val addFieldBottomSheetParams = BottomSheetParams(
         content = AddFieldBottomSheet { viewModel.setEvent(Event.OnBottomSheetTypeClick(it)) }

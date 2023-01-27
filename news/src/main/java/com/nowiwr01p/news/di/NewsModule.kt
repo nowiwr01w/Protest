@@ -41,7 +41,15 @@ val moduleNews = module {
     /**
      * CREATE ARTICLE
      */
-    viewModel { CreateArticleViewModel(get(), get(), get()) }
+    viewModel {
+        CreateArticleViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 
     /**
      * ARTICLE
