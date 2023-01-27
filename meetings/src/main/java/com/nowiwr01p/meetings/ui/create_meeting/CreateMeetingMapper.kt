@@ -25,12 +25,12 @@ class CreateMeetingMapper: ViewModelMapper<CreateMeetingVewModel>() {
             ),
             takeWithYouInfo = TakeWithYouInfo(
                 postersMotivation = postersMotivation,
-                posters = posters
+                posters = posters.filter { it.isNotEmpty() }
             ),
             details = Details(
-                goals =  goals,
-                slogans = slogans,
-                strategy = strategy
+                goals =  goals.filter { it.isNotEmpty() },
+                slogans = slogans.filter { it.isNotEmpty() },
+                strategy = strategy.filter { it.isNotEmpty() }
             ),
             telegram = telegram
         )
