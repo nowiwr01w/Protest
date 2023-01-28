@@ -135,7 +135,7 @@ class CreateArticleValidatorImpl(config: CreateArticleRemoteConfig): CreateArtic
         imageTypeError: CreateArticleError
     ) = with(link) {
         val ext = startsWith("https://")
-        val image = endsWith(".png") || endsWith(".jpg") || endsWith(".jpeg")
+        val image = endsWith(".png") || endsWith(".jpg") || endsWith(".jpeg") || endsWith(".webp")
         when {
             !ext -> extensionError
             !image -> imageTypeError

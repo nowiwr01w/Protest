@@ -22,7 +22,7 @@ sealed class CreateMeetingError(
         ): ImageLinkError(errorText)
 
         data class ImageTypeError(
-            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg"
+            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg, webp"
         ): ImageLinkError(errorText)
     }
 

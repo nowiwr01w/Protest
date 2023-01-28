@@ -254,7 +254,7 @@ private fun Quote(quote: Quote) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .padding()
-        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+        .padding(top = 12.dp, bottom = 4.dp, start = 16.dp, end = 16.dp)
 ) {
     val (box, text) = createRefs()
     Box(
@@ -262,7 +262,7 @@ private fun Quote(quote: Quote) = ConstraintLayout(
             .width(4.dp)
             .fillMaxHeight()
             .clip(RoundedCornerShape(16.dp))
-            .background(Color.Black.copy(alpha = 0.75f))
+            .background(MaterialTheme.colors.graphicsSecondary.copy(alpha = 0.5f))
             .constrainAs(box) {
                 height = Dimension.fillToConstraints
                 start.linkTo(parent.start)

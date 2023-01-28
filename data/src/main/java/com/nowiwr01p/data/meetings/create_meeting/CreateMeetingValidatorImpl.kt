@@ -43,7 +43,7 @@ class CreateMeetingValidatorImpl(config: CreateMeetingRemoteConfig): CreateMeeti
      */
     override suspend fun validateImageLink(link: String): CreateMeetingError? = with(link) {
         val ext = startsWith("https://")
-        val image = endsWith(".png") || endsWith(".jpg") || endsWith(".jpeg")
+        val image = endsWith(".png") || endsWith(".jpg") || endsWith(".jpeg") || endsWith(".webp")
         when {
             !ext -> ImageLinkError.ExtensionError()
             !image -> ImageLinkError.ImageTypeError()

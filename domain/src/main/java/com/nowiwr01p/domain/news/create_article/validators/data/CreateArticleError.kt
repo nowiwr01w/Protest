@@ -21,7 +21,7 @@ sealed class CreateArticleError(
         ): TopImageError(errorText)
 
         data class ImageTypeError(
-            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg"
+            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg, webp"
         ): TopImageError(errorText)
     }
 
@@ -121,7 +121,7 @@ sealed class CreateArticleError(
         ): ImageListError(errorText, type, contentIndex)
 
         data class ImageTypeError(
-            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg",
+            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg, webp",
             override val type: DynamicFields = IMAGE_LINK,
             override val contentIndex: Int
         ): ImageListError(errorText, type, contentIndex)

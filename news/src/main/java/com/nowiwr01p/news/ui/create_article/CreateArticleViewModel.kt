@@ -138,7 +138,7 @@ class CreateArticleViewModel(
                 }
                 setState { copy(content = updatedContent) }
             }
-            /** CHANGE SUBTITLE **/
+            /** CHANGE QUOTE **/
             is Quote -> {
                 val updatedContent = content.toMutableList().apply {
                     this[contentItemIndex] = updatedContentItem.copy(text = value)
