@@ -47,6 +47,12 @@ data class Text(
 ): ArticleData()
 
 @Serializable
+data class Quote(
+    override var order: Int = 0,
+    val text: String = ""
+): ArticleData()
+
+@Serializable
 data class Image(
     val link: String = "",
     val description: String = ""

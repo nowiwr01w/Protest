@@ -2,6 +2,7 @@
 
 package com.nowiwr01p.news.ui.article
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -14,7 +15,9 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -106,6 +109,7 @@ fun ArticleContent(
                     is Title -> TopTitle(content)
                     is Description -> Description(content)
                     is Text -> Text(content)
+                    is Quote -> Quote(content)
                     is SubTitle -> SubTitle(content)
                     is ImageList -> ImageListItem(content)
                     is OrderedList -> OrderedListItem(content)
@@ -241,6 +245,45 @@ private fun Text(text: Text) = Text(
         .fillMaxWidth()
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
+
+/**
+ * QUOTE
+ */
+@Composable
+private fun Quote(quote: Quote) = ConstraintLayout(
+    modifier = Modifier
+        .fillMaxWidth()
+        .padding()
+        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+) {
+    val (box, text) = createRefs()
+    Box(
+        modifier = Modifier
+            .width(4.dp)
+            .fillMaxHeight()
+            .clip(RoundedCornerShape(16.dp))
+            .background(Color.Black.copy(alpha = 0.75f))
+            .constrainAs(box) {
+                height = Dimension.fillToConstraints
+                start.linkTo(parent.start)
+                top.linkTo(parent.top)
+                bottom.linkTo(parent.bottom)
+            }
+    )
+    Text(
+        text = quote.text,
+        color = MaterialTheme.colors.textPrimary,
+        style = MaterialTheme.typography.body1.copy(fontStyle = FontStyle.Italic),
+        modifier = Modifier
+            .padding(start = 16.dp)
+            .constrainAs(text) {
+                start.linkTo(box.end)
+                end.linkTo(parent.end)
+                top.linkTo(box.top)
+                bottom.linkTo(box.bottom)
+            }
+    )
+}
 
 /**
  * IMAGES

@@ -10,6 +10,7 @@ enum class StaticFields: CreateArticleFieldType {
 
 enum class DynamicFields: CreateArticleFieldType {
     TEXT_FIELD,
+    QUOTE_FIELD,
     SUBTITLE_FIELD,
     IMAGE_LINK,
     IMAGE_DETAILS,

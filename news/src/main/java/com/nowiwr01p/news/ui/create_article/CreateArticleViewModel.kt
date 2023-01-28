@@ -61,6 +61,7 @@ class CreateArticleViewModel(
         val item = when (type) {
             SUBTITLE -> SubTitle()
             TEXT -> Text()
+            QUOTE -> Quote()
             IMAGE -> ImageList()
             ORDERED_LIST -> OrderedList()
         }
@@ -132,6 +133,13 @@ class CreateArticleViewModel(
             }
             /** CHANGE SUBTITLE **/
             is SubTitle -> {
+                val updatedContent = content.toMutableList().apply {
+                    this[contentItemIndex] = updatedContentItem.copy(text = value)
+                }
+                setState { copy(content = updatedContent) }
+            }
+            /** CHANGE SUBTITLE **/
+            is Quote -> {
                 val updatedContent = content.toMutableList().apply {
                     this[contentItemIndex] = updatedContentItem.copy(text = value)
                 }
@@ -226,6 +234,7 @@ class CreateArticleViewModel(
                 title = filterIsInstance<Title>().first(),
                 description = filterIsInstance<Description>().first(),
                 text = filterIsInstance<Text>(),
+                quotes = filterIsInstance<Quote>(),
                 subtitles = filterIsInstance<SubTitle>(),
                 imagesLists = filterIsInstance<ImageList>(),
                 orderedLists = filterIsInstance<OrderedList>(),

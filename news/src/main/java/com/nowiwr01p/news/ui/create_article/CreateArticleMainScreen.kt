@@ -175,6 +175,7 @@ private fun CreateArticleMainScreenContent(
                 is Title -> TitleItem(state, listener).toItem(index, state)
                 is Description -> DescriptionItem(state, listener).toItem(index, state)
                 is Text -> TextItem(state,  listener,  index).toItem(index, state)
+                is Quote -> QuoteItem(state,  listener,  index).toItem(index, state)
                 is SubTitle -> SubTitleItem(state,  listener,  index).toItem(index, state)
                 is ImageList -> ImageList(index, state, listener, item)
                 is OrderedList -> OrderedList(index, state, listener, item)

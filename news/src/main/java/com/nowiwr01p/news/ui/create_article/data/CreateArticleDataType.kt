@@ -1,9 +1,6 @@
 package com.nowiwr01p.news.ui.create_article.data
 
-import com.nowiwr01p.core.model.ImageList
-import com.nowiwr01p.core.model.OrderedList
-import com.nowiwr01p.core.model.SubTitle
-import com.nowiwr01p.core.model.Text
+import com.nowiwr01p.core.model.*
 import com.nowiwr01p.domain.news.create_article.validators.data.CreateArticleFieldType
 import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
@@ -105,6 +102,28 @@ open class CreateArticleDataType(
         override val trailingIconCallback: () -> Unit = { listener?.onRemoveField(commonIndex) },
         override val onValueChanged: (String) -> Unit = {
             listener?.onDynamicFieldChanged(commonIndex, -1, type, it)
+        }
+    ): CreateArticleDataType(
+        type = type,
+        value = value,
+        hint = hint,
+        onValueChanged = onValueChanged,
+        trailingIconCallback = trailingIconCallback
+    )
+
+    /**
+     * TEXT
+     */
+    data class QuoteItem(
+        val state: State,
+        val listener: Listener?,
+        val commonIndex: Int,
+        override val type: DynamicFields = QUOTE_FIELD,
+        override val value: String = (state.content[commonIndex] as Quote).text,
+        override val hint: String = "Цитата",
+        override val trailingIconCallback: () -> Unit = { listener?.onRemoveField(commonIndex) },
+        override val onValueChanged: (String) -> Unit = {
+            listener?.onDynamicFieldChanged(commonIndex,-1, type, it)
         }
     ): CreateArticleDataType(
         type = type,

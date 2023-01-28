@@ -10,6 +10,7 @@ data class Article(
     val title: Title = Title(),
     val description: Description = Description(),
     val text: List<Text> = listOf(),
+    val quotes: List<Quote> = listOf(),
     val subtitles: List<SubTitle> = listOf(),
     val imagesLists: List<ImageList> = listOf(),
     val orderedLists: List<OrderedList> = listOf()
@@ -17,6 +18,7 @@ data class Article(
     fun buildContent() = mutableListOf(topImage, dateViewers, title, description).apply {
         imagesLists.forEach { add(it) }
         text.forEach { add(it) }
+        quotes.forEach { add(it) }
         subtitles.forEach { add(it) }
         orderedLists.forEach { add(it) }
     }.sortedBy {
