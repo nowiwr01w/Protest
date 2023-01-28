@@ -257,7 +257,7 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
         )
     } else {
         Text(
-            text = state.user.name.ifEmpty { "Andrey Larionov" },
+            text = state.user.name.ifEmpty { "Profile" },
             style = MaterialTheme.typography.title1Bold,
             color = MaterialTheme.colors.textPrimary,
             maxLines = 1,

@@ -217,7 +217,7 @@ private fun SubTitle(subtitle: SubTitle) = Text(
     text = subtitle.text,
     style = MaterialTheme.typography.title2Bold,
     color = MaterialTheme.colors.textPrimary,
-    modifier = Modifier.padding(top = 4.dp, start = 16.dp, end = 16.dp)
+    modifier = Modifier.padding(top = 16.dp, start = 16.dp, end = 16.dp)
 )
 
 /**

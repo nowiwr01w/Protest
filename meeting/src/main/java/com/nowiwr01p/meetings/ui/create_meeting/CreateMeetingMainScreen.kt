@@ -66,13 +66,13 @@ fun CreateMeetingMainScreen(
     viewModel: CreateMeetingVewModel = getViewModel { parametersOf(Color.White) }
 ) {
     val state = viewModel.viewState.value
+    val focusManager = LocalFocusManager.current
 
     val cityBottomSheetParams = BottomSheetParams(
-        topPadding = 288.dp,
         content = CityBottomSheet(state) { viewModel.setEvent(Event.SetMeetingEverywhere(it)) }
     )
     val categoriesBottomSheetParams = BottomSheetParams(
-        topPadding = 216.dp,
+        topPadding = if (state.imageLink.isNotEmpty()) 56.dp else 216.dp,
         content = CategoriesBottomSheet(state) { viewModel.setEvent(Event.OnSelectedCategoryClick(it)) }
     )
 
@@ -93,6 +93,7 @@ fun CreateMeetingMainScreen(
             viewModel.setEvent(Event.OnEditCustomTextField(type, value))
         }
         override fun showBottomSheet(type: BottomSheetType) {
+            focusManager.clearFocus()
            val params = when (type) {
                 BottomSheetType.CITY -> cityBottomSheetParams
                 BottomSheetType.CATEGORIES -> categoriesBottomSheetParams
@@ -319,12 +320,11 @@ private fun CityItem(state: State, listener: Listener?) = FakeTextField(
 private fun CityBottomSheet(state: State, onClick: (Boolean) -> Unit): @Composable () -> Unit = {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
+            .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
         Text(
-            text = "У вас карт бланш",
+            text = "У вас карт-бланш",
             color = MaterialTheme.colors.textPrimary,
             style = MaterialTheme.typography.title1Bold,
             modifier = Modifier.padding(top = 8.dp)
