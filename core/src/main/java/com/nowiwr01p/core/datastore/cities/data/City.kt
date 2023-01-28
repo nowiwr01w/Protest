@@ -12,16 +12,10 @@ data class City(
     val latitude: Double = .0,
     @SerializedName("lng")
     val longitude: Double = .0,
-    @SerializedName("country")
-    val country: String = "",
-    @SerializedName("iso2")
-    val iso2: String = "",
-    @SerializedName("admin_name")
-    val adminName: String = "",
-    @SerializedName("capital")
-    val capital: String = "",
+    @SerializedName("district")
+    val district: String = "",
     @SerializedName("population")
     val population: String = "",
-    @SerializedName("population_proper")
-    val populationProper: String = ""
+    @SerializedName("subject")
+    val subject: String = ""
 )
