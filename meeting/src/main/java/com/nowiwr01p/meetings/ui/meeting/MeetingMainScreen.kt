@@ -165,12 +165,16 @@ private fun ScrollableContent(
         item { Title(meeting) }
         item { Description(meeting) }
         item { LocationTitle() }
-        item { LocationInfoContainer(state) }
 
-        if (state.loaded) {
-            item { MapPreview(state) }
+        if (state.meeting.cityName == "everywhere") {
+            item { MeetingEveryWhereLocation() }
+        } else {
+            item { LocationInfoContainer(state) }
+            if (state.loaded) {
+                item { MapPreview(state) }
+            }
+            item { MapPlaceComment(meeting) }
         }
-        item { MapPlaceComment(meeting) }
 
         val posters = state.meeting.takeWithYouInfo.posters.isNotEmpty()
         val motivation = state.meeting.takeWithYouInfo.postersMotivation.isNotEmpty()
@@ -351,6 +355,16 @@ private fun LocationDate(date: String) = Text(
     text = date,
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1
+)
+
+@Composable
+private fun MeetingEveryWhereLocation() = Text(
+    text = "Идеальный сценарий - выйти на центральные площади городов.\n" +
+            "Но жизнь не идеальна, поэтому время и место встречи можно посмотреть у нас в Telegram канале.\n\n" +
+            "Если вы организатор, а вашего города нет в списке - создайте его и напишите нам в Telegram - @nowiwr01m",
+    color = MaterialTheme.colors.textPrimary,
+    style = MaterialTheme.typography.body1,
+    modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
 )
 
 @Composable

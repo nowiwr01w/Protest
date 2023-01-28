@@ -219,8 +219,8 @@ private fun FieldsContainer(
     item { Date(state, listener) }
     if (!state.meetingEverywhere) {
         item { OpenDate(state, listener) }
+        item { TelegramItem(state, listener).toUiItem(state) }
     }
-    item { TelegramItem(state, listener).toUiItem(state) }
     item { PosterMotivationItem(state, listener).toUiItem(state) }
     item { Posters(state, listener) }
     item { Goals(state, listener) }

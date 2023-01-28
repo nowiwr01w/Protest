@@ -25,11 +25,13 @@ class CreateMeetingValidatorImpl(config: CreateMeetingRemoteConfig): CreateMeeti
         validateTitle(title)
         validateDescription(description)
         validateDate(date)
-        validateLocationTitle(locationInfo.locationName)
-        validateLocationCoordinates(locationInfo.locationStartPoint)
-        validateLocationDetails(locationInfo.locationDetails)
-        validateLocationPath(locationInfo.path)
-        validateTelegramLink(telegram)
+        if (cityName != "everywhere") {
+            validateLocationTitle(locationInfo.locationName)
+            validateLocationCoordinates(locationInfo.locationStartPoint)
+            validateLocationDetails(locationInfo.locationDetails)
+            validateLocationPath(locationInfo.path)
+            validateTelegramLink(telegram)
+        }
     }.let {
         errors.distinct().filterNotNull()
     }.also {

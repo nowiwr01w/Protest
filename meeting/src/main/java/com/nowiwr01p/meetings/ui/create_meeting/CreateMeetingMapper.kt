@@ -32,7 +32,7 @@ class CreateMeetingMapper: ViewModelMapper<CreateMeetingVewModel>() {
                 slogans = slogans.filter { it.isNotEmpty() },
                 strategy = strategy.filter { it.isNotEmpty() }
             ),
-            telegram = telegram
+            telegram = if (meetingEverywhere) "https://t.me/protests_ru/" else telegram
         )
     }
 }
