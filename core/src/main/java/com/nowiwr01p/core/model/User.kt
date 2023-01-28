@@ -13,4 +13,5 @@ data class User(
     val verified: Boolean = false,
     val writer: Boolean = false,
     val organizer: Boolean = false,
+    val organizerEverywhere: Boolean = false
 )

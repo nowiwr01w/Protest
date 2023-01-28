@@ -14,6 +14,7 @@ import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingError
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.CreateMeetingFieldItemType
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsFieldType
+import com.nowiwr01p.meetings.ui.create_meeting.data.BottomSheetType
 
 interface CreateMeetingContract {
 
@@ -27,7 +28,8 @@ interface CreateMeetingContract {
         data class SelectTime(val time: Long): Event
         data class SetDrawnPath(val path: List<LatLng>): Event
         data class SetStartLocationPath(val position: LatLng): Event
-        data class ShowCategoriesBottomSheet(val params: BottomSheetParams): Event
+        data class SetMeetingEverywhere(val everywhere: Boolean): Event
+        data class ShowBottomSheet(val params: BottomSheetParams): Event
         data class OnSelectedCategoryClick(val category: Category): Event
         data class OnAddDetailsItemClick(val type: DetailsFieldType): Event
         data class OnRemoveDetailsItemClick(val type: DetailsFieldType, val index: Int): Event
@@ -37,6 +39,7 @@ interface CreateMeetingContract {
 
     data class State(
         val user: User = User(),
+        val meetingEverywhere: Boolean = false,
         val imageLink: String = "",
         val categories: List<Category> = listOf(),
         val selectedCategories: Set<Category> = setOf(),
@@ -70,7 +73,7 @@ interface CreateMeetingContract {
         fun onAddDetailsItem(type: DetailsFieldType)
         fun onRemoveDetailsItem(type: DetailsFieldType, index: Int)
         fun onEditDetailsItem(type: DetailsFieldType, index: Int, value: String)
-        fun showCategoriesBottomSheet()
+        fun showBottomSheet(type: BottomSheetType)
         fun showDateTimePicker()
         fun navigateToMapDrawPath()
         fun navigateChooseStartLocation()

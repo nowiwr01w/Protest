@@ -21,7 +21,7 @@ class MeetingsMapper: ViewModelMapper<MeetingsViewModel>() {
     fun updateMeetings(category: Category) = with(viewModel.viewState.value) {
         viewModel.allMeetings
             .filter { meeting ->
-                meeting.cityName == user.city.name
+                meeting.cityName == user.city.name || meeting.cityName == "everywhere"
             }
             .filter { meeting ->
             val selectedName = updateSelectedCategory(category).name

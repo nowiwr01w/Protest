@@ -53,6 +53,7 @@ import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DetailsField
 import com.nowiwr01p.domain.meetings.create_meeting.validators.data.DynamicDetailsItem.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.*
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingContract.State
+import com.nowiwr01p.meetings.ui.create_meeting.data.BottomSheetType
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData
 import com.nowiwr01p.meetings.ui.create_meeting.data.CustomTextFieldData.*
 import com.nowiwr01p.meetings.ui.main.Category
@@ -66,7 +67,11 @@ fun CreateMeetingMainScreen(
 ) {
     val state = viewModel.viewState.value
 
-    val bottomSheetParams = BottomSheetParams(
+    val cityBottomSheetParams = BottomSheetParams(
+        topPadding = 288.dp,
+        content = CityBottomSheet(state) { viewModel.setEvent(Event.SetMeetingEverywhere(it)) }
+    )
+    val categoriesBottomSheetParams = BottomSheetParams(
         topPadding = 216.dp,
         content = CategoriesBottomSheet(state) { viewModel.setEvent(Event.OnSelectedCategoryClick(it)) }
     )
@@ -87,8 +92,12 @@ fun CreateMeetingMainScreen(
         override fun onEditCustomTextField(type: CreateMeetingFieldItemType, value: String) {
             viewModel.setEvent(Event.OnEditCustomTextField(type, value))
         }
-        override fun showCategoriesBottomSheet() {
-            viewModel.setEvent(Event.ShowCategoriesBottomSheet(bottomSheetParams))
+        override fun showBottomSheet(type: BottomSheetType) {
+           val params = when (type) {
+                BottomSheetType.CITY -> cityBottomSheetParams
+                BottomSheetType.CATEGORIES -> categoriesBottomSheetParams
+            }
+            viewModel.setEvent(Event.ShowBottomSheet(params))
         }
         override fun navigateToPreview() {
             viewModel.setEvent(Event.NavigateToPreview)
@@ -204,6 +213,7 @@ private fun FieldsContainer(
 ) {
     item { TopImageItem(state, listener).toUiItem(state) }
     item { Categories(state, listener) }
+    item { CityItem(state, listener) }
     item { TitleItem(state, listener).toUiItem(state)}
     item { DescriptionItem(state, listener).toUiItem(state) }
     item { Date(state, listener) }
@@ -291,6 +301,64 @@ private fun CustomTextField(state: State, item: CustomTextFieldData) = Row(
 }
 
 /**
+ * CITY
+ */
+@Composable
+private fun CityItem(state: State, listener: Listener?) = FakeTextField(
+    state = state,
+    type = CITY,
+    clickable = state.user.organizerEverywhere,
+    onClick = { listener?.showBottomSheet(BottomSheetType.CITY) }
+) {
+    val hint = if (state.meetingEverywhere) "По всей России" else "Город - ${state.user.city.name}"
+    FakeTitle(hint = hint)
+}
+
+private fun CityBottomSheet(state: State, onClick: (Boolean) -> Unit): @Composable () -> Unit = {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 16.dp)
+    ) {
+        Text(
+            text = "У вас карт бланш",
+            color = MaterialTheme.colors.textPrimary,
+            style = MaterialTheme.typography.title1Bold,
+            modifier = Modifier.padding(top = 8.dp)
+        )
+        Text(
+            text = "Вы можете создать митинг и он появится в ленте всех городов.",
+            style = MaterialTheme.typography.calloutRegular,
+            color = MaterialTheme.colors.textPrimary,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        Text(
+            text = "Вы не сможете задать место встречи в приложении. Каждый город будет кооперироваться сам.",
+            style = MaterialTheme.typography.calloutRegular,
+            color = MaterialTheme.colors.textPrimary,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        Text(
+            text = "Выбирайте эту опцию только если вы уверены, что ситуация, " +
+                    "против которой вы собираетесь бороться, будет масштабно освещена.",
+            style = MaterialTheme.typography.calloutRegular,
+            color = MaterialTheme.colors.textPrimary,
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        val text = if (state.meetingEverywhere) "Отменить" else "Окей"
+        StateButton(
+            text = text,
+            onSendRequest = { onClick.invoke(!state.meetingEverywhere) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 32.dp)
+                .clip(RoundedCornerShape(24.dp))
+        )
+    }
+}
+
+/**
  * CATEGORIES
  */
 @Composable
@@ -306,7 +374,7 @@ private fun Categories(
         onClick = {
             focusManager.clearFocus()
             keyboard?.hide()
-            listener?.showCategoriesBottomSheet()
+            listener?.showBottomSheet(BottomSheetType.CATEGORIES)
         }
     ) {
         if (state.selectedCategories.isEmpty()) {
@@ -555,6 +623,7 @@ private fun FakeTextField(
     state: State,
     type: CreateMeetingFieldItemType,
     showSubItemSlash: Boolean = false,
+    clickable: Boolean = true,
     onClick: () -> Unit,
     content: @Composable () -> Unit
 ) = Row(
@@ -592,7 +661,7 @@ private fun FakeTextField(
                 ),
                 shape = RoundedCornerShape(12.dp)
             )
-            .clickable { onClick() }
+            .clickable(enabled = clickable) { onClick() }
     ) {
         content()
     }

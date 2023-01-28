@@ -44,7 +44,7 @@ class CreateMeetingVewModel(
             is Event.OnRemoveDetailsItemClick -> addRemoveDetailsItem(event.type, event.index)
             is Event.OnEditCustomTextField -> editCustomTextField(event.type, event.value)
             is Event.OnSelectedCategoryClick -> selectCategory(event.category)
-            is Event.ShowCategoriesBottomSheet -> showBottomSheetHelper.showBottomSheet(event.params)
+            is Event.ShowBottomSheet -> showBottomSheetHelper.showBottomSheet(event.params)
             is Event.NavigateToMapDrawPath -> setEffect { Effect.NavigateToMapDrawPath }
             is Event.NavigateToChooseStartLocation -> setEffect { Effect.NavigateToChooseStartLocation }
             is Event.ShowDateTimePicker -> showDateTimePicker()
@@ -52,6 +52,7 @@ class CreateMeetingVewModel(
             is Event.SelectTime -> selectTime(event.time)
             is Event.SetDrawnPath -> setPath(event.path)
             is Event.SetStartLocationPath -> setStartLocation(event.position)
+            is Event.SetMeetingEverywhere -> setMeetingEverywhere(event.everywhere)
             is Event.NavigateToPreview -> validateMeetingData()
         }
     }
@@ -74,8 +75,10 @@ class CreateMeetingVewModel(
     /**
      * USER
      */
-    private suspend fun getUserData() = getUserUseCase.execute().value.let { user ->
-        setState { copy(user = user) }
+    private suspend fun getUserData() = launch {
+        getUserUseCase.execute().collect { user ->
+            setState { copy(user = user) }
+        }
     }
 
     /**
@@ -163,6 +166,14 @@ class CreateMeetingVewModel(
 
     private fun setStartLocation(position: LatLng) = setState {
         copy(startLocation = position)
+    }
+
+    /**
+     * MANAGE MEETING CITY
+     */
+    private fun setMeetingEverywhere(everywhere: Boolean) {
+        setState { copy(meetingEverywhere = everywhere) }
+        showBottomSheetHelper.closeBottomSheet()
     }
 
     /**

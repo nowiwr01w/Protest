@@ -3,6 +3,7 @@ package com.nowiwr01p.domain.meetings.create_meeting.validators.data
 interface CreateMeetingFieldItemType
 
 enum class CustomTextFieldType: CreateMeetingFieldItemType {
+    CITY,
     TOP_IMAGE,
     CATEGORIES,
     TITLE,

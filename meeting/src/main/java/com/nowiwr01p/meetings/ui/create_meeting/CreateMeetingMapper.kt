@@ -9,7 +9,7 @@ class CreateMeetingMapper: ViewModelMapper<CreateMeetingVewModel>() {
     fun getMeeting() = with(viewModel.viewState.value) {
         Meeting(
             id = UUID.randomUUID().toString(),
-            cityName = user.city.name,
+            cityName = if (meetingEverywhere) "everywhere" else user.city.name,
             creatorId = user.id,
             image = imageLink,
             date = selectedDate,
