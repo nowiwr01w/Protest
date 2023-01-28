@@ -217,7 +217,9 @@ private fun FieldsContainer(
     item { TitleItem(state, listener).toUiItem(state)}
     item { DescriptionItem(state, listener).toUiItem(state) }
     item { Date(state, listener) }
-    item { OpenDate(state, listener) }
+    if (!state.meetingEverywhere) {
+        item { OpenDate(state, listener) }
+    }
     item { TelegramItem(state, listener).toUiItem(state) }
     item { PosterMotivationItem(state, listener).toUiItem(state) }
     item { Posters(state, listener) }
@@ -468,10 +470,12 @@ private fun Date(
         AnimatedVisibility(visible = checked.value) {
             Column {
                 DateTimeSubItem(state, listener)
-                ChooseStartLocationItem(state, listener)
-                LocationItem(state, listener).toUiItem(state)
-                LocationDetailsItem(state, listener).toUiItem(state)
-                DrawPathItem(state, listener)
+                if (!state.meetingEverywhere) {
+                    ChooseStartLocationItem(state, listener)
+                    LocationItem(state, listener).toUiItem(state)
+                    LocationDetailsItem(state, listener).toUiItem(state)
+                    DrawPathItem(state, listener)
+                }
             }
         }
     }
