@@ -128,7 +128,7 @@ private fun Toolbar(
 ) {
     CoilImage(
         imageModel = {
-            state.user.avatar.ifEmpty { R.drawable.hao }
+            state.user.avatar.ifEmpty { "https://avatars.githubusercontent.com/u/39140585?v=4" }
         },
         modifier = Modifier
             .size(32.dp)
