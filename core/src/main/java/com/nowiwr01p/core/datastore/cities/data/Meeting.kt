@@ -9,8 +9,6 @@ data class Meeting(
     val cityName: String = "",
     val creatorId: String = "",
     val image: String = "",
-    val date: Long = 0L,
-    val requiredPeopleCount: Int = 0,
     val categories: List<Category> = listOf(),
     val title: String = "",
     val description: String = "",
@@ -26,8 +24,6 @@ data class Meeting(
             cityName = "Saint-Petersburg",
             creatorId = "1234",
             image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",
-            date = System.currentTimeMillis(),
-            requiredPeopleCount = 0,
             categories = Category.getSampleData(),
             title = "Свободу Навальному",
             description = "Ни для кого не секрет, что в России права человека считаются чем-то, что всегда " +
@@ -57,6 +53,8 @@ data class Coordinate(
 
 @Serializable
 data class LocationInfo(
+    val date: Long = 0L,
+    val requiredPeopleCount: Int = 0,
     val locationName: String = "",
     val locationStartPoint: Coordinate = Coordinate(),
     val locationDetails: String = "",
@@ -64,6 +62,8 @@ data class LocationInfo(
 ) {
     companion object {
         fun getSampleData() = LocationInfo(
+            date = System.currentTimeMillis(),
+            requiredPeopleCount = 0,
             locationName = "Дворцовая площадь",
             locationStartPoint = Coordinate(59.938946, 30.314982),
             locationDetails = "Рядом со сценой"

@@ -28,7 +28,7 @@ class MeetingsClientImpl(
 
     override suspend fun subscribeMeetings(): Unit = withContext(dispatchers.io) {
         val listener = createEventListener<Map<String, Meeting>> { map ->
-            val updated = map.values.sortedByDescending { meeting -> meeting.date }
+            val updated = map.values.sortedByDescending { meeting -> meeting.locationInfo.date }
             CoroutineScope(dispatchers.io).launch {
                 meetingsFlow.emit(updated)
             }
