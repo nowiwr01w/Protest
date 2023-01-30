@@ -8,6 +8,8 @@ data class Meeting(
     val id: String = "",
     val cityName: String = "",
     val creatorId: String = "",
+    val date: Long = 0L,
+    val requiredPeopleCount: Int = 0,
     val image: String = "",
     val categories: List<Category> = listOf(),
     val title: String = "",
@@ -23,6 +25,8 @@ data class Meeting(
         fun getSampleData() = Meeting(
             cityName = "Saint-Petersburg",
             creatorId = "1234",
+            date = System.currentTimeMillis(),
+            requiredPeopleCount = 0,
             image = "https://krasnoturinsk.info/upload/resize_cache/iblock/d28/855_420_1/d28b130dbc0228bd99ae97369489a808.jpg",
             categories = Category.getSampleData(),
             title = "Свободу Навальному",
@@ -53,8 +57,6 @@ data class Coordinate(
 
 @Serializable
 data class LocationInfo(
-    val date: Long = 0L,
-    val requiredPeopleCount: Int = 0,
     val locationName: String = "",
     val locationStartPoint: Coordinate = Coordinate(),
     val locationDetails: String = "",
@@ -62,8 +64,6 @@ data class LocationInfo(
 ) {
     companion object {
         fun getSampleData() = LocationInfo(
-            date = System.currentTimeMillis(),
-            requiredPeopleCount = 0,
             locationName = "Дворцовая площадь",
             locationStartPoint = Coordinate(59.938946, 30.314982),
             locationDetails = "Рядом со сценой"

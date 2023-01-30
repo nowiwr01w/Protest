@@ -31,12 +31,16 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(MEETINGS_REFERENCE)
     }
 
-    override suspend fun getMeetingsPreviewReference(): DatabaseReference {
-        return database.getReference(MEETINGS_PREVIEW_REFERENCE)
+    override suspend fun getMeetingReference(id: String): DatabaseReference {
+        return database.getReference(MEETINGS_REFERENCE).child(id)
     }
 
     override suspend fun getArticleReference(id: String): DatabaseReference {
         return database.getReference(NEWS_REFERENCE).child(id)
+    }
+
+    override suspend fun getLocationsReference(id: String): DatabaseReference {
+        return database.getReference(MEETING_LOCATION_REFERENCE).child(id)
     }
 
     override suspend fun getImagesStorageReference(): StorageReference {
@@ -49,7 +53,7 @@ class FirebaseReferencesRepositoryImpl(
         const val STORIES_REFERENCE = "stories"
         const val CATEGORIES_REFERENCE = "categories"
         const val MEETINGS_REFERENCE = "meetings"
-        const val MEETINGS_PREVIEW_REFERENCE = "meetings_preview"
+        const val MEETING_LOCATION_REFERENCE = "location"
         const val IMAGES_STORAGE = "images"
     }
 }

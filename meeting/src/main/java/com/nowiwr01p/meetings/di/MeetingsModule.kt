@@ -55,7 +55,7 @@ val moduleMeetings = module {
     }
 
     /**
-     * MAP ALL MEETINGS
+     * CREATE MEETING MAP (START LOCATION + DRAW PATH)
      */
     viewModel {
         CreateMeetingMapViewModel(get())
@@ -81,7 +81,15 @@ val moduleMeetings = module {
     factory { CreateMeetingMapper() }
 
     /**
-     * MEETING SCREEN
+     * MEETING INFO
      */
-    viewModel { MeetingViewModel(get(), get(), get(), get()) }
+    viewModel {
+        MeetingViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 }

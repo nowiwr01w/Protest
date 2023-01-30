@@ -24,7 +24,7 @@ class CreateMeetingValidatorImpl(config: CreateMeetingRemoteConfig): CreateMeeti
         validateCategories(categories)
         validateTitle(title)
         validateDescription(description)
-        validateDate(locationInfo.date)
+        validateDate(date)
         if (cityName != "everywhere") {
             validateLocationTitle(locationInfo.locationName)
             validateLocationCoordinates(locationInfo.locationStartPoint)

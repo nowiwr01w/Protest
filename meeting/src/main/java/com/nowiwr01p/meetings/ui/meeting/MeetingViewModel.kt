@@ -6,6 +6,7 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.meetings.meeting.GetLocationUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase.Args
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
@@ -13,9 +14,10 @@ import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import kotlinx.coroutines.delay
 
 class MeetingViewModel(
-    private val getLocalUserUseCase: GetUserUseCase,
+    private val getUserUseCase: GetUserUseCase,
     private val setReactionUseCase: SetReactionUseCase,
     private val createMeetingUseCase: CreateMeetingUseCase,
+    private val getLocationUseCase: GetLocationUseCase,
     private val openLinksHelper: OpenLinksHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -31,15 +33,30 @@ class MeetingViewModel(
     }
 
     private fun init(meeting: Meeting) = io {
-        setState { copy(meeting = meeting, loaded = true) }
-        getUserData()
+        setState { copy(meeting = meeting) }
+        runCatching {
+            getUserData()
+            getMeetingLocation()
+        }.onSuccess {
+            setState { copy(loaded = true) }
+        }
+    }
+
+    /**
+     * LOAD LOCATION IF TODO
+     */
+    private suspend fun getMeetingLocation() = with(viewState.value) {
+        getLocationUseCase.execute(meeting.id)?.let { location ->
+            val updatedMeeting = meeting.copy(locationInfo = location)
+            setState { copy(meeting = updatedMeeting) }
+        }
     }
 
     /**
      * LOCAL USER DATA
      */
     private suspend fun getUserData() {
-        val user = getLocalUserUseCase.execute().value
+        val user = getUserUseCase.execute().value
         setState { copy(user = user) }
     }
 

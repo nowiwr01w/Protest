@@ -329,16 +329,23 @@ private fun LocationInfoContainer(state: State) = Row(
         .fillMaxWidth()
         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
 ) {
-    with(state.meeting.locationInfo) {
-        if (requiredPeopleCount != 0) {
-            val text = "Митинг будет на следующий день после того, как наберётся " +
-                    "$requiredPeopleCount человек.\n" +
-                    "Это обязательное условие."
-            LocationPlace(text)
-        } else {
-            LocationPlace(locationName)
-            Spacer(modifier = Modifier.weight(1f))
-            LocationDate(date.formatToDateTime())
+    with(state.meeting) {
+        when {
+            requiredPeopleCount != 0 -> {
+                val text = "Митинг будет на следующий день после того, как наберётся " +
+                        "$requiredPeopleCount человек.\n" +
+                        "Это обязательное условие."
+                LocationPlace(text)
+            }
+            locationInfo.locationName.isEmpty() -> {
+                val text = "В целях безопасти пока что локация скрыта"
+                LocationPlace(text)
+            }
+            else -> {
+                LocationPlace(locationInfo.locationName)
+                Spacer(modifier = Modifier.weight(1f))
+                LocationDate(date.formatToDateTime())
+            }
         }
     }
 }
@@ -370,7 +377,7 @@ private fun MeetingEveryWhereLocation() = Text(
 @Composable
 private fun MapPreview(state: State) {
     val coordinates = with(state) {
-        if (meeting.locationInfo.requiredPeopleCount != 0) cityCoordinates else meetingCoordinates
+        if (meeting.requiredPeopleCount != 0) cityCoordinates else meetingCoordinates
     }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(coordinates, 11f)
@@ -400,13 +407,13 @@ private fun MapPreview(state: State) {
                 .padding(top = 12.dp, start = 16.dp, end = 16.dp)
                 .clip(RoundedCornerShape(16.dp))
         ) {
-            if (state.meeting.locationInfo.requiredPeopleCount == 0) {
+            if (state.meeting.requiredPeopleCount == 0) {
                 Marker(
                     state = rememberMarkerState(position = coordinates)
                 )
             }
         }
-        if (state.meeting.locationInfo.requiredPeopleCount != 0) {
+        if (state.meeting.requiredPeopleCount != 0) {
             MapUnknownPlaceContainer()
         }
     }
@@ -414,7 +421,7 @@ private fun MapPreview(state: State) {
 
 @Composable
 private fun MapPlaceComment(meeting: Meeting) {
-    if (meeting.locationInfo.requiredPeopleCount == 0) {
+    if (meeting.requiredPeopleCount == 0) {
         Row(
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,

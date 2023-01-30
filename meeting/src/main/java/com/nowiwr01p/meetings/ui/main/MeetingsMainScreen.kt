@@ -33,7 +33,6 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountAll
 import com.nowiwr01p.core.model.Category
-import com.nowiwr01p.core.model.CreateMeetingMapType.DRAW_PATH
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
@@ -57,9 +56,6 @@ fun MeetingsMainScreen(
     viewModel: MeetingsViewModel = getViewModel { parametersOf(Color.White) }
 ) {
     val listener = object : Listener {
-        override fun toMap(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMapDrawPath(DRAW_PATH)
-        }
         override fun toMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMeetingInfo(false, meeting)
         }
@@ -416,8 +412,13 @@ private fun MeetingItem(
             start.linkTo(title.start)
             top.linkTo(title.bottom)
         }
+    val text = if (meeting.requiredPeopleCount > 0) {
+        "Открытая дата"
+    } else {
+        meeting.date.formatToDateTime()
+    }
     Text(
-        text = meeting.locationInfo.date.formatToDateTime(),
+        text = text,
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular,
         modifier = dateModifier
