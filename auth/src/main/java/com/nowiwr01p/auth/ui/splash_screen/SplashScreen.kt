@@ -1,7 +1,10 @@
 package com.nowiwr01p.auth.ui.splash_screen
 
+import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -14,9 +17,10 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.nowiwr01p.auth.R
-import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.Event
-import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.State
+import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
+import com.nowiwr01p.core_ui.theme.subHeadlineRegular
+import com.nowiwr01p.core_ui.theme.textColorSecondary
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -32,14 +36,10 @@ fun SplashScreen(
 }
 
 @Composable
-private fun SplashScreenContent(
-    state: State,
-    navigator: Navigator
-) = Box(
+private fun SplashScreenContent(state: State, navigator: Navigator) = Box(
     modifier = Modifier
         .fillMaxSize()
-        .background(Color.White),
-    contentAlignment = Alignment.Center
+        .background(Color.White)
 ) {
     val composition by rememberLottieComposition(
         spec = LottieCompositionSpec.RawRes(R.raw.anim_splash_screen)
@@ -49,7 +49,7 @@ private fun SplashScreenContent(
     LottieAnimation(
         composition = composition,
         progress = { logoAnimationState.progress },
-        modifier = Modifier.padding(start = 24.dp, end = 24.dp, bottom = 24.dp)
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
     )
 
     if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
@@ -59,4 +59,42 @@ private fun SplashScreenContent(
             navigator.authNavigator.toAuth()
         }
     }
+
+    AnimatedText(logoAnimationState.progress)
+}
+
+@Composable
+private fun BoxScope.AnimatedText(progress: Float) = Column(
+    horizontalAlignment = Alignment.CenterHorizontally,
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(150.dp)
+        .align(Alignment.BottomCenter)
+) {
+    Item(
+        value = "На нашем флаге",
+        isVisible = progress >= 0.25
+    )
+    Item(
+        value = "Белый снег и синяя река",
+        isVisible = progress >= 0.5
+    )
+    Item(
+        value = "И всё.",
+        isVisible = progress >= 0.75
+    )
+}
+
+@Composable
+private fun Item(value: String, isVisible: Boolean) = AnimatedVisibility(
+    visible = isVisible,
+    modifier = Modifier.padding(bottom = 4.dp),
+    enter = slideInVertically() + fadeIn(),
+    exit = slideOutVertically() + fadeOut()
+) {
+    Text(
+        text = value,
+        color = MaterialTheme.colors.textColorSecondary,
+        style = MaterialTheme.typography.subHeadlineRegular
+    )
 }
