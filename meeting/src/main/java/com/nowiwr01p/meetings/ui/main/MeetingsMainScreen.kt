@@ -56,6 +56,9 @@ fun MeetingsMainScreen(
     viewModel: MeetingsViewModel = getViewModel { parametersOf(Color.White) }
 ) {
     val listener = object : Listener {
+        override fun toUnpublishedMeetings() {
+            navigator.meetingsNavigator.navigateToUnpublishedMeetings()
+        }
         override fun toMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMeetingInfo(false, meeting)
         }
@@ -166,7 +169,7 @@ private fun Toolbar(
             ClickableIcon(
                 icon = R.drawable.ic_search,
                 modifier = Modifier.padding(end = 6.dp),
-                onClick = { listener?.toCreateMeeting() }
+                onClick = { listener?.toUnpublishedMeetings() }
             )
         }
         ClickableIcon(
@@ -354,7 +357,9 @@ private fun LazyListScope.Meetings(
     } else {
         item { Spacer(modifier = Modifier.height(8.dp)) }
         items(state.meetings) { meeting ->
-            MeetingItem(meeting, listener)
+            MeetingItem(meeting) {
+                listener?.toMeeting(meeting)
+            }
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
     }
@@ -362,13 +367,13 @@ private fun LazyListScope.Meetings(
 
 
 @Composable
-private fun MeetingItem(
+internal fun MeetingItem(
     meeting: Meeting,
-    listener: Listener?
+    onClick: () -> Unit
 ) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
-        .clickable { listener?.toMeeting(meeting) }
+        .clickable { onClick.invoke() }
         .padding(vertical = 12.dp, horizontal = 16.dp)
         .background(MaterialTheme.colors.background)
 ) {

@@ -14,6 +14,7 @@ import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapViewModel
 import com.nowiwr01p.meetings.ui.meeting.MeetingViewModel
+import com.nowiwr01p.meetings.ui.previews.MeetingsPreviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -24,7 +25,7 @@ val moduleMeetings = module {
     }
 
     /**
-     * MAIN SCREEN
+     * MAIN SCREEN - MEETINGS
      */
     viewModel {
         val scope = getKoin().getOrCreateScope(meetingsScreenScopeId, named(meetingsScreenScopeName))
@@ -52,6 +53,13 @@ val moduleMeetings = module {
         scoped { GetMeetingsScreenCacheUseCase(get()) }
         scoped { SaveMeetingsScreenCacheUseCase(get()) }
         scoped { GetCachedCategoriesUseCase(get()) }
+    }
+
+    /**
+     * MEETINGS PREVIEWS
+     */
+    viewModel {
+        MeetingsPreviewViewModel(get())
     }
 
     /**

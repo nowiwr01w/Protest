@@ -33,6 +33,7 @@ interface MeetingsContract {
     }
 
     interface Listener {
+        fun toUnpublishedMeetings()
         fun toMeeting(meeting: Meeting)
         fun toProfile(editMode: Boolean)
         fun toCreateMeeting()

@@ -62,6 +62,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(MEETINGS_PREVIEW_REFERENCE).child(id)
     }
 
+    override suspend fun getUnpublishedMeetingsReference(): DatabaseReference {
+        return database.getReference(MEETINGS_PREVIEW_REFERENCE)
+    }
+
     /**
      * LOCATIONS
      */

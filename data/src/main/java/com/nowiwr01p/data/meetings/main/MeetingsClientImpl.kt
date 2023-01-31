@@ -36,6 +36,12 @@ class MeetingsClientImpl(
         references.getMeetingsReference().addValueEventListener(listener)
     }
 
+    override suspend fun getUnpublishedMeetings() = withContext(dispatchers.io) {
+        references.getUnpublishedMeetingsReference().get().await()
+            .children
+            .map { snapshot -> snapshot.getValue<Meeting>()!! }
+    }
+
     /**
      * MEETING LOCATION
      */

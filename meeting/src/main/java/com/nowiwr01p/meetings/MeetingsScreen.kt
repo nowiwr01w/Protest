@@ -15,6 +15,7 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMainScreen
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
 import com.nowiwr01p.meetings.ui.create_meeting.map.CurrentMeetingMapScreen
 import com.nowiwr01p.meetings.ui.meeting.MeetingMainScreen
+import com.nowiwr01p.meetings.ui.previews.MeetingsPreviewMainScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -42,6 +43,25 @@ sealed class MeetingsScreen<T>(
             }
         }
     }
+
+    /**
+     * UNPUBLISHED MEETINGS LIST
+     */
+    object MeetingsPreviewMainScreen: MeetingsScreen<Unit>(
+        MeetingsScreenType.UnpublishedMeetingsMainScreen.route,
+        rootRoute,
+        false
+    ) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigate(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                MeetingsPreviewMainScreen(navigator)
+            }
+        }
+    }
+
 
     /**
      * MEETING INFO

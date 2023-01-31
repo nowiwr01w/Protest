@@ -17,6 +17,10 @@ class MeetingsNavigatorImpl: MeetingsNavigator {
         navController = curNavController
     }
 
+    override fun navigateToUnpublishedMeetings() {
+        MeetingsPreviewMainScreen.navigate(Unit, navController)
+    }
+
     override fun navigateToMeetingInfo(isPreviewMode: Boolean, meeting: Meeting) {
         val args = MeetingMainScreen.Args(isPreviewMode, meeting)
         MeetingMainScreen.navigate(args, navController)
@@ -34,6 +38,7 @@ class MeetingsNavigatorImpl: MeetingsNavigator {
         builder.navigation(MeetingsMainScreen.route, MeetingsMainScreen.rootRoute) {
             MeetingsMainScreen.createScreen(builder, navigator)
             MeetingMainScreen.createScreen(this, navigator)
+            MeetingsPreviewMainScreen.createScreen(this, navigator)
             CreateMeetingScreen.createScreen(this, navigator)
             CreateMeetingMapScreen.createScreen(this, navigator)
         }

@@ -28,7 +28,7 @@ fun CenterScreenProgressBar() = Column(
 }
 
 @Composable
-fun StubProgressBar(modifier: Modifier) = Column(
+fun StubProgressBar(modifier: Modifier = Modifier) = Column(
     verticalArrangement = Arrangement.Center,
     horizontalAlignment = Alignment.CenterHorizontally,
     modifier = modifier
