@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,7 +16,9 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.nowiwr01p.auth.R
-import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
+import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.State
+import com.nowiwr01p.auth.ui.splash_screen.data.ItemData
+import com.nowiwr01p.auth.ui.splash_screen.data.getAnimatedTextItems
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.theme.textColorSecondary
@@ -28,9 +29,9 @@ fun SplashScreen(
     navigator: Navigator,
     viewModel: SplashScreenViewModel = getViewModel()
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.setEvent(Event.Init)
-    }
+//    LaunchedEffect(Unit) {
+//        viewModel.setEvent(Event.Init)
+//    }
 
     SplashScreenContent(viewModel.viewState.value, navigator)
 }
@@ -60,7 +61,7 @@ private fun SplashScreenContent(state: State, navigator: Navigator) = Box(
         }
     }
 
-    AnimatedText(logoAnimationState.progress)
+    AnimatedText(logoAnimationState.progress,)
 }
 
 @Composable
@@ -71,29 +72,20 @@ private fun BoxScope.AnimatedText(progress: Float) = Column(
         .height(150.dp)
         .align(Alignment.BottomCenter)
 ) {
-    Item(
-        value = "На нашем флаге",
-        isVisible = progress >= 0.25
-    )
-    Item(
-        value = "Белый снег и синяя река",
-        isVisible = progress >= 0.5
-    )
-    Item(
-        value = "И всё.",
-        isVisible = progress >= 0.75
-    )
+    getAnimatedTextItems().forEach { item ->
+        TextItem(item, progress)
+    }
 }
 
 @Composable
-private fun Item(value: String, isVisible: Boolean) = AnimatedVisibility(
-    visible = isVisible,
-    modifier = Modifier.padding(bottom = 4.dp),
+private fun TextItem(item: ItemData, progress: Float) = AnimatedVisibility(
+    visible = progress in (item.value..0.8f),
     enter = slideInVertically() + fadeIn(),
-    exit = slideOutVertically() + fadeOut()
+    exit = slideOutVertically() + fadeOut(),
+    modifier = Modifier.padding(bottom = 4.dp),
 ) {
     Text(
-        text = value,
+        text = item.text,
         color = MaterialTheme.colors.textColorSecondary,
         style = MaterialTheme.typography.subHeadlineRegular
     )
