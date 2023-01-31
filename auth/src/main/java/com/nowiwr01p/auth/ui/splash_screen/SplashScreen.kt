@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,7 +17,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.nowiwr01p.auth.R
-import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.State
+import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.auth.ui.splash_screen.data.ItemData
 import com.nowiwr01p.auth.ui.splash_screen.data.getAnimatedTextItems
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -29,9 +30,9 @@ fun SplashScreen(
     navigator: Navigator,
     viewModel: SplashScreenViewModel = getViewModel()
 ) {
-//    LaunchedEffect(Unit) {
-//        viewModel.setEvent(Event.Init)
-//    }
+    LaunchedEffect(Unit) {
+        viewModel.setEvent(Event.Init)
+    }
 
     SplashScreenContent(viewModel.viewState.value, navigator)
 }
