@@ -51,6 +51,7 @@ import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
+import com.nowiwr01p.core_ui.ui.progress.StubProgressBar
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meeting.R
@@ -158,51 +159,62 @@ private fun ScrollableContent(
     listener: Listener?,
     modifier: Modifier
 ) {
-    val meeting = state.meeting
-    LazyColumn(modifier) {
-        item { TopImage(meeting) }
-        item { Categories(meeting) }
-        item { Title(meeting) }
-        item { Description(meeting) }
-        item { LocationTitle() }
+    Box(modifier = modifier) {
+        val meeting = state.meeting
 
-        if (state.meeting.cityName == "everywhere") {
-            item { MeetingEveryWhereLocation() }
-        } else {
-            item { LocationInfoContainer(state) }
-            if (state.loaded) {
-                item { MapPreview(state) }
+        LazyColumn {
+            item { TopImage(meeting) }
+            item { Categories(meeting) }
+            item { Title(meeting) }
+            item { Description(meeting) }
+            item { LocationTitle() }
+
+            if (state.meeting.cityName == "everywhere") {
+                item { MeetingEveryWhereLocation() }
+            } else {
+                item { LocationInfoContainer(state) }
+                if (state.loaded) {
+                    item { MapPreview(state) }
+                }
+                item { MapPlaceComment(meeting) }
             }
-            item { MapPlaceComment(meeting) }
-        }
 
-        val posters = state.meeting.takeWithYouInfo.posters.isNotEmpty()
-        val motivation = state.meeting.takeWithYouInfo.postersMotivation.isNotEmpty()
+            val posters = state.meeting.takeWithYouInfo.posters.isNotEmpty()
+            val motivation = state.meeting.takeWithYouInfo.postersMotivation.isNotEmpty()
 
-        if (posters || motivation) {
-            item { TakeWithYouTitle() }
-        }
-        if (motivation) {
-            item { TakeWithYouDetails(meeting) }
-        }
-        if (posters) {
-            item { Posters(meeting, listener) }
-        }
+            if (posters || motivation) {
+                item { TakeWithYouTitle() }
+            }
+            if (motivation) {
+                item { TakeWithYouDetails(meeting) }
+            }
+            if (posters) {
+                item { Posters(meeting, listener) }
+            }
 
-        with(state.meeting.details) {
-            if (goals.isNotEmpty() || slogans.isNotEmpty() || strategy.isNotEmpty()) {
-                item { DropdownItems(meeting) }
+            with(state.meeting.details) {
+                if (goals.isNotEmpty() || slogans.isNotEmpty() || strategy.isNotEmpty()) {
+                    item { DropdownItems(meeting) }
+                }
+            }
+
+            if (isPreviewMode) {
+                item { Spacer(modifier = Modifier.height(120.dp)) }
+            } else {
+                item { WillYouGoTitle() }
+                item { WillYouGoPeopleCount(meeting) }
+                item { WillYouGoImage() }
+                item { WillYouGoActionButtons(state, listener) }
+                item { Spacer(modifier = Modifier.height(24.dp)) }
             }
         }
 
-        if (isPreviewMode) {
-            item { Spacer(modifier = Modifier.height(120.dp)) }
-        } else {
-            item { WillYouGoTitle() }
-            item { WillYouGoPeopleCount(meeting) }
-            item { WillYouGoImage() }
-            item { WillYouGoActionButtons(state, listener) }
-            item { Spacer(modifier = Modifier.height(24.dp)) }
+        if (!state.loaded) {
+            StubProgressBar(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(Color.White)
+            )
         }
     }
 }

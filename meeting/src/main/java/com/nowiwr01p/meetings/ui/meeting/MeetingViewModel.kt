@@ -38,6 +38,7 @@ class MeetingViewModel(
             getUserData()
             getMeetingLocation()
         }.onSuccess {
+            delay(1000)
             setState { copy(loaded = true) }
         }
     }
