@@ -13,8 +13,7 @@ class CreateArticleRepositoryImpl(
 ): CreateArticleRepository {
 
     override suspend fun createArticle(article: Article): Unit = withContext(dispatchers.io) {
-        references.getNewsReference()
-            .child(article.id)
+        references.getArticlePreviewReference(article.id)
             .setValue(article)
             .await()
     }

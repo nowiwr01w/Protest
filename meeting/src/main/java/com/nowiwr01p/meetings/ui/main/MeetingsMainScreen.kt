@@ -162,6 +162,13 @@ private fun Toolbar(
         Spacer(
             modifier = Modifier.weight(1f)
         )
+        if (state.user.organizer) {
+            ClickableIcon(
+                icon = R.drawable.ic_search,
+                modifier = Modifier.padding(end = 6.dp),
+                onClick = { listener?.toCreateMeeting() }
+            )
+        }
         ClickableIcon(
             icon = R.drawable.ic_add,
             modifier = Modifier.padding(end = 10.dp),

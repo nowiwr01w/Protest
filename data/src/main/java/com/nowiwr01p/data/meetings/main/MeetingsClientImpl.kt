@@ -50,7 +50,7 @@ class MeetingsClientImpl(
      */
     override suspend fun createMeeting(meeting: Meeting): Unit = withContext(dispatchers.io) {
         val sendMeeting = async {
-            references.getMeetingReference(meeting.id)
+            references.getMeetingPreviewReference(meeting.id)
                 .setValue(MeetingDB.toMeetingDB(meeting))
                 .await()
         }
