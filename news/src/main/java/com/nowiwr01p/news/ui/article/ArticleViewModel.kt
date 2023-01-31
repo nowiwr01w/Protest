@@ -4,6 +4,7 @@ import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.news.article.SetArticleViewedUseCase
+import com.nowiwr01p.domain.news.article.data.CreateArticleMode
 import com.nowiwr01p.domain.news.create_article.usecase.CreateArticleUseCase
 import com.nowiwr01p.news.ui.article.ArticleContract.*
 import kotlinx.coroutines.delay
@@ -18,7 +19,7 @@ class ArticleViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init(event.article)
-            is Event.PublishArticle -> publish()
+            is Event.PublishArticle -> publish(event.mode)
         }
     }
 
@@ -35,10 +36,11 @@ class ArticleViewModel(
         }
     }
 
-    private fun publish() = io {
+    private fun publish(mode: CreateArticleMode) = io {
         setState { copy(publishButtonState = SEND_REQUEST) }
         runCatching {
-            createArticleUseCase.execute(viewState.value.article)
+            val args = CreateArticleUseCase.Args(mode, viewState.value.article)
+            createArticleUseCase.execute(args)
         }.onSuccess {
             setState { copy(publishButtonState = SUCCESS) }
         }.onFailure {

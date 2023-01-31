@@ -11,7 +11,7 @@ import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.news.NewsScreen.ArticleScreen.Args
 import com.nowiwr01p.news.navigation.NewsScreenType
-import com.nowiwr01p.news.ui.article.ArticleScreen
+import com.nowiwr01p.news.ui.article.ArticleMainScreen
 import com.nowiwr01p.news.ui.create_article.CreateArticleMainScreen
 import com.nowiwr01p.news.ui.news.NewsMainScreen
 import com.nowiwr01p.news.ui.previews.UnpublishedNewsMainScreen
@@ -81,7 +81,8 @@ sealed class NewsScreen<T>(
         @Serializable
         data class Args(
             val article: Article,
-            val isPreviewMode: Boolean
+            val isPreviewMode: Boolean,
+            val isViewUnpublishedMode: Boolean
         )
 
         override fun navigate(args: Args, navController: NavController) {
@@ -99,8 +100,10 @@ sealed class NewsScreen<T>(
             ) {
                 val articleJson = it.arguments?.getString(ARG_ARTICLE).orEmpty()
                 val args = Json.decodeFromString<Args>(articleJson)
-                ArticleScreen(
+
+                ArticleMainScreen(
                     isPreviewMode = args.isPreviewMode,
+                    isViewUnpublishedMode = args.isViewUnpublishedMode,
                     article = args.article,
                     navigator = navigator
                 )

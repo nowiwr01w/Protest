@@ -61,7 +61,11 @@ fun NewsMainScreen(
     EffectObserver(viewModel.effect) {
         when (it) {
             is Effect.ShowArticle -> {
-                navigator.newsNavigator.navigateToArticle(it.article)
+                navigator.newsNavigator.navigateToArticle(
+                    article = it.article,
+                    isPreviewMode = false,
+                    isViewUnpublishedMode = false
+                )
             }
             is Effect.NavigateToCreateArticle -> {
                 navigator.newsNavigator.navigateToCreateArticle()

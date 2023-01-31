@@ -5,6 +5,6 @@ import com.nowiwr01p.core_ui.navigators.module.ModuleNavigator
 
 interface NewsNavigator: ModuleNavigator {
     fun navigateToUnpublishedNews()
-    fun navigateToArticle(article: Article, isPreviewMode: Boolean = false)
+    fun navigateToArticle(article: Article, isPreviewMode: Boolean, isViewUnpublishedMode: Boolean)
     fun navigateToCreateArticle()
 }

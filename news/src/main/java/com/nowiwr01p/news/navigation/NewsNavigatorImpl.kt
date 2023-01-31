@@ -25,8 +25,8 @@ class NewsNavigatorImpl: NewsNavigator {
         NewsScreen.CreateArticleScreen.navigate(Unit, navController)
     }
 
-    override fun navigateToArticle(article: Article, isPreviewMode: Boolean) {
-        val args = ArticleScreen.Args(article, isPreviewMode)
+    override fun navigateToArticle(article: Article, isPreviewMode: Boolean, isViewUnpublishedMode: Boolean) {
+        val args = ArticleScreen.Args(article, isPreviewMode, isViewUnpublishedMode)
         ArticleScreen.navigate(args, navController)
     }
 

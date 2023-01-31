@@ -22,5 +22,6 @@ interface UnpublishedNewsContract {
 
     interface Listener {
         fun onBackClick()
+        fun toArticle(article: Article)
     }
 }

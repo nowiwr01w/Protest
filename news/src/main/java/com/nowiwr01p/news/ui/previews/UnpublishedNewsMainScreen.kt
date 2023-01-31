@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.ui.progress.StubProgressBar
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -24,6 +25,13 @@ fun UnpublishedNewsMainScreen(
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
+        }
+        override fun toArticle(article: Article) {
+            navigator.newsNavigator.navigateToArticle(
+                article = article,
+                isPreviewMode = false,
+                isViewUnpublishedMode = true
+            )
         }
     }
 
@@ -43,7 +51,7 @@ private fun UnpublishedNewsMainScreenContent(state: State, listener: Listener) =
 ) {
     Toolbar(listener)
     if (state.loaded) {
-        News(state)
+        News(state, listener)
     } else {
         StubProgressBar()
     }
@@ -68,12 +76,12 @@ private fun Toolbar(listener: Listener) = ToolbarTop(
  * NEWS
  */
 @Composable
-private fun News(state: State) = LazyColumn(
+private fun News(state: State, listener: Listener) = LazyColumn(
     modifier = Modifier.fillMaxSize()
 ) {
     items(state.news) { article ->
         ArticleView(article) {
-            // TODO
+            listener.toArticle(article)
         }
     }
 }

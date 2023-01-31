@@ -15,7 +15,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.style.TextAlign
@@ -35,14 +34,17 @@ import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.horizontal_pager.PagerIndicator
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
+import com.nowiwr01p.domain.news.article.data.CreateArticleMode
+import com.nowiwr01p.domain.news.article.data.CreateArticleMode.*
 import com.nowiwr01p.news.R
 import com.nowiwr01p.news.ui.article.ArticleContract.*
 import com.skydoves.landscapist.coil.CoilImage
 import org.koin.androidx.compose.getViewModel
 
 @Composable
-fun ArticleScreen(
+fun ArticleMainScreen(
     isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     article: Article,
     navigator: Navigator,
     viewModel: ArticleViewModel = getViewModel()
@@ -51,8 +53,8 @@ fun ArticleScreen(
         override fun onBackClick() {
             navigator.navigateUp()
         }
-        override fun onPublishArticle() {
-            viewModel.setEvent(Event.PublishArticle)
+        override fun onPublishArticle(mode: CreateArticleMode) {
+            viewModel.setEvent(Event.PublishArticle(mode))
         }
     }
 
@@ -62,6 +64,7 @@ fun ArticleScreen(
 
     ArticleContent(
         isPreviewMode = isPreviewMode,
+        isViewUnpublishedMode = isViewUnpublishedMode,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -70,13 +73,14 @@ fun ArticleScreen(
 @Composable
 fun ArticleContent(
     isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?
 ) {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val (toolbar, content, publishButton) = createRefs()
+        val (toolbar, content, button) = createRefs()
 
         val toolbarModifier = Modifier
             .constrainAs(toolbar) {
@@ -119,22 +123,22 @@ fun ArticleContent(
             item { Spacer(modifier = Modifier.height(bottomSpace)) }
         }
 
-        val publishButtonModifier = Modifier
+        val buttonModifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
             .clip(RoundedCornerShape(24.dp))
-            .constrainAs(publishButton) {
+            .constrainAs(button) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
             }
-        if (isPreviewMode) {
-            PublishButton(
-                state = state,
-                listener = listener,
-                modifier = publishButtonModifier
-            )
-        }
+        PublishButton(
+            isPreviewMode = isPreviewMode,
+            isViewUnpublishedMode = isViewUnpublishedMode,
+            state = state,
+            listener = listener,
+            modifier = buttonModifier
+        )
     }
 }
 
@@ -399,19 +403,25 @@ private fun StepItem(text: String) = Row(
  */
 @Composable
 private fun PublishButton(
+    isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?,
     modifier: Modifier
 ) {
     StateButton(
-        text = "Опубликовать",
+        text = if (isPreviewMode) "Отправить на ревью" else "Опубликовать",
         state = state.publishButtonState,
         onSendRequest = {
-            listener?.onPublishArticle()
+            val mode = if (isPreviewMode) SEND_TO_REVIEW else PUBLISH_REVIEWED
+            listener?.onPublishArticle(mode)
         },
         onSuccess = {
             listener?.onBackClick()
             listener?.onBackClick()
+            if (isViewUnpublishedMode) {
+                listener?.onBackClick()
+            }
         },
         modifier = modifier
     )
@@ -424,7 +434,8 @@ private fun PublishButton(
 @Composable
 fun Preview() = MeetingsTheme {
     ArticleContent(
-        isPreviewMode = true,
+        isPreviewMode = false,
+        isViewUnpublishedMode = true,
         state = State(article = article),
         listener = null
     )

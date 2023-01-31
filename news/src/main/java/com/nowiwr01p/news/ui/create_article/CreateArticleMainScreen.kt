@@ -112,7 +112,11 @@ fun CreateArticleMainScreen(
                 navigator.navigateUp()
             }
             is Effect.NavigateToPreview -> {
-                navigator.newsNavigator.navigateToArticle(it.article, true)
+                navigator.newsNavigator.navigateToArticle(
+                    article = it.article,
+                    isPreviewMode = true,
+                    isViewUnpublishedMode = false
+                )
             }
             is Effect.OnItemAdded -> scope.launch {
                 focusManager.clearFocus()
