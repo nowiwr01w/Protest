@@ -71,7 +71,11 @@ class MeetingsClientImpl(
                 .setValue(meeting.locationInfo)
                 .await()
         }
-        listOf(sendMeeting, sendLocation).awaitAll()
+        listOf(sendMeeting, sendLocation).awaitAll().also {
+            if (mode == PUBLISH_REVIEWED) {
+                references.getMeetingPreviewReference(meeting.id).removeValue().await()
+            }
+        }
     }
 
     /**
