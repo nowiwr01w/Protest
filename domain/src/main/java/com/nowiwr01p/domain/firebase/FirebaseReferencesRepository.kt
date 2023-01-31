@@ -8,6 +8,7 @@ interface FirebaseReferencesRepository {
     suspend fun getStoriesReference(): DatabaseReference
     suspend fun getCategoriesReference(): DatabaseReference
     suspend fun getNewsReference(): DatabaseReference
+    suspend fun getUnpublishedNewsReference(): DatabaseReference
     suspend fun getArticleReference(id: String): DatabaseReference
     suspend fun getArticlePreviewReference(id: String): DatabaseReference
     suspend fun getMeetingsReference(): DatabaseReference

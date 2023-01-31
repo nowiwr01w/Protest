@@ -6,4 +6,5 @@ import kotlinx.coroutines.flow.StateFlow
 interface NewsClient {
     suspend fun subscribeNews()
     suspend fun getNews(): StateFlow<List<Article>>
+    suspend fun getUnpublishedNews(): List<Article>
 }

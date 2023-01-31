@@ -8,6 +8,7 @@ import com.nowiwr01p.news.navigation.NewsNavigatorImpl
 import com.nowiwr01p.news.ui.news.NewsViewModel
 import com.nowiwr01p.news.ui.article.ArticleViewModel
 import com.nowiwr01p.news.ui.create_article.CreateArticleViewModel
+import com.nowiwr01p.news.ui.previews.UnpublishedNewsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -36,6 +37,13 @@ val moduleNews = module {
             scope.get(),
             get()
         )
+    }
+
+    /**
+     * UNPUBLISHED NEWS
+     */
+    viewModel {
+        UnpublishedNewsViewModel(get())
     }
 
     /**

@@ -14,6 +14,7 @@ import com.nowiwr01p.news.navigation.NewsScreenType
 import com.nowiwr01p.news.ui.article.ArticleScreen
 import com.nowiwr01p.news.ui.create_article.CreateArticleMainScreen
 import com.nowiwr01p.news.ui.news.NewsMainScreen
+import com.nowiwr01p.news.ui.previews.UnpublishedNewsMainScreen
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -35,6 +36,24 @@ sealed class NewsScreen<T>(
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
                 NewsMainScreen(navigator)
+            }
+        }
+    }
+
+    /**
+     * UNPUBLISHED NEWS LIST
+     */
+    object UnpublishedNewsMainScreen: NewsScreen<Unit>(
+        NewsScreenType.UnpublishedNewsScreen.route,
+        rootRoute,
+        false
+    ) {
+        override fun navigate(args: Unit, navController: NavController) {
+            navController.navigateOrPopup(route)
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(route) {
+                UnpublishedNewsMainScreen(navigator)
             }
         }
     }

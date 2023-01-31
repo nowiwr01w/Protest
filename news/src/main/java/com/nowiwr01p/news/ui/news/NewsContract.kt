@@ -28,6 +28,7 @@ interface NewsContract {
 
     interface Listener {
         fun onBackClick()
+        fun toUnpublishedNews()
         fun onArticleClick(article: Article)
         fun toCreateArticle()
     }

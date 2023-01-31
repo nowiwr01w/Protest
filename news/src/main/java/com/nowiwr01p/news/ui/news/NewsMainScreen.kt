@@ -40,6 +40,9 @@ fun NewsMainScreen(
     val state = viewModel.viewState.value
 
     val listener = object : Listener {
+        override fun toUnpublishedNews() {
+            navigator.newsNavigator.navigateToUnpublishedNews()
+        }
         override fun onBackClick() {
             navigator.navigateUp()
         }
@@ -106,7 +109,7 @@ private fun Toolbar(state: State, listener: Listener?) = Row(
             ClickableIcon(
                 icon = R.drawable.ic_search,
                 modifier = Modifier.padding(end = 6.dp),
-                onClick = { listener?.toCreateArticle() }
+                onClick = { listener?.toUnpublishedNews() }
             )
         }
         ClickableIcon(
@@ -123,7 +126,9 @@ private fun Toolbar(state: State, listener: Listener?) = Row(
 private fun LazyListScope.NewsList(state: State, listener: Listener?) {
     item { Spacer(modifier = Modifier.height(12.dp)) }
     items(state.newsList) { article ->
-        ArticleView(article, listener)
+        ArticleView(article) {
+            listener?.onArticleClick(article)
+        }
         Spacer(modifier = Modifier.height(8.dp))
     }
 }
@@ -132,10 +137,10 @@ private fun LazyListScope.NewsList(state: State, listener: Listener?) {
  * ARTICLE ITEM
  */
 @Composable
-private fun ArticleView(article: Article, listener: Listener?) = ConstraintLayout(
+internal fun ArticleView(article: Article, onClick: () -> Unit) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
-        .clickable { listener?.onArticleClick(article) }
+        .clickable { onClick.invoke() }
         .padding(vertical = 4.dp, horizontal = 16.dp)
         .background(MaterialTheme.colors.background)
 ) {

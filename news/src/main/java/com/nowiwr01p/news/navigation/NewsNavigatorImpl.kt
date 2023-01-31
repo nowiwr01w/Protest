@@ -17,6 +17,10 @@ class NewsNavigatorImpl: NewsNavigator {
         navController = curNavController
     }
 
+    override fun navigateToUnpublishedNews() {
+        NewsScreen.UnpublishedNewsMainScreen.navigate(Unit, navController)
+    }
+
     override fun navigateToCreateArticle() {
         NewsScreen.CreateArticleScreen.navigate(Unit, navController)
     }
@@ -29,6 +33,7 @@ class NewsNavigatorImpl: NewsNavigator {
     override fun graph(builder: NavGraphBuilder, navigator: Navigator) {
         builder.navigation(NewsScreen.NewsMainScreen.route, NewsScreen.NewsMainScreen.rootRoute) {
             NewsScreen.NewsMainScreen.createScreen(builder, navigator)
+            NewsScreen.UnpublishedNewsMainScreen.createScreen(this, navigator)
             NewsScreen.CreateArticleScreen.createScreen(this, navigator)
             ArticleScreen.createScreen(this, navigator)
         }

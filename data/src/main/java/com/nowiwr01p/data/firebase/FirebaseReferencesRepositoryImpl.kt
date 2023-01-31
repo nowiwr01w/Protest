@@ -47,6 +47,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(NEWS_PREVIEW_REFERENCE).child(id)
     }
 
+    override suspend fun getUnpublishedNewsReference(): DatabaseReference {
+        return database.getReference(NEWS_PREVIEW_REFERENCE)
+    }
+
     /**
      * MEETINGS
      */
