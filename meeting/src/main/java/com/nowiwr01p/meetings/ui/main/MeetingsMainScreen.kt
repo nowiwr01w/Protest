@@ -60,7 +60,11 @@ fun MeetingsMainScreen(
             navigator.meetingsNavigator.navigateToUnpublishedMeetings()
         }
         override fun toMeeting(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMeetingInfo(false, meeting)
+            navigator.meetingsNavigator.navigateToMeetingInfo(
+                isPreviewMode = false,
+                isViewUnpublishedMode = false,
+                meeting = meeting
+            )
         }
         override fun toCreateMeeting() {
             navigator.meetingsNavigator.navigateToCreateMeeting()

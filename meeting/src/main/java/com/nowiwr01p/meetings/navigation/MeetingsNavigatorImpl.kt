@@ -21,8 +21,8 @@ class MeetingsNavigatorImpl: MeetingsNavigator {
         MeetingsPreviewMainScreen.navigate(Unit, navController)
     }
 
-    override fun navigateToMeetingInfo(isPreviewMode: Boolean, meeting: Meeting) {
-        val args = MeetingMainScreen.Args(isPreviewMode, meeting)
+    override fun navigateToMeetingInfo(isPreviewMode: Boolean, isViewUnpublishedMode: Boolean, meeting: Meeting) {
+        val args = MeetingMainScreen.Args(isPreviewMode, isViewUnpublishedMode, meeting)
         MeetingMainScreen.navigate(args, navController)
     }
 

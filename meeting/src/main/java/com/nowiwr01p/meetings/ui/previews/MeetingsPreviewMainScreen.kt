@@ -9,6 +9,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.ui.progress.StubProgressBar
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
@@ -26,6 +27,13 @@ fun MeetingsPreviewMainScreen(
     val listener = object : Listener {
         override fun onBackClick() {
             navigator.navigateUp()
+        }
+        override fun toPublishMeeting(meeting: Meeting) {
+            navigator.meetingsNavigator.navigateToMeetingInfo(
+                isPreviewMode = false,
+                isViewUnpublishedMode = true,
+                meeting = meeting
+            )
         }
     }
 
@@ -47,7 +55,7 @@ private fun MeetingsPreviewMainScreenContent(state: State, listener: Listener) =
 ) {
     Toolbar(listener)
     if (state.loaded) {
-        Meetings(state)
+        Meetings(state, listener)
     } else {
         StubProgressBar()
     }
@@ -72,12 +80,12 @@ private fun Toolbar(listener: Listener) = ToolbarTop(
  * MEETINGS
  */
 @Composable
-private fun Meetings(state: State) = LazyColumn(
+private fun Meetings(state: State, listener: Listener) = LazyColumn(
     modifier = Modifier.fillMaxSize()
 ) {
     items(state.meetings) { meeting ->
         MeetingItem(meeting) {
-            // TODO
+            listener.toPublishMeeting(meeting)
         }
     }
 }

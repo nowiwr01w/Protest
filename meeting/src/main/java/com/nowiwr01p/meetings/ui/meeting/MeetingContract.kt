@@ -7,13 +7,14 @@ import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
 import com.nowiwr01p.meetings.extensions.getCityCoordinates
 import com.nowiwr01p.meetings.extensions.getMeetingCoordinates
 
 interface MeetingContract {
 
     sealed interface Event: ViewEvent {
-        object CreateMeeting: Event
+        data class CreateMeeting(val mode: CreateMeetingMode): Event
         data class Init(val meeting: Meeting): Event
         data class OpenLink(val link: String): Event
         data class SetReaction(val isPositiveButtonClicked: Boolean): Event
@@ -36,7 +37,7 @@ interface MeetingContract {
     interface Listener {
         fun onBack()
         fun openLink(link: String)
-        fun createMeeting()
+        fun createMeeting(mode: CreateMeetingMode)
         fun setReaction(isPositiveButtonClicked: Boolean)
     }
 }

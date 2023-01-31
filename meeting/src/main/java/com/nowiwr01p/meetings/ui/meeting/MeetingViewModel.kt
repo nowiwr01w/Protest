@@ -8,7 +8,7 @@ import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.meeting.GetLocationUseCase
 import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase
-import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase.Args
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import kotlinx.coroutines.delay
@@ -28,7 +28,7 @@ class MeetingViewModel(
             is Event.Init -> init(event.meeting)
             is Event.OpenLink -> openLink(event.link)
             is Event.SetReaction -> setReaction(event.isPositiveButtonClicked)
-            is Event.CreateMeeting -> createMeeting()
+            is Event.CreateMeeting -> createMeeting(event.mode)
         }
     }
 
@@ -66,7 +66,7 @@ class MeetingViewModel(
      */
     private fun setReaction(isPositiveButtonClicked: Boolean) = io {
         runCatching {
-            val args = Args(viewState.value.meeting.id, isPositiveButtonClicked)
+            val args = SetReactionUseCase.Args(viewState.value.meeting.id, isPositiveButtonClicked)
             setReactionUseCase.execute(args)
         }.onSuccess {
             setState { copy(meeting = it) }
@@ -76,10 +76,11 @@ class MeetingViewModel(
     /**
      * CREATE MEETING FROM PREVIEW
      */
-    private fun createMeeting() = io {
+    private fun createMeeting(mode: CreateMeetingMode) = io {
         setState { copy(createMeetingButtonState = SEND_REQUEST) }
         runCatching {
-            createMeetingUseCase.execute(viewState.value.meeting)
+            val args = CreateMeetingUseCase.Args(mode, viewState.value.meeting)
+            createMeetingUseCase.execute(args)
         }.onSuccess {
             setState { copy(createMeetingButtonState = SUCCESS) }
         }.onFailure {

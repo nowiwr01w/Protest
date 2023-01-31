@@ -74,6 +74,7 @@ sealed class MeetingsScreen<T>(
         @Serializable
         data class Args(
             val isPreviewMode: Boolean,
+            val isViewUnpublishedMode: Boolean,
             val meeting: Meeting
         )
 
@@ -97,6 +98,7 @@ sealed class MeetingsScreen<T>(
 
                 MeetingMainScreen(
                     isPreviewMode = args.isPreviewMode,
+                    isViewUnpublishedMode = args.isViewUnpublishedMode,
                     meeting = args.meeting,
                     navigator = navigator
                 )

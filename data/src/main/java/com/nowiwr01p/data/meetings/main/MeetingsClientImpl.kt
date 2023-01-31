@@ -8,6 +8,8 @@ import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode.*
 import com.nowiwr01p.domain.user.client.UserClient
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -54,9 +56,13 @@ class MeetingsClientImpl(
     /**
      * CREATE MEETING
      */
-    override suspend fun createMeeting(meeting: Meeting): Unit = withContext(dispatchers.io) {
+    override suspend fun createMeeting(mode: CreateMeetingMode, meeting: Meeting): Unit = withContext(dispatchers.io) {
+        val reference = when (mode) {
+            SEND_TO_REVIEW -> references.getMeetingPreviewReference(meeting.id)
+            PUBLISH_REVIEWED -> references.getMeetingReference(meeting.id)
+        }
         val sendMeeting = async {
-            references.getMeetingPreviewReference(meeting.id)
+            reference
                 .setValue(MeetingDB.toMeetingDB(meeting))
                 .await()
         }

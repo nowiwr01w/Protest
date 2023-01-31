@@ -133,7 +133,11 @@ fun CreateMeetingMainScreen(
                 navigator.meetingsNavigator.navigateToMapDrawPath(SELECT_START_LOCATION)
             }
             is Effect.NavigateToPreview -> {
-                navigator.meetingsNavigator.navigateToMeetingInfo(true, it.meeting)
+                navigator.meetingsNavigator.navigateToMeetingInfo(
+                    isPreviewMode = true,
+                    isViewUnpublishedMode = false,
+                    meeting = it.meeting
+                )
             }
         }
     }

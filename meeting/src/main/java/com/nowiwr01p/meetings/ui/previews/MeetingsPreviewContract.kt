@@ -20,5 +20,6 @@ interface MeetingsPreviewContract {
 
     interface Listener {
         fun onBackClick()
+        fun toPublishMeeting(meeting: Meeting)
     }
 }

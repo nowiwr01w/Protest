@@ -54,6 +54,8 @@ import com.nowiwr01p.core_ui.ui.button.StateButton
 import com.nowiwr01p.core_ui.ui.progress.StubProgressBar
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode.*
 import com.nowiwr01p.meeting.R
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.State
@@ -63,6 +65,7 @@ import org.koin.androidx.compose.getViewModel
 @Composable
 fun MeetingMainScreen(
     isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     meeting: Meeting,
     navigator: Navigator,
     viewModel: MeetingViewModel = getViewModel()
@@ -77,8 +80,8 @@ fun MeetingMainScreen(
        override fun setReaction(isPositiveButtonClicked: Boolean) {
             viewModel.setEvent(Event.SetReaction(isPositiveButtonClicked))
        }
-       override fun createMeeting() {
-            viewModel.setEvent(Event.CreateMeeting)
+       override fun createMeeting(mode: CreateMeetingMode) {
+            viewModel.setEvent(Event.CreateMeeting(mode))
        }
    }
 
@@ -88,6 +91,7 @@ fun MeetingMainScreen(
 
     MeetingMainScreenContent(
         isPreviewMode = isPreviewMode,
+        isViewUnpublishedMode = isViewUnpublishedMode,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -96,13 +100,14 @@ fun MeetingMainScreen(
 @Composable
 private fun MeetingMainScreenContent(
     isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?
 ) {
     ConstraintLayout(
         modifier = Modifier.fillMaxSize()
     ) {
-        val (toolbar, content, publishButton) = createRefs()
+        val (toolbar, content, button) = createRefs()
 
         val toolbarModifier = Modifier
             .constrainAs(toolbar) {
@@ -128,25 +133,28 @@ private fun MeetingMainScreenContent(
             }
         ScrollableContent(
             isPreviewMode = isPreviewMode,
+            isViewUnpublishedMode = isViewUnpublishedMode,
             state = state,
             listener = listener,
             modifier = contentModifier
         )
 
-        val publishButtonModifier = Modifier
+        val buttonModifier = Modifier
             .fillMaxWidth()
             .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
             .clip(RoundedCornerShape(24.dp))
-            .constrainAs(publishButton) {
+            .constrainAs(button) {
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
                 bottom.linkTo(parent.bottom)
             }
-        if (isPreviewMode) {
-            PublishButton(
+        if (isPreviewMode || isViewUnpublishedMode) {
+            Button(
+                isPreviewMode = isPreviewMode,
+                isViewUnpublishedMode = isViewUnpublishedMode,
                 state = state,
                 listener = listener,
-                modifier = publishButtonModifier
+                modifier = buttonModifier
             )
         }
     }
@@ -155,6 +163,7 @@ private fun MeetingMainScreenContent(
 @Composable
 private fun ScrollableContent(
     isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?,
     modifier: Modifier
@@ -198,7 +207,7 @@ private fun ScrollableContent(
                 }
             }
 
-            if (isPreviewMode) {
+            if (isPreviewMode || isViewUnpublishedMode) {
                 item { Spacer(modifier = Modifier.height(120.dp)) }
             } else {
                 item { WillYouGoTitle() }
@@ -781,20 +790,26 @@ private fun getBorderColor(
  * PUBLISH BUTTON
  */
 @Composable
-private fun PublishButton(
+private fun Button(
+    isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?,
     modifier: Modifier
 ) {
     StateButton(
-        text = "Опубликовать",
+        text = if (isPreviewMode) "Отправить на ревью" else "Опубликовать",
         state = state.createMeetingButtonState,
         onSendRequest = {
-            listener?.createMeeting()
+            val mode = if (isPreviewMode) SEND_TO_REVIEW else PUBLISH_REVIEWED
+            listener?.createMeeting(mode)
         },
         onSuccess = {
             listener?.onBack()
             listener?.onBack()
+            if (isViewUnpublishedMode) {
+                listener?.onBack()
+            }
         },
         modifier = modifier
     )
@@ -808,6 +823,7 @@ private fun PublishButton(
 private fun MeetingMainScreenContent() = MeetingsTheme {
     MeetingMainScreenContent(
         isPreviewMode = false,
+        isViewUnpublishedMode = false,
         state = State(),
         listener = null
     )

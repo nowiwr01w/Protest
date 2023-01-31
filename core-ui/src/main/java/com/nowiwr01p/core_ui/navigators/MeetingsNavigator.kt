@@ -5,7 +5,7 @@ import com.nowiwr01p.core.model.CreateMeetingMapType
 import com.nowiwr01p.core_ui.navigators.module.ModuleNavigator
 
 interface MeetingsNavigator: ModuleNavigator {
-    fun navigateToMeetingInfo(isPreviewMode: Boolean, meeting: Meeting)
+    fun navigateToMeetingInfo(isPreviewMode: Boolean, isViewUnpublishedMode: Boolean, meeting: Meeting)
     fun navigateToCreateMeeting()
     fun navigateToUnpublishedMeetings()
     fun navigateToMapDrawPath(type: CreateMeetingMapType)
