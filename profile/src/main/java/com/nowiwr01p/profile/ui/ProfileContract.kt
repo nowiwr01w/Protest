@@ -38,7 +38,9 @@ interface ProfileContract {
         val shouldRequestPermission: Boolean = false,
         val isStorageAvailable: Boolean = false,
         val showLogoutAlert: Boolean = false,
-        val showDeleteAccountAlert: Boolean = false
+        val showDeleteAccountAlert: Boolean = false,
+        val tempOrganizer: Boolean = false,
+        val tempWriter: Boolean = false
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {

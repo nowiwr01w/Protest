@@ -273,11 +273,17 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
             top.linkTo(name.bottom)
         }
     if (!state.editMode) {
-        val userRole = when {
+        var userRole = when {
+            state.tempOrganizer && state.tempWriter -> "Временный организатор, редактор новостей"
+            state.tempOrganizer -> "Временный организатор"
+            state.tempWriter -> "Временный редактор"
+            else -> "Для отображения роли получите доступ"
+        }
+        userRole = when {
             state.user.organizer && state.user.writer -> "Организатор, редактор новостей"
             state.user.organizer -> "Организатор"
             state.user.writer -> "Редактор новостей"
-            else -> "Для отображения роли получите доступ"
+            else -> userRole
         }
         Text(
             text = userRole,
