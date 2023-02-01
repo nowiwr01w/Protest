@@ -11,10 +11,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.rememberCoroutineScope
@@ -80,6 +77,9 @@ fun MeetingsMainScreen(
         }
         override fun showBecomeOrganizerBottomSheet() {
             // TODO
+        }
+        override fun toMapCurrentMeeting(meeting: Meeting) {
+            navigator.meetingsNavigator.navigateToMapCurrentMeeting(meeting.id)
         }
     }
 
@@ -362,7 +362,8 @@ private fun LazyListScope.Meetings(
         item { Spacer(modifier = Modifier.height(8.dp)) }
         items(state.meetings) { meeting ->
             MeetingItem(meeting) {
-                listener?.toMeeting(meeting)
+                listener?.toMapCurrentMeeting(meeting)
+//                listener?.toMeeting(meeting)
             }
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
@@ -371,10 +372,7 @@ private fun LazyListScope.Meetings(
 
 
 @Composable
-internal fun MeetingItem(
-    meeting: Meeting,
-    onClick: () -> Unit
-) = ConstraintLayout(
+internal fun MeetingItem(meeting: Meeting, onClick: () -> Unit) = ConstraintLayout(
     modifier = Modifier
         .fillMaxWidth()
         .clickable { onClick.invoke() }

@@ -13,6 +13,7 @@ import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingVewModel
 import com.nowiwr01p.meetings.ui.main.MeetingsMapper
 import com.nowiwr01p.meetings.ui.main.MeetingsViewModel
 import com.nowiwr01p.meetings.ui.create_meeting.map.CreateMeetingMapViewModel
+import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingViewModel
 import com.nowiwr01p.meetings.ui.meeting.MeetingViewModel
 import com.nowiwr01p.meetings.ui.previews.MeetingsPreviewViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -53,6 +54,13 @@ val moduleMeetings = module {
         scoped { GetMeetingsScreenCacheUseCase(get()) }
         scoped { SaveMeetingsScreenCacheUseCase(get()) }
         scoped { GetCachedCategoriesUseCase(get()) }
+    }
+
+    /**
+     * MAP CURRENT MEETING
+     */
+    viewModel {
+        MapCurrentMeetingViewModel()
     }
 
     /**

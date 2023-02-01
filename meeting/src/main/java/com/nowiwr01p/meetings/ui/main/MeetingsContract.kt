@@ -40,5 +40,6 @@ interface MeetingsContract {
         fun showBecomeOrganizerBottomSheet()
         fun onStoryClick(story: Story)
         fun onCategoryClick(category: Category)
+        fun toMapCurrentMeeting(meeting: Meeting)
     }
 }

@@ -8,12 +8,14 @@ import androidx.navigation.navArgument
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.CreateMeetingMapType
 import com.nowiwr01p.core_ui.Keys
+import com.nowiwr01p.core_ui.Keys.ARG_TO_MAP_CURRENT_MEETING
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
 import com.nowiwr01p.meetings.ui.create_meeting.CreateMeetingMainScreen
 import com.nowiwr01p.meetings.ui.main.MeetingsMainScreen
 import com.nowiwr01p.meetings.ui.create_meeting.map.CurrentMeetingMapScreen
+import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeeting
 import com.nowiwr01p.meetings.ui.meeting.MeetingMainScreen
 import com.nowiwr01p.meetings.ui.previews.MeetingsPreviewMainScreen
 import kotlinx.serialization.Serializable
@@ -40,6 +42,32 @@ sealed class MeetingsScreen<T>(
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(route) {
                 MeetingsMainScreen(navigator)
+            }
+        }
+    }
+
+    /**
+     * MAP CURRENT MEETING
+     */
+    object MapCurrentMeeting: MeetingsScreen<String>(
+        MeetingsScreenType.MapCurrentMeeting.route,
+        rootRoute,
+        false
+    ) {
+        override fun navigate(args: String, navController: NavController) {
+            navController.navigate(
+                route = route.replace("{${ARG_TO_MAP_CURRENT_MEETING}}", args)
+            )
+        }
+        override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
+            navGraphBuilder.composable(
+                route = route,
+                arguments = listOf(
+                    navArgument(ARG_TO_MAP_CURRENT_MEETING) { type = NavType.StringType }
+                )
+            ) {
+                val meetingId = it.arguments?.getString(ARG_TO_MAP_CURRENT_MEETING).orEmpty()
+                MapCurrentMeeting(meetingId, navigator)
             }
         }
     }
