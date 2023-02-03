@@ -6,17 +6,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.*
+import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
+import com.nowiwr01p.meetings.extensions.get
 import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
 fun MapCurrentMeeting(
-    meetingId: String,
+    meeting: Meeting,
     navigator: Navigator,
     viewModel: MapCurrentMeetingViewModel = getViewModel()
 ) {
@@ -27,7 +31,7 @@ fun MapCurrentMeeting(
     }
 
     LaunchedEffect(Unit) {
-        viewModel.setEvent(Event.Init(meetingId))
+        viewModel.setEvent(Event.Init(meeting))
     }
 
     MapCurrentMeetingContent(
@@ -41,7 +45,9 @@ private fun MapCurrentMeetingContent(state: State, listener: Listener?) = Column
     modifier = Modifier.fillMaxSize()
 ) {
     Toolbar(state, listener)
-    Map()
+    if (state.meeting.cityName.isNotEmpty()) {
+        Map(state)
+    }
 }
 
 @Composable
@@ -57,8 +63,21 @@ private fun Toolbar(state: State, listener: Listener?) = ToolbarTop(
 )
 
 @Composable
-private fun Map() {
+private fun Map(state: State) {
+    val startPoint = state.meeting.locationInfo.locationStartPoint.get()
+    val cameraPositionState = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(startPoint, 13f)
+    }
 
+    GoogleMap(
+        modifier = Modifier.fillMaxSize(),
+        cameraPositionState = cameraPositionState,
+        uiSettings = MapUiSettings(zoomControlsEnabled = false)
+    ) {
+        Marker(
+            state = rememberMarkerState(position = startPoint)
+        )
+    }
 }
 
 /**

@@ -8,7 +8,7 @@ import com.nowiwr01p.core_ui.view_model.ViewState
 interface MapCurrentMeetingContract {
 
     sealed interface Event: ViewEvent {
-        data class Init(val meetingId: String): Event
+        data class Init(val meeting: Meeting): Event
     }
 
     data class State(

@@ -79,7 +79,7 @@ fun MeetingsMainScreen(
             // TODO
         }
         override fun toMapCurrentMeeting(meeting: Meeting) {
-            navigator.meetingsNavigator.navigateToMapCurrentMeeting(meeting.id)
+            navigator.meetingsNavigator.navigateToMapCurrentMeeting(meeting)
         }
     }
 

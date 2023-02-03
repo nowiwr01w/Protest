@@ -49,14 +49,17 @@ sealed class MeetingsScreen<T>(
     /**
      * MAP CURRENT MEETING
      */
-    object MapCurrentMeeting: MeetingsScreen<String>(
+    object MapCurrentMeeting: MeetingsScreen<Meeting>(
         MeetingsScreenType.MapCurrentMeeting.route,
         rootRoute,
         false
     ) {
-        override fun navigate(args: String, navController: NavController) {
+        override fun navigate(args: Meeting, navController: NavController) {
             navController.navigate(
-                route = route.replace("{${ARG_TO_MAP_CURRENT_MEETING}}", args)
+                route = route.replace(
+                    "{${ARG_TO_MAP_CURRENT_MEETING}}",
+                    Json.encodeToString(args)
+                )
             )
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
@@ -66,8 +69,9 @@ sealed class MeetingsScreen<T>(
                     navArgument(ARG_TO_MAP_CURRENT_MEETING) { type = NavType.StringType }
                 )
             ) {
-                val meetingId = it.arguments?.getString(ARG_TO_MAP_CURRENT_MEETING).orEmpty()
-                MapCurrentMeeting(meetingId, navigator)
+                val meetingJson = it.arguments?.getString(ARG_TO_MAP_CURRENT_MEETING).orEmpty()
+                val meeting = Json.decodeFromString<Meeting>(meetingJson)
+                MapCurrentMeeting(meeting, navigator)
             }
         }
     }

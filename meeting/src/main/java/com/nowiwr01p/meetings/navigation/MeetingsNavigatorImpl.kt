@@ -17,8 +17,8 @@ class MeetingsNavigatorImpl: MeetingsNavigator {
         navController = curNavController
     }
 
-    override fun navigateToMapCurrentMeeting(meetingId: String) {
-        MapCurrentMeeting.navigate(meetingId, navController)
+    override fun navigateToMapCurrentMeeting(meeting: Meeting) {
+        MapCurrentMeeting.navigate(meeting, navController)
     }
 
     override fun navigateToUnpublishedMeetings() {
