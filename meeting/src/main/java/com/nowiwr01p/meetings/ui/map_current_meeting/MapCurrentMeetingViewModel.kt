@@ -6,9 +6,7 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
-import com.nowiwr01p.domain.meetings.meeting.usecase.GetSubscribedMeetingUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SubscribeMeetingUseCase
 import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
 import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus
@@ -20,7 +18,6 @@ import kotlinx.coroutines.launch
 class MapCurrentMeetingViewModel(
     private val getLocationUseCase: GetLocationUseCase,
     private val subscribeMeetingUseCase: SubscribeMeetingUseCase,
-    private val getSubscribedMeetingUseCase: GetSubscribedMeetingUseCase,
     private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -55,35 +52,28 @@ class MapCurrentMeetingViewModel(
     private fun subscribeMeeting(meeting: Meeting, location: LocationInfo) = io {
         runCatching {
             subscribeMeetingUseCase.execute(meeting.id)
-        }.onSuccess {
-            setSubscribedMeeting(location)
+        }.onSuccess { meetingFlow ->
+            meetingFlow.collect { subscribed -> setMeetingData(subscribed, location) }
         }
     }
 
     /**
-     * SET UPDATED MEETING INFO
+     * SET MEETING DATA
      */
-    private fun setSubscribedMeeting(location: LocationInfo) = launch {
-        getSubscribedMeetingUseCase.execute().collect { subscribed ->
-            setMeeting(subscribed, location)
-            setMeetingTitleAndStatus(subscribed)
-        }
-    }
-
-    private fun setMeeting(meeting: Meeting, location: LocationInfo) {
-        setState { copy(meeting = meeting.copy(locationInfo = location)) }
-    }
-
-    /**
-     * SET MEETING TITLE AND STATUS
-     */
-    private fun setMeetingTitleAndStatus(meeting: Meeting) = MeetingStatus.get(meeting).let { status ->
-        when (status) {
-            WAITING_FOR_PEOPLE -> "Сбор людей".also { setWaitingTitle() }
-            IN_PROGRESS -> "В процессе".also { cancelWaitingTitleJob() }
-            ENDED -> "Митинг завершен".also { cancelWaitingTitleJob() }
-        }.also {
-            setState { copy(title = it, meetingStatus = status) }
+    private fun setMeetingData(meeting: Meeting, location: LocationInfo) {
+        MeetingStatus.get(meeting).let { status ->
+            val title = when (status) {
+                WAITING_FOR_PEOPLE -> "Сбор людей".also { setWaitingTitle() }
+                IN_PROGRESS -> "В процессе".also { cancelWaitingTitleJob() }
+                ENDED -> "Митинг завершен".also { cancelWaitingTitleJob() }
+            }
+            setState {
+                copy(
+                    title = title,
+                    meetingStatus = status,
+                    meeting = meeting.copy(locationInfo = location)
+                )
+            }
         }
     }
 

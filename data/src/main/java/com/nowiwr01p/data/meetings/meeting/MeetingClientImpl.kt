@@ -7,7 +7,6 @@ import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.meeting.client.MeetingClient
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -18,14 +17,11 @@ class MeetingClientImpl(
 
     private val meeting: MutableStateFlow<Meeting> = MutableStateFlow(Meeting())
 
-    override suspend fun getMeetingFlow() = meeting.asStateFlow()
-
-    override suspend fun subscribeMeeting(id: String): Unit = withContext(dispatchers.io) {
+    override suspend fun subscribeMeeting(id: String) = withContext(dispatchers.io) {
         val listener = createEventListener<Meeting> { curMeeting ->
-            CoroutineScope(dispatchers.io).launch {
-                meeting.emit(curMeeting)
-            }
+            CoroutineScope(dispatchers.io).launch { meeting.emit(curMeeting) }
         }
         references.getMeetingReference(id).addValueEventListener(listener)
+        meeting
     }
 }

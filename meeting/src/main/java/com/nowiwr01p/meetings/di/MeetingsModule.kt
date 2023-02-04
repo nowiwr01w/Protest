@@ -63,7 +63,6 @@ val moduleMeetings = module {
         MapCurrentMeetingViewModel(
             get(),
             get(),
-            get(),
             get()
         )
     }
