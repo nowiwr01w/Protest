@@ -6,9 +6,9 @@ import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
 
 class GetLocationUseCase(
     private val client: MeetingsClient
-): UseCase<String, LocationInfo?> {
+): UseCase<String, LocationInfo> {
 
-    override suspend fun execute(input: String): LocationInfo? {
+    override suspend fun execute(input: String): LocationInfo {
         return client.getMeetingLocation(input)
     }
 }

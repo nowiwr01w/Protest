@@ -4,5 +4,5 @@ import androidx.compose.ui.graphics.Color
 
 data class SnackBarParams(
     val text: String,
-    val fromStatusBarColor: Color
+    val fromStatusBarColor: Color = Color.White
 )

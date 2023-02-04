@@ -60,7 +60,7 @@ val moduleMeetings = module {
      * MAP CURRENT MEETING
      */
     viewModel {
-        MapCurrentMeetingViewModel()
+        MapCurrentMeetingViewModel(get(), get())
     }
 
     /**

@@ -9,7 +9,7 @@ interface MeetingsClient {
     suspend fun subscribeMeetings()
     suspend fun getMeetings(): StateFlow<List<Meeting>>
     suspend fun getUnpublishedMeetings(): List<Meeting>
-    suspend fun getMeetingLocation(meetingId: String): LocationInfo?
+    suspend fun getMeetingLocation(meetingId: String): LocationInfo
     suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean): Meeting
     suspend fun createMeeting(mode: CreateMeetingMode, meeting: Meeting)
 }

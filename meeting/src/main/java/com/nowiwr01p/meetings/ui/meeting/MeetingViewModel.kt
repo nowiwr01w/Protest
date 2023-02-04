@@ -47,8 +47,10 @@ class MeetingViewModel(
      * LOAD LOCATION IF TODO
      */
     private suspend fun getMeetingLocation() = with(viewState.value) {
-        getLocationUseCase.execute(meeting.id)?.let { location ->
-            val updatedMeeting = meeting.copy(locationInfo = location)
+        runCatching {
+            getLocationUseCase.execute(meeting.id)
+        }.onSuccess {
+            val updatedMeeting = meeting.copy(locationInfo = it)
             setState { copy(meeting = updatedMeeting) }
         }
     }

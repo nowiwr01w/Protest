@@ -20,7 +20,7 @@ interface MapCurrentMeetingContract {
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
-
+        object NavigateBack: Effect
     }
 
     interface Listener {

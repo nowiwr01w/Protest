@@ -50,7 +50,7 @@ class MeetingsClientImpl(
     override suspend fun getMeetingLocation(meetingId: String) = withContext(dispatchers.io) {
         references.getLocationsReference(meetingId).get()
             .await()
-            .getValue<LocationInfo>()
+            .getValue<LocationInfo>() ?: throw IllegalStateException("No location found")
     }
 
     /**

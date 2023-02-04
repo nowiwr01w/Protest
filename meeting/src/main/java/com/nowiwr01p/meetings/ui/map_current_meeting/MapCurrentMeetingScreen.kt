@@ -9,8 +9,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.*
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.MeetingsTheme
+import com.nowiwr01p.core_ui.ui.progress.StubProgressBar
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
@@ -35,6 +37,12 @@ fun MapCurrentMeeting(
         viewModel.setEvent(Event.Init(meeting))
     }
 
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.NavigateBack -> listener.onBackClick()
+        }
+    }
+
     MapCurrentMeetingContent(
         state = viewModel.viewState.value,
         listener = listener
@@ -46,8 +54,10 @@ private fun MapCurrentMeetingContent(state: State, listener: Listener?) = Column
     modifier = Modifier.fillMaxSize()
 ) {
     Toolbar(state, listener)
-    if (state.meeting.cityName.isNotEmpty()) {
+    if (state.meeting.locationInfo.locationStartPoint.latitude != .0) {
         Map(state)
+    } else {
+        StubProgressBar()
     }
 }
 

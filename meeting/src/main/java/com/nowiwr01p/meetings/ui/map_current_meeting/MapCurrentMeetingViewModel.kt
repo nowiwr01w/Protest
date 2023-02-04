@@ -1,8 +1,12 @@
 package com.nowiwr01p.meetings.ui.map_current_meeting
 
 import androidx.lifecycle.viewModelScope
+import com.nowiwr01p.core.datastore.cities.data.LocationInfo
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
+import com.nowiwr01p.domain.meetings.meeting.GetLocationUseCase
 import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
 import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus
 import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus.*
@@ -10,7 +14,10 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MapCurrentMeetingViewModel: BaseViewModel<Event, State, Effect>() {
+class MapCurrentMeetingViewModel(
+    private val getLocationUseCase: GetLocationUseCase,
+    private val showSnackBarHelper: ShowSnackBarHelper
+): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
 
@@ -21,9 +28,29 @@ class MapCurrentMeetingViewModel: BaseViewModel<Event, State, Effect>() {
     }
 
     private fun init(meeting: Meeting) {
-        initMeeting(meeting)
-        initMeetingStatus(meeting)
-        initMeetingTitle()
+        getLocation(meeting)
+    }
+
+    private fun getLocation(meeting: Meeting) = io {
+        runCatching {
+            getLocationUseCase.execute(meeting.id)
+        }.onSuccess { location ->
+            initMeeting(meeting)
+            initLocation(location)
+            initMeetingStatus(meeting)
+            initMeetingTitle()
+        }.onFailure {
+            val params = SnackBarParams(text = "Упс, мы где-то налажали. Свяжитесь с нами, это важно.")
+            showSnackBarHelper.showErrorSnackBar(params)
+            setEffect { Effect.NavigateBack }
+        }
+    }
+
+    /**
+     * SET LOCATION
+     */
+    private fun initLocation(locationInfo: LocationInfo) = setState {
+        copy(meeting = meeting.copy(locationInfo = locationInfo))
     }
 
     /**
