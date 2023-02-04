@@ -16,6 +16,7 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import com.nowiwr01p.meetings.extensions.get
 import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
+import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus.*
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -51,16 +52,18 @@ private fun MapCurrentMeetingContent(state: State, listener: Listener?) = Column
 }
 
 @Composable
-private fun Toolbar(state: State, listener: Listener?) = ToolbarTop(
-    title = {
-        ToolbarTitle(title = "Текущий митинг")
-    },
-    backIcon = {
-        ToolbarBackButton {
-            listener?.onBackClick()
+private fun Toolbar(state: State, listener: Listener?) {
+    ToolbarTop(
+        title = {
+            ToolbarTitle(title = state.title)
+        },
+        backIcon = {
+            ToolbarBackButton {
+                listener?.onBackClick()
+            }
         }
-    }
-)
+    )
+}
 
 @Composable
 private fun Map(state: State) {
@@ -77,6 +80,10 @@ private fun Map(state: State) {
         Marker(
             state = rememberMarkerState(position = startPoint)
         )
+        if (state.meetingStatus == IN_PROGRESS) {
+            val coordinates = state.meeting.locationInfo.path.map { it.get() }
+            Polyline(points = coordinates)
+        }
     }
 }
 
