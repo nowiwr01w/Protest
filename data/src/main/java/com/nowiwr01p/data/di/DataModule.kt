@@ -28,6 +28,7 @@ import com.nowiwr01p.data.categories.CategoriesClientImpl
 import com.nowiwr01p.data.config.CreateArticleRemoteConfigImpl
 import com.nowiwr01p.data.config.CreateMeetingRemoteConfigImpl
 import com.nowiwr01p.data.config.UserRemoteConfigImpl
+import com.nowiwr01p.data.meetings.meeting.MeetingClientImpl
 import com.nowiwr01p.data.stories.StoriesClientImpl
 import com.nowiwr01p.data.user.client.UserClientImpl
 import com.nowiwr01p.domain.AppDispatchers
@@ -53,6 +54,7 @@ import com.nowiwr01p.domain.categories.client.CategoriesClient
 import com.nowiwr01p.domain.config.CreateArticleRemoteConfig
 import com.nowiwr01p.domain.config.CreateMeetingRemoteConfig
 import com.nowiwr01p.domain.config.UserRemoteConfig
+import com.nowiwr01p.domain.meetings.meeting.client.MeetingClient
 import com.nowiwr01p.domain.stories.client.StoriesClient
 import com.nowiwr01p.domain.user.client.UserClient
 import org.koin.dsl.module
@@ -164,6 +166,13 @@ val moduleData = module {
      */
     single<StoriesClient> {
         StoriesClientImpl(get(), get(), get())
+    }
+
+    /**
+     * MEETING
+     */
+    single<MeetingClient> {
+        MeetingClientImpl(get(), get())
     }
 
     /**

@@ -6,8 +6,8 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.meetings.meeting.GetLocationUseCase
-import com.nowiwr01p.domain.meetings.meeting.SetReactionUseCase
+import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
+import com.nowiwr01p.domain.meetings.meeting.usecase.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*

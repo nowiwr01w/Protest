@@ -16,7 +16,7 @@ interface MapCurrentMeetingContract {
     data class State(
         val meeting: Meeting = Meeting(),
         val meetingStatus: MeetingStatus = WAITING_FOR_PEOPLE,
-        val title: String = ""
+        val title: String = "Текущий митинг"
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {

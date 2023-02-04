@@ -1,4 +1,4 @@
-package com.nowiwr01p.domain.meetings.meeting
+package com.nowiwr01p.domain.meetings.meeting.usecase
 
 import com.nowiwr01p.core.datastore.cities.data.LocationInfo
 import com.nowiwr01p.domain.UseCase

@@ -6,7 +6,10 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.meetings.meeting.GetLocationUseCase
+import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
+import com.nowiwr01p.domain.meetings.meeting.usecase.GetSubscribedMeetingUseCase
+import com.nowiwr01p.domain.meetings.meeting.usecase.SubscribeMeetingUseCase
 import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
 import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus
 import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus.*
@@ -16,6 +19,8 @@ import kotlinx.coroutines.launch
 
 class MapCurrentMeetingViewModel(
     private val getLocationUseCase: GetLocationUseCase,
+    private val subscribeMeetingUseCase: SubscribeMeetingUseCase,
+    private val getSubscribedMeetingUseCase: GetSubscribedMeetingUseCase,
     private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -35,49 +40,51 @@ class MapCurrentMeetingViewModel(
         runCatching {
             getLocationUseCase.execute(meeting.id)
         }.onSuccess { location ->
-            initMeeting(meeting)
-            initLocation(location)
-            initMeetingStatus(meeting)
-            initMeetingTitle()
+            subscribeMeeting(meeting, location)
         }.onFailure {
             val params = SnackBarParams(text = "Упс, мы где-то налажали. Свяжитесь с нами, это важно.")
             showSnackBarHelper.showErrorSnackBar(params)
+            delay(4000)
             setEffect { Effect.NavigateBack }
         }
     }
 
     /**
-     * SET LOCATION
+     * SUBSCRIBE MEETING
      */
-    private fun initLocation(locationInfo: LocationInfo) = setState {
-        copy(meeting = meeting.copy(locationInfo = locationInfo))
-    }
-
-    /**
-     * SET MEETING
-     */
-    private fun initMeeting(meeting: Meeting) {
-        setState { copy(meeting = meeting) }
-    }
-
-    /**
-     * SET MEETING STATUS
-     */
-    private fun initMeetingStatus(meeting: Meeting) {
-        val status = MeetingStatus.get(meeting)
-        setState { copy(meetingStatus = status) }
-    }
-
-    /**
-     * SET MEETING TITLE
-     */
-    private fun initMeetingTitle() = with(viewState.value) {
-        val title = when (meetingStatus) {
-            WAITING_FOR_PEOPLE -> "Сбор людей".also { initWaitingTitle() }
-            IN_PROGRESS -> "В процессе"
-            ENDED -> "Митинг завершен"
+    private fun subscribeMeeting(meeting: Meeting, location: LocationInfo) = io {
+        runCatching {
+            subscribeMeetingUseCase.execute(meeting.id)
+        }.onSuccess {
+            setSubscribedMeeting(location)
         }
-        setState { copy(title = title) }
+    }
+
+    /**
+     * SET UPDATED MEETING INFO
+     */
+    private fun setSubscribedMeeting(location: LocationInfo) = launch {
+        getSubscribedMeetingUseCase.execute().collect { subscribed ->
+            setMeeting(subscribed, location)
+            setMeetingTitleAndStatus(subscribed)
+        }
+    }
+
+    private fun setMeeting(meeting: Meeting, location: LocationInfo) {
+        setState { copy(meeting = meeting.copy(locationInfo = location)) }
+    }
+
+    /**
+     * SET MEETING TITLE AND STATUS
+     */
+    private fun setMeetingTitleAndStatus(meeting: Meeting) = MeetingStatus.get(meeting).let { status ->
+        when (status) {
+            WAITING_FOR_PEOPLE -> "Сбор людей".also { setWaitingTitle() }
+            IN_PROGRESS -> "В процессе".also { cancelWaitingTitleJob() }
+            ENDED -> "Митинг завершен".also { cancelWaitingTitleJob() }
+        }.also {
+            setState { copy(title = it, meetingStatus = status) }
+        }
     }
 
     /**
@@ -85,7 +92,7 @@ class MapCurrentMeetingViewModel(
      */
     private var waitingTitleJob: Job? = null
 
-    private fun initWaitingTitle() {
+    private fun setWaitingTitle() {
         val animatedTitles =  listOf("Сбор людей", "Сбор людей.", "Сбор людей..", "Сбор людей...")
         waitingTitleJob?.cancel()
         waitingTitleJob = viewModelScope.launch {
@@ -95,5 +102,9 @@ class MapCurrentMeetingViewModel(
                 delay(750)
             }
         }
+    }
+
+    private fun cancelWaitingTitleJob() {
+        waitingTitleJob?.cancel()
     }
 }
