@@ -41,13 +41,13 @@ class SplashScreenViewModel(
         async { subscribeUserIfAuthorized() },
         async { isCitySet() },
         async { isVerificationCompleted() },
-        async { onContentSubscribe() }
     ).awaitAll()
 
     private suspend fun subscribeUserIfAuthorized() = runCatching {
         subscribeUserUseCase.execute()
     }.onSuccess {
         setState { copy(isAuthorized = true) }
+        onContentSubscribe()
     }.onFailure {
         setState { copy(isAuthorized = false) }
     }
@@ -62,12 +62,14 @@ class SplashScreenViewModel(
         setState { copy(isVerificationCompleted = completed) }
     }
 
-    private suspend fun onContentSubscribe() = listOf(
-        async { subscribeStoriesUseCase.execute() },
-        async { subscribeMeetingsUseCase.execute() },
-        async { subscribeCategoriesUseCase.execute() },
-        async { subscribeNewsUseCase.execute() }
-    ).awaitAll()
+    private suspend fun onContentSubscribe() = runCatching {
+        listOf(
+            async { subscribeStoriesUseCase.execute() },
+            async { subscribeMeetingsUseCase.execute() },
+            async { subscribeCategoriesUseCase.execute() },
+            async { subscribeNewsUseCase.execute() }
+        ).awaitAll()
+    }
 
     private fun getStartScreenRoute() = with(viewState.value) {
         val startScreen = when {

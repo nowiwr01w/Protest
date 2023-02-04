@@ -9,6 +9,7 @@ import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.news.create_article.usecase.ValidateArticleDataUseCase
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.news.create_article.validators.data.CreateArticleError
 import com.nowiwr01p.news.ui.create_article.CreateArticleContract.*
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType
 import com.nowiwr01p.news.ui.create_article.data.CreateArticleBottomSheetType.*
@@ -18,14 +19,14 @@ import com.nowiwr01p.domain.news.create_article.validators.data.DynamicFields.*
 import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields
 import com.nowiwr01p.domain.news.create_article.validators.data.StaticFields.*
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
-import java.util.*
 
 class CreateArticleViewModel(
     private val statusBarColor: Color,
     private val getLocalUserUseCase: GetUserUseCase,
     private val validateArticleDataUseCase: ValidateArticleDataUseCase,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
-    private val showSnackBarHelper: ShowSnackBarHelper
+    private val showSnackBarHelper: ShowSnackBarHelper,
+    private val mapper: CreateArticleMapper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -218,44 +219,26 @@ class CreateArticleViewModel(
     /**
      * BUILD ARTICLE & NAVIGATE TO PREVIEW
      */
-    private fun validate() = with(viewState.value) {
-        val orderedContent = content.toMutableList().mapIndexed { index, articleData ->
-            articleData.setItemOrder(index)
+    private fun validate() = io {
+        val article = mapper.getArticle()
+        runCatching {
+            validateArticleDataUseCase.execute(article)
+        }.onSuccess {
+            if (it.isEmpty()) toPreview(article) else showErrors(it)
         }
-        val dateViewers = DateViewers(
-            date = System.currentTimeMillis(),
-            viewers = listOf(userId)
+    }
+
+    private fun toPreview(article: Article) {
+        setState { copy(errors = listOf()) }
+        setEffect { Effect.NavigateToPreview(article) }
+    }
+
+    private fun showErrors(errors: List<CreateArticleError>) {
+        val params = SnackBarParams(
+            fromStatusBarColor = statusBarColor,
+            text = errors.minBy { it.contentIndex }.errorText
         )
-        with(orderedContent) {
-            val article = Article(
-                id = UUID.randomUUID().toString(),
-                topImage = filterIsInstance<TopImage>().first(),
-                dateViewers = dateViewers,
-                title = filterIsInstance<Title>().first(),
-                description = filterIsInstance<Description>().first(),
-                text = filterIsInstance<Text>(),
-                quotes = filterIsInstance<Quote>(),
-                subtitles = filterIsInstance<SubTitle>(),
-                imagesLists = filterIsInstance<ImageList>(),
-                orderedLists = filterIsInstance<OrderedList>(),
-            )
-            io {
-                runCatching {
-                    validateArticleDataUseCase.execute(article)
-                }.onSuccess { errors ->
-                    if (errors.isEmpty()) {
-                        setState { copy(errors = listOf()) }
-                        setEffect { Effect.NavigateToPreview(article) }
-                    } else {
-                        val params = SnackBarParams(
-                            fromStatusBarColor = statusBarColor,
-                            text = errors.sortedBy { it.contentIndex }.first().errorText
-                        )
-                        showSnackBarHelper.showErrorSnackBar(params)
-                        setState { copy(errors = errors) }
-                    }
-                }
-            }
-        }
+        showSnackBarHelper.showErrorSnackBar(params)
+        setState { copy(errors = errors) }
     }
 }

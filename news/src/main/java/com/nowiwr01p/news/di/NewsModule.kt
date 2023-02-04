@@ -7,6 +7,7 @@ import com.nowiwr01p.domain.news.main.usecase.data.NewsScreenCache
 import com.nowiwr01p.news.navigation.NewsNavigatorImpl
 import com.nowiwr01p.news.ui.news.NewsViewModel
 import com.nowiwr01p.news.ui.article.ArticleViewModel
+import com.nowiwr01p.news.ui.create_article.CreateArticleMapper
 import com.nowiwr01p.news.ui.create_article.CreateArticleViewModel
 import com.nowiwr01p.news.ui.previews.UnpublishedNewsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
@@ -49,8 +50,13 @@ val moduleNews = module {
     /**
      * CREATE ARTICLE
      */
+    factory {
+        CreateArticleMapper()
+    }
+
     viewModel {
         CreateArticleViewModel(
+            get(),
             get(),
             get(),
             get(),

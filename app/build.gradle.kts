@@ -67,6 +67,7 @@ dependencies {
     implementation(project(mapOf("path" to ":core-ui")))
     implementation(project(mapOf("path" to ":navigation")))
 
+    logDependencies()
     animationDependencies()
     biometricDependencies()
     koinDependencies()

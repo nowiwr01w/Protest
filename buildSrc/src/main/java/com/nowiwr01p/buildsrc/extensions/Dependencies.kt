@@ -7,6 +7,10 @@ import org.gradle.api.artifacts.dsl.DependencyHandler
 /**
  * Dependencies
  */
+fun DependencyHandler.logDependencies() {
+    implementation(Basic.TIMBER_LIB)
+}
+
 fun DependencyHandler.animationDependencies() {
     implementation(Animations.LOTTIE)
 }
@@ -69,7 +73,6 @@ fun DependencyHandler.commonUiDependencies() {
     implementation(Basic.TOOLING)
     implementation(Basic.TOOLING_PREVIEW)
     implementation(Basic.CONSTRAINT_LAYOUT)
-    implementation(Basic.TIMBER_LIB)
     implementation(Basic.ACTIVITY_COMPOSE)
     implementation(Basic.COIL)
     implementation(Basic.COIL_COMPOSE)
