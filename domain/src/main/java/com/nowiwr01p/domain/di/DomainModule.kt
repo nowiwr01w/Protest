@@ -1,5 +1,6 @@
 package com.nowiwr01p.domain.di
 
+import com.nowiwr01p.domain.app.GetSplashScreenAnimationStateUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
@@ -37,6 +38,11 @@ import com.nowiwr01p.domain.user.usecase.UpdateUserNameUseCase
 import org.koin.dsl.module
 
 val moduleDomain = module {
+
+    /**
+     * APP
+     */
+    factory { GetSplashScreenAnimationStateUseCase(get(), get()) }
 
     /**
      * USER

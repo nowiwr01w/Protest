@@ -3,10 +3,11 @@ package com.nowiwr01p.auth.ui.splash_screen
 import com.nowiwr01p.auth.AuthScreen.*
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.app.GetSplashScreenAnimationStateUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
+import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.main.usecase.SubscribeMeetingsUseCase
 import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsUseCase
 import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
@@ -15,6 +16,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class SplashScreenViewModel(
+    private val getSplashScreenAnimationStateUseCase: GetSplashScreenAnimationStateUseCase,
     private val subscribeUserUseCase: SubscribeUserUseCase,
     private val subscribeStoriesUseCase: SubscribeStoriesUseCase,
     private val subscribeNewsUseCase: SubscribeNewsUseCase,
@@ -33,8 +35,15 @@ class SplashScreenViewModel(
     }
 
     private fun getStartScreen() = io {
+        getSplashScreenAnimation()
         checkLocalData()
         getStartScreenRoute()
+    }
+
+    private suspend fun getSplashScreenAnimation() {
+        getSplashScreenAnimationStateUseCase.execute().let { demo ->
+            setState { copy(isSplashScreenDemoAnimation = demo) }
+        }
     }
 
     private suspend fun checkLocalData() = listOf(

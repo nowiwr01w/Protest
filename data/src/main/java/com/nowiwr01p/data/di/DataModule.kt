@@ -25,6 +25,7 @@ import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationRemoteRepositoryImpl
 import com.nowiwr01p.data.categories.CategoriesClientImpl
+import com.nowiwr01p.domain.config.AppRemoteConfig
 import com.nowiwr01p.data.config.CreateArticleRemoteConfigImpl
 import com.nowiwr01p.data.config.CreateMeetingRemoteConfigImpl
 import com.nowiwr01p.data.config.UserRemoteConfigImpl
@@ -97,6 +98,9 @@ val moduleData = module {
                 remoteConfigSettings { minimumFetchIntervalInSeconds = interval.toLong() }
             )
         }
+    }
+    single {
+        AppRemoteConfig(get())
     }
     single<UserRemoteConfig> {
         UserRemoteConfigImpl()

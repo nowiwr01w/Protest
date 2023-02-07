@@ -34,7 +34,10 @@ fun SplashScreen(
         viewModel.setEvent(Event.Init)
     }
 
-    SplashScreenContent(viewModel.viewState.value, navigator)
+    SplashScreenContent(
+        state = viewModel.viewState.value,
+        navigator = navigator
+    )
 }
 
 @Composable
@@ -44,14 +47,18 @@ private fun SplashScreenContent(state: State, navigator: Navigator) = Box(
         .background(Color.White)
 ) {
     val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(R.raw.anim_splash_screen)
+        spec = LottieCompositionSpec.RawRes(
+            resId = if (state.isSplashScreenDemoAnimation) R.raw.anim_splash_screen_demo else R.raw.anim_splash_screen
+        )
     )
     val logoAnimationState = animateLottieCompositionAsState(composition)
 
+    val topPadding = if (state.isSplashScreenDemoAnimation) 132.dp else 0.dp
+    val bottomPadding = if (state.isSplashScreenDemoAnimation) 0.dp else 24.dp
     LottieAnimation(
         composition = composition,
         progress = { logoAnimationState.progress },
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 24.dp)
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = bottomPadding)
     )
 
     if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
@@ -62,7 +69,7 @@ private fun SplashScreenContent(state: State, navigator: Navigator) = Box(
         }
     }
 
-    AnimatedText(logoAnimationState.progress,)
+    AnimatedText(logoAnimationState.progress)
 }
 
 @Composable

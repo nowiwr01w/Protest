@@ -7,6 +7,7 @@ plugins {
 
 val properties = gradleLocalProperties(rootDir)
 
+val appName: String = properties.getProperty("APP_STORE_NAME")
 val authName: String = properties.getProperty("AUTH_WARNING_STORE_NAME")
 val locationName: String = properties.getProperty("LOCATION_STORE_NAME")
 val verificationName: String = properties.getProperty("VERIFICATION_STORE_NAME")
@@ -16,11 +17,13 @@ android {
 
     buildTypes {
         debug {
+            buildConfigField("String", "APP_SETTINGS_DATA_STORE", appName)
             buildConfigField("String", "AUTH_SECURITY_DATA_STORE", authName)
             buildConfigField("String","LOCATION_DATA_STORE", locationName)
             buildConfigField("String","VERIFICATION_DATA_STORE", verificationName)
         }
         release {
+            buildConfigField("String", "APP_SETTINGS_DATA_STORE", appName)
             buildConfigField("String", "AUTH_SECURITY_DATA_STORE", authName)
             buildConfigField("String","LOCATION_DATA_STORE", locationName)
             buildConfigField("String","VERIFICATION_DATA_STORE", verificationName)

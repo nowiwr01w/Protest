@@ -12,7 +12,7 @@ abstract class RemoteConfig: KoinComponent {
     protected val config = get<FirebaseRemoteConfig>()
     protected val dispatchers = get<AppDispatchers>()
 
-    protected abstract fun initValues()
+    abstract fun initValues()
 
     init {
         CoroutineScope(dispatchers.io).launch {
