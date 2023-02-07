@@ -12,12 +12,15 @@ import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
 import com.nowiwr01p.core.datastore.cities.data.MeetingStatus.*
 import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
+import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.meeting.usecase.RunMeetingUseCase
+import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class MapCurrentMeetingViewModel(
+    private val getUserUseCase: GetUserUseCase,
     private val getLocationUseCase: GetLocationUseCase,
     private val subscribeMeetingUseCase: SubscribeMeetingUseCase,
     private val runMeetingUseCase: RunMeetingUseCase,
@@ -33,21 +36,26 @@ class MapCurrentMeetingViewModel(
         }
     }
 
-    private fun init(meeting: Meeting) {
+    private fun init(meeting: Meeting) = io {
+        getUserData()
         getLocation(meeting)
+    }
+
+    private suspend fun getUserData() = launch {
+        getUserUseCase.execute().collect { user ->
+            setState { copy(user = user) }
+        }
     }
 
     /**
      * LOAD MEETING LOCATION AND PATH
      */
-    private fun getLocation(meeting: Meeting) = io {
-        runCatching {
-            getLocationUseCase.execute(meeting.id)
-        }.onSuccess { location ->
-            subscribeMeeting(meeting, location)
-        }.onFailure {
-            onGetLocationFailed()
-        }
+    private suspend fun getLocation(meeting: Meeting) = runCatching {
+        getLocationUseCase.execute(meeting.id)
+    }.onSuccess { location ->
+        subscribeMeeting(meeting, location)
+    }.onFailure {
+        onGetLocationFailed()
     }
 
     private suspend fun onGetLocationFailed() {

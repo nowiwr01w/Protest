@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.map_current_meeting
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -121,16 +122,30 @@ private fun Map(state: State) = if (state.meeting.locationInfo.locationStartPoin
  * BOTTOM BUTTONS
  */
 @Composable
-private fun BoxScope.ButtonsContainer(state: State, listener: Listener?) = Row(
+private fun BoxScope.ButtonsContainer(state: State, listener: Listener?) = AnimatedVisibility(
+    visible = state.user.organizer,
+    exit = slideOutVertically(
+        animationSpec = tween(delayMillis = 1000),
+    ) + fadeOut(),
+    enter = slideInVertically(
+        initialOffsetY = { 250 },
+        animationSpec = tween(delayMillis = 1000),
+    ) + fadeIn(),
     modifier = Modifier
         .fillMaxWidth()
         .align(Alignment.BottomCenter)
-        .padding(bottom = 32.dp)
 ) {
+    Buttons(state, listener)
+}
+
+@Composable
+private fun Buttons(state: State, listener: Listener?) {
     val width = (LocalConfiguration.current.screenWidthDp.dp - 48.dp) / 2
     Row(
-        modifier = Modifier.padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 32.dp)
     ) {
         AnimatedVisibility(visible = state.meetingStatus == IN_PROGRESS) {
             StateButton(

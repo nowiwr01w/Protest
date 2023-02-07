@@ -6,6 +6,7 @@ import com.nowiwr01p.core_ui.view_model.ViewSideEffect
 import com.nowiwr01p.core_ui.view_model.ViewState
 import com.nowiwr01p.core.datastore.cities.data.MeetingStatus
 import com.nowiwr01p.core.datastore.cities.data.MeetingStatus.*
+import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.ui.button.ButtonState
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 
@@ -17,6 +18,7 @@ interface MapCurrentMeetingContract {
     }
 
     data class State(
+        val user: User = User(),
         val meeting: Meeting = Meeting(),
         val meetingStatus: MeetingStatus = WAITING_FOR_PEOPLE,
         val title: String = "Текущий митинг",
