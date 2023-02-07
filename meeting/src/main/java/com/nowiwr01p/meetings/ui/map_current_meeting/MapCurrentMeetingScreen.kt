@@ -96,12 +96,12 @@ private fun Toolbar(
  * MAP
  */
 @Composable
-private fun Map(state: State) = if (state.meeting.locationInfo.locationStartPoint.latitude == .0) {
+private fun Map(state: State) = if (state.cameraPosition.latitude == .0) {
     StubProgressBar()
 } else {
     val startPoint = state.meeting.locationInfo.locationStartPoint.get()
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(startPoint, 13f)
+        position = CameraPosition.fromLatLngZoom(state.cameraPosition, 13f)
     }
     GoogleMap(
         modifier = Modifier.fillMaxSize(),

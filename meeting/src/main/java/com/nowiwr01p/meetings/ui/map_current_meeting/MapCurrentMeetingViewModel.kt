@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.map_current_meeting
 
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.datastore.cities.data.LocationInfo
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
@@ -54,6 +55,7 @@ class MapCurrentMeetingViewModel(
         getLocationUseCase.execute(meeting.id)
     }.onSuccess { location ->
         subscribeMeeting(meeting, location)
+        calculateCameraPosition(location)
     }.onFailure {
         onGetLocationFailed()
     }
@@ -134,5 +136,21 @@ class MapCurrentMeetingViewModel(
         setState { copy(runMeetingButtonState = state) }
         delay(3000)
         setState { copy(runMeetingButtonState = DEFAULT) }
+    }
+
+    /**
+     * CALCULATE CAMERA POSITION
+     */
+    private fun calculateCameraPosition(location: LocationInfo) = with(location.path) {
+        val minLat = minBy { it.latitude }.latitude
+        val maxLat = maxBy { it.latitude }.latitude
+        val minLon = minBy { it.longitude }.longitude
+        val maxLon = maxBy { it.longitude }.longitude
+
+        val centerLat = (minLat + maxLat) / 2
+        val centerLon = (minLon + maxLon) / 2
+        val center = LatLng(centerLat, centerLon)
+
+        setState { copy(cameraPosition = center) }
     }
 }

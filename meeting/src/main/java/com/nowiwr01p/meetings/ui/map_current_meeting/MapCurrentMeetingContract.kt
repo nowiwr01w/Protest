@@ -1,5 +1,6 @@
 package com.nowiwr01p.meetings.ui.map_current_meeting
 
+import com.google.android.gms.maps.model.LatLng
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
@@ -22,7 +23,8 @@ interface MapCurrentMeetingContract {
         val meeting: Meeting = Meeting(),
         val meetingStatus: MeetingStatus = WAITING_FOR_PEOPLE,
         val title: String = "Текущий митинг",
-        val runMeetingButtonState: ButtonState = DEFAULT
+        val runMeetingButtonState: ButtonState = DEFAULT,
+        val cameraPosition: LatLng = LatLng(.0, .0)
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {
