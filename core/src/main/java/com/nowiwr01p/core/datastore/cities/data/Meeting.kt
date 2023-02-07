@@ -9,7 +9,7 @@ data class Meeting(
     val cityName: String = "",
     val creatorId: String = "",
     val date: Long = 0L,
-    val ended: Boolean = false,
+    val status: MeetingStatus = MeetingStatus.WAITING_FOR_PEOPLE,
     val requiredPeopleCount: Int = 0,
     val image: String = "",
     val categories: List<Category> = listOf(),

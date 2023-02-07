@@ -17,6 +17,7 @@ import com.nowiwr01p.domain.stories.usecase.GetStoriesUseCase
 import com.nowiwr01p.domain.meetings.main.usecase.SetStoryViewedUseCase
 import com.nowiwr01p.domain.meetings.main.usecase.SubscribeMeetingsUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
+import com.nowiwr01p.domain.meetings.meeting.usecase.RunMeetingUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SubscribeMeetingUseCase
 import com.nowiwr01p.domain.meetings.previews.GetUnpublishedMeetingsUseCase
@@ -81,6 +82,7 @@ val moduleDomain = module {
      * MEETING
      */
     factory { GetLocationUseCase(get()) }
+    factory { RunMeetingUseCase(get()) }
     factory { SubscribeMeetingUseCase(get()) }
 
     /**

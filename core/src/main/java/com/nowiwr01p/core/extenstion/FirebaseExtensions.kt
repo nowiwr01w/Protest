@@ -14,13 +14,13 @@ fun AuthResult.toUser() = User(
     verified = user?.isEmailVerified ?: false
 )
 
-inline fun <reified T> createEventListener(crossinline callback: (user: T) -> Unit) = object : ValueEventListener {
+inline fun <reified T> createEventListener(crossinline callback: (value: T) -> Unit) = object : ValueEventListener {
     override fun onCancelled(p0: DatabaseError) {}
 
     override fun onDataChange(snapshot: DataSnapshot) {
-        snapshot.getValue<T>().let { user ->
-            if (user != null) {
-                callback.invoke(user)
+        snapshot.getValue<T>().let { value ->
+            if (value != null) {
+                callback.invoke(value)
             } else {
                 if (BuildConfig.DEBUG) {
                     throw IllegalStateException("createUserEventListener(), value == null")

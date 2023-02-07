@@ -9,8 +9,10 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SubscribeMeetingUseCase
 import com.nowiwr01p.meetings.ui.map_current_meeting.MapCurrentMeetingContract.*
-import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus
-import com.nowiwr01p.meetings.ui.map_current_meeting.data.MeetingStatus.*
+import com.nowiwr01p.core.datastore.cities.data.MeetingStatus.*
+import com.nowiwr01p.core_ui.ui.button.ButtonState
+import com.nowiwr01p.core_ui.ui.button.ButtonState.*
+import com.nowiwr01p.domain.meetings.meeting.usecase.RunMeetingUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -18,6 +20,7 @@ import kotlinx.coroutines.launch
 class MapCurrentMeetingViewModel(
     private val getLocationUseCase: GetLocationUseCase,
     private val subscribeMeetingUseCase: SubscribeMeetingUseCase,
+    private val runMeetingUseCase: RunMeetingUseCase,
     private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -26,6 +29,7 @@ class MapCurrentMeetingViewModel(
     override fun handleEvents(event: Event) {
         when (event) {
             is Event.Init -> init(event.meeting)
+            is Event.RunMeeting -> runMeeting()
         }
     }
 
@@ -33,17 +37,24 @@ class MapCurrentMeetingViewModel(
         getLocation(meeting)
     }
 
+    /**
+     * LOAD MEETING LOCATION AND PATH
+     */
     private fun getLocation(meeting: Meeting) = io {
         runCatching {
             getLocationUseCase.execute(meeting.id)
         }.onSuccess { location ->
             subscribeMeeting(meeting, location)
         }.onFailure {
-            val params = SnackBarParams(text = "Упс, мы где-то налажали. Свяжитесь с нами, это важно.")
-            showSnackBarHelper.showErrorSnackBar(params)
-            delay(4000)
-            setEffect { Effect.NavigateBack }
+            onGetLocationFailed()
         }
+    }
+
+    private suspend fun onGetLocationFailed() {
+        val params = SnackBarParams(text = "Упс, мы где-то налажали. Свяжитесь с нами, это важно.")
+        showSnackBarHelper.showErrorSnackBar(params)
+        delay(4000)
+        setEffect { Effect.NavigateBack }
     }
 
     /**
@@ -61,19 +72,17 @@ class MapCurrentMeetingViewModel(
      * SET MEETING DATA
      */
     private fun setMeetingData(meeting: Meeting, location: LocationInfo) {
-        MeetingStatus.get(meeting).let { status ->
-            val title = when (status) {
-                WAITING_FOR_PEOPLE -> "Сбор людей".also { setWaitingTitle() }
-                IN_PROGRESS -> "В процессе".also { cancelWaitingTitleJob() }
-                ENDED -> "Митинг завершен".also { cancelWaitingTitleJob() }
-            }
-            setState {
-                copy(
-                    title = title,
-                    meetingStatus = status,
-                    meeting = meeting.copy(locationInfo = location)
-                )
-            }
+        val title = when (meeting.status) {
+            WAITING_FOR_PEOPLE -> "Сбор людей".also { setWaitingTitle() }
+            IN_PROGRESS -> "В процессе".also { cancelWaitingTitleJob() }
+            ENDED -> "Митинг завершен".also { cancelWaitingTitleJob() }
+        }
+        setState {
+            copy(
+                title = title,
+                meetingStatus = meeting.status,
+                meeting = meeting.copy(locationInfo = location)
+            )
         }
     }
 
@@ -96,5 +105,26 @@ class MapCurrentMeetingViewModel(
 
     private fun cancelWaitingTitleJob() {
         waitingTitleJob?.cancel()
+    }
+
+    /**
+     * SET MEETING "IN PROGRESS"
+     */
+    private fun runMeeting() = io {
+        setState { copy(runMeetingButtonState = SEND_REQUEST) }
+        runCatching {
+            val location = viewState.value.meeting.locationInfo
+            runMeetingUseCase.execute(location)
+        }.onSuccess {
+            onRunMeetingCompleted(SUCCESS)
+        }.onFailure {
+            onRunMeetingCompleted(ERROR)
+        }
+    }
+
+    private suspend fun onRunMeetingCompleted(state: ButtonState) {
+        setState { copy(runMeetingButtonState = state) }
+        delay(3000)
+        setState { copy(runMeetingButtonState = DEFAULT) }
     }
 }
