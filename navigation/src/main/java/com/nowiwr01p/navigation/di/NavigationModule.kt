@@ -25,9 +25,6 @@ val moduleNavigation = module {
             get(),
             get(),
             get(),
-            get(),
-            get(),
-            get(),
             get()
         )
     }

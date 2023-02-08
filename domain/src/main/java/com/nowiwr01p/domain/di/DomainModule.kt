@@ -1,6 +1,7 @@
 package com.nowiwr01p.domain.di
 
 import com.nowiwr01p.domain.app.GetSplashScreenAnimationStateUseCase
+import com.nowiwr01p.domain.app.InitAppDataUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
@@ -42,6 +43,7 @@ val moduleDomain = module {
     /**
      * APP
      */
+    factory { InitAppDataUseCase(get(), get(), get(), get(), get(), get()) }
     factory { GetSplashScreenAnimationStateUseCase(get(), get()) }
 
     /**

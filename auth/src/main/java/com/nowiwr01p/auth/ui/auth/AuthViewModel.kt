@@ -12,24 +12,24 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
+import com.nowiwr01p.domain.app.InitAppDataUseCase
 import com.nowiwr01p.domain.auth.main.data.user.UserData
 import com.nowiwr01p.domain.auth.main.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.main.data.user.UserDataSignUp
 import com.nowiwr01p.domain.auth.main.usecase.*
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
-import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.delay
 
 class AuthViewModel(
     private val statusBarColor: Color,
+    private val initAppDataUseCase: InitAppDataUseCase,
     private val authDataValidator: ValidateAuthDataUseCase,
     private val authSecurityWarning: GetAuthSecurityWarningUseCase,
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
-    private val subscribeUserUseCase: SubscribeUserUseCase,
     private val statusBarColorHelper: StatusBarColorHelper,
     private val showSnackBarHelper: ShowSnackBarHelper,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
@@ -120,7 +120,7 @@ class AuthViewModel(
                 is UserDataSignUp -> signUpUseCase.execute(userData)
             }
         }.onSuccess {
-            subscribeUserUseCase.execute()
+            initAppDataUseCase.execute()
             checkVerification(it)
         }.onFailure {
             onAuthFailed()

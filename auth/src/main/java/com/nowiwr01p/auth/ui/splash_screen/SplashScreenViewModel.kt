@@ -1,27 +1,21 @@
 package com.nowiwr01p.auth.ui.splash_screen
 
+import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.auth.AuthScreen.*
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.app.GetSplashScreenAnimationStateUseCase
+import com.nowiwr01p.domain.app.InitAppDataUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
-import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
 import com.nowiwr01p.domain.execute
-import com.nowiwr01p.domain.meetings.main.usecase.SubscribeMeetingsUseCase
-import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsUseCase
-import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
-import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 
 class SplashScreenViewModel(
+    private val auth: FirebaseAuth,
+    private val initAppDataUseCase: InitAppDataUseCase,
     private val getSplashScreenAnimationStateUseCase: GetSplashScreenAnimationStateUseCase,
-    private val subscribeUserUseCase: SubscribeUserUseCase,
-    private val subscribeStoriesUseCase: SubscribeStoriesUseCase,
-    private val subscribeNewsUseCase: SubscribeNewsUseCase,
-    private val subscribeMeetingsUseCase: SubscribeMeetingsUseCase,
-    private val subscribeCategoriesUseCase: SubscribeCategoriesUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getLocalVerificationUseCase: GetLocalVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
@@ -40,46 +34,64 @@ class SplashScreenViewModel(
         getStartScreenRoute()
     }
 
+    /**
+     * SPLASH SCREEN ANIMATION
+     */
     private suspend fun getSplashScreenAnimation() {
         getSplashScreenAnimationStateUseCase.execute().let { demo ->
             setState { copy(isSplashScreenDemoAnimation = demo) }
         }
     }
 
+    /**
+     * CHOOSE START SCREEN BY THIS DATA
+     */
     private suspend fun checkLocalData() = listOf(
-        async { subscribeUserIfAuthorized() },
+        async { isAuthorized() },
         async { isCitySet() },
         async { isVerificationCompleted() },
     ).awaitAll()
 
-    private suspend fun subscribeUserIfAuthorized() = runCatching {
-        subscribeUserUseCase.execute()
-    }.onSuccess {
-        setState { copy(isAuthorized = true) }
-        onContentSubscribe()
-    }.onFailure {
-        setState { copy(isAuthorized = false) }
+    /**
+     * AUTHORIZED USER STATE
+     */
+    private fun isAuthorized() = runCatching {
+        auth.currentUser != null
+    }.onSuccess { authorized ->
+        setState { copy(isAuthorized = authorized) }
+        if (authorized) {
+            initAppData()
+        }
     }
 
+    /**
+     * SUBSCRIBE ON ALL OF THE DATA
+     */
+    private fun initAppData() = io {
+        runCatching {
+            initAppDataUseCase.execute()
+        }
+    }
+
+    /**
+     * CITY STATE
+     */
     private suspend fun isCitySet() {
         val set = getLocalCityUseCase.execute().name.isNotEmpty()
         setState { copy(isCitySet = set) }
     }
 
+    /**
+     * VERIFICATION STATE
+     */
     private suspend fun isVerificationCompleted() {
         val completed = getLocalVerificationUseCase.execute()
         setState { copy(isVerificationCompleted = completed) }
     }
 
-    private suspend fun onContentSubscribe() = runCatching {
-        listOf(
-            async { subscribeStoriesUseCase.execute() },
-            async { subscribeMeetingsUseCase.execute() },
-            async { subscribeCategoriesUseCase.execute() },
-            async { subscribeNewsUseCase.execute() }
-        ).awaitAll()
-    }
-
+    /**
+     * ROUTE OF THE START SCREEN
+     */
     private fun getStartScreenRoute() = with(viewState.value) {
         val startScreen = when {
             !isAuthorized -> AuthMainScreen.route
