@@ -7,7 +7,7 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.app.GetSplashScreenAnimationStateUseCase
 import com.nowiwr01p.domain.app.InitAppDataUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
-import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
+import com.nowiwr01p.domain.auth.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.execute
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -17,7 +17,7 @@ class SplashScreenViewModel(
     private val initAppDataUseCase: InitAppDataUseCase,
     private val getSplashScreenAnimationStateUseCase: GetSplashScreenAnimationStateUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
-    private val getLocalVerificationUseCase: GetLocalVerificationUseCase
+    private val getRemoteVerificationUseCase: GetRemoteVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -46,11 +46,13 @@ class SplashScreenViewModel(
     /**
      * CHOOSE START SCREEN BY THIS DATA
      */
-    private suspend fun checkLocalData() = listOf(
-        async { isAuthorized() },
-        async { isCitySet() },
-        async { isVerificationCompleted() },
-    ).awaitAll()
+    private suspend fun checkLocalData() = runCatching {
+        listOf(
+            async { isAuthorized() },
+            async { isCitySet() },
+            async { isVerificationCompleted() },
+        ).awaitAll()
+    }
 
     /**
      * AUTHORIZED USER STATE
@@ -85,7 +87,7 @@ class SplashScreenViewModel(
      * VERIFICATION STATE
      */
     private suspend fun isVerificationCompleted() {
-        val completed = getLocalVerificationUseCase.execute()
+        val completed = getRemoteVerificationUseCase.execute()
         setState { copy(isVerificationCompleted = completed) }
     }
 

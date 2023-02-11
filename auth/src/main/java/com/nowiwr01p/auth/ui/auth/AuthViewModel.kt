@@ -17,6 +17,7 @@ import com.nowiwr01p.domain.auth.main.data.user.UserData
 import com.nowiwr01p.domain.auth.main.data.user.UserDataSignIn
 import com.nowiwr01p.domain.auth.main.data.user.UserDataSignUp
 import com.nowiwr01p.domain.auth.main.usecase.*
+import com.nowiwr01p.domain.auth.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
 import kotlinx.coroutines.delay
@@ -29,6 +30,7 @@ class AuthViewModel(
     private val setAuthSecurityWarningShown: SetAuthSecurityWarningShownUseCase,
     private val signInUseCase: SignInUseCase,
     private val signUpUseCase: SignUpUseCase,
+    private val checkVerification: GetRemoteVerificationUseCase,
     private val sendEmailVerificationUseCase: SendEmailVerificationUseCase,
     private val statusBarColorHelper: StatusBarColorHelper,
     private val showSnackBarHelper: ShowSnackBarHelper,
@@ -128,7 +130,7 @@ class AuthViewModel(
     }
 
     private suspend fun checkVerification(user: User) {
-        if (user.verified) {
+        if (checkVerification.execute()) {
             setUserWasLoggedInBefore(user)
         } else {
             runCatching {

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import com.nowiwr01p.auth.AuthScreen
+import com.nowiwr01p.core_ui.Keys.ARG_TO_CITIES
 import com.nowiwr01p.core_ui.bottom_navigation.BottomNavigationItem
 import com.nowiwr01p.core_ui.navigators.*
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -60,10 +61,12 @@ class NavigatorImpl(
     }
 
     override fun navigateToRoute(route: String) {
-        navController.navigate(route) {
+        // handle toCities() from splashScreen
+        val resultRoute = route.replace("{$ARG_TO_CITIES}", "false")
+        navController.navigate(resultRoute) {
             popUpTo(navController.graph.startDestinationId) { inclusive = true }
         }
-        navController.graph.setStartDestination(route)
+        navController.graph.setStartDestination(resultRoute)
     }
 
     override fun setNavController(navHostController: NavHostController) {

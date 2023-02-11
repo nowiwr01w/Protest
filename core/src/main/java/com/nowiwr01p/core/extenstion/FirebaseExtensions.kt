@@ -10,8 +10,7 @@ import com.nowiwr01p.core.model.User
 
 fun AuthResult.toUser() = User(
     id = user?.uid.orEmpty(),
-    email = user?.email.orEmpty(),
-    verified = user?.isEmailVerified ?: false
+    email = user?.email.orEmpty()
 )
 
 inline fun <reified T> createEventListener(crossinline callback: (value: T) -> Unit) = object : ValueEventListener {

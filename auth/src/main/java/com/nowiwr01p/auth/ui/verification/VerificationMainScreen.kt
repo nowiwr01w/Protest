@@ -27,11 +27,12 @@ import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun VerificationMainScreen(
     navigator: Navigator,
-    viewModel: VerificationViewModel = getViewModel()
+    viewModel: VerificationViewModel = getViewModel { parametersOf(mainBackgroundColor) }
 ) {
     val listener = object : Listener {
         override fun resendCode() {

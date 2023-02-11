@@ -1,13 +1,17 @@
 package com.nowiwr01p.auth.ui.cities
 
+import androidx.compose.ui.graphics.Color
 import com.nowiwr01p.auth.ui.cities.CitiesContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.core.datastore.cities.data.City
+import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.cities.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
 
 class CitiesViewModel(
+    private val statusBarColor: Color,
+    private val statusBarColorHelper: StatusBarColorHelper,
     private val getCities: GetCitiesUseCase,
     private val setCity: SetCityUseCase,
     private val mapper: CitiesMapper
@@ -32,6 +36,7 @@ class CitiesViewModel(
     }
 
     private fun init() {
+        statusBarColorHelper.setStatusBarColor(statusBarColor)
         getCities()
     }
 

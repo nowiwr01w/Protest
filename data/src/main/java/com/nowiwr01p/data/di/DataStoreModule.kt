@@ -7,12 +7,10 @@ import com.nowiwr01p.core.datastore.DataStoreType.*
 import com.nowiwr01p.data.app.AppDataStoreRepositoryImpl
 import com.nowiwr01p.data.auth.main.repository.AuthSecurityDataStoreRepositoryImpl
 import com.nowiwr01p.data.auth.cities.CitiesStateLocalRepositoryImpl
-import com.nowiwr01p.data.auth.verification.VerificationLocalRepositoryImpl
 import com.nowiwr01p.domain.app.AppDataStoreRepository
 import com.nowiwr01p.domain.auth.main.repository.AuthSecurityDataStoreRepository
 import com.nowiwr01p.domain.auth.cities.api.CitiesApi
 import com.nowiwr01p.domain.auth.cities.repository.CityStateLocalRepository
-import com.nowiwr01p.domain.auth.verification.repository.VerificationLocalRepository
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -56,13 +54,6 @@ val moduleCore = module {
         val fileName = get<String>(named(CITIES))
         val dataStore = CitiesDataStore(fileName)
         CitiesStateLocalRepositoryImpl(
-            dataStore.create(androidContext())
-        )
-    }
-    single<VerificationLocalRepository> {
-        val fileName = get<String>(named(VERIFICATION))
-        val dataStore = VerificationDataStore(fileName)
-        VerificationLocalRepositoryImpl(
             dataStore.create(androidContext())
         )
     }

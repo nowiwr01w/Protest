@@ -6,10 +6,8 @@ import com.nowiwr01p.domain.auth.cities.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
 import com.nowiwr01p.domain.auth.main.usecase.*
-import com.nowiwr01p.domain.auth.verification.usecase.GetLocalVerificationUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetRemoteVerificationUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.SendEmailVerificationUseCase
-import com.nowiwr01p.domain.auth.verification.usecase.SetVerificationCompletedUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.ValidateMeetingDataUseCase
 import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
@@ -66,8 +64,6 @@ val moduleDomain = module {
     /**
      * VERIFICATION
      */
-    factory { GetLocalVerificationUseCase(get()) }
-    factory { SetVerificationCompletedUseCase(get(), get()) }
     factory { SendEmailVerificationUseCase(get()) }
     factory { GetRemoteVerificationUseCase(get()) }
 

@@ -34,12 +34,13 @@ import com.nowiwr01p.core_ui.ui.toolbar.ToolbarBackButton
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTitle
 import com.nowiwr01p.core_ui.ui.toolbar.ToolbarTop
 import org.koin.androidx.compose.getViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 fun CitiesMainScreen(
     fromProfile: Boolean,
     navigator: Navigator,
-    viewModel: CitiesViewModel = getViewModel()
+    viewModel: CitiesViewModel = getViewModel { parametersOf(mainBackgroundColor) }
 ) {
     val listener = object : Listener {
         override fun onBackClick() {

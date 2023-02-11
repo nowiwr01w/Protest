@@ -25,12 +25,4 @@ class VerificationRemoteRepositoryImpl(
         userRepository.getFirebaseUser().reload().await()
         userRepository.getFirebaseUser().isEmailVerified
     }
-
-    /**
-     * SET VERIFICATION COMPLETED
-     */
-    override suspend fun setVerificationCompleted(completed: Boolean): Unit = withContext(dispatchers.io) {
-        val updated = userRepository.getUser().copy(verified = completed)
-        userRepository.updateUser(updated)
-    }
 }

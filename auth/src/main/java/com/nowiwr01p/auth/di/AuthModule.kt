@@ -31,6 +31,7 @@ val moduleAuth = module {
             get(),
             get(),
             get(),
+            get(),
             get()
         )
     }
@@ -38,7 +39,14 @@ val moduleAuth = module {
     /**
      * VERIFICATION
      */
-    viewModel { VerificationViewModel(get(), get(), get()) }
+    viewModel {
+        VerificationViewModel(
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 
     /**
      * LOCATION
@@ -47,5 +55,13 @@ val moduleAuth = module {
         CitiesMapper()
     }
 
-    viewModel { CitiesViewModel(get(), get(), get()) }
+    viewModel {
+        CitiesViewModel(
+            get(),
+            get(),
+            get(),
+            get(),
+            get()
+        )
+    }
 }

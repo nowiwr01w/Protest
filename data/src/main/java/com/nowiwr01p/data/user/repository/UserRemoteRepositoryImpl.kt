@@ -8,14 +8,12 @@ import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.auth.cities.repository.CityStateLocalRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
-import com.nowiwr01p.domain.auth.verification.repository.VerificationLocalRepository
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class UserRemoteRepositoryImpl(
     private val auth: FirebaseAuth,
     private val references: FirebaseReferencesRepository,
-    private val verificationLocalRepository: VerificationLocalRepository,
     private val cityStateLocalRepository: CityStateLocalRepository,
     private val dispatchers: AppDispatchers
 ): UserRemoteRepository {
@@ -38,6 +36,5 @@ class UserRemoteRepositoryImpl(
 
     private suspend fun User.setLocalData() {
         cityStateLocalRepository.setCity(city)
-        verificationLocalRepository.setVerificationCompleted(verified)
     }
 }
