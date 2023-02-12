@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.core.model.User
+import com.nowiwr01p.core.model.map
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.auth.cities.repository.CityStateLocalRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -30,7 +31,7 @@ class UserRemoteRepositoryImpl(
 
     override suspend fun setUser(user: User) = withContext(dispatchers.io) {
         val firebaseUser = getFirebaseUser()
-        references.getUserReference(firebaseUser.uid).setValue(user).await()
+        references.getUserReference(firebaseUser.uid).setValue(user.map()).await()
         user.also { it.setLocalData() }
     }
 

@@ -14,3 +14,20 @@ data class User(
     val organizer: Boolean = false,
     val organizerEverywhere: Boolean = false
 )
+
+@Serializable
+data class UserDB(
+    val id: String = "",
+    val email: String = "",
+    val city: City = City(),
+    val name: String = "",
+    val avatar: String = ""
+)
+
+fun User.map() = UserDB(
+    id = id,
+    email = email,
+    city = city,
+    name = name,
+    avatar = avatar
+)
