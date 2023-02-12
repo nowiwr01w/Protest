@@ -5,13 +5,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.profile.repository.ProfileRepository
-import com.nowiwr01p.domain.user.repository.UserRemoteRepository
+import com.nowiwr01p.domain.user.client.UserClient
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ProfileRepositoryImpl(
     private val auth: FirebaseAuth,
-    private val remoteRepository: UserRemoteRepository,
+    private val client: UserClient,
     private val referencesRepository: FirebaseReferencesRepository,
     private val dispatchers: AppDispatchers
 ): ProfileRepository {
@@ -27,7 +27,7 @@ class ProfileRepositoryImpl(
      * DELETE ACCOUNT
      */
     override suspend fun deleteAccount(): Unit = withContext(dispatchers.io) {
-        remoteRepository.getFirebaseUser().run {
+        auth.currentUser!!.run {
             delete().await()
             referencesRepository.getUserReference(uid).removeValue().await()
         }
@@ -37,7 +37,7 @@ class ProfileRepositoryImpl(
      * USER IMAGE
      */
     override suspend fun uploadImage(uri: Uri) = withContext(dispatchers.io) {
-        val user = remoteRepository.getUser()
+        val user = client.getUserFlow().value
         clearPreviousImages(user.id)
 
         val fileName = "${user.id}/${uri.lastPathSegment}"

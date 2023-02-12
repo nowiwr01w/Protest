@@ -37,6 +37,6 @@ class AuthRepositoryImpl(
             .asDeferred()
             .await()
             .toUser()
-        userRepository.updateUser(user)
+        userRepository.setUser(user)
     }
 }

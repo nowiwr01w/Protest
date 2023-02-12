@@ -28,7 +28,7 @@ class UserRemoteRepositoryImpl(
         userSnapshot.getValue<User>()!!.also { it.setLocalData() }
     }
 
-    override suspend fun updateUser(user: User) = withContext(dispatchers.io) {
+    override suspend fun setUser(user: User) = withContext(dispatchers.io) {
         val firebaseUser = getFirebaseUser()
         references.getUserReference(firebaseUser.uid).setValue(user).await()
         user.also { it.setLocalData() }

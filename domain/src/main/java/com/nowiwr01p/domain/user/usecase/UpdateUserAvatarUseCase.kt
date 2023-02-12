@@ -16,6 +16,6 @@ class UpdateUserAvatarUseCase(
     override suspend fun execute(input: Uri): User {
         val link = profileRepository.uploadImage(input)
         val updated = getUserUseCase.execute().value.copy(avatar = link)
-        return userRemoteRepository.updateUser(updated)
+        return userRemoteRepository.setUser(updated)
     }
 }

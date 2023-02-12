@@ -5,6 +5,6 @@ import com.nowiwr01p.core.model.User
 
 interface UserRemoteRepository {
     suspend fun getUser(): User
+    suspend fun setUser(user: User): User
     suspend fun getFirebaseUser(): FirebaseUser
-    suspend fun updateUser(user: User): User
 }

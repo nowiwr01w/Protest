@@ -12,6 +12,6 @@ class UpdateUserNameUseCase(
 
     override suspend fun execute(input: String): User {
         val updated = getUserUseCase.execute().value.copy(name = input)
-        return userRemoteRepository.updateUser(updated)
+        return userRemoteRepository.setUser(updated)
     }
 }

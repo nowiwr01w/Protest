@@ -76,7 +76,7 @@ val moduleData = module {
         UserRemoteRepositoryImpl(get(), get(), get(), get())
     }
     single<UserClient> {
-        UserClientImpl(get(), get(), get())
+        UserClientImpl(get(), get(), get(), get())
     }
 
     /**
@@ -148,7 +148,7 @@ val moduleData = module {
         CitiesStateLocalRepositoryImpl(get())
     }
     factory<CityStateRemoteRepository> {
-        CitiesStateRemoteRepositoryImpl(get())
+        CitiesStateRemoteRepositoryImpl(get(), get())
     }
 
     /**
