@@ -29,6 +29,10 @@ class CreateArticleViewModel(
     private val mapper: CreateArticleMapper
 ): BaseViewModel<Event, State, Effect>() {
 
+    init {
+        mapper.viewModel = this
+    }
+
     override fun setInitialState() = State()
 
     override fun handleEvents(event: Event) {
