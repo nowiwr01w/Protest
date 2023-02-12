@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class AppPreference(
-    val splashScreenDemoAnimation: Boolean = true
+    val splashScreenDemoAnimation: Boolean = false
 )
