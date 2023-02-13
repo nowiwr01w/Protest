@@ -1,7 +1,6 @@
 package com.nowiwr01p.news.ui.news
 
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.config.UserRemoteConfig
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.news.main.usecase.GetNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
@@ -12,7 +11,6 @@ import com.nowiwr01p.news.ui.news.NewsContract.*
 import kotlinx.coroutines.launch
 
 class NewsViewModel(
-    private val config: UserRemoteConfig,
     private val getNews: GetNewsUseCase,
     private val getNewsScreenCache: GetNewsScreenCacheUseCase,
     private val saveNewsScreenCache: SaveNewsScreenCacheUseCase,
@@ -34,7 +32,6 @@ class NewsViewModel(
         runCatching {
             getScreenCache()
             getUserData()
-            checkEverybodyCanWriteNews()
             getNews()
         }.onSuccess {
             saveScreenCache()
@@ -59,12 +56,6 @@ class NewsViewModel(
             setState { copy(newsList = news) }
         }
     }
-
-    private fun checkEverybodyCanWriteNews() = config
-        .isWriteNewsEverybodyActivated()
-        .let {
-            setState { copy(everybodyCanWriteNews = it.value) }
-        }
 
     /**
      * SCREEN CACHE

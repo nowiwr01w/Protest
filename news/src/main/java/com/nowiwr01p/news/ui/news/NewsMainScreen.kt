@@ -105,7 +105,7 @@ private fun Toolbar(state: State, listener: Listener?) = Row(
         color = MaterialTheme.colors.textPrimary,
         modifier = Modifier.padding(start = 16.dp)
     )
-    if (state.user.writer || state.everybodyCanWriteNews) {
+    if (state.user.writer || state.user.tempWriter) {
         Spacer(
             modifier = Modifier.weight(1f)
         )

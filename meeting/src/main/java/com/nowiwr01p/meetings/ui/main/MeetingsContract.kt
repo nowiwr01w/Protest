@@ -24,8 +24,7 @@ interface MeetingsContract {
         val stories: List<Story> = mutableStateListOf(),
         val categories: List<Category> = mutableStateListOf(),
         val selectedStory: Story = Story(),
-        val selectedCategory: Category = Category(),
-        val everybodyCanCreateMeetings: Boolean = false
+        val selectedCategory: Category = Category()
     ): ViewState
 
     sealed interface Effect: ViewSideEffect {

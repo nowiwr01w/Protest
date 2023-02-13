@@ -12,7 +12,9 @@ data class User(
     val avatar: String = "",
     val writer: Boolean = false,
     val organizer: Boolean = false,
-    val organizerEverywhere: Boolean = false
+    val organizerEverywhere: Boolean = false,
+    val tempWriter: Boolean = false,
+    val tempOrganizer: Boolean = false
 )
 
 @Serializable

@@ -274,9 +274,9 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
         }
     if (!state.editMode) {
         var userRole = when {
-            state.tempOrganizer && state.tempWriter -> "Временный организатор, редактор новостей"
-            state.tempOrganizer -> "Временный организатор"
-            state.tempWriter -> "Временный редактор"
+            state.user.tempOrganizer && state.user.tempWriter -> "Временный организатор, редактор новостей"
+            state.user.tempOrganizer -> "Временный организатор"
+            state.user.tempWriter -> "Временный редактор"
             else -> "Для отображения роли получите доступ"
         }
         userRole = when {

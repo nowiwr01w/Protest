@@ -42,7 +42,9 @@ class UserClientImpl(
         user.copy(
             writer = getCustomClaimValue("writer"),
             organizer = getCustomClaimValue("organizer"),
-            organizerEverywhere = getCustomClaimValue("organizerEverywhere")
+            organizerEverywhere = getCustomClaimValue("organizerEverywhere"),
+            tempWriter = getCustomClaimValue("tempWriter"),
+            tempOrganizer = getCustomClaimValue("tempOrganizer")
         )
     }
 

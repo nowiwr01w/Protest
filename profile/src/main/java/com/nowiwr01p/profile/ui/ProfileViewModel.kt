@@ -4,7 +4,6 @@ import android.net.Uri
 import androidx.core.net.toUri
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.config.UserRemoteConfig
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
@@ -15,7 +14,6 @@ import com.nowiwr01p.profile.ui.ProfileContract.*
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val config: UserRemoteConfig,
     private val getUserUseCase: GetUserUseCase,
     private val updateUserNameUseCase: UpdateUserNameUseCase,
     private val updateUserAvatarUseCase: UpdateUserAvatarUseCase,
@@ -50,7 +48,6 @@ class ProfileViewModel(
     private fun init(editMode: Boolean) {
         setState { copy(editMode = editMode) }
         getUserData()
-        getUserTempRole()
     }
 
     /**
@@ -59,22 +56,6 @@ class ProfileViewModel(
     private fun getUserData() = launch {
         getUserUseCase.execute().collect { user ->
             setState { copy(user = user) }
-        }
-    }
-
-    /**
-     * USER TEMPORARY ROLE
-     */
-    private fun getUserTempRole() {
-        launch {
-            config.isWriteNewsEverybodyActivated().collect { activated ->
-                setState { copy(tempWriter = activated) }
-            }
-        }
-        launch {
-            config.isCreateMeetingEverybodyActivated().collect { activated ->
-                setState { copy(tempOrganizer = activated) }
-            }
         }
     }
 

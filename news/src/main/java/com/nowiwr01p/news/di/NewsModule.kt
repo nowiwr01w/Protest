@@ -33,7 +33,6 @@ val moduleNews = module {
 
         NewsViewModel(
             get(),
-            get(),
             scope.get(),
             scope.get(),
             get()
