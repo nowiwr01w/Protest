@@ -29,20 +29,20 @@ class MeetingViewModel(
 
     override fun handleEvents(event: Event) {
         when (event) {
-            is Event.Init -> init(event.meeting)
+            is Event.Init -> init(event.isPreviewMode, event.meeting)
             is Event.OpenLink -> openLink(event.link)
             is Event.SetReaction -> setReaction(event.isPositiveButtonClicked)
             is Event.CreateMeeting -> createMeeting(event.mode)
         }
     }
 
-    private fun init(meeting: Meeting) = io {
+    private fun init(isPreviewMode: Boolean, meeting: Meeting) = io {
         setState { copy(meeting = meeting) }
         runCatching {
             getUserData()
-            getMeetingLocation()
+            if (!isPreviewMode) getMeetingLocation()
         }.onSuccess {
-            delay(1000)
+            if (!isPreviewMode) delay(1000)
             setState { copy(loaded = true) }
         }
     }

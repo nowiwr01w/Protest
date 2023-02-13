@@ -15,7 +15,7 @@ interface MeetingContract {
 
     sealed interface Event: ViewEvent {
         data class CreateMeeting(val mode: CreateMeetingMode): Event
-        data class Init(val meeting: Meeting): Event
+        data class Init(val isPreviewMode: Boolean, val meeting: Meeting): Event
         data class OpenLink(val link: String): Event
         data class SetReaction(val isPositiveButtonClicked: Boolean): Event
     }
