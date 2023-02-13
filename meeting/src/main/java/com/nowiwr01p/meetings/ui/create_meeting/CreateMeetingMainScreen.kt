@@ -478,7 +478,7 @@ private fun Date(
                     ChooseStartLocationItem(state, listener)
                     LocationItem(state, listener).toUiItem(state)
                     LocationDetailsItem(state, listener).toUiItem(state)
-                    DrawPathItem(state, listener)
+//                    DrawPathItem(state, listener)
                 }
             }
         }

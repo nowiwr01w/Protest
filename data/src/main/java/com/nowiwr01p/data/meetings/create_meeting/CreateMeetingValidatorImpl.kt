@@ -29,7 +29,7 @@ class CreateMeetingValidatorImpl(config: CreateMeetingRemoteConfig): CreateMeeti
             validateLocationTitle(locationInfo.locationName)
             validateLocationCoordinates(locationInfo.locationStartPoint)
             validateLocationDetails(locationInfo.locationDetails)
-            validateLocationPath(locationInfo.path)
+//            validateLocationPath(locationInfo.path)
             validateTelegramLink(telegram)
         }
     }.let {

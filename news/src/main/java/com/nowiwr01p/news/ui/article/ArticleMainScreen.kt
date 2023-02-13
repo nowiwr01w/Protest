@@ -77,7 +77,6 @@ fun ArticleMainScreen(
 
     ArticleContent(
         isPreviewMode = isPreviewMode,
-        isViewUnpublishedMode = isViewUnpublishedMode,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -86,7 +85,6 @@ fun ArticleMainScreen(
 @Composable
 fun ArticleContent(
     isPreviewMode: Boolean,
-    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?
 ) {
@@ -439,7 +437,6 @@ private fun PublishButton(
 fun Preview() = MeetingsTheme {
     ArticleContent(
         isPreviewMode = false,
-        isViewUnpublishedMode = true,
         state = State(article = article),
         listener = null
     )

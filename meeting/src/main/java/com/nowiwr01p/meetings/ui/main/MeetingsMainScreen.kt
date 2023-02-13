@@ -362,8 +362,8 @@ private fun LazyListScope.Meetings(
         item { Spacer(modifier = Modifier.height(8.dp)) }
         items(state.meetings) { meeting ->
             MeetingItem(meeting) {
-                listener?.toMapCurrentMeeting(meeting)
-//                listener?.toMeeting(meeting)
+//                listener?.toMapCurrentMeeting(meeting)
+                listener?.toMeeting(meeting)
             }
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }
