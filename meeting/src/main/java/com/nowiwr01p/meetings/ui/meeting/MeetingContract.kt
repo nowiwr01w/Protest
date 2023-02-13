@@ -32,7 +32,9 @@ interface MeetingContract {
             get() = meeting.getMeetingCoordinates()
     }
 
-    sealed interface Effect: ViewSideEffect
+    sealed interface Effect: ViewSideEffect {
+        object OnCreateMeetingSuccess: Effect
+    }
 
     interface Listener {
         fun onBack()

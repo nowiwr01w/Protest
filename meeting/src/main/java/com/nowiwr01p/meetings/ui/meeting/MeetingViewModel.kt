@@ -3,12 +3,15 @@ package com.nowiwr01p.meetings.ui.meeting
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
+import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode.SEND_TO_REVIEW
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import kotlinx.coroutines.delay
@@ -18,7 +21,8 @@ class MeetingViewModel(
     private val setReactionUseCase: SetReactionUseCase,
     private val createMeetingUseCase: CreateMeetingUseCase,
     private val getLocationUseCase: GetLocationUseCase,
-    private val openLinksHelper: OpenLinksHelper
+    private val openLinksHelper: OpenLinksHelper,
+    private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -84,12 +88,24 @@ class MeetingViewModel(
             val args = CreateMeetingUseCase.Args(mode, viewState.value.meeting)
             createMeetingUseCase.execute(args)
         }.onSuccess {
+            showSuccessSnackBar(mode)
             setState { copy(createMeetingButtonState = SUCCESS) }
         }.onFailure {
             setState { copy(createMeetingButtonState = ERROR) }
             delay(3000)
             setState { copy(createMeetingButtonState = DEFAULT) }
         }
+    }
+
+    private fun showSuccessSnackBar(mode: CreateMeetingMode) {
+        val text = if (mode == SEND_TO_REVIEW) "Отправлено на ревью" else "Опубликовано"
+        val params = SnackBarParams(
+            text = text,
+            endCallback = {
+                setEffect { Effect.OnCreateMeetingSuccess }
+            }
+        )
+        showSnackBarHelper.showSuccessSnackBar(params)
     }
 
     private fun openLink(link: String) = io {

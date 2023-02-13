@@ -8,10 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
-import com.nowiwr01p.core_ui.theme.*
 
 @Composable
-fun ErrorSnackBar(params: SnackBarParams) {
+fun TopSnackBar(params: SnackBarParams) {
     val statusBarHeight = WindowInsets.statusBars.getTop(LocalDensity.current)
 
     Column(
@@ -20,7 +19,7 @@ fun ErrorSnackBar(params: SnackBarParams) {
             .fillMaxWidth()
             .heightIn(min = 56.dp)
             .padding(top = statusBarHeight.dp)
-            .background(MaterialTheme.colors.graphicsRed)
+            .background(params.toStatusBarColor)
     ) {
         Text(
             text = params.text,

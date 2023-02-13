@@ -45,6 +45,7 @@ import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
 import com.nowiwr01p.core.model.Category
+import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.R.raw
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
@@ -87,6 +88,18 @@ fun MeetingMainScreen(
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(Event.Init(meeting))
+    }
+
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.OnCreateMeetingSuccess -> {
+                listener.onBack()
+                listener.onBack()
+                if (isViewUnpublishedMode) {
+                    listener.onBack()
+                }
+            }
+        }
     }
 
     MeetingMainScreenContent(
@@ -151,7 +164,6 @@ private fun MeetingMainScreenContent(
         if (isPreviewMode || isViewUnpublishedMode) {
             Button(
                 isPreviewMode = isPreviewMode,
-                isViewUnpublishedMode = isViewUnpublishedMode,
                 state = state,
                 listener = listener,
                 modifier = buttonModifier
@@ -792,7 +804,6 @@ private fun getBorderColor(
 @Composable
 private fun Button(
     isPreviewMode: Boolean,
-    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?,
     modifier: Modifier
@@ -803,13 +814,6 @@ private fun Button(
         onSendRequest = {
             val mode = if (isPreviewMode) SEND_TO_REVIEW else PUBLISH_REVIEWED
             listener?.createMeeting(mode)
-        },
-        onSuccess = {
-            listener?.onBack()
-            listener?.onBack()
-            if (isViewUnpublishedMode) {
-                listener?.onBack()
-            }
         },
         modifier = modifier
     )

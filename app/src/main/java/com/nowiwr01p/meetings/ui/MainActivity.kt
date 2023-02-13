@@ -32,7 +32,7 @@ import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinkObserver
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
-import com.nowiwr01p.core_ui.ui.snack_bar.ErrorSnackBar
+import com.nowiwr01p.core_ui.ui.snack_bar.TopSnackBar
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import org.koin.android.ext.android.inject
@@ -87,7 +87,7 @@ class MainActivity : ComponentActivity() {
                         )
                     ) {
                         params?.let {
-                            ErrorSnackBar(it)
+                            TopSnackBar(it)
                         }
                     }
                 }

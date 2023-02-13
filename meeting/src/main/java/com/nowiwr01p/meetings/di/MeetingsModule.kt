@@ -110,6 +110,7 @@ val moduleMeetings = module {
             get(),
             get(),
             get(),
+            get(),
             get()
         )
     }

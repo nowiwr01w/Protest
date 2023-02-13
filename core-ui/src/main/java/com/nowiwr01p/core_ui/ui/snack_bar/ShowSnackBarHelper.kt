@@ -36,11 +36,18 @@ class ShowSnackBarHelper(
         show(params)
         delay(4000)
         hide(params)
+        delay(250)
+        params.endCallback()
+    }
+
+    fun showSuccessSnackBar(params: SnackBarParams) {
+        val updatedParams = params.copy(error = false)
+        showErrorSnackBar(updatedParams)
     }
 
     private suspend fun show(params: SnackBarParams) {
         _text.send(params)
-        statusBarColorHelper.setStatusBarColor(lightGraphicsRed)
+        statusBarColorHelper.setStatusBarColor(params.toStatusBarColor)
     }
 
     private suspend fun hide(params: SnackBarParams) {
