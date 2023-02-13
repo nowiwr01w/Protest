@@ -77,6 +77,7 @@ fun ArticleMainScreen(
 
     ArticleContent(
         isPreviewMode = isPreviewMode,
+        isViewUnpublishedMode = isViewUnpublishedMode,
         state = viewModel.viewState.value,
         listener = listener
     )
@@ -85,6 +86,7 @@ fun ArticleMainScreen(
 @Composable
 fun ArticleContent(
     isPreviewMode: Boolean,
+    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?
 ) {
@@ -130,25 +132,27 @@ fun ArticleContent(
                     is OrderedList -> OrderedListItem(content)
                 }
             }
-            val bottomSpace = if (isPreviewMode) 120.dp else 32.dp
+            val bottomSpace = if (isPreviewMode || isViewUnpublishedMode) 120.dp else 32.dp
             item { Spacer(modifier = Modifier.height(bottomSpace)) }
         }
 
-        val buttonModifier = Modifier
-            .fillMaxWidth()
-            .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .constrainAs(button) {
-                start.linkTo(parent.start)
-                end.linkTo(parent.end)
-                bottom.linkTo(parent.bottom)
-            }
-        PublishButton(
-            isPreviewMode = isPreviewMode,
-            state = state,
-            listener = listener,
-            modifier = buttonModifier
-        )
+        if (isPreviewMode || isViewUnpublishedMode) {
+            val buttonModifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 24.dp, end = 24.dp, bottom = 32.dp)
+                .clip(RoundedCornerShape(24.dp))
+                .constrainAs(button) {
+                    start.linkTo(parent.start)
+                    end.linkTo(parent.end)
+                    bottom.linkTo(parent.bottom)
+                }
+            PublishButton(
+                isPreviewMode = isPreviewMode,
+                state = state,
+                listener = listener,
+                modifier = buttonModifier
+            )
+        }
     }
 }
 
@@ -437,6 +441,7 @@ private fun PublishButton(
 fun Preview() = MeetingsTheme {
     ArticleContent(
         isPreviewMode = false,
+        isViewUnpublishedMode = false,
         state = State(article = article),
         listener = null
     )

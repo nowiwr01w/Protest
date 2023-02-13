@@ -40,7 +40,7 @@ import org.koin.core.parameter.parametersOf
 fun CitiesMainScreen(
     fromProfile: Boolean,
     navigator: Navigator,
-    viewModel: CitiesViewModel = getViewModel { parametersOf(mainBackgroundColor) }
+    viewModel: CitiesViewModel = getViewModel { parametersOf(if (fromProfile) Color.White else mainBackgroundColor) }
 ) {
     val listener = object : Listener {
         override fun onBackClick() {
