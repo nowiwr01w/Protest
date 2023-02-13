@@ -28,6 +28,7 @@ import com.google.accompanist.pager.rememberPagerState
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core.model.Article.Companion.article
+import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
@@ -60,6 +61,18 @@ fun ArticleMainScreen(
 
     LaunchedEffect(Unit) {
         viewModel.setEvent(Event.Init(article))
+    }
+
+    EffectObserver(viewModel.effect) {
+        when (it) {
+            is Effect.OnCreateArticleSuccess -> {
+                listener.onBackClick()
+                listener.onBackClick()
+                if (isViewUnpublishedMode) {
+                    listener.onBackClick()
+                }
+            }
+        }
     }
 
     ArticleContent(
@@ -134,7 +147,6 @@ fun ArticleContent(
             }
         PublishButton(
             isPreviewMode = isPreviewMode,
-            isViewUnpublishedMode = isViewUnpublishedMode,
             state = state,
             listener = listener,
             modifier = buttonModifier
@@ -404,7 +416,6 @@ private fun StepItem(text: String) = Row(
 @Composable
 private fun PublishButton(
     isPreviewMode: Boolean,
-    isViewUnpublishedMode: Boolean,
     state: State,
     listener: Listener?,
     modifier: Modifier
@@ -415,13 +426,6 @@ private fun PublishButton(
         onSendRequest = {
             val mode = if (isPreviewMode) SEND_TO_REVIEW else PUBLISH_REVIEWED
             listener?.onPublishArticle(mode)
-        },
-        onSuccess = {
-            listener?.onBackClick()
-            listener?.onBackClick()
-            if (isViewUnpublishedMode) {
-                listener?.onBackClick()
-            }
         },
         modifier = modifier
     )

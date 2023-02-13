@@ -67,7 +67,13 @@ val moduleNews = module {
     /**
      * ARTICLE
      */
-    viewModel { ArticleViewModel(get(), get()) }
+    viewModel {
+        ArticleViewModel(
+            get(),
+            get(),
+            get()
+        )
+    }
 }
 
 private const val newsScreenScopeId = "newsScreenScopeId"

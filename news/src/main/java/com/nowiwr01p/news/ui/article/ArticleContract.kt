@@ -21,7 +21,9 @@ interface ArticleContract {
         val viewsCount: Int = 0
     ) : ViewState
 
-    sealed interface Effect : ViewSideEffect
+    sealed interface Effect : ViewSideEffect {
+        object OnCreateArticleSuccess: Effect
+    }
 
     interface Listener {
         fun onBackClick()

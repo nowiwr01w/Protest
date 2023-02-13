@@ -2,6 +2,8 @@ package com.nowiwr01p.news.ui.article
 
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.news.article.SetArticleViewedUseCase
 import com.nowiwr01p.domain.news.article.data.CreateArticleMode
@@ -11,7 +13,8 @@ import kotlinx.coroutines.delay
 
 class ArticleViewModel(
     private val setArticleViewedUseCase: SetArticleViewedUseCase,
-    private val createArticleUseCase: CreateArticleUseCase
+    private val createArticleUseCase: CreateArticleUseCase,
+    private val showSnackBarHelper: ShowSnackBarHelper
 ) : BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -42,11 +45,23 @@ class ArticleViewModel(
             val args = CreateArticleUseCase.Args(mode, viewState.value.article)
             createArticleUseCase.execute(args)
         }.onSuccess {
+            showSuccessSnackBar(mode)
             setState { copy(publishButtonState = SUCCESS) }
         }.onFailure {
             setState { copy(publishButtonState = ERROR) }
             delay(3000)
             setState { copy(publishButtonState = DEFAULT) }
         }
+    }
+
+    private fun showSuccessSnackBar(mode: CreateArticleMode) {
+        val text = if (mode == CreateArticleMode.SEND_TO_REVIEW) "Отправлено на ревью" else "Опубликовано"
+        val params = SnackBarParams(
+            text = text,
+            endCallback = {
+                setEffect { Effect.OnCreateArticleSuccess }
+            }
+        )
+        showSnackBarHelper.showSuccessSnackBar(params)
     }
 }
