@@ -47,6 +47,7 @@ import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.R.raw
+import com.nowiwr01p.core_ui.extensions.getColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -300,26 +301,33 @@ private fun Categories(meeting: Meeting) = FlowRow(
         .fillMaxWidth()
         .padding(top = 16.dp, start = 16.dp)
 ) {
-    meeting.categories.sortedBy { it.priority }.forEach {
-        Category(it)
-    }
+    meeting.categories
+        .sortedBy { it.priority }
+        .take(5)
+        .forEachIndexed { index, category ->
+            Category(index, category)
+        }
 }
 
 @Composable
 private fun Category(
+    index: Int,
     category: Category
-) = Box(
-    contentAlignment = Alignment.Center,
-    modifier = Modifier
-        .clip(RoundedCornerShape(40))
-        .background(category.backgroundColor.toColor())
 ) {
-    Text(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        text = category.name,
-        color = category.textColor.toColor(),
-        style = MaterialTheme.typography.caption2Regular,
-    )
+    val categoryColor = category.getColor(index)
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .clip(RoundedCornerShape(40))
+            .background(categoryColor.first)
+    ) {
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            text = category.name,
+            color = categoryColor.second,
+            style = MaterialTheme.typography.caption2Regular,
+        )
+    }
 }
 
 /**

@@ -31,6 +31,7 @@ import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountAll
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
+import com.nowiwr01p.core_ui.extensions.getColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
 import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
@@ -462,30 +463,34 @@ private fun MeetingCategories(
 ) = LazyRow(
     modifier = modifier.fillMaxWidth()
 ) {
-    val sorted = meeting.categories.distinctBy { it.textColor }.sortedBy { it.priority }.take(3)
-    items(sorted) {
-        Category(it)
+    val sorted = meeting.categories.sortedBy { it.priority }.take(3)
+    itemsIndexed(sorted) { index, category ->
+        Category(index, category)
     }
     item { Spacer(modifier = Modifier.width(8.dp)) }
 }
 
 @Composable
 internal fun Category(
+    index: Int,
     category: Category,
     modifier: Modifier = Modifier
-) = Box(
-    contentAlignment = Alignment.Center,
-    modifier = modifier
-        .padding(end = 8.dp)
-        .clip(RoundedCornerShape(40))
-        .background(category.backgroundColor.toColor())
 ) {
-    Text(
-        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
-        text = category.name,
-        color = category.textColor.toColor(),
-        style = MaterialTheme.typography.caption2Regular,
-    )
+    val categoryColors = category.getColor(index)
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .padding(end = 8.dp)
+            .clip(RoundedCornerShape(40))
+            .background(categoryColors.first)
+    ) {
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
+            text = category.name,
+            color = categoryColors.second,
+            style = MaterialTheme.typography.caption2Regular,
+        )
+    }
 }
 
 /**

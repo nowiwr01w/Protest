@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -396,15 +397,16 @@ private fun CategoriesList(state: State) = LazyRow(
     modifier = Modifier.fillMaxSize(),
     verticalAlignment = Alignment.CenterVertically
 ) {
-    val selectedCategories = state.selectedCategories.toList().sortedBy { it.backgroundColor }
+    val selectedCategories = state.selectedCategories.toList().sortedBy { it.priority }
 
     item { Spacer(modifier = Modifier.width(16.dp)) }
-    items(
-        key = { it.name },
+    itemsIndexed(
+        key = { _, category -> category.name },
         items = selectedCategories
-    ) {
+    ) { index, category ->
         Category(
-            category = it,
+            index = index,
+            category = category,
             modifier = Modifier.animateItemPlacement()
         )
     }
