@@ -127,12 +127,12 @@ internal fun getProfileItems(state: State, listener: Listener?) = listOf(
     ),
     "Приложение" to listOf(
         CityItem(listener),
-        NotificationItem(listener)
+//        NotificationItem(listener)
     ),
     "О проекте" to listOf(
         BugItem(listener),
         SuggestIdeaItem(listener),
-        DevelopmentItem(listener),
+//        DevelopmentItem(listener),
         SupportProjectItem(listener)
     ),
     "Условия пользования" to listOf(
