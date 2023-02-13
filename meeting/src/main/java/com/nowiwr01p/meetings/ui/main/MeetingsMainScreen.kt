@@ -169,7 +169,7 @@ private fun Toolbar(
         Spacer(
             modifier = Modifier.weight(1f)
         )
-        if (state.user.organizer) {
+        if (state.user.admin) {
             ClickableIcon(
                 icon = R.drawable.ic_search,
                 modifier = Modifier.padding(end = 6.dp),

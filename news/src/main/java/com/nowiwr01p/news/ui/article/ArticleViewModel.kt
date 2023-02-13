@@ -7,6 +7,7 @@ import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.news.article.SetArticleViewedUseCase
 import com.nowiwr01p.domain.news.article.data.CreateArticleMode
+import com.nowiwr01p.domain.news.article.data.CreateArticleMode.*
 import com.nowiwr01p.domain.news.create_article.usecase.CreateArticleUseCase
 import com.nowiwr01p.news.ui.article.ArticleContract.*
 import kotlinx.coroutines.delay
@@ -55,7 +56,7 @@ class ArticleViewModel(
     }
 
     private fun showSuccessSnackBar(mode: CreateArticleMode) {
-        val text = if (mode == CreateArticleMode.SEND_TO_REVIEW) "Отправлено на ревью" else "Опубликовано"
+        val text = if (mode == SEND_TO_REVIEW) "Отправлено на ревью" else "Опубликовано"
         val params = SnackBarParams(
             text = text,
             endCallback = {

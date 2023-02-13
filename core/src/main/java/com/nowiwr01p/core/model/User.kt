@@ -14,7 +14,8 @@ data class User(
     val organizer: Boolean = false,
     val organizerEverywhere: Boolean = false,
     val tempWriter: Boolean = false,
-    val tempOrganizer: Boolean = false
+    val tempOrganizer: Boolean = false,
+    val admin: Boolean = false
 )
 
 @Serializable

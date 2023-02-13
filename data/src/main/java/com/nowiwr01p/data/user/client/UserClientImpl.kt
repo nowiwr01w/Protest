@@ -44,7 +44,8 @@ class UserClientImpl(
             organizer = getCustomClaimValue("organizer"),
             organizerEverywhere = getCustomClaimValue("organizerEverywhere"),
             tempWriter = getCustomClaimValue("tempWriter"),
-            tempOrganizer = getCustomClaimValue("tempOrganizer")
+            tempOrganizer = getCustomClaimValue("tempOrganizer"),
+            admin = getCustomClaimValue("admin")
         )
     }
 

@@ -109,7 +109,7 @@ private fun Toolbar(state: State, listener: Listener?) = Row(
         Spacer(
             modifier = Modifier.weight(1f)
         )
-        if (state.user.writer) {
+        if (state.user.admin) {
             ClickableIcon(
                 icon = R.drawable.ic_search,
                 modifier = Modifier.padding(end = 6.dp),
