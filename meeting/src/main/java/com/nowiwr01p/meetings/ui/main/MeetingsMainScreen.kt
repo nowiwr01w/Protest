@@ -76,8 +76,8 @@ fun MeetingsMainScreen(
         override fun onStoryClick(story: Story) {
             viewModel.setEvent(Event.SelectStory(story))
         }
-        override fun showBecomeOrganizerBottomSheet() {
-            // TODO
+        override fun openBecomeOrganizerLink() {
+            viewModel.setEvent(Event.OpenBecomeOrganizerLink)
         }
         override fun toMapCurrentMeeting(meeting: Meeting) {
             navigator.meetingsNavigator.navigateToMapCurrentMeeting(meeting)
@@ -524,7 +524,7 @@ private fun EmptyListStub(state: State, listener: Listener?) = Column(
     StateButton(
         text = buttonText,
         onSendRequest = {
-            if (state.user.organizer) listener?.toCreateMeeting() else listener?.showBecomeOrganizerBottomSheet()
+            if (state.user.organizer) listener?.toCreateMeeting() else listener?.openBecomeOrganizerLink()
         },
         modifier = Modifier
             .fillMaxWidth()

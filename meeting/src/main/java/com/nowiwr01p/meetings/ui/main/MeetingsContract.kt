@@ -13,6 +13,7 @@ interface MeetingsContract {
 
     sealed interface Event: ViewEvent {
         object Init: Event
+        object OpenBecomeOrganizerLink: Event
         data class SelectStory(val story: Story): Event
         data class SelectCategory(val category: Category): Event
     }
@@ -36,7 +37,7 @@ interface MeetingsContract {
         fun toMeeting(meeting: Meeting)
         fun toProfile(editMode: Boolean)
         fun toCreateMeeting()
-        fun showBecomeOrganizerBottomSheet()
+        fun openBecomeOrganizerLink()
         fun onStoryClick(story: Story)
         fun onCategoryClick(category: Category)
         fun toMapCurrentMeeting(meeting: Meeting)

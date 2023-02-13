@@ -6,6 +6,7 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.ui.bottom_sheet.BottomSheetParams
 import com.nowiwr01p.core_ui.ui.bottom_sheet.ShowBottomSheetHelper
+import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
@@ -30,6 +31,7 @@ class MeetingsViewModel(
     private val setStoryViewedUseCase: SetStoryViewedUseCase,
     private val statusBarColorHelper: StatusBarColorHelper,
     private val showBottomSheetHelper: ShowBottomSheetHelper,
+    private val openLinksHelper: OpenLinksHelper,
     private val mapper: MeetingsMapper
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -46,6 +48,7 @@ class MeetingsViewModel(
             is Event.Init -> init()
             is Event.SelectStory -> selectStory(event.story)
             is Event.SelectCategory -> selectCategory(event.category)
+            is Event.OpenBecomeOrganizerLink -> openLink()
         }
     }
 
@@ -167,5 +170,12 @@ class MeetingsViewModel(
             val updatedStories = mapper.updateStories(id, it)
             setState { copy(stories = updatedStories) }
         }
+    }
+
+    /**
+     * SHOW BECOME ORGANIZER FORM
+     */
+    private fun openLink() = io {
+        openLinksHelper.openLink("https://docs.google.com/forms/d/e/1FAIpQLScM9w8tzcwRRRGsvkVTRZqrcIc6zLzBmkDiKKvNe8oPOn7Nvw/viewform?usp=sharing")
     }
 }
