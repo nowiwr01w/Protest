@@ -27,8 +27,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,8 +63,13 @@ fun ProfileMainScreen(
 ) {
     val state = viewModel.viewState.value
     val context = LocalContext.current
+    val clipboardManager = LocalClipboardManager.current
 
     val listener = object : Listener {
+        override fun copyUserId() {
+            val userId = buildAnnotatedString { append(viewModel.viewState.value.user.id) }
+            clipboardManager.setText(userId)
+        }
         override fun onEditClick() {
             viewModel.setEvent(Event.OnEditClick)
         }

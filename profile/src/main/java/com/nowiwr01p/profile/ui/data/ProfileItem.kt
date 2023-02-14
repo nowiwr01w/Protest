@@ -22,7 +22,10 @@ sealed class ProfileItem(
         override val name: String = "Стать организатором",
         override val startIcon: Int = R.drawable.ic_brain,
         override val endIcon: Int? = if (state.user.organizer) R.drawable.ic_done else null,
-        override val onClick: () -> Unit = { listener?.openLink(ORGANIZER_LINK) },
+        override val onClick: () -> Unit = {
+            listener?.copyUserId()
+            listener?.openLink(ORGANIZER_LINK)
+        },
     ): ProfileItem(name, startIcon, onClick)
 
     data class NewsWriterItem(
@@ -31,7 +34,10 @@ sealed class ProfileItem(
         override val name: String = "Стать редактором новостей",
         override val startIcon: Int = R.drawable.ic_lamp,
         override val endIcon: Int? = if (state.user.writer) R.drawable.ic_done else null,
-        override val onClick: () -> Unit = { listener?.openLink(WRITER_LINK) },
+        override val onClick: () -> Unit = {
+            listener?.copyUserId()
+            listener?.openLink(WRITER_LINK)
+        },
     ): ProfileItem(name, startIcon, onClick)
 
     /**

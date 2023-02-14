@@ -61,6 +61,7 @@ interface ProfileContract {
         fun setAvatarPreview(uri: Uri)
         fun toChangeCity()
         fun logout()
+        fun copyUserId()
         fun deleteAccount()
         fun showLogoutAlert(show: Boolean)
         fun showDeleteAccountAlert(show: Boolean)
