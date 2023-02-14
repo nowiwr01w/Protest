@@ -3,6 +3,8 @@ package com.nowiwr01p.profile.ui
 import android.net.Uri
 import androidx.core.net.toUri
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
+import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
@@ -19,7 +21,8 @@ class ProfileViewModel(
     private val updateUserAvatarUseCase: UpdateUserAvatarUseCase,
     private val logOutUseCase: LogOutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
-    private val openLinksHelper: OpenLinksHelper
+    private val openLinksHelper: OpenLinksHelper,
+    private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
 
     override fun setInitialState() = State()
@@ -63,11 +66,14 @@ class ProfileViewModel(
      * CHANGE USER DATA
      */
     private fun updateUserData() = io {
+        setState { copy(editProgress = true) }
         runCatching {
             updateUserName()
             updateUserAvatar()
         }.onSuccess {
-            setState { copy(editMode = false, previewEditName = "", previewEditAvatar = "") }
+            onUserDataUpdatedSuccess()
+        }.onFailure {
+            onUserDataUpdatedFailed()
         }
     }
 
@@ -79,9 +85,23 @@ class ProfileViewModel(
 
     private suspend fun updateUserAvatar() = with(viewState.value) {
         if (previewEditAvatar.isNotBlank()) {
-            val updatedUser = updateUserAvatarUseCase.execute(previewEditAvatar.toUri())
-            setState { copy(user = updatedUser) }
+            updateUserAvatarUseCase.execute(previewEditAvatar.toUri())
         }
+    }
+
+    private fun onUserDataUpdatedSuccess() = setState {
+        copy(
+            editMode = false,
+            editProgress = false,
+            previewEditName = "",
+            previewEditAvatar = ""
+        )
+    }
+
+    private fun onUserDataUpdatedFailed() {
+        val params = SnackBarParams("Не удалось сохранить изменения. Попробуйте позже.")
+        showSnackBarHelper.showErrorSnackBar(params)
+        setState { copy(editMode = false, editProgress = false) }
     }
 
     /**

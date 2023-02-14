@@ -215,18 +215,27 @@ private fun TopContainer(state: State, listener: Listener?) = ConstraintLayout(
     }
 
     val editModifier = Modifier
-        .padding(end = 10.dp)
         .constrainAs(edit) {
             end.linkTo(parent.end)
             top.linkTo(parent.top)
         }
-    ClickableIcon(
-        modifier = editModifier,
-        icon = if (state.editMode) R.drawable.ic_save else R.drawable.ic_edit,
-        onClick = {
-            if (state.editMode) listener?.onSaveClick() else listener?.onEditClick()
-        },
-    )
+    if (state.editProgress) {
+        CircularProgressIndicator(
+            strokeWidth = 2.dp,
+            color = MaterialTheme.colors.mainBackgroundColor,
+            modifier = editModifier
+                .padding(top = 6.dp, end = 16.dp)
+                .size(20.dp)
+        )
+    } else {
+        ClickableIcon(
+            modifier = editModifier.padding(end = 10.dp),
+            icon = if (state.editMode) R.drawable.ic_save else R.drawable.ic_edit,
+            onClick = {
+                if (state.editMode) listener?.onSaveClick() else listener?.onEditClick()
+            }
+        )
+    }
 
     val chatModifier = Modifier
         .padding(start = 10.dp)

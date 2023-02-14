@@ -33,6 +33,7 @@ interface ProfileContract {
         val previewEditName: String = "",
         val previewEditAvatar: String = "",
         val editMode: Boolean = false,
+        val editProgress: Boolean = false,
         val showPermissionAlert: Boolean = false,
         val shouldRequestAlert: Boolean = false,
         val shouldRequestPermission: Boolean = false,
