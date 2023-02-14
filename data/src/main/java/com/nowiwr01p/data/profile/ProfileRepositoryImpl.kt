@@ -28,8 +28,8 @@ class ProfileRepositoryImpl(
      */
     override suspend fun deleteAccount(): Unit = withContext(dispatchers.io) {
         auth.currentUser!!.run {
-            delete().await()
             referencesRepository.getUserReference(uid).removeValue().await()
+            delete().await()
         }
     }
 
