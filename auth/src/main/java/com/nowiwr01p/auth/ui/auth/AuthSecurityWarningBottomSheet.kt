@@ -19,7 +19,6 @@ fun AuthSecurityWarningContent() = LazyColumn(
         .padding(start = 16.dp, end = 16.dp, top = 8.dp),
 ) {
     item { Title() }
-    item { Subtitle1() }
     item { Subtitle2() }
     item { StepsTitle() }
     item { Steps() }
@@ -35,19 +34,10 @@ private fun Title() = Text(
 )
 
 @Composable
-private fun Subtitle1() = Text(
-    text = "Ни для кого не секрет, что в России права человека считаются чем-то, что всегда " +
-            "уходит на задний план",
-    color = MaterialTheme.colors.textPrimary,
-    style = MaterialTheme.typography.body1,
-    modifier = Modifier.padding(top = 16.dp)
-)
-
-@Composable
 private fun Subtitle2() = Text(
-    text = "Почтовые сервисы Яндекса, VK и Mail не являются безопастными - данные компании " +
-            "по щелчку пальцев правительства могут слить ваши данные или заблокировать " +
-            "учётную запись",
+    text = "Почтовые сервисы Yandex, VK и Mail не являются безопастными - сливы данных пользователей " +
+            "происходят +- часто. В последней утечке Яндекса слили не только личные данные " +
+            "пользователей, но и личные данные сотрудников.",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1,
     modifier = Modifier.padding(top = 8.dp)
@@ -65,26 +55,16 @@ private fun StepsTitle() = Text(
 private fun Steps() = Column {
     StepItem(
         text = "Не используйте почтовые сервисы, связанные с РФ. " +
-               "Зарегистрироваться с помощью них не получится"
+               "Зарегистрироваться с помощью них не получится."
     )
     StepItem(
         text = "Используйте анонимные почтовые сервисы, такие как ProtonMail. " +
-               "Данный сервис находится в юрисдикции Швейцарии, поэтому, чтобы получить доступ " +
-               "к вашему аккаунту, ФСБ понадобится предоставить кучу объективных аргументов " +
-               "Европейским судам"
-    )
-    StepItem(
-        text = "VPN - ваш друг. Желательно платный и с хорошей репутацией, чтобы избегать " +
-                "сливов персональных данных"
+               "При регистрации в ProtonMail не требуется вводить номер телефона или другой адрес " +
+                "электройнной почты, а сам сервис находится в юрисдикции Швейцарии."
     )
     StepItem(
         text = "Используйте генераторы рандомных паролей. Чем сложнее ваш пароль - тем сложнее " +
-               "получить доступ к вашему аккаунту. Хранить такие пароли можно в 1Password " +
-               "или же в связке паролей Apple"
-    )
-    StepItem(
-        text = "Когда ходите на митинги - выключайте GPS. С его помощью можно отследить " +
-               "ваше местоположение с точностью до метра"
+               "получить доступ к вашему аккаунту. Хранить такие пароли можно, например, в 1Password."
     )
 }
 
@@ -109,7 +89,7 @@ private fun StepItem(text: String) = Row(
 
 @Composable
 private fun Subtitle3() = Text(
-    text =  "Забывая про безопастность своих данных, вы подвергаете себя риску. Не надо так",
+    text =  "Забывая про безопастность своих данных, вы подвергаете себя риску.",
     color = MaterialTheme.colors.textPrimary,
     style = MaterialTheme.typography.body1,
     modifier = Modifier.padding(top = 16.dp, bottom = 16.dp)

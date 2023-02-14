@@ -32,5 +32,7 @@ class EmailValidatorImpl: EmailValidator {
         return true
     }
 
-    private val invalidDomainsList = listOf("@vk", "@mail", "@yandex")
+    private val invalidDomainsList = listOf(
+        "@yandex", "@vk", "@mail", "@rambler", "@list", "@bk", "@internet", "@inbox", "@hotmail"
+    )
 }
