@@ -52,6 +52,9 @@ fun CitiesMainScreen(
         override fun onConfirmClick() {
             viewModel.setEvent(Event.ConfirmClick)
         }
+        override fun showNextScreen() {
+            viewModel.setEvent(Event.ShowNextScreen)
+        }
         override fun onSearchStateChanged(value: String) {
             viewModel.setEvent(Event.OnSearchStateChanged(value))
         }
@@ -125,7 +128,7 @@ fun CitiesMainScreenContent(
                 bottom.linkTo(parent.bottom)
             }
         if (state.selectedCity != null) {
-            ChooseButton(listener, buttonModifier)
+            ChooseButton(state, listener, buttonModifier)
         } else {
             Search(state, listener, buttonModifier)
         }
@@ -217,17 +220,21 @@ fun CityItem(
  */
 @Composable
 private fun ChooseButton(
+    state: State,
     listener: Listener?,
     modifier: Modifier
-) = StateButton(
-    text = "Выбрать",
-    state = DEFAULT,
-    onSendRequest = { listener?.onConfirmClick() },
-    modifier = modifier
-        .fillMaxWidth()
-        .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
-        .clip(RoundedCornerShape(24.dp))
-)
+) {
+    StateButton(
+        text = "Выбрать",
+        state = state.confirmButtonState,
+        onSendRequest = { listener?.onConfirmClick() },
+        onSuccess = { listener?.showNextScreen() },
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(bottom = 32.dp, start = 24.dp, end = 24.dp)
+            .clip(RoundedCornerShape(24.dp))
+    )
+}
 
 /**
  * BOTTOM CITIES SEARCH

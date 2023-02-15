@@ -4,10 +4,12 @@ import androidx.compose.ui.graphics.Color
 import com.nowiwr01p.auth.ui.cities.CitiesContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.core.datastore.cities.data.City
+import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.auth.cities.usecase.GetCitiesUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.SetCityUseCase
+import kotlinx.coroutines.delay
 
 class CitiesViewModel(
     private val statusBarColor: Color,
@@ -30,7 +32,8 @@ class CitiesViewModel(
             is Event.Init -> init()
             is Event.CityClick -> selectCity(event.city)
             is Event.ClearSelectedCity -> setState { copy(selectedCity = null) }
-            is Event.ConfirmClick -> onConfirmClicked()
+            is Event.ConfirmClick -> saveCity()
+            is Event.ShowNextScreen -> showNextScreen()
             is Event.OnSearchStateChanged -> onSearchStateChanged(event.value)
         }
     }
@@ -41,14 +44,24 @@ class CitiesViewModel(
     }
 
     private fun selectCity(city: City) {
-        saveCity(city)
         val updated = mapper.selectCity(city)
         setCities(updated)
         setState { copy(selectedCity = city) }
     }
 
-    private fun saveCity(city: City) = io {
-        setCity.execute(city)
+    private fun saveCity() = io {
+        setState { copy(confirmButtonState = SEND_REQUEST) }
+        runCatching {
+            viewState.value.selectedCity?.let { city ->
+                setCity.execute(city)
+            }
+        }.onSuccess {
+            setState { copy(confirmButtonState = SUCCESS) }
+        }.onFailure {
+            setState { copy(confirmButtonState = ERROR) }
+            delay(3000)
+            setState { copy(confirmButtonState = DEFAULT) }
+        }
     }
 
     private fun getCities() = io {
@@ -68,7 +81,7 @@ class CitiesViewModel(
         setState { copy(searchValue = value, cities = filtered) }
     }
 
-    private fun onConfirmClicked() {
+    private fun showNextScreen() {
         setEffect { Effect.ShowNextScreen }
         setState { copy(selectedCity = null) }
     }
