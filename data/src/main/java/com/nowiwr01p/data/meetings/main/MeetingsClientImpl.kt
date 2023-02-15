@@ -6,6 +6,7 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.datastore.cities.data.MeetingDB
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
+import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
 import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
@@ -28,14 +29,17 @@ class MeetingsClientImpl(
      */
     override suspend fun getMeetings() = meetingsFlow
 
-    override suspend fun subscribeMeetings(): Unit = withContext(dispatchers.io) {
+    override suspend fun subscribeMeetings() = withContext(dispatchers.io) {
         val listener = createEventListener<Map<String, Meeting>> { map ->
             val updated = map.values.sortedByDescending { meeting -> meeting.date }
             CoroutineScope(dispatchers.io).launch {
                 meetingsFlow.emit(updated)
             }
         }
-        references.getMeetingsReference().addValueEventListener(listener)
+        val reference = references.getMeetingsReference().also { ref ->
+            ref.addValueEventListener(listener)
+        }
+        EventListener(reference, listener)
     }
 
     override suspend fun getUnpublishedMeetings() = withContext(dispatchers.io) {

@@ -4,6 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.AppDispatchers
+import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.user.client.UserClient
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -26,13 +27,16 @@ class UserClientImpl(
     /**
      * GET REMOTE USER WITH REALTIME UPDATED
      */
-    override suspend fun subscribeUser(): Unit = withContext(dispatchers.io) {
+    override suspend fun subscribeUser() = withContext(dispatchers.io) {
         val listener = createEventListener<User> { user ->
             val updatedUser = setUserPermissions(user)
             userFlow.emit(updatedUser)
         }
         val userId = repository.getFirebaseUser().uid
-        references.getUserReference(userId).addValueEventListener(listener)
+        val reference = references.getUserReference(userId).also { ref ->
+            ref.addValueEventListener(listener)
+        }
+        EventListener(reference, listener)
     }
 
     /**

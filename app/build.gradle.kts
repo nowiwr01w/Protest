@@ -70,6 +70,7 @@ dependencies {
     implementation(project(mapOf("path" to ":core")))
     implementation(project(mapOf("path" to ":core-ui")))
     implementation(project(mapOf("path" to ":navigation")))
+    implementation(project(mapOf("path" to ":domain")))
 
     logDependencies()
     animationDependencies()

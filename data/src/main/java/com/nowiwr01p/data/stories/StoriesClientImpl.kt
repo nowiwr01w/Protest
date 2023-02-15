@@ -3,6 +3,7 @@ package com.nowiwr01p.data.stories
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
+import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.stories.client.StoriesClient
@@ -26,13 +27,16 @@ class StoriesClientImpl(
      */
     override suspend fun getStories() = storiesFlow
 
-    override suspend fun subscribeStories(): Unit = withContext(dispatchers.io) {
+    override suspend fun subscribeStories() = withContext(dispatchers.io) {
         val listener = createEventListener<Map<String, Story>> { map ->
             CoroutineScope(dispatchers.io).launch {
                 storiesFlow.emit(map.values.toList())
             }
         }
-        references.getStoriesReference().addValueEventListener(listener)
+        val reference = references.getStoriesReference().also { ref ->
+            ref.addValueEventListener(listener)
+        }
+        EventListener(reference, listener)
     }
 
     /**

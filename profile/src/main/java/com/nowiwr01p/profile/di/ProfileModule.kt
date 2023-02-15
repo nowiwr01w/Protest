@@ -23,6 +23,7 @@ val moduleProfile = module {
             get(),
             get(),
             get(),
+            get(),
             get()
         )
     }

@@ -6,6 +6,7 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
+import com.nowiwr01p.domain.app.InitAppDataUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
@@ -21,6 +22,7 @@ class ProfileViewModel(
     private val updateUserAvatarUseCase: UpdateUserAvatarUseCase,
     private val logOutUseCase: LogOutUseCase,
     private val deleteAccountUseCase: DeleteAccountUseCase,
+    private val initAppDataUseCase: InitAppDataUseCase,
     private val openLinksHelper: OpenLinksHelper,
     private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
@@ -150,6 +152,7 @@ class ProfileViewModel(
     private fun logout() = io {
         runCatching {
             logOutUseCase.execute()
+            initAppDataUseCase.clearSubscribed()
         }.onSuccess {
             setEffect { Effect.NavigateToAuth }
         }
@@ -158,6 +161,7 @@ class ProfileViewModel(
     private fun deleteAccount() = io {
         runCatching {
             deleteAccountUseCase.execute()
+            initAppDataUseCase.clearSubscribed()
         }.onSuccess {
             setEffect { Effect.NavigateToAuth }
         }

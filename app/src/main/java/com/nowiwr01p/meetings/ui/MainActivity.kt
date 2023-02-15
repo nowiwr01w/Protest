@@ -35,6 +35,7 @@ import com.nowiwr01p.core_ui.ui.open_ilnks.openLink
 import com.nowiwr01p.core_ui.ui.snack_bar.TopSnackBar
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
 import com.nowiwr01p.core_ui.ui.status_bar.StatusBarColorHelper
+import com.nowiwr01p.domain.app.InitAppDataUseCase
 import org.koin.android.ext.android.inject
 
 class MainActivity : ComponentActivity() {
@@ -44,6 +45,7 @@ class MainActivity : ComponentActivity() {
     private val statusBarColorHelper by inject<StatusBarColorHelper>()
     private val showBottomSheetHelper by inject<ShowBottomSheetHelper>()
     private val openLinksHelper by inject<OpenLinksHelper>()
+    private val initAppDataUseCase by inject<InitAppDataUseCase>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -123,6 +125,11 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    override fun onDestroy() {
+        initAppDataUseCase.clearSubscribed()
+        super.onDestroy()
     }
 }
 

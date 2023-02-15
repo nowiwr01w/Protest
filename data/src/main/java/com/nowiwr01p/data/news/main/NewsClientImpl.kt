@@ -4,6 +4,7 @@ import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.domain.AppDispatchers
+import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.news.main.repository.NewsClient
 import kotlinx.coroutines.CoroutineScope
@@ -24,14 +25,17 @@ class NewsClientImpl(
      */
     override suspend fun getNews() = newsFlow
 
-    override suspend fun subscribeNews(): Unit = withContext(dispatchers.io) {
+    override suspend fun subscribeNews() = withContext(dispatchers.io) {
         val listener = createEventListener<Map<String, Article>> { map ->
             val updated = map.values.sortedByDescending { article -> article.dateViewers.date }
             CoroutineScope(dispatchers.io).launch {
                 newsFlow.emit(updated)
             }
         }
-        references.getNewsReference().addValueEventListener(listener)
+        val reference = references.getNewsReference().also { ref ->
+            ref.addValueEventListener(listener)
+        }
+        EventListener(reference, listener)
     }
 
     /**

@@ -42,7 +42,7 @@ val moduleDomain = module {
     /**
      * APP
      */
-    factory { InitAppDataUseCase(get(), get(), get(), get(), get(), get(), get()) }
+    single { InitAppDataUseCase(get(), get(), get(), get(), get(), get(), get()) }
     factory { InitAppCrashlyticsUseCase(get(), get()) }
     factory { GetSplashScreenAnimationUrlUseCase(get(), get()) }
 
