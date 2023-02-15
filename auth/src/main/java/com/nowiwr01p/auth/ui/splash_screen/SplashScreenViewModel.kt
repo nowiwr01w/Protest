@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.auth.AuthScreen.*
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
-import com.nowiwr01p.domain.app.GetSplashScreenAnimationStateUseCase
+import com.nowiwr01p.domain.app.GetSplashScreenAnimationUrlUseCase
 import com.nowiwr01p.domain.app.InitAppDataUseCase
 import com.nowiwr01p.domain.auth.cities.usecase.local.GetLocalCityUseCase
 import com.nowiwr01p.domain.auth.verification.usecase.GetRemoteVerificationUseCase
@@ -15,7 +15,7 @@ import kotlinx.coroutines.awaitAll
 class SplashScreenViewModel(
     private val auth: FirebaseAuth,
     private val initAppDataUseCase: InitAppDataUseCase,
-    private val getSplashScreenAnimationStateUseCase: GetSplashScreenAnimationStateUseCase,
+    private val getSplashScreenAnimationUrlUseCase: GetSplashScreenAnimationUrlUseCase,
     private val getLocalCityUseCase: GetLocalCityUseCase,
     private val getRemoteVerificationUseCase: GetRemoteVerificationUseCase
 ): BaseViewModel<Event, State, Effect>() {
@@ -24,11 +24,11 @@ class SplashScreenViewModel(
 
     override fun handleEvents(event: Event) {
         when (event) {
-            is Event.Init -> getStartScreen()
+            is Event.Init -> init()
         }
     }
 
-    private fun getStartScreen() = io {
+    private fun init() = io {
         getSplashScreenAnimation()
         checkLocalData()
         getStartScreenRoute()
@@ -38,8 +38,8 @@ class SplashScreenViewModel(
      * SPLASH SCREEN ANIMATION
      */
     private suspend fun getSplashScreenAnimation() {
-        getSplashScreenAnimationStateUseCase.execute().let { demo ->
-            setState { copy(isSplashScreenDemoAnimation = demo) }
+        getSplashScreenAnimationUrlUseCase.execute().let { url ->
+            setState { copy(animationUrl = url) }
         }
     }
 

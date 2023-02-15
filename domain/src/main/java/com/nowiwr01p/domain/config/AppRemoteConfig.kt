@@ -11,13 +11,13 @@ class AppRemoteConfig(
 
     override fun initValues() {
         CoroutineScope(dispatchers.io).launch {
-            config[SPLASH_SCREEN_DEMO_ANIMATION].asBoolean().also { demo ->
-                repository.setSplashScreenDemoAnimation(demo)
+            config[SPLASH_SCREEN_ANIMATION_URL].asString().also { url ->
+                repository.setAnimationUrl(url)
             }
         }
     }
 
     private companion object {
-        const val SPLASH_SCREEN_DEMO_ANIMATION = "splash_screen_demo_animation"
+        const val SPLASH_SCREEN_ANIMATION_URL = "splash_screen_animation_url"
     }
 }

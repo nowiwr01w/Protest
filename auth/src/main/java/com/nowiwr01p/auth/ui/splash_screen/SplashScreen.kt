@@ -47,7 +47,7 @@ private fun SplashScreenContent(state: State, navigator: Navigator) = Box(
         .background(Color.White)
 ) {
     val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.Url("https://assets6.lottiefiles.com/packages/lf20_Lkj6LJfM8f.json")
+        spec = LottieCompositionSpec.Url(state.animationUrl)
     )
     val logoAnimationState = animateLottieCompositionAsState(composition)
 

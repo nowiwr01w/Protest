@@ -16,7 +16,7 @@ interface SplashScreenContract {
         val isCountrySet: Boolean = false,
         val isAuthorized: Boolean = false,
         val isVerificationCompleted: Boolean = false,
-        val isSplashScreenDemoAnimation: Boolean = false
+        val animationUrl: String = ""
     ): ViewState
 
     interface Effect: ViewSideEffect

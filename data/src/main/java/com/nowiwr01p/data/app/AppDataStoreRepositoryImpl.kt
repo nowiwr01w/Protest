@@ -9,9 +9,9 @@ class AppDataStoreRepositoryImpl(
     private val dataStore: DataStore<AppPreference>
 ): AppDataStoreRepository {
 
-    override suspend fun isSplashScreenDemoAnimation() = dataStore.data.first().splashScreenDemoAnimation
+    override suspend fun getAnimationUrl() = dataStore.data.first().splashScreenAnimationUrl
 
-    override suspend fun setSplashScreenDemoAnimation(demo: Boolean) {
-        dataStore.updateData { AppPreference(demo) }
+    override suspend fun setAnimationUrl(url: String) {
+        dataStore.updateData { AppPreference(url) }
     }
 }
