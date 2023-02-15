@@ -1,14 +1,5 @@
 package com.nowiwr01p.buildsrc.extensions
 
-import com.nowiwr01p.buildsrc.dependency.Accompanist
-import com.nowiwr01p.buildsrc.dependency.Animations
-import com.nowiwr01p.buildsrc.dependency.Basic
-import com.nowiwr01p.buildsrc.dependency.Koin
-import com.nowiwr01p.buildsrc.dependency.Biometric
-import com.nowiwr01p.buildsrc.dependency.Network
-import com.nowiwr01p.buildsrc.dependency.Room
-import com.nowiwr01p.buildsrc.dependency.UnitTest
-import com.nowiwr01p.buildsrc.dependency.Navigation
 import org.gradle.api.artifacts.Dependency
 import org.gradle.api.artifacts.dsl.DependencyHandler
 
@@ -32,6 +23,10 @@ fun DependencyHandler.debugImplementation(dependencyNotation: String): Dependenc
  */
 fun DependencyHandler.implementation(dependencyNotation: String): Dependency? {
     return add("implementation", dependencyNotation)
+}
+
+fun DependencyHandler.implementationPlatform(dependencyNotation: String): Dependency? {
+    return add("implementation", platform(dependencyNotation))
 }
 
 /**

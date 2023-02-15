@@ -24,7 +24,7 @@ fun DependencyHandler.dataStoreDependencies() {
 }
 
 fun DependencyHandler.firebaseDependencies() {
-    implementation(Firebase.BOM)
+    implementationPlatform(Firebase.BOM)
     implementation(Firebase.AUTH)
     implementation(Firebase.PUSH)
     implementation(Firebase.CONFIG)
