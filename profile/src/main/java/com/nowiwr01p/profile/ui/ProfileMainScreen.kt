@@ -3,6 +3,8 @@ package com.nowiwr01p.profile.ui
 import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.content.Intent
 import android.net.Uri
+import android.os.Build.VERSION
+import android.os.Build.VERSION_CODES
 import android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.GetContent
@@ -131,7 +133,7 @@ fun ProfileMainScreen(
 
     val launcher = rememberLauncherForActivityResult(RequestPermission()) { granted ->
         when {
-            granted -> listener.setStorageAvailable()
+            granted || VERSION.SDK_INT >= VERSION_CODES.R -> listener.setStorageAvailable()
             state.shouldRequestPermission && state.shouldRequestAlert -> listener.showPermissionAlert(true)
         }
     }
