@@ -16,13 +16,13 @@ import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
-import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.splash_screen.SplashScreenContract.*
 import com.nowiwr01p.auth.ui.splash_screen.data.ItemData
 import com.nowiwr01p.auth.ui.splash_screen.data.getAnimatedTextItems
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.subHeadlineRegular
 import com.nowiwr01p.core_ui.theme.textColorSecondary
+import com.nowiwr01p.core_ui.ui.progress.StubProgressBar
 import org.koin.androidx.compose.getViewModel
 
 @Composable
@@ -47,18 +47,20 @@ private fun SplashScreenContent(state: State, navigator: Navigator) = Box(
         .background(Color.White)
 ) {
     val composition by rememberLottieComposition(
-        spec = LottieCompositionSpec.RawRes(
-            resId = if (state.isSplashScreenDemoAnimation) R.raw.anim_splash_screen_demo else R.raw.anim_splash_screen
-        )
+        spec = LottieCompositionSpec.Url("https://assets6.lottiefiles.com/packages/lf20_Lkj6LJfM8f.json")
     )
     val logoAnimationState = animateLottieCompositionAsState(composition)
 
-    val topPadding = if (state.isSplashScreenDemoAnimation) 132.dp else 0.dp
-    val bottomPadding = if (state.isSplashScreenDemoAnimation) 0.dp else 24.dp
+    if (logoAnimationState.progress == 0f) {
+        StubProgressBar()
+    }
     LottieAnimation(
         composition = composition,
         progress = { logoAnimationState.progress },
-        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = topPadding, bottom = bottomPadding)
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(250.dp)
+            .align(Alignment.Center)
     )
 
     if (logoAnimationState.isAtEnd && logoAnimationState.isPlaying) {
