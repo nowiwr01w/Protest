@@ -8,6 +8,6 @@ class GetMeetingsScreenCacheUseCase(
 ): UseCase<Unit, MeetingsScreenCache?> {
 
     override suspend fun execute(input: Unit): MeetingsScreenCache? {
-        return if (meetingsCache.data.user.email.isNotEmpty()) meetingsCache else null
+        return if (meetingsCache.data.user.id.isNotEmpty()) meetingsCache else null
     }
 }

@@ -6,7 +6,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class User(
     val id: String = "",
-    val email: String = "",
     val city: City = City(),
     val name: String = "",
     val avatar: String = "",
@@ -21,7 +20,6 @@ data class User(
 @Serializable
 data class UserDB(
     val id: String = "",
-    val email: String = "",
     val city: City = City(),
     val name: String = "",
     val avatar: String = ""
@@ -29,7 +27,6 @@ data class UserDB(
 
 fun User.map() = UserDB(
     id = id,
-    email = email,
     city = city,
     name = name,
     avatar = avatar
