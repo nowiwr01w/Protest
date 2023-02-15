@@ -40,7 +40,7 @@ class ProfileRepositoryImpl(
         val user = client.getUserFlow().value
         clearPreviousImages(user.id)
 
-        val fileName = "${user.id}/${uri.lastPathSegment}"
+        val fileName = "${user.id}/${System.currentTimeMillis()}"
         val uploadReference = referencesRepository.getImagesStorageReference().child(fileName)
 
         uploadReference.putFile(uri).await()
