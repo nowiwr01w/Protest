@@ -5,6 +5,7 @@ plugins {
     id("kotlin-android")
     id("com.android.application")
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -35,6 +36,9 @@ android {
 
     buildTypes {
         release {
+            firebaseCrashlytics {
+                nativeSymbolUploadEnabled = true
+            }
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

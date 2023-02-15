@@ -24,11 +24,15 @@ fun DependencyHandler.dataStoreDependencies() {
 }
 
 fun DependencyHandler.firebaseDependencies() {
+    implementation(Firebase.BOM)
     implementation(Firebase.AUTH)
     implementation(Firebase.PUSH)
     implementation(Firebase.CONFIG)
-    implementation(Firebase.DATABASE)
     implementation(Firebase.STORAGE)
+    implementation(Firebase.DATABASE)
+    implementation(Firebase.ANALYTICS)
+    implementation(Firebase.CRASHLYTICS)
+    implementation(Firebase.CRASHLYTICS_NDK)
 }
 
 fun DependencyHandler.koinDependencies() {
