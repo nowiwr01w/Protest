@@ -19,6 +19,7 @@ class InitAppDataUseCase(
     private val subscribeNewsUseCase: SubscribeNewsUseCase,
     private val subscribeMeetingsUseCase: SubscribeMeetingsUseCase,
     private val subscribeCategoriesUseCase: SubscribeCategoriesUseCase,
+    private val setupCrashlyticsUseCase: InitAppCrashlyticsUseCase,
     private val dispatchers: AppDispatchers
 ): UseCase<Unit, Unit> {
 
@@ -33,7 +34,8 @@ class InitAppDataUseCase(
                 async { subscribeStoriesUseCase.execute() },
                 async { subscribeMeetingsUseCase.execute() },
                 async { subscribeCategoriesUseCase.execute() },
-                async { subscribeNewsUseCase.execute() }
+                async { subscribeNewsUseCase.execute() },
+                async { setupCrashlyticsUseCase.execute() }
             ).awaitAll()
         }
     }

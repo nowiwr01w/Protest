@@ -13,8 +13,7 @@ import kotlinx.coroutines.launch
 import timber.log.Timber
 
 fun AuthResult.toUser() = User(
-    id = user?.uid.orEmpty(),
-    email = user?.email.orEmpty()
+    id = user?.uid.orEmpty()
 )
 
 inline fun <reified T> createEventListener(
