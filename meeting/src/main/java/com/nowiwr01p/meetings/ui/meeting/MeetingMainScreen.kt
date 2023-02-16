@@ -44,12 +44,12 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCount
 import com.nowiwr01p.core.extenstion.getPeopleMaybeGoCount
+import com.nowiwr01p.core.extenstion.storageUrl
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.R.raw
 import com.nowiwr01p.core_ui.extensions.getColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
-import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.button.StateButton
@@ -281,7 +281,7 @@ private fun Toolbar(
  */
 @Composable
 private fun TopImage(meeting: Meeting) = CoilImage(
-    imageModel = { meeting.image },
+    imageModel = { meeting.image.storageUrl() },
     modifier = Modifier
         .fillMaxWidth()
         .height(250.dp)
@@ -509,7 +509,7 @@ private fun Posters(
         .padding(top = 16.dp)
 ) {
     items(meeting.takeWithYouInfo.posters) { poster ->
-        Poster { listener?.openLink(poster) }
+        Poster { listener?.openLink(poster.storageUrl()) }
     }
     item { Spacer(modifier = Modifier.width(16.dp)) }
 }

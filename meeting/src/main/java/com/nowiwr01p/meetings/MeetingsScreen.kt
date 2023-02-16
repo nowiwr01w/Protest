@@ -6,9 +6,12 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core.extenstion.decodeObjectFromString
+import com.nowiwr01p.core.extenstion.setObjectArgToNavigationRoute
 import com.nowiwr01p.core.model.CreateMeetingMapType
 import com.nowiwr01p.core_ui.Keys
 import com.nowiwr01p.core_ui.Keys.ARG_TO_MAP_CURRENT_MEETING
+import com.nowiwr01p.core_ui.Keys.ARG_TO_MEETING_INFO
 import com.nowiwr01p.core_ui.base_screen.Screen
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.meetings.navigation.MeetingsScreenType
@@ -112,22 +115,17 @@ sealed class MeetingsScreen<T>(
 
         override fun navigate(args: Args, navController: NavController) {
             navController.navigate(
-                route = route.replace(
-                    oldValue = "{${Keys.ARG_TO_MEETING_INFO}}",
-                    newValue = Json.encodeToString(args)
-                )
+                route = route.setObjectArgToNavigationRoute(ARG_TO_MEETING_INFO, args)
             )
         }
         override fun createScreen(navGraphBuilder: NavGraphBuilder, navigator: Navigator) {
             navGraphBuilder.composable(
                 route = route,
                 arguments = listOf(
-                    navArgument(Keys.ARG_TO_MEETING_INFO) { type = NavType.StringType }
+                    navArgument(ARG_TO_MEETING_INFO) { type = NavType.StringType }
                 )
             ) {
-                val meetingJson = it.arguments?.getString(Keys.ARG_TO_MEETING_INFO).orEmpty()
-                val args = Json.decodeFromString<Args>(meetingJson)
-
+                val args = it.decodeObjectFromString<Args>(ARG_TO_MEETING_INFO)
                 MeetingMainScreen(
                     isPreviewMode = args.isPreviewMode,
                     isViewUnpublishedMode = args.isViewUnpublishedMode,

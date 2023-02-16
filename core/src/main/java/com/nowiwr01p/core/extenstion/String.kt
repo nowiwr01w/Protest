@@ -27,3 +27,5 @@ fun Meeting.getPeopleGoCount() = reaction.peopleGoCount.size.let { definitelyGo 
 fun Meeting.getPeopleMaybeGoCount() = reaction.peopleMaybeGoCount.size.let { maybeGo ->
     if (maybeGo == 0) "" else "${maybeGo.formatPeopleCount()}, возможно, тоже\n"
 }
+
+fun String.storageUrl() = replace("/o/meetings/", "/o/meetings%2F")
