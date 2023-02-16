@@ -28,4 +28,8 @@ fun Meeting.getPeopleMaybeGoCount() = reaction.peopleMaybeGoCount.size.let { may
     if (maybeGo == 0) "" else "${maybeGo.formatPeopleCount()}, возможно, тоже\n"
 }
 
-fun String.storageUrl() = replace("/o/meetings/", "/o/meetings%2F")
+fun String.storageUrl() = replace("/o/images/", "/o/images%2F")
+    .replace("/o/news/", "/o/stories%2F")
+    .replace("/o/stories/", "/o/stories%2F")
+    .replace("/o/posters/", "/o/posters%2F")
+    .replace("/o/meetings/", "/o/meetings%2F")

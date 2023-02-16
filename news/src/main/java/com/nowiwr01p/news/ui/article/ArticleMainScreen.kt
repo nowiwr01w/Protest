@@ -26,6 +26,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.nowiwr01p.core.extenstion.formatToDateTime
+import com.nowiwr01p.core.extenstion.storageUrl
 import com.nowiwr01p.core.model.*
 import com.nowiwr01p.core.model.Article.Companion.article
 import com.nowiwr01p.core_ui.EffectObserver
@@ -177,7 +178,7 @@ fun Toolbar(
  */
 @Composable
 fun TopImage(image: TopImage) = CoilImage(
-    imageModel = { image.link },
+    imageModel = { image.link.storageUrl() },
     modifier = Modifier
         .fillMaxWidth()
         .height(250.dp)
@@ -355,7 +356,7 @@ private fun ImageItem(image: Image) = Column(
     horizontalAlignment = Alignment.CenterHorizontally
 ) {
     CoilImage(
-        imageModel = { image.link },
+        imageModel = { image.link.storageUrl() },
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)

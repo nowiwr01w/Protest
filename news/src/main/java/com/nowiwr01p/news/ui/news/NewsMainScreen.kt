@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.extenstion.formatToDateTime
+import com.nowiwr01p.core.extenstion.storageUrl
 import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.core_ui.EffectObserver
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
@@ -161,7 +162,7 @@ internal fun ArticleView(article: Article, onClick: () -> Unit) = ConstraintLayo
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { article.topImage.link }
+        imageModel = { article.topImage.link.storageUrl() }
     )
 
     val titleModifier = Modifier

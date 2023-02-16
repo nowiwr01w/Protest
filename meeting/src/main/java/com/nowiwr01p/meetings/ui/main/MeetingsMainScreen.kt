@@ -29,11 +29,11 @@ import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountAll
+import com.nowiwr01p.core.extenstion.storageUrl
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.core_ui.extensions.ClickableIcon
 import com.nowiwr01p.core_ui.extensions.getColor
 import com.nowiwr01p.core_ui.extensions.shadowCard
-import com.nowiwr01p.core_ui.extensions.toColor
 import com.nowiwr01p.core_ui.navigators.main.Navigator
 import com.nowiwr01p.core_ui.theme.*
 import com.nowiwr01p.core_ui.ui.animation.pressedAnimation
@@ -261,7 +261,7 @@ private fun Story(
             contentAlignment = Alignment.Center
         ) {
             CoilImage(
-                imageModel = { story.previewIcon },
+                imageModel = { story.previewIcon.storageUrl() },
                 modifier = Modifier
                     .size(64.dp)
                     .clip(CircleShape)
@@ -393,7 +393,7 @@ internal fun MeetingItem(meeting: Meeting, onClick: () -> Unit) = ConstraintLayo
         }
     CoilImage(
         modifier = imageModifier,
-        imageModel = { meeting.image }
+        imageModel = { meeting.image.storageUrl() }
     )
 
     val categoriesModifier = Modifier
