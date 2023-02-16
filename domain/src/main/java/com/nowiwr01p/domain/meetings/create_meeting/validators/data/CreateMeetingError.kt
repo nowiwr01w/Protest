@@ -20,10 +20,6 @@ sealed class CreateMeetingError(
         data class ExtensionError(
             override val errorText: String = "Ссылка должна начинаться с https://"
         ): ImageLinkError(errorText)
-
-        data class ImageTypeError(
-            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg, webp"
-        ): ImageLinkError(errorText)
     }
 
     /**

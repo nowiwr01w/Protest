@@ -35,8 +35,7 @@ class CreateArticleValidatorImpl(config: CreateArticleRemoteConfig): CreateArtic
     override fun validateTopImageLink(link: String) {
         validateImage(
             link = link,
-            extensionError = TopImageError.ExtensionError(),
-            imageTypeError = TopImageError.ImageTypeError()
+            extensionError = TopImageError.ExtensionError()
         )
     }
 
@@ -108,8 +107,7 @@ class CreateArticleValidatorImpl(config: CreateArticleRemoteConfig): CreateArtic
     override fun validateImageList(imageList: ImageList) = imageList.images.forEach { image ->
         validateImage(
             link = image.link,
-            extensionError = ImageListError.ExtensionError(contentIndex = imageList.order),
-            imageTypeError = ImageListError.ImageTypeError(contentIndex = imageList.order)
+            extensionError = ImageListError.ExtensionError(contentIndex = imageList.order)
         )
     }
 
@@ -132,13 +130,10 @@ class CreateArticleValidatorImpl(config: CreateArticleRemoteConfig): CreateArtic
     private fun validateImage(
         link: String,
         extensionError: CreateArticleError,
-        imageTypeError: CreateArticleError
     ) = with(link) {
         val ext = startsWith("https://")
-        val image = endsWith(".png") || endsWith(".jpg") || endsWith(".jpeg") || endsWith(".webp")
         when {
             !ext -> extensionError
-            !image -> imageTypeError
             else -> null
         }.also {
             addError(it)

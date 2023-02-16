@@ -19,10 +19,6 @@ sealed class CreateArticleError(
         data class ExtensionError(
             override val errorText: String = "Ссылка должна начинаться с https://"
         ): TopImageError(errorText)
-
-        data class ImageTypeError(
-            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg, webp"
-        ): TopImageError(errorText)
     }
 
     /**
@@ -116,12 +112,6 @@ sealed class CreateArticleError(
 
         data class ExtensionError(
             override val errorText: String = "Ссылка должна начинаться с https://",
-            override val type: DynamicFields = IMAGE_LINK,
-            override val contentIndex: Int
-        ): ImageListError(errorText, type, contentIndex)
-
-        data class ImageTypeError(
-            override val errorText: String = "Допустимые форматы картинки: png, jpg, jpeg, webp",
             override val type: DynamicFields = IMAGE_LINK,
             override val contentIndex: Int
         ): ImageListError(errorText, type, contentIndex)
