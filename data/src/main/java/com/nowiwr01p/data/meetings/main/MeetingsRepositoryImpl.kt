@@ -4,7 +4,7 @@ import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.app.EventListener
+import com.nowiwr01p.domain.app.ReferencedListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
 import kotlinx.coroutines.CoroutineScope
@@ -35,7 +35,7 @@ class MeetingsRepositoryImpl(
         val reference = references.getMeetingsReference().also { ref ->
             ref.addValueEventListener(listener)
         }
-        EventListener(reference, listener)
+        ReferencedListener(reference, listener)
     }
 
     /**

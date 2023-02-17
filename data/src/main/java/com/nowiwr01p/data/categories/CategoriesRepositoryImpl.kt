@@ -3,7 +3,7 @@ package com.nowiwr01p.data.categories
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.core.model.Category
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.app.EventListener
+import com.nowiwr01p.domain.app.ReferencedListener
 import com.nowiwr01p.domain.categories.repository.CategoriesRepository
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import kotlinx.coroutines.CoroutineScope
@@ -30,6 +30,6 @@ class CategoriesRepositoryImpl(
         val reference = references.getCategoriesReference().also { ref ->
             ref.addValueEventListener(listener)
         }
-        EventListener(reference, listener)
+        ReferencedListener(reference, listener)
     }
 }

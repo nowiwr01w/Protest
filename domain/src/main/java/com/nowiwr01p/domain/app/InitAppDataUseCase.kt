@@ -12,7 +12,7 @@ import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.*
 
-typealias EventListener = Pair<DatabaseReference, ValueEventListener>
+typealias ReferencedListener = Pair<DatabaseReference, ValueEventListener>
 
 class InitAppDataUseCase(
     private val subscribeUserUseCase: SubscribeUserUseCase,
@@ -24,13 +24,13 @@ class InitAppDataUseCase(
     private val dispatchers: AppDispatchers
 ): UseCase<Unit, Unit> {
 
-    private val dispatchListeners = mutableListOf<EventListener>()
+    private val referencedListeners = mutableListOf<ReferencedListener>()
 
     override suspend fun execute(input: Unit) {
         init()
     }
 
-    private fun EventListener.add() = dispatchListeners.add(this)
+    private fun ReferencedListener.add() = referencedListeners.add(this)
 
     private suspend fun init() = CoroutineScope(dispatchers.io).launch {
         runCatching {
@@ -46,7 +46,7 @@ class InitAppDataUseCase(
     }
 
     fun clearSubscribed() = CoroutineScope(dispatchers.io).launch {
-        dispatchListeners.map { referenceToListener ->
+        referencedListeners.map { referenceToListener ->
             async {
                 with(referenceToListener) { first.removeEventListener(second) }
             }

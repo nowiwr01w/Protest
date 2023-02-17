@@ -4,7 +4,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.app.EventListener
+import com.nowiwr01p.domain.app.ReferencedListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
@@ -36,7 +36,7 @@ class UserRemoteRealtimeRepositoryImpl(
         val reference = references.getUserReference(userId).also { ref ->
             ref.addValueEventListener(listener)
         }
-        EventListener(reference, listener)
+        ReferencedListener(reference, listener)
     }
 
     /**

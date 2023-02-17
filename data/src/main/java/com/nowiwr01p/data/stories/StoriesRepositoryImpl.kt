@@ -3,7 +3,7 @@ package com.nowiwr01p.data.stories
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
-import com.nowiwr01p.domain.app.EventListener
+import com.nowiwr01p.domain.app.ReferencedListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.stories.repository.StoriesRepository
@@ -36,7 +36,7 @@ class StoriesRepositoryImpl(
         val reference = references.getStoriesReference().also { ref ->
             ref.addValueEventListener(listener)
         }
-        EventListener(reference, listener)
+        ReferencedListener(reference, listener)
     }
 
     /**
