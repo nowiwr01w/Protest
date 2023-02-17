@@ -3,18 +3,17 @@ package com.nowiwr01p.data.meetings.main
 import com.google.firebase.database.ktx.getValue
 import com.nowiwr01p.core.datastore.cities.data.LocationInfo
 import com.nowiwr01p.core.datastore.cities.data.Meeting
-import com.nowiwr01p.core.datastore.cities.data.MeetingDB
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
-import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
-import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode.*
 import com.nowiwr01p.domain.user.client.UserClient
-import kotlinx.coroutines.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 
 class MeetingsClientImpl(
     private val references: FirebaseReferencesRepository,
@@ -55,31 +54,6 @@ class MeetingsClientImpl(
         references.getLocationsReference(meetingId).get()
             .await()
             .getValue<LocationInfo>() ?: throw IllegalStateException("No location found")
-    }
-
-    /**
-     * CREATE MEETING
-     */
-    override suspend fun createMeeting(mode: CreateMeetingMode, meeting: Meeting): Unit = withContext(dispatchers.io) {
-        val reference = when (mode) {
-            SEND_TO_REVIEW -> references.getMeetingPreviewReference(meeting.id)
-            PUBLISH_REVIEWED -> references.getMeetingReference(meeting.id)
-        }
-        val sendMeeting = async {
-            reference
-                .setValue(MeetingDB.toMeetingDB(meeting))
-                .await()
-        }
-        val sendLocation = async {
-            references.getLocationsReference(meeting.id)
-                .setValue(meeting.locationInfo)
-                .await()
-        }
-        listOf(sendMeeting, sendLocation).awaitAll().also {
-            if (mode == PUBLISH_REVIEWED) {
-                references.getMeetingPreviewReference(meeting.id).removeValue().await()
-            }
-        }
     }
 
     /**
