@@ -6,19 +6,19 @@ import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.main.data.Story
-import com.nowiwr01p.domain.stories.client.StoriesClient
-import com.nowiwr01p.domain.user.client.UserClient
+import com.nowiwr01p.domain.stories.repository.StoriesRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class StoriesClientImpl(
-    private val userClient: UserClient,
+class StoriesRepositoryImpl(
+    private val userRemoteRealtimeRepository: UserRemoteRealtimeRepository,
     private val references: FirebaseReferencesRepository,
     private val dispatchers: AppDispatchers
-): StoriesClient {
+): StoriesRepository {
 
     private val storiesFlow: MutableStateFlow<List<Story>> = MutableStateFlow(listOf())
 
@@ -43,7 +43,7 @@ class StoriesClientImpl(
      * SET STORY VIEWED
      */
     override suspend fun setStoryViewed(storyId: String) = withContext(dispatchers.io) {
-        val userId = userClient.getUserFlow().value.id
+        val userId = userRemoteRealtimeRepository.getUserFlow().value.id
         val updatedStory = references.getStoriesReference().child(storyId).get().await()
             .getValue<Story>()!!
             .updateStory(userId)

@@ -5,13 +5,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.profile.repository.ProfileRepository
-import com.nowiwr01p.domain.user.client.UserClient
+import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
 class ProfileRepositoryImpl(
     private val auth: FirebaseAuth,
-    private val client: UserClient,
+    private val client: UserRemoteRealtimeRepository,
     private val referencesRepository: FirebaseReferencesRepository,
     private val dispatchers: AppDispatchers
 ): ProfileRepository {

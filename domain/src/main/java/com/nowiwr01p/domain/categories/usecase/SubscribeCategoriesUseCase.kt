@@ -2,10 +2,10 @@ package com.nowiwr01p.domain.categories.usecase
 
 import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.app.EventListener
-import com.nowiwr01p.domain.categories.client.CategoriesClient
+import com.nowiwr01p.domain.categories.repository.CategoriesRepository
 
 class SubscribeCategoriesUseCase(
-    private val client: CategoriesClient
+    private val client: CategoriesRepository
 ): UseCase<Unit, EventListener> {
 
     override suspend fun execute(input: Unit): EventListener {

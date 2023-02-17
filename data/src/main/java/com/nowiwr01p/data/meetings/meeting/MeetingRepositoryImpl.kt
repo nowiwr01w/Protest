@@ -6,20 +6,20 @@ import com.nowiwr01p.core.datastore.cities.data.Meeting
 import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.meetings.meeting.client.MeetingClient
+import com.nowiwr01p.domain.meetings.meeting.repository.MeetingRepository
 import com.nowiwr01p.core.datastore.cities.data.MeetingStatus.IN_PROGRESS
-import com.nowiwr01p.domain.user.client.UserClient
+import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class MeetingClientImpl(
-    private val userClient: UserClient,
+class MeetingRepositoryImpl(
+    private val userRemoteRealtimeRepository: UserRemoteRealtimeRepository,
     private val references: FirebaseReferencesRepository,
     private val dispatchers: AppDispatchers
-): MeetingClient {
+): MeetingRepository {
 
     private val meeting: MutableStateFlow<Meeting> = MutableStateFlow(Meeting())
 
@@ -55,7 +55,7 @@ class MeetingClientImpl(
     }
 
     private suspend fun Meeting.updateMeeting(positive: Boolean): Meeting {
-        val userId = userClient.getUserFlow().value.id
+        val userId = userRemoteRealtimeRepository.getUserFlow().value.id
 
         val positiveContains = reaction.peopleGoCount.contains(userId)
         val maybeContains = reaction.peopleMaybeGoCount.contains(userId)

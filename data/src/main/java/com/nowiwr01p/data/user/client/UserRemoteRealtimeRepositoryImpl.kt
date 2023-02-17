@@ -6,19 +6,19 @@ import com.nowiwr01p.core.model.User
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.user.client.UserClient
+import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class UserClientImpl(
+class UserRemoteRealtimeRepositoryImpl(
     private val auth: FirebaseAuth,
     private val references: FirebaseReferencesRepository,
     private val repository: UserRemoteRepository,
     private val dispatchers: AppDispatchers
-): UserClient {
+): UserRemoteRealtimeRepository {
 
     private val userFlow: MutableStateFlow<User> = MutableStateFlow(User())
 

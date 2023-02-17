@@ -4,7 +4,7 @@ import com.nowiwr01p.core.model.Article
 import com.nowiwr01p.domain.app.EventListener
 import kotlinx.coroutines.flow.StateFlow
 
-interface NewsClient {
+interface NewsRepository {
     suspend fun subscribeNews(): EventListener
     suspend fun getNews(): StateFlow<List<Article>>
     suspend fun getUnpublishedNews(): List<Article>

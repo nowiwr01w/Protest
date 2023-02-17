@@ -6,17 +6,17 @@ import com.nowiwr01p.core.extenstion.createEventListener
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.app.EventListener
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
-import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
+import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 
-class MeetingsClientImpl(
+class MeetingsRepositoryImpl(
     private val references: FirebaseReferencesRepository,
     private val dispatchers: AppDispatchers
-): MeetingsClient {
+): MeetingsRepository {
 
     private val meetingsFlow: MutableStateFlow<List<Meeting>> = MutableStateFlow(listOf())
 

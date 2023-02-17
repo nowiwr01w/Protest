@@ -20,19 +20,19 @@ import com.nowiwr01p.data.auth.cities.CitiesStateLocalRepositoryImpl
 import com.nowiwr01p.data.auth.cities.CitiesStateRemoteRepositoryImpl
 import com.nowiwr01p.data.news.create_article.repository.CreateArticleRepositoryImpl
 import com.nowiwr01p.data.news.create_article.validator.CreateArticleValidatorImpl
-import com.nowiwr01p.data.meetings.main.MeetingsClientImpl
-import com.nowiwr01p.data.news.main.NewsClientImpl
+import com.nowiwr01p.data.meetings.main.MeetingsRepositoryImpl
+import com.nowiwr01p.data.news.main.NewsRepositoryImpl
 import com.nowiwr01p.data.profile.ProfileRepositoryImpl
 import com.nowiwr01p.data.user.repository.UserRemoteRepositoryImpl
 import com.nowiwr01p.data.auth.verification.VerificationRemoteRepositoryImpl
-import com.nowiwr01p.data.categories.CategoriesClientImpl
+import com.nowiwr01p.data.categories.CategoriesRepositoryImpl
 import com.nowiwr01p.domain.config.AppRemoteConfig
 import com.nowiwr01p.data.config.CreateArticleRemoteConfigImpl
 import com.nowiwr01p.data.config.CreateMeetingRemoteConfigImpl
 import com.nowiwr01p.data.meetings.create_meeting.CreateMeetingRepositoryImpl
-import com.nowiwr01p.data.meetings.meeting.MeetingClientImpl
-import com.nowiwr01p.data.stories.StoriesClientImpl
-import com.nowiwr01p.data.user.client.UserClientImpl
+import com.nowiwr01p.data.meetings.meeting.MeetingRepositoryImpl
+import com.nowiwr01p.data.stories.StoriesRepositoryImpl
+import com.nowiwr01p.data.user.client.UserRemoteRealtimeRepositoryImpl
 import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.AppDispatchersImpl
 import com.nowiwr01p.domain.news.article.ArticleRepository
@@ -47,18 +47,18 @@ import com.nowiwr01p.domain.auth.cities.repository.CitiesRepository
 import com.nowiwr01p.domain.auth.cities.repository.CityStateRemoteRepository
 import com.nowiwr01p.domain.news.create_article.repository.CreateArticleRepository
 import com.nowiwr01p.domain.news.create_article.validators.CreateArticleValidator
-import com.nowiwr01p.domain.meetings.main.repository.MeetingsClient
-import com.nowiwr01p.domain.news.main.repository.NewsClient
+import com.nowiwr01p.domain.meetings.main.repository.MeetingsRepository
+import com.nowiwr01p.domain.news.main.repository.NewsRepository
 import com.nowiwr01p.domain.profile.repository.ProfileRepository
 import com.nowiwr01p.domain.user.repository.UserRemoteRepository
 import com.nowiwr01p.domain.auth.verification.repository.VerificationRemoteRepository
-import com.nowiwr01p.domain.categories.client.CategoriesClient
+import com.nowiwr01p.domain.categories.repository.CategoriesRepository
 import com.nowiwr01p.domain.config.CreateArticleRemoteConfig
 import com.nowiwr01p.domain.config.CreateMeetingRemoteConfig
 import com.nowiwr01p.domain.meetings.create_meeting.repository.CreateMeetingRepository
-import com.nowiwr01p.domain.meetings.meeting.client.MeetingClient
-import com.nowiwr01p.domain.stories.client.StoriesClient
-import com.nowiwr01p.domain.user.client.UserClient
+import com.nowiwr01p.domain.meetings.meeting.repository.MeetingRepository
+import com.nowiwr01p.domain.stories.repository.StoriesRepository
+import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import org.koin.dsl.module
 
 val moduleData = module {
@@ -76,8 +76,8 @@ val moduleData = module {
     factory<UserRemoteRepository> {
         UserRemoteRepositoryImpl(get(), get(), get(), get())
     }
-    single<UserClient> {
-        UserClientImpl(get(), get(), get(), get())
+    single<UserRemoteRealtimeRepository> {
+        UserRemoteRealtimeRepositoryImpl(get(), get(), get(), get())
     }
 
     /**
@@ -155,29 +155,29 @@ val moduleData = module {
     /**
      * MEETINGS
      */
-    single<MeetingsClient> {
-        MeetingsClientImpl(get(), get())
+    single<MeetingsRepository> {
+        MeetingsRepositoryImpl(get(), get())
     }
 
     /**
      * CATEGORIES
      */
-    single<CategoriesClient> {
-        CategoriesClientImpl(get() ,get())
+    single<CategoriesRepository> {
+        CategoriesRepositoryImpl(get() ,get())
     }
 
     /**
      * STORIES
      */
-    single<StoriesClient> {
-        StoriesClientImpl(get(), get(), get())
+    single<StoriesRepository> {
+        StoriesRepositoryImpl(get(), get(), get())
     }
 
     /**
      * MEETING
      */
-    single<MeetingClient> {
-        MeetingClientImpl(get(), get(), get())
+    single<MeetingRepository> {
+        MeetingRepositoryImpl(get(), get(), get())
     }
 
     /**
@@ -193,8 +193,8 @@ val moduleData = module {
     /**
      * NEWS
      */
-    single<NewsClient> {
-        NewsClientImpl(get(), get())
+    single<NewsRepository> {
+        NewsRepositoryImpl(get(), get())
     }
 
     /**
