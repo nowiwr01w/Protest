@@ -156,7 +156,7 @@ val moduleData = module {
      * MEETINGS
      */
     single<MeetingsClient> {
-        MeetingsClientImpl(get(), get(), get())
+        MeetingsClientImpl(get(), get())
     }
 
     /**
@@ -177,7 +177,7 @@ val moduleData = module {
      * MEETING
      */
     single<MeetingClient> {
-        MeetingClientImpl(get(), get())
+        MeetingClientImpl(get(), get(), get())
     }
 
     /**
