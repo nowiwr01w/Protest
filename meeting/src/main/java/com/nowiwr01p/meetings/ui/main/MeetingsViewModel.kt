@@ -24,6 +24,7 @@ class MeetingsViewModel(
     private val statusBarColor: Color,
     private val getStoriesUseCase: GetStoriesUseCase,
     private val getMeetingsUseCase: GetMeetingsUseCase,
+    private val getReactionsUseCase: GetReactionsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val getMeetingsScreenCacheUseCase: GetMeetingsScreenCacheUseCase,
@@ -59,6 +60,7 @@ class MeetingsViewModel(
             getScreenCache()
             getUserData()
             getStories()
+            getReactions()
             getMeetings()
             getCategories()
         }.onSuccess {
@@ -77,6 +79,12 @@ class MeetingsViewModel(
     private suspend fun getUserData() = launch {
         getUserUseCase.execute().collect { user ->
             setState { copy(user = user) }
+        }
+    }
+
+    private suspend fun getReactions() = launch {
+        getReactionsUseCase.execute().collect { meetingIdToReaction ->
+            setState { copy(reactions = meetingIdToReaction) }
         }
     }
 

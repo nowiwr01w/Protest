@@ -1,6 +1,7 @@
 package com.nowiwr01p.meetings.ui.meeting
 
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Reaction
 import com.nowiwr01p.core_ui.ui.button.ButtonState.*
 import com.nowiwr01p.core_ui.ui.open_ilnks.OpenLinksHelper
 import com.nowiwr01p.core_ui.ui.snack_bar.ShowSnackBarHelper
@@ -8,6 +9,7 @@ import com.nowiwr01p.core_ui.ui.snack_bar.SnackBarParams
 import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.execute
+import com.nowiwr01p.domain.meetings.main.usecase.GetReactionsUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SetReactionUseCase
 import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode
@@ -15,12 +17,14 @@ import com.nowiwr01p.domain.meetings.meeting.data.CreateMeetingMode.SEND_TO_REVI
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.meeting.MeetingContract.*
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MeetingViewModel(
     private val getUserUseCase: GetUserUseCase,
     private val setReactionUseCase: SetReactionUseCase,
     private val createMeetingUseCase: CreateMeetingUseCase,
     private val getLocationUseCase: GetLocationUseCase,
+    private val getReactionsUseCase: GetReactionsUseCase,
     private val openLinksHelper: OpenLinksHelper,
     private val showSnackBarHelper: ShowSnackBarHelper
 ): BaseViewModel<Event, State, Effect>() {
@@ -40,6 +44,7 @@ class MeetingViewModel(
         setState { copy(meeting = meeting) }
         runCatching {
             getUserData()
+            subscribeReaction(meeting.id)
             if (!isPreviewMode) getMeetingLocation()
         }.onSuccess {
             if (!isPreviewMode) delay(1000)
@@ -60,10 +65,20 @@ class MeetingViewModel(
     }
 
     /**
+     * SUBSCRIBE REACTIONS
+     */
+    private fun subscribeReaction(meetingId: String) = launch {
+        getReactionsUseCase.execute().collect { meetingIdToReaction ->
+            val reaction = meetingIdToReaction[meetingId] ?: Reaction()
+            val updatedMeeting = viewState.value.meeting.copy(reaction = reaction)
+            setState { copy(meeting = updatedMeeting) }
+        }
+    }
+
+    /**
      * LOCAL USER DATA
      */
-    private suspend fun getUserData() {
-        val user = getUserUseCase.execute().value
+    private suspend fun getUserData() = getUserUseCase.execute().value.let { user ->
         setState { copy(user = user) }
     }
 
@@ -74,8 +89,6 @@ class MeetingViewModel(
         runCatching {
             val args = SetReactionUseCase.Args(viewState.value.meeting.id, isPositiveButtonClicked)
             setReactionUseCase.execute(args)
-        }.onSuccess {
-            setState { copy(meeting = it) }
         }
     }
 

@@ -70,6 +70,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(MEETINGS_PREVIEW_REFERENCE)
     }
 
+    override suspend fun getMeetingReactionReference(): DatabaseReference {
+        return database.getReference(MEETING_REACTION_REFERENCE)
+    }
+
     /**
      * LOCATIONS
      */
@@ -92,6 +96,7 @@ class FirebaseReferencesRepositoryImpl(
         const val CATEGORIES_REFERENCE = "categories"
         const val MEETINGS_REFERENCE = "meetings"
         const val MEETINGS_PREVIEW_REFERENCE = "meetings_preview"
+        const val MEETING_REACTION_REFERENCE = "meetings_reactions"
         const val MEETING_LOCATION_REFERENCE = "location"
         const val IMAGES_STORAGE = "images"
     }

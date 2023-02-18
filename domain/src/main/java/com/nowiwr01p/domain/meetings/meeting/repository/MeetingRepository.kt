@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.StateFlow
 interface MeetingRepository {
     suspend fun subscribeMeeting(id: String): StateFlow<Meeting>
     suspend fun getMeetingLocation(meetingId: String): LocationInfo
-    suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean): Meeting
+    suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean)
     suspend fun runMeeting(location: LocationInfo)
 }

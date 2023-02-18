@@ -37,6 +37,7 @@ val moduleMeetings = module {
             get(),
             get(),
             get(),
+            get(),
             scope.get(),
             scope.get(),
             get(),
@@ -107,6 +108,7 @@ val moduleMeetings = module {
      */
     viewModel {
         MeetingViewModel(
+            get(),
             get(),
             get(),
             get(),

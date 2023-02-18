@@ -8,6 +8,7 @@ import com.nowiwr01p.domain.AppDispatchers
 import com.nowiwr01p.domain.firebase.FirebaseReferencesRepository
 import com.nowiwr01p.domain.meetings.meeting.repository.MeetingRepository
 import com.nowiwr01p.core.datastore.cities.data.MeetingStatus.IN_PROGRESS
+import com.nowiwr01p.core.datastore.cities.data.Reaction
 import com.nowiwr01p.domain.user.repository.UserRemoteRealtimeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -46,35 +47,39 @@ class MeetingRepositoryImpl(
     /**
      * SET REACTION
      */
-    override suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean) = withContext(dispatchers.io) {
-        val updatedMeeting = references.getMeetingReference(meetingId).get().await()
-            .getValue<Meeting>()!!
-            .updateMeeting(isPositiveButtonClicked)
-        references.getMeetingReference(meetingId).setValue(updatedMeeting).await()
-        updatedMeeting
+    override suspend fun setReaction(meetingId: String, isPositiveButtonClicked: Boolean) {
+        withContext(dispatchers.io) {
+            val reaction = references.getMeetingReactionReference().child(meetingId)
+                .get()
+                .await()
+                .getValue<Reaction>()!!
+                .updateMeeting(isPositiveButtonClicked)
+            references.getMeetingReactionReference().child(meetingId)
+                .setValue(reaction)
+                .await()
+        }
     }
 
-    private suspend fun Meeting.updateMeeting(positive: Boolean): Meeting {
+    private suspend fun Reaction.updateMeeting(positive: Boolean): Reaction {
         val userId = userRemoteRealtimeRepository.getUserFlow().value.id
 
-        val positiveContains = reaction.peopleGoCount.contains(userId)
-        val maybeContains = reaction.peopleMaybeGoCount.contains(userId)
+        val positiveContains = peopleGoCount.contains(userId)
+        val maybeContains = peopleMaybeGoCount.contains(userId)
 
-        val positiveReactionsFiltered = reaction.peopleGoCount
+        val positiveReactionsFiltered = peopleGoCount
             .filterNot { userId == it }
             .toMutableList()
-        val maybeReactionsFiltered = reaction.peopleMaybeGoCount
+        val maybeReactionsFiltered = peopleMaybeGoCount
             .filterNot { userId == it }
             .toMutableList()
 
         if (positive && !positiveContains) positiveReactionsFiltered.add(userId)
         if (!positive && !maybeContains) maybeReactionsFiltered.add(userId)
 
-        val updatedReaction = reaction.copy(
+        return copy(
             peopleGoCount = positiveReactionsFiltered,
             peopleMaybeGoCount = maybeReactionsFiltered
         )
-        return copy(reaction = updatedReaction)
     }
 
     /**

@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Reaction
 import com.nowiwr01p.core.extenstion.formatToDateTime
 import com.nowiwr01p.core.extenstion.getPeopleGoCountAll
 import com.nowiwr01p.core.extenstion.storageUrl
@@ -362,9 +363,10 @@ private fun LazyListScope.Meetings(
     } else {
         item { Spacer(modifier = Modifier.height(8.dp)) }
         items(state.meetings) { meeting ->
-            MeetingItem(meeting) {
-//                listener?.toMapCurrentMeeting(meeting)
-                listener?.toMeeting(meeting)
+            val reaction = state.reactions[meeting.id] ?: Reaction()
+            val updatedMeeting = meeting.copy(reaction = reaction)
+            MeetingItem(updatedMeeting) {
+                listener?.toMeeting(updatedMeeting)
             }
         }
         item { Spacer(modifier = Modifier.height(8.dp)) }

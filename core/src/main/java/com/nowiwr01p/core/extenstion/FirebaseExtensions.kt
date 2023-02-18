@@ -29,11 +29,7 @@ inline fun <reified T> createEventListener(
                     callback.invoke(value)
                 }
             } else {
-                if (BuildConfig.DEBUG) {
-                    throw IllegalStateException("createUserEventListener(), value == null")
-                } else {
-                    Timber.tag("UnexpectedError").d("createEventListener(), value == null")
-                }
+                Timber.tag("Zhopa").d("createEventListener(), value == null")
             }
         }
     }

@@ -2,6 +2,7 @@ package com.nowiwr01p.meetings.ui.main
 
 import androidx.compose.runtime.mutableStateListOf
 import com.nowiwr01p.core.datastore.cities.data.Meeting
+import com.nowiwr01p.core.datastore.cities.data.Reaction
 import com.nowiwr01p.core.model.User
 import com.nowiwr01p.core_ui.view_model.ViewEvent
 import com.nowiwr01p.core_ui.view_model.ViewSideEffect
@@ -21,6 +22,7 @@ interface MeetingsContract {
     data class State(
         val showProgress: Boolean = false,
         val user: User = User(),
+        val reactions: Map<String, Reaction> = mapOf(),
         val meetings: List<Meeting> = listOf(),
         val stories: List<Story> = mutableStateListOf(),
         val categories: List<Category> = mutableStateListOf(),

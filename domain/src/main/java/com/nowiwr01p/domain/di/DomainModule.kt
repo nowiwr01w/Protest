@@ -13,10 +13,8 @@ import com.nowiwr01p.domain.meetings.create_meeting.usecase.CreateMeetingUseCase
 import com.nowiwr01p.domain.meetings.create_meeting.usecase.ValidateMeetingDataUseCase
 import com.nowiwr01p.domain.categories.usecase.GetCategoriesUseCase
 import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
-import com.nowiwr01p.domain.meetings.main.usecase.GetMeetingsUseCase
+import com.nowiwr01p.domain.meetings.main.usecase.*
 import com.nowiwr01p.domain.stories.usecase.GetStoriesUseCase
-import com.nowiwr01p.domain.meetings.main.usecase.SetStoryViewedUseCase
-import com.nowiwr01p.domain.meetings.main.usecase.SubscribeMeetingsUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.GetLocationUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.RunMeetingUseCase
 import com.nowiwr01p.domain.meetings.meeting.usecase.SetReactionUseCase
@@ -42,9 +40,9 @@ val moduleDomain = module {
     /**
      * APP
      */
-    single { InitAppDataUseCase(get(), get(), get(), get(), get(), get(), get()) }
     factory { InitAppCrashlyticsUseCase(get(), get()) }
     factory { GetSplashScreenAnimationUrlUseCase(get(), get()) }
+    single { InitAppDataUseCase(get(), get(), get(), get(), get(), get(), get(), get()) }
 
     /**
      * USER
@@ -80,8 +78,10 @@ val moduleDomain = module {
      * MEETINGS
      */
     factory { GetMeetingsUseCase(get()) }
+    factory { GetReactionsUseCase(get()) }
     factory { SetReactionUseCase(get()) }
     factory { SubscribeMeetingsUseCase(get()) }
+    factory { SubscribeReactionsUseCase(get()) }
     factory { GetUnpublishedMeetingsUseCase(get()) }
 
     /**

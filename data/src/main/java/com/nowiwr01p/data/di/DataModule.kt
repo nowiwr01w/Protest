@@ -184,7 +184,7 @@ val moduleData = module {
      * CREATE MEETING
      */
     factory<CreateMeetingRepository> {
-        CreateMeetingRepositoryImpl(get(), get())
+        CreateMeetingRepositoryImpl(get(), get(), get())
     }
     factory<CreateMeetingValidator> {
         CreateMeetingValidatorImpl(get())

@@ -7,6 +7,7 @@ import com.nowiwr01p.domain.UseCase
 import com.nowiwr01p.domain.categories.usecase.SubscribeCategoriesUseCase
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.meetings.main.usecase.SubscribeMeetingsUseCase
+import com.nowiwr01p.domain.meetings.main.usecase.SubscribeReactionsUseCase
 import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsUseCase
 import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
@@ -19,6 +20,7 @@ class InitAppDataUseCase(
     private val subscribeNewsUseCase: SubscribeNewsUseCase,
     private val subscribeStoriesUseCase: SubscribeStoriesUseCase,
     private val subscribeMeetingsUseCase: SubscribeMeetingsUseCase,
+    private val subscribeReactionsUseCase: SubscribeReactionsUseCase,
     private val subscribeCategoriesUseCase: SubscribeCategoriesUseCase,
     private val setupCrashlyticsUseCase: InitAppCrashlyticsUseCase,
     private val dispatchers: AppDispatchers
@@ -40,7 +42,8 @@ class InitAppDataUseCase(
                 async { subscribeNewsUseCase.execute().add() },
                 async { subscribeStoriesUseCase.execute().add() },
                 async { subscribeMeetingsUseCase.execute().add() },
-                async { subscribeCategoriesUseCase.execute().add() }
+                async { subscribeReactionsUseCase.execute().add() },
+                async { subscribeCategoriesUseCase.execute().add() },
             ).awaitAll()
         }
     }

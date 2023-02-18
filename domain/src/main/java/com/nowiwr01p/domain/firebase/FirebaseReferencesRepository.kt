@@ -14,6 +14,7 @@ interface FirebaseReferencesRepository {
     suspend fun getMeetingsReference(): DatabaseReference
     suspend fun getUnpublishedMeetingsReference(): DatabaseReference
     suspend fun getMeetingReference(id: String): DatabaseReference
+    suspend fun getMeetingReactionReference(): DatabaseReference
     suspend fun getMeetingPreviewReference(id: String): DatabaseReference
     suspend fun getLocationsReference(id: String): DatabaseReference
     suspend fun getImagesStorageReference(): StorageReference
