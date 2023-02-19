@@ -25,6 +25,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(STORIES_REFERENCE)
     }
 
+    override suspend fun getStoriesViewersReference(): DatabaseReference {
+        return database.getReference(STORIES_VIEWERS_REFERENCE)
+    }
+
     /**
      * CATEGORIES
      */
@@ -98,6 +102,7 @@ class FirebaseReferencesRepositoryImpl(
         const val NEWS_VIEWERS_REFERENCE = "news_viewers"
         const val NEWS_PREVIEW_REFERENCE = "news_preview"
         const val STORIES_REFERENCE = "stories"
+        const val STORIES_VIEWERS_REFERENCE = "stories_viewers"
         const val CATEGORIES_REFERENCE = "categories"
         const val MEETINGS_REFERENCE = "meetings"
         const val MEETINGS_PREVIEW_REFERENCE = "meetings_preview"

@@ -6,6 +6,7 @@ import com.google.firebase.storage.StorageReference
 interface FirebaseReferencesRepository {
     suspend fun getUserReference(id: String): DatabaseReference
     suspend fun getStoriesReference(): DatabaseReference
+    suspend fun getStoriesViewersReference(): DatabaseReference
     suspend fun getCategoriesReference(): DatabaseReference
     suspend fun getNewsReference(): DatabaseReference
     suspend fun getNewsViewersReference(): DatabaseReference

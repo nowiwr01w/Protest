@@ -11,6 +11,7 @@ import com.nowiwr01p.domain.meetings.main.usecase.SubscribeReactionsUseCase
 import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsUseCase
 import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsViewersUseCase
 import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
+import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesViewersUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import kotlinx.coroutines.*
 
@@ -24,6 +25,7 @@ class InitAppDataUseCase(
     private val subscribeReactionsUseCase: SubscribeReactionsUseCase,
     private val subscribeCategoriesUseCase: SubscribeCategoriesUseCase,
     private val subscribeNewsViewersUseCase: SubscribeNewsViewersUseCase,
+    private val subscribeStoriesViewersUseCase: SubscribeStoriesViewersUseCase,
     private val setupCrashlyticsUseCase: InitAppCrashlyticsUseCase,
     private val dispatchers: AppDispatchers
 ): UseCase<Unit, Unit> {
@@ -46,7 +48,8 @@ class InitAppDataUseCase(
                 async { subscribeMeetingsUseCase.execute().add() },
                 async { subscribeReactionsUseCase.execute().add() },
                 async { subscribeCategoriesUseCase.execute().add() },
-                async { subscribeNewsViewersUseCase.execute().add() }
+                async { subscribeNewsViewersUseCase.execute().add() },
+                async { subscribeStoriesViewersUseCase.execute().add() }
             ).awaitAll()
         }
     }

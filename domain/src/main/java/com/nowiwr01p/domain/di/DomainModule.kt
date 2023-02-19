@@ -30,7 +30,9 @@ import com.nowiwr01p.domain.news.main.usecase.SubscribeNewsViewersUseCase
 import com.nowiwr01p.domain.news.previews.GetUnpublishedNewsUseCase
 import com.nowiwr01p.domain.profile.usecase.DeleteAccountUseCase
 import com.nowiwr01p.domain.profile.usecase.LogOutUseCase
+import com.nowiwr01p.domain.stories.usecase.GetStoriesViewersUseCase
 import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesUseCase
+import com.nowiwr01p.domain.stories.usecase.SubscribeStoriesViewersUseCase
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.domain.user.usecase.SubscribeUserUseCase
 import com.nowiwr01p.domain.user.usecase.UpdateUserAvatarUseCase
@@ -44,7 +46,7 @@ val moduleDomain = module {
      */
     factory { InitAppCrashlyticsUseCase(get(), get()) }
     factory { GetSplashScreenAnimationUrlUseCase(get(), get()) }
-    single { InitAppDataUseCase(get(), get(), get(), get(), get(), get(), get(), get(), get()) }
+    single { InitAppDataUseCase(get(), get(), get(), get(), get(), get(), get(), get(), get(), get()) }
 
     /**
      * USER
@@ -104,6 +106,8 @@ val moduleDomain = module {
      */
     factory { GetStoriesUseCase(get()) }
     factory { SubscribeStoriesUseCase(get()) }
+    factory { GetStoriesViewersUseCase(get()) }
+    factory { SubscribeStoriesViewersUseCase(get()) }
     factory { SetStoryViewedUseCase(get()) }
 
     /**

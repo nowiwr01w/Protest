@@ -7,5 +7,7 @@ import kotlinx.coroutines.flow.StateFlow
 interface StoriesRepository {
     suspend fun subscribeStories(): ReferencedListener
     suspend fun getStories(): StateFlow<List<Story>>
-    suspend fun setStoryViewed(storyId: String): Story
+    suspend fun subscribeStoriesViewers(): ReferencedListener
+    suspend fun getStoriesViewers(): StateFlow<Map<String, List<String>>>
+    suspend fun setStoryViewed(storyId: String)
 }

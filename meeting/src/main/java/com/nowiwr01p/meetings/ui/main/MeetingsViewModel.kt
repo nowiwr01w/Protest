@@ -15,6 +15,7 @@ import com.nowiwr01p.domain.meetings.main.data.Story
 import com.nowiwr01p.domain.meetings.main.usecase.*
 import com.nowiwr01p.domain.meetings.main.usecase.data.MeetingsScreenCacheData
 import com.nowiwr01p.domain.stories.usecase.GetStoriesUseCase
+import com.nowiwr01p.domain.stories.usecase.GetStoriesViewersUseCase
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
 import com.nowiwr01p.meetings.ui.main.MeetingsContract.*
 import com.nowiwr01p.meetings.ui.main.story_bottom_sheet.StoryBottomSheet
@@ -23,6 +24,7 @@ import kotlinx.coroutines.launch
 class MeetingsViewModel(
     private val statusBarColor: Color,
     private val getStoriesUseCase: GetStoriesUseCase,
+    private val getStoriesViewersUseCase: GetStoriesViewersUseCase,
     private val getMeetingsUseCase: GetMeetingsUseCase,
     private val getReactionsUseCase: GetReactionsUseCase,
     private val getCategoriesUseCase: GetCategoriesUseCase,
@@ -60,6 +62,7 @@ class MeetingsViewModel(
             getScreenCache()
             getUserData()
             getStories()
+            getStoriesViewers()
             getReactions()
             getMeetings()
             getCategories()
@@ -105,6 +108,16 @@ class MeetingsViewModel(
     private suspend fun getStories() = launch {
         getStoriesUseCase.execute().collect { stories ->
             setState { copy(stories = stories) }
+        }
+    }
+
+    /**
+     * STORIES VIEWERS
+     */
+    private suspend fun getStoriesViewers() = launch {
+        getStoriesViewersUseCase.execute().collect { storyIdToViewers ->
+            val updatedStories = mapper.updateStories(storyIdToViewers)
+            setState { copy(stories = updatedStories) }
         }
     }
 
@@ -174,9 +187,6 @@ class MeetingsViewModel(
     private fun setStoryViewed(id: String) = io {
         runCatching {
             setStoryViewedUseCase.execute(id)
-        }.onSuccess {
-            val updatedStories = mapper.updateStories(id, it)
-            setState { copy(stories = updatedStories) }
         }
     }
 
