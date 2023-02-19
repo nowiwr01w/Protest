@@ -93,7 +93,7 @@ sealed class ProfileItem(
      */
     data class PrivacyItem(
         val listener: Listener?,
-        override val name: String = "Политика приватности",
+        override val name: String = "Политика конфиденциальности",
         override val startIcon: Int = R.drawable.ic_security,
         override val onClick: () -> Unit = { listener?.openLink(PRIVACY_LINK) },
     ): ProfileItem(name, startIcon, onClick)
@@ -143,7 +143,7 @@ internal fun getProfileItems(state: State, listener: Listener?) = listOf(
     ),
     "Условия пользования" to listOf(
         PrivacyItem(listener),
-        TermsItem(listener)
+//        TermsItem(listener)
     ),
     "Выход" to listOf(
         LogoutItem(listener),

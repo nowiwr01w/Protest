@@ -34,6 +34,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.Dimension
+import com.nowiwr01p.auth.BuildConfig
+import com.nowiwr01p.auth.BuildConfig.PRIVACY_LINK
 import com.nowiwr01p.auth.R
 import com.nowiwr01p.auth.ui.auth.AuthContract.*
 import com.nowiwr01p.auth.ui.auth.data.AuthType.SIGN_IN
@@ -370,12 +372,9 @@ private fun ToggleText(
  */
 @Composable
 private fun TermsText(listener: Listener?) {
-    val privacyText = "политику конфиденциальности"
-    val conditionsText = "пользовательское соглашение"
+    val privacyText = "политикой конфиденциальности"
     val text = buildAnnotatedString {
-        append("Продолжая, вы принимаете ")
-        appendLink(conditionsText)
-        append(" и ")
+        append("Продолжая, вы соглашаетесь с нашей ")
         appendLink(privacyText)
     }
     ClickableText(
@@ -387,10 +386,7 @@ private fun TermsText(listener: Listener?) {
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 24.dp),
         onClick = { offset ->
             text.onTextClick(privacyText, offset) {
-                listener?.openLink("https://google.com/") // TODO
-            }
-            text.onTextClick(conditionsText, offset) {
-                listener?.openLink("https://youtube.com/") // TODO
+                listener?.openLink(PRIVACY_LINK)
             }
         }
     )
