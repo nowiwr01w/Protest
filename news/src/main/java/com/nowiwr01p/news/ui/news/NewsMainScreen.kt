@@ -133,15 +133,19 @@ private fun LazyListScope.NewsList(
     listener: Listener?
 ) {
     item { Spacer(modifier = Modifier.height(12.dp)) }
-    items(state.newsList) { article ->
+    val updatedNews = state.newsList.map { article ->
         val dateViewers = state.newsViewers[article.id] ?: article.dateViewers
         val updatedDateViewers = article.dateViewers.copy(
             date = dateViewers.date,
             viewers = dateViewers.viewers
         )
-        val updatedArticle = article.copy(dateViewers = updatedDateViewers)
-        ArticleView(updatedArticle) {
-            listener?.onArticleClick(updatedArticle)
+        article.copy(dateViewers = updatedDateViewers)
+    }.sortedByDescending { article ->
+        article.dateViewers.date
+    }
+    items(updatedNews) { article ->
+        ArticleView(article) {
+            listener?.onArticleClick(article)
         }
         Spacer(modifier = Modifier.height(8.dp))
     }
