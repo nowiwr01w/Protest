@@ -128,11 +128,20 @@ private fun Toolbar(state: State, listener: Listener?) = Row(
 /**
  * NEWS
  */
-private fun LazyListScope.NewsList(state: State, listener: Listener?) {
+private fun LazyListScope.NewsList(
+    state: State,
+    listener: Listener?
+) {
     item { Spacer(modifier = Modifier.height(12.dp)) }
     items(state.newsList) { article ->
-        ArticleView(article) {
-            listener?.onArticleClick(article)
+        val dateViewers = state.newsViewers[article.id] ?: article.dateViewers
+        val updatedDateViewers = article.dateViewers.copy(
+            date = dateViewers.date,
+            viewers = dateViewers.viewers
+        )
+        val updatedArticle = article.copy(dateViewers = updatedDateViewers)
+        ArticleView(updatedArticle) {
+            listener?.onArticleClick(updatedArticle)
         }
         Spacer(modifier = Modifier.height(8.dp))
     }

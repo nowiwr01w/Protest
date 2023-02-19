@@ -35,6 +35,7 @@ val moduleNews = module {
             get(),
             scope.get(),
             scope.get(),
+            get(),
             get()
         )
     }

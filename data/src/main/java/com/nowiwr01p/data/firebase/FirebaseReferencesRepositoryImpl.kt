@@ -51,6 +51,10 @@ class FirebaseReferencesRepositoryImpl(
         return database.getReference(NEWS_PREVIEW_REFERENCE)
     }
 
+    override suspend fun getNewsViewersReference(): DatabaseReference {
+        return database.getReference(NEWS_VIEWERS_REFERENCE)
+    }
+
     /**
      * MEETINGS
      */
@@ -91,6 +95,7 @@ class FirebaseReferencesRepositoryImpl(
     private companion object {
         const val USER_REFERENCE = "users"
         const val NEWS_REFERENCE = "news"
+        const val NEWS_VIEWERS_REFERENCE = "news_viewers"
         const val NEWS_PREVIEW_REFERENCE = "news_preview"
         const val STORIES_REFERENCE = "stories"
         const val CATEGORIES_REFERENCE = "categories"

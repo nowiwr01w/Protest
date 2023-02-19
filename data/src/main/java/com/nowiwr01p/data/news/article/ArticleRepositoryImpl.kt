@@ -19,8 +19,7 @@ class ArticleRepositoryImpl(
      */
     override suspend fun setArticleViewed(articleId: String) = withContext(dispatchers.io) {
         val userId = userRemoteRealtimeRepository.getUserFlow().value.id
-        val currentViewers = getArticleViews(articleId)
-        val updatedViewers = currentViewers.toMutableList().apply {
+        val updatedViewers = getArticleViews(articleId).toMutableList().apply {
             add(userId)
         }
         setArticleViews(articleId, updatedViewers)
@@ -28,21 +27,21 @@ class ArticleRepositoryImpl(
     }
 
     private suspend fun getArticleViews(id: String) = referencesRepository
-        .getArticleReference(id)
-        .child(VIEWERS)
+        .getNewsViewersReference()
+        .child(id)
+        .child("viewers")
         .get()
         .await()
         .getValue(LIST_STRING_TOKEN)!!
 
     private suspend fun setArticleViews(id: String, viewers: List<String>) = referencesRepository
-        .getArticleReference(id)
-        .child(VIEWERS)
+        .getNewsViewersReference()
+        .child(id)
+        .child("viewers")
         .setValue(viewers)
         .await()
 
     private companion object {
-        const val VIEWERS = "dateViewers/viewers"
-
         val LIST_STRING_TOKEN = object : GenericTypeIndicator<List<String>>() {}
     }
 }

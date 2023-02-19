@@ -4,6 +4,7 @@ import com.nowiwr01p.core_ui.view_model.BaseViewModel
 import com.nowiwr01p.domain.execute
 import com.nowiwr01p.domain.news.main.usecase.GetNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.main.usecase.GetNewsUseCase
+import com.nowiwr01p.domain.news.main.usecase.GetNewsViewersUseCase
 import com.nowiwr01p.domain.news.main.usecase.SaveNewsScreenCacheUseCase
 import com.nowiwr01p.domain.news.main.usecase.data.NewsScreenCacheData
 import com.nowiwr01p.domain.user.usecase.GetUserUseCase
@@ -14,6 +15,7 @@ class NewsViewModel(
     private val getNews: GetNewsUseCase,
     private val getNewsScreenCache: GetNewsScreenCacheUseCase,
     private val saveNewsScreenCache: SaveNewsScreenCacheUseCase,
+    private val getNewsViewersUseCase: GetNewsViewersUseCase,
     private val getLocalUserUseCase: GetUserUseCase
 ): BaseViewModel<Event, State, Effect>() {
 
@@ -33,6 +35,7 @@ class NewsViewModel(
             getScreenCache()
             getUserData()
             getNews()
+            getNewsViewers()
         }.onSuccess {
             saveScreenCache()
             setState { copy(isLoading = false) }
@@ -54,6 +57,15 @@ class NewsViewModel(
     private suspend fun getNews() = launch {
         getNews.execute().collect { news ->
             setState { copy(newsList = news) }
+        }
+    }
+
+    /**
+     * NEWS VIEWERS
+     */
+    private suspend fun getNewsViewers() = launch {
+        getNewsViewersUseCase.execute().collect { viewers ->
+            setState { copy(newsViewers = viewers) }
         }
     }
 
