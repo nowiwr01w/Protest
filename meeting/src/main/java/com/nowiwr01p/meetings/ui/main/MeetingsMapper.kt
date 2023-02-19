@@ -30,6 +30,11 @@ class MeetingsMapper: ViewModelMapper<MeetingsViewModel>() {
         }
     }
 
+    fun updateStories(stories: List<Story>) = stories.map { story ->
+        val currentViewers = viewModel.storiesViewers[story.id].orEmpty()
+        story.copy(viewers = currentViewers)
+    }
+
     fun updateStories(viewers: Map<String, List<String>>) = with(viewModel.viewState.value) {
         stories.map { story ->
             val currentViewers = viewers[story.id].orEmpty()

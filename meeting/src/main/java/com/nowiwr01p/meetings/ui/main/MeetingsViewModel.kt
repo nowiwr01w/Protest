@@ -39,6 +39,7 @@ class MeetingsViewModel(
 ): BaseViewModel<Event, State, Effect>() {
 
     internal var allMeetings = listOf<Meeting>()
+    internal var storiesViewers = mapOf<String, List<String>>()
 
     init {
         mapper.viewModel = this
@@ -61,8 +62,8 @@ class MeetingsViewModel(
             setStatusBarColor()
             getScreenCache()
             getUserData()
-            getStories()
             getStoriesViewers()
+            getStories()
             getReactions()
             getMeetings()
             getCategories()
@@ -103,20 +104,22 @@ class MeetingsViewModel(
     }
 
     /**
-     * STORIES
-     */
-    private suspend fun getStories() = launch {
-        getStoriesUseCase.execute().collect { stories ->
-            setState { copy(stories = stories) }
-        }
-    }
-
-    /**
      * STORIES VIEWERS
      */
     private suspend fun getStoriesViewers() = launch {
         getStoriesViewersUseCase.execute().collect { storyIdToViewers ->
+            storiesViewers = storyIdToViewers
             val updatedStories = mapper.updateStories(storyIdToViewers)
+            setState { copy(stories = updatedStories) }
+        }
+    }
+
+    /**
+     * STORIES
+     */
+    private suspend fun getStories() = launch {
+        getStoriesUseCase.execute().collect { stories ->
+            val updatedStories = mapper.updateStories(stories)
             setState { copy(stories = updatedStories) }
         }
     }
