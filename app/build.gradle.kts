@@ -24,7 +24,7 @@ android {
         applicationId = BuildConfig.APP_ID
         minSdk = BuildConfig.MIN_SDK
         targetSdk = BuildConfig.TARGET_SDK
-        versionCode = 1
+        versionCode = 3
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
